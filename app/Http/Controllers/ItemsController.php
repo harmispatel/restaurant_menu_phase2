@@ -420,19 +420,6 @@ class ItemsController extends Controller
             $delete_item_image_url = route('items.delete.image',$item_id);
             $price_array = ItemPrice::where('item_id',$item['id'])->where('shop_id',$shop_id)->get();
 
-            // Item Category Tags Array
-            if(count($item_cat_tags) > 0)
-            {
-                foreach ($item_cat_tags as $key => $value)
-                {
-                    $tag_data[] = isset($value->hasOneTag['name']) ? $value->hasOneTag['name'] : '';
-                }
-            }
-            else
-            {
-                $tag_data = [];
-            }
-
             // Get Language Settings
             $language_settings = clientLanguageSettings($shop_id);
             $primary_lang_id = isset($language_settings['primary_language']) ? $language_settings['primary_language'] : '';
@@ -450,6 +437,19 @@ class ItemsController extends Controller
             // $primary_item_price = isset($item[$primary_lang_code."_price"]) ? unserialize($item[$primary_lang_code."_price"]) : [];
             $primary_input_lang_code = "'$primary_lang_code'";
             $primary_form_name = "'$primary_lang_code"."_item_form'";
+
+            // Item Category Tags Array
+            if(count($item_cat_tags) > 0)
+            {
+                foreach ($item_cat_tags as $key => $value)
+                {
+                    $primary_tag_data[] = isset($value->hasOneTag[$primary_lang_code.'_name']) ? $value->hasOneTag[$primary_lang_code.'_name'] : '';
+                }
+            }
+            else
+            {
+                $primary_tag_data = [];
+            }
 
             // Additional Languages
             $additional_languages = AdditionalLanguage::where('shop_id',$shop_id)->get();
@@ -653,12 +653,12 @@ class ItemsController extends Controller
                                             {
                                                 foreach($tags as $tag)
                                                 {
-                                                    $html .= '<option value="'.$tag["name"].'"';
-                                                        if(in_array($tag["name"],$tag_data))
+                                                    $html .= '<option value="'.$tag[$primary_lang_code."_name"].'"';
+                                                        if(in_array($tag[$primary_lang_code."_name"],$primary_tag_data))
                                                         {
                                                             $html .= 'selected';
                                                         }
-                                                    $html .='>'.$tag["name"].'</option>';
+                                                    $html .='>'.$tag[$primary_lang_code."_name"].'</option>';
                                                 }
                                             }
                                         $html .= '</select>';
@@ -758,6 +758,19 @@ class ItemsController extends Controller
                         $add_lang_name = isset($add_lang_detail->name) ? $add_lang_detail->name : '';
                         $add_input_lang_code = "'$add_lang_code'";
                         $add_form_name = "'$add_lang_code"."_item_form'";
+
+                        // Item Category Tags Array
+                        if(count($item_cat_tags) > 0)
+                        {
+                            foreach ($item_cat_tags as $key => $value)
+                            {
+                                $add_tag_data[] = isset($value->hasOneTag[$add_lang_code.'_name']) ? $value->hasOneTag[$add_lang_code.'_name'] : '';
+                            }
+                        }
+                        else
+                        {
+                            $add_tag_data = [];
+                        }
 
                         // Additional Language Item Details
                         $add_item_name = isset($item[$add_lang_code."_name"]) ? $item[$add_lang_code."_name"] : '';
@@ -934,12 +947,12 @@ class ItemsController extends Controller
                                                 {
                                                     foreach($tags as $tag)
                                                     {
-                                                        $html .= '<option value="'.$tag["name"].'"';
-                                                            if(in_array($tag["name"],$tag_data))
+                                                        $html .= '<option value="'.$tag[$add_lang_code."_name"].'"';
+                                                            if(in_array($tag[$add_lang_code."_name"],$add_tag_data))
                                                             {
                                                                 $html .= 'selected';
                                                             }
-                                                        $html .='>'.$tag["name"].'</option>';
+                                                        $html .='>'.$tag[$add_lang_code."_name"].'</option>';
                                                     }
                                                 }
                                             $html .= '</select>';
@@ -1207,12 +1220,12 @@ class ItemsController extends Controller
                                 {
                                     foreach($tags as $tag)
                                     {
-                                        $html .= '<option value="'.$tag["name"].'"';
-                                            if(in_array($tag["name"],$tag_data))
+                                        $html .= '<option value="'.$tag[$primary_lang_code."_name"].'"';
+                                            if(in_array($tag[$primary_lang_code."_name"],$primary_tag_data))
                                             {
                                                 $html .= 'selected';
                                             }
-                                        $html .='>'.$tag["name"].'</option>';
+                                        $html .='>'.$tag[$primary_lang_code."_name"].'</option>';
                                     }
                                 }
                             $html .= '</select>';
