@@ -9,6 +9,7 @@ use App\Models\Ingredient;
 use App\Models\ItemPrice;
 use App\Models\Items;
 use App\Models\Languages;
+use App\Models\Option;
 use App\Models\Tags;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,19 +21,19 @@ class ItemsController extends Controller
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $data['ingredients'] = Ingredient::get();
         $data['tags'] = Tags::where('shop_id',$shop_id)->get();
+        $data['options'] = Option::where('shop_id',$shop_id)->get();
+        $data['categories'] = Category::where('shop_id',$shop_id)->where('category_type','product_category')->get();
 
         if(!empty($id) || $id != '')
         {
             $data['cat_id'] = $id;
-            $data['categories'] = Category::where('shop_id',$shop_id)->get();
             $data['category'] = Category::where('id',$id)->first();
             $data['items'] = Items::where('category_id',$id)->where('shop_id',$shop_id)->orderBy('order_key')->get();
-            $data['cat_tags'] = CategoryProductTags::join('tags','tags.id','category_product_tags.tag_id')->orderBy('tags.order')->where('category_id',$id)->get()->unique('tag_id');
+            $data['cat_tags'] = CategoryProductTags::join('tags','tags.id','category_product_tags.tag_id')->orderBy('tags.order')->where('category_id',$id)->where('tags.shop_id','=',$shop_id)->get()->unique('tag_id');
         }
         else
         {
             $data['cat_id'] = '';
-            $data['categories'] = Category::where('shop_id',$shop_id)->get();
             $data['category'] = "All";
             $data['items'] = Items::orderBy('order_key')->where('shop_id',$shop_id)->get();
             $data['cat_tags'] = CategoryProductTags::join('tags','tags.id','category_product_tags.tag_id')->where('tags.shop_id','=',$shop_id)->orderBy('tags.order')->get()->unique('tag_id');
@@ -48,6 +49,7 @@ class ItemsController extends Controller
     {
         $request->validate([
             'name'   => 'required',
+            'category'   => 'required',
         ]);
 
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
@@ -79,6 +81,7 @@ class ItemsController extends Controller
         $published = isset($request->published) ? $request->published : 0;
         $day_special = isset($request->day_special) ? $request->day_special : 0;
         $ingredients = (isset($request->ingredients) && count($request->ingredients) > 0) ? serialize($request->ingredients) : '';
+        $options = (isset($request->options) && count($request->options) > 0) ? serialize($request->options) : '';
         $tags = isset($request->tags) ? $request->tags : [];
 
 
@@ -113,6 +116,7 @@ class ItemsController extends Controller
             $item->published = $published;
             $item->order_key = $item_order;
             $item->ingredients = $ingredients;
+            $item->options = $options;
             $item->is_new = $is_new;
             $item->as_sign = $as_sign;
             $item->day_special = $day_special;
@@ -161,7 +165,7 @@ class ItemsController extends Controller
             {
                 foreach($tags as $val)
                 {
-                    $findTag = Tags::where('name',$val)->orWhere($item_name_key,$val)->where('shop_id',$shop_id)->first();
+                    $findTag = Tags::where($item_name_key,$val)->where('shop_id',$shop_id)->first();
                     $tag_id = (isset($findTag->id) && !empty($findTag->id)) ? $findTag->id : '';
 
                     if(!empty($tag_id) || $tag_id != '')
@@ -389,10 +393,13 @@ class ItemsController extends Controller
         try
         {
             // Categories
-            $categories = Category::get();
+            $categories = Category::where('shop_id',$shop_id)->get();
 
             // Ingredients
             $ingredients = Ingredient::get();
+
+            // Ingredients
+            $options = Option::where('shop_id',$shop_id)->get();
 
             // Tags
             $tags = Tags::where('shop_id',$shop_id)->get();
@@ -408,6 +415,7 @@ class ItemsController extends Controller
             $item_type = (isset($item['type'])) ? $item['type'] : '';
             $category_id = (isset($item['category_id'])) ? $item['category_id'] : '';
             $item_ingredients = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
+            $item_options = (isset($item['options']) && !empty($item['options'])) ? unserialize($item['options']) : [];
             $item_cat_tags = CategoryProductTags::with(['hasOneTag'])->where('item_id',$item['id'])->where('category_id',$item['category_id'])->get();
             $delete_item_image_url = route('items.delete.image',$item_id);
             $price_array = ItemPrice::where('item_id',$item['id'])->where('shop_id',$shop_id)->get();
@@ -524,98 +532,6 @@ class ItemsController extends Controller
                                     $html .= '<input type="text" name="item_name" id="item_name" class="form-control" value="'.$primary_item_name.'">';
                                 $html .= '</div>';
 
-                                $html .= '<div class="form-group mb-3">';
-                                    $html .= '<label class="form-label" for="item_description">'.__('Desription').'</label>';
-                                    $html .= '<textarea name="item_description" id="item_description_'.$primary_lang_code.'" class="form-control item_description" rows="3">'.$primary_item_desc.'</textarea>';
-                                $html .= '</div>';
-
-                                $html .= '<div class="form-group mb-3">';
-                                    $html .= '<label class="form-label">'.__('Image').'</label>';
-                                    $html .= '<input type="file" name="item_image" id="'.$primary_lang_code.'_item_image" class="form-control item_image" onchange="imageCropper('.$primary_input_lang_code.',this)" style="display:none">';
-                                    $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
-
-                                    if(!empty($item_image))
-                                    {
-                                        $html .= '<div class="row mt-2" id="edit-img">';
-                                            $html .= '<div class="col-md-3">';
-                                                $html .= '<div class="mt-3 position-relative" id="itemImage">';
-                                                    $html .= '<label style="cursor:pointer" for="'.$primary_lang_code.'_item_image"><img src="'.$item_image.'" class="w-100"></label>';
-                                                    $html .= '<a href="'.$delete_item_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>';
-                                                $html .= '</div>';
-                                            $html .= '</div>';
-                                        $html .= '</div>';
-
-                                        $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
-                                            $html .= '<div class="col-md-3" id="img-label">';
-                                                $html .= '<label for="'.$primary_lang_code.'_item_image" style="cursor: pointer">';
-                                                    $html .= '<img src="" class="w-100" id="crp-img-prw">';
-                                                $html .= '</label>';
-                                            $html .= '</div>';
-                                        $html .= '</div>';
-                                    }
-                                    else
-                                    {
-                                        $html .= '<div class="mt-3" id="itemImage">';
-                                            $html .= '<div class="col-md-3" id="img-label">';
-                                                $html .= '<label style="cursor:pointer;" for="'.$primary_lang_code.'_item_image"><img src="'.$default_image.'" class="w-100" id="crp-img-prw"></label>';
-                                            $html .= '</div>';
-                                        $html .= '</div>';
-                                    }
-                                    $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
-                                $html .= '</div>';
-
-                                $html .= '<div class="form-group mb-3">';
-                                    $html .= '<div class="row">';
-                                        $html .= '<div class="col-md-8 img-crop-sec mb-2" style="display: none">';
-                                            $html .= '<img src="" alt="" id="resize-image" class="w-100 resize-image">';
-                                            $html .= '<div class="mt-3">';
-                                                $html .= '<a class="btn btn-sm btn-success" onclick="saveCropper('.$primary_form_name.')">Save</a>';
-                                                $html .= '<a class="btn btn-sm btn-danger mx-2" onclick="resetCropper()">Reset</a>';
-                                                $html .= '<a class="btn btn-sm btn-secondary" onclick="cancelCropper('.$primary_form_name.')">Cancel</a>';
-                                            $html .= '</div>';
-                                        $html .= '</div>';
-                                        $html .= '<div class="col-md-4 img-crop-sec" style="display: none;">';
-                                            $html .= '<div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>';
-                                        $html .= '</div>';
-                                    $html .= '</div>';
-                                $html .= '</div>';
-
-                                $html .= '<div class="form-group mb-3">';
-                                    $html .= '<label class="form-label" for="ingredients">'.__('Indicative Icons').'</label>';
-                                    $html .= '<select name="ingredients[]" id="'.$primary_lang_code.'_ingredients" class="form-select" multiple>';
-                                        if(count($ingredients) > 0)
-                                        {
-                                            foreach($ingredients as $ing)
-                                            {
-                                                $html .= '<option value="'.$ing["id"].'"';
-                                                    if(in_array($ing["id"],$item_ingredients))
-                                                    {
-                                                        $html .= 'selected';
-                                                    }
-                                                $html .='>'.$ing["name"].'</option>';
-                                            }
-                                        }
-                                    $html .= '</select>';
-                                $html .= '</div>';
-
-                                $html .= '<div class="form-group mb-3">';
-                                    $html .= '<label class="form-label" for="tags">'.__('Tags').'</label>';
-                                    $html .= '<select name="tags[]" id="'.$primary_lang_code.'_tags" class="form-select" multiple>';
-                                        if(count($tags) > 0)
-                                        {
-                                            foreach($tags as $tag)
-                                            {
-                                                $html .= '<option value="'.$tag["name"].'"';
-                                                    if(in_array($tag["name"],$tag_data))
-                                                    {
-                                                        $html .= 'selected';
-                                                    }
-                                                $html .='>'.$tag["name"].'</option>';
-                                            }
-                                        }
-                                    $html .= '</select>';
-                                $html .= '</div>';
-
                                 $html .= '<div class="form-group price_div priceDiv mb-3" id="priceDiv">';
                                     $html .= '<label class="form-label">'.__('Price').'</label>';
 
@@ -651,60 +567,177 @@ class ItemsController extends Controller
                                     $html .= '<a onclick="addPrice(\''.$primary_lang_code.'_item_form\')" class="btn addPriceBtn btn-info text-white">'.__('Add Price').'</a>';
                                 $html .= '</div>';
 
-                                $html .= '<div class="form-group calories_div mb-3">';
-                                    $html .= '<label class="form-label" for="calories">'.__('Calories').'</label>';
-                                    $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$primary_item_calories.'">';
+                                $html .= '<div class="form-group mb-3 text-center">';
+                                    $html .= '<a class="btn btn-sm btn-primary" style="cursor: pointer" onclick="toggleMoreDetails('.$primary_form_name.')" id="more_dt_btn">More Details.. <i class="bi bi-eye-slash"></i></a>';
                                 $html .= '</div>';
 
-                                $html .= '<div class="form-group mb-3">';
-                                    $html .= '<div class="row">';
-                                        $html .= '<div class="col-md-6 mark_new mb-2">';
-                                            $html .= '<label class="switch me-2">';
-                                                $html .= '<input type="checkbox" id="mark_new" name="is_new" value="1" '.$item_is_new.'>';
-                                                $html .= '<span class="slider round">';
-                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                $html .= '</span>';
-                                            $html .= '</label>';
-                                            $html .= '<label for="mark_new" class="form-label">'.__('Mark Item as New').'</label>';
+                                $html .= '<div class="form-group mb-3" id="more_details" style="display: none;">';
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<label class="form-label" for="item_description">'.__('Desription').'</label>';
+                                        $html .= '<textarea name="item_description" id="item_description_'.$primary_lang_code.'" class="form-control item_description" rows="3">'.$primary_item_desc.'</textarea>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<label class="form-label">'.__('Image').'</label>';
+                                        $html .= '<input type="file" name="item_image" id="'.$primary_lang_code.'_item_image" class="form-control item_image" onchange="imageCropper('.$primary_input_lang_code.',this)" style="display:none">';
+                                        $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
+
+                                        if(!empty($item_image))
+                                        {
+                                            $html .= '<div class="row" id="edit-img">';
+                                                $html .= '<div class="col-md-3">';
+                                                    $html .= '<div class="position-relative" id="itemImage">';
+                                                        $html .= '<label style="cursor:pointer" for="'.$primary_lang_code.'_item_image"><img src="'.$item_image.'" class="w-100" style="border-radius:10px;"></label>';
+                                                        $html .= '<a href="'.$delete_item_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: 0; right: -45px;"><i class="bi bi-trash"></i></a>';
+                                                    $html .= '</div>';
+                                                $html .= '</div>';
+                                            $html .= '</div>';
+
+                                            $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
+                                                $html .= '<div class="col-md-3" id="img-label">';
+                                                    $html .= '<label for="'.$primary_lang_code.'_item_image" style="cursor: pointer">';
+                                                        $html .= '<img src="" class="w-100 h-100" style="border-radius:10px;" id="crp-img-prw">';
+                                                    $html .= '</label>';
+                                                $html .= '</div>';
+                                            $html .= '</div>';
+                                        }
+                                        else
+                                        {
+                                            $html .= '<div class="mt-3" id="itemImage">';
+                                                $html .= '<div class="col-md-3" id="img-label">';
+                                                    $html .= '<label style="cursor:pointer;" for="'.$primary_lang_code.'_item_image"><img src="'.$default_image.'" class="w-100 h-100" style="border-radius:10px;" id="crp-img-prw"></label>';
+                                                $html .= '</div>';
+                                            $html .= '</div>';
+                                        }
+                                        $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<div class="row">';
+                                            $html .= '<div class="col-md-8 img-crop-sec mb-2" style="display: none">';
+                                                $html .= '<img src="" alt="" id="resize-image" class="w-100 resize-image">';
+                                                $html .= '<div class="mt-3">';
+                                                    $html .= '<a class="btn btn-sm btn-success" onclick="saveCropper('.$primary_form_name.')">Save</a>';
+                                                    $html .= '<a class="btn btn-sm btn-danger mx-2" onclick="resetCropper()">Reset</a>';
+                                                    $html .= '<a class="btn btn-sm btn-secondary" onclick="cancelCropper('.$primary_form_name.')">Cancel</a>';
+                                                $html .= '</div>';
+                                            $html .= '</div>';
+                                            $html .= '<div class="col-md-4 img-crop-sec" style="display: none;">';
+                                                $html .= '<div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>';
+                                            $html .= '</div>';
                                         $html .= '</div>';
-                                        $html .= '<div class="col-md-6 mark_sign mb-2">';
-                                            $html .= '<label class="switch me-2">';
-                                                $html .= '<input type="checkbox" id="mark_sign" name="is_sign" value="1" '.$item_as_sign.'>';
-                                                $html .= '<span class="slider round">';
-                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                $html .= '</span>';
-                                            $html .= '</label>';
-                                            $html .= '<label for="mark_sign" class="form-label">'.__('Mark Item as Signature').'</label>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<label class="form-label" for="ingredients">'.__('Indicative Icons').'</label>';
+                                        $html .= '<select name="ingredients[]" id="'.$primary_lang_code.'_ingredients" class="form-select" multiple>';
+                                            if(count($ingredients) > 0)
+                                            {
+                                                foreach($ingredients as $ing)
+                                                {
+                                                    $html .= '<option value="'.$ing["id"].'"';
+                                                        if(in_array($ing["id"],$item_ingredients))
+                                                        {
+                                                            $html .= 'selected';
+                                                        }
+                                                    $html .='>'.$ing["name"].'</option>';
+                                                }
+                                            }
+                                        $html .= '</select>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<label class="form-label" for="tags">'.__('Tags').'</label>';
+                                        $html .= '<select name="tags[]" id="'.$primary_lang_code.'_tags" class="form-select" multiple>';
+                                            if(count($tags) > 0)
+                                            {
+                                                foreach($tags as $tag)
+                                                {
+                                                    $html .= '<option value="'.$tag["name"].'"';
+                                                        if(in_array($tag["name"],$tag_data))
+                                                        {
+                                                            $html .= 'selected';
+                                                        }
+                                                    $html .='>'.$tag["name"].'</option>';
+                                                }
+                                            }
+                                        $html .= '</select>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group calories_div mb-3">';
+                                        $html .= '<label class="form-label" for="calories">'.__('Calories').'</label>';
+                                        $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$primary_item_calories.'">';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
+                                        $html .= '<select name="options[]" id="'.$primary_lang_code.'_options" class="form-select" multiple>';
+                                            if(count($options) > 0)
+                                            {
+                                                foreach($options as $opt)
+                                                {
+                                                    $html .= '<option value="'.$opt["id"].'"';
+                                                        if(in_array($opt["id"],$item_options))
+                                                        {
+                                                            $html .= 'selected';
+                                                        }
+                                                    $html .='>'.$opt["title"].'</option>';
+                                                }
+                                            }
+                                        $html .= '</select>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<div class="row">';
+                                            $html .= '<div class="col-md-6 mark_new mb-2">';
+                                                $html .= '<label class="switch me-2">';
+                                                    $html .= '<input type="checkbox" id="mark_new" name="is_new" value="1" '.$item_is_new.'>';
+                                                    $html .= '<span class="slider round">';
+                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                    $html .= '</span>';
+                                                $html .= '</label>';
+                                                $html .= '<label for="mark_new" class="form-label">'.__('New').'</label>';
+                                            $html .= '</div>';
+                                            $html .= '<div class="col-md-6 mark_sign mb-2">';
+                                                $html .= '<label class="switch me-2">';
+                                                    $html .= '<input type="checkbox" id="mark_sign" name="is_sign" value="1" '.$item_as_sign.'>';
+                                                    $html .= '<span class="slider round">';
+                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                    $html .= '</span>';
+                                                $html .= '</label>';
+                                                $html .= '<label for="mark_sign" class="form-label">'.__('Recommended').'</label>';
+                                            $html .= '</div>';
+                                        $html .= '</div>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<div class="row">';
+                                            $html .= '<div class="col-md-6 day_special mb-2">';
+                                                $html .= '<label class="switch me-2">';
+                                                    $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';
+                                                    $html .= '<span class="slider round">';
+                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                    $html .= '</span>';
+                                                $html .= '</label>';
+                                                $html .= '<label for="day_special" class="form-label">'.__('Day Special').'</label>';
+                                            $html .= '</div>';
+                                            $html .= '<div class="col-md-6 mb-2">';
+                                                $html .= '<label class="switch me-2">';
+                                                    $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
+                                                    $html .= '<span class="slider round">';
+                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                    $html .= '</span>';
+                                                $html .= '</label>';
+                                                $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
+                                            $html .= '</div>';
                                         $html .= '</div>';
                                     $html .= '</div>';
                                 $html .= '</div>';
 
-                                $html .= '<div class="form-group mb-3">';
-                                    $html .= '<div class="row">';
-                                        $html .= '<div class="col-md-6 day_special mb-2">';
-                                            $html .= '<label class="switch me-2">';
-                                                $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';
-                                                $html .= '<span class="slider round">';
-                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                $html .= '</span>';
-                                            $html .= '</label>';
-                                            $html .= '<label for="day_special" class="form-label">'.__('Mark Item as Day Special').'</label>';
-                                        $html .= '</div>';
-                                        $html .= '<div class="col-md-6 mb-2">';
-                                            $html .= '<label class="switch me-2">';
-                                                $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
-                                                $html .= '<span class="slider round">';
-                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                $html .= '</span>';
-                                            $html .= '</label>';
-                                            $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
-                                        $html .= '</div>';
-                                    $html .= '</div>';
-                                $html .= '</div>';
 
                                 $html .= '<div class="form-group mb-3">';
                                     $html .= '<a class="btn btn btn-success" onclick="updateItem('.$primary_input_lang_code.')">'.__('Update').'</a>';
@@ -781,98 +814,6 @@ class ItemsController extends Controller
                                         $html .= '<input type="text" name="item_name" id="item_name" class="form-control" value="'.$add_item_name.'">';
                                     $html .= '</div>';
 
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<label class="form-label" for="item_description">'.__('Desription').'</label>';
-                                        $html .= '<textarea name="item_description" id="item_description_'.$add_lang_code.'" class="form-control item_description" rows="3">'.$add_item_desc.'</textarea>';
-                                    $html .= '</div>';
-
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<label class="form-label">'.__('Image').'</label>';
-                                        $html .= '<input type="file" style="display:none;" name="item_image" id="'.$add_lang_code.'_item_image" class="form-control item_image" onchange="imageCropper('.$add_input_lang_code.',this)">';
-                                        $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
-
-                                        if(!empty($item_image))
-                                        {
-                                            $html .= '<div class="row mt-2" id="edit-img">';
-                                                $html .= '<div class="col-md-3">';
-                                                    $html .= '<div class="mt-3 position-relative" id="itemImage">';
-                                                        $html .= '<label for="'.$add_lang_code.'_item_image" style="cursor:pointer"><img src="'.$item_image.'" class="w-100"></label>';
-                                                        $html .= '<a href="'.$delete_item_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>';
-                                                    $html .= '</div>';
-                                                $html .= '</div>';
-                                            $html .= '</div>';
-
-                                            $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
-                                                $html .= '<div class="col-md-3" id="img-label">';
-                                                    $html .= '<label for="'.$add_lang_code.'_item_image" style="cursor: pointer">';
-                                                        $html .= '<img src="" class="w-100" id="crp-img-prw">';
-                                                    $html .= '</label>';
-                                                $html .= '</div>';
-                                            $html .= '</div>';
-                                        }
-                                        else
-                                        {
-                                            $html .= '<div class="mt-3" id="itemImage">';
-                                                $html .= '<div class="col-md-3" id="img-label">';
-                                                    $html .= '<label style="cursor:pointer;" for="'.$add_lang_code.'_item_image"><img src="'.$default_image.'" class="w-100" id="crp-img-prw"></label>';
-                                                $html .= '</div>';
-                                            $html .= '</div>';
-                                        }
-                                        $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
-                                    $html .= '</div>';
-
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<div class="row">';
-                                            $html .= '<div class="col-md-8 img-crop-sec mb-2" style="display: none">';
-                                                $html .= '<img src="" alt="" id="resize-image" class="w-100 resize-image">';
-                                                $html .= '<div class="mt-3">';
-                                                    $html .= '<a class="btn btn-sm btn-success" onclick="saveCropper('.$add_form_name.')">Save</a>';
-                                                    $html .= '<a class="btn btn-sm btn-danger mx-2" onclick="resetCropper()">Reset</a>';
-                                                    $html .= '<a class="btn btn-sm btn-secondary" onclick="cancelCropper('.$add_form_name.')">Cancel</a>';
-                                                $html .= '</div>';
-                                            $html .= '</div>';
-                                            $html .= '<div class="col-md-4 img-crop-sec" style="display: none;">';
-                                                $html .= '<div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>';
-                                            $html .= '</div>';
-                                        $html .= '</div>';
-                                    $html .= '</div>';
-
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<label class="form-label" for="ingredients">'.__('Indicative Icons').'</label>';
-                                        $html .= '<select name="ingredients[]" id="'.$add_lang_code.'_ingredients" class="form-select" multiple>';
-                                            if(count($ingredients) > 0)
-                                            {
-                                                foreach($ingredients as $ing)
-                                                {
-                                                    $html .= '<option value="'.$ing["id"].'"';
-                                                        if(in_array($ing["id"],$item_ingredients))
-                                                        {
-                                                            $html .= 'selected';
-                                                        }
-                                                    $html .='>'.$ing["name"].'</option>';
-                                                }
-                                            }
-                                        $html .= '</select>';
-                                    $html .= '</div>';
-
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<label class="form-label" for="tags">'.__('Tags').'</label>';
-                                        $html .= '<select name="tags[]" id="'.$add_lang_code.'_tags" class="form-select" multiple>';
-                                            if(count($tags) > 0)
-                                            {
-                                                foreach($tags as $tag)
-                                                {
-                                                    $html .= '<option value="'.$tag["name"].'"';
-                                                        if(in_array($tag["name"],$tag_data))
-                                                        {
-                                                            $html .= 'selected';
-                                                        }
-                                                    $html .='>'.$tag["name"].'</option>';
-                                                }
-                                            }
-                                        $html .= '</select>';
-                                    $html .= '</div>';
-
                                     $html .= '<div class="form-group price_div priceDiv mb-3" id="priceDiv">';
                                         $html .= '<label class="form-label">'.__('Price').'</label>';
 
@@ -907,60 +848,177 @@ class ItemsController extends Controller
                                         $html .= '<a onclick="addPrice(\''.$add_lang_code.'_item_form\')" class="btn addPriceBtn btn-info text-white">'.__('Add Price').'</a>';
                                     $html .= '</div>';
 
-                                    $html .= '<div class="form-group calories_div mb-3">';
-                                        $html .= '<label class="form-label" for="calories">'.__('Calories').'</label>';
-                                        $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$add_item_calories.'">';
+                                    $html .= '<div class="form-group mb-3 text-center">';
+                                        $html .= '<a class="btn btn-sm btn-primary" style="cursor: pointer" onclick="toggleMoreDetails('.$add_form_name.')" id="more_dt_btn">More Details.. <i class="bi bi-eye-slash"></i></a>';
                                     $html .= '</div>';
 
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<div class="row">';
-                                            $html .= '<div class="col-md-6 mark_new mb-2">';
-                                                $html .= '<label class="switch me-2">';
-                                                    $html .= '<input type="checkbox" id="mark_new" name="is_new" value="1" '.$item_is_new.'>';
-                                                    $html .= '<span class="slider round">';
-                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                    $html .= '</span>';
-                                                $html .= '</label>';
-                                                $html .= '<label for="mark_new" class="form-label">'.__('Mark Item as New').'</label>';
+                                    $html .= '<div class="form-group mb-3" id="more_details" style="display: none;">';
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<label class="form-label" for="item_description">'.__('Desription').'</label>';
+                                            $html .= '<textarea name="item_description" id="item_description_'.$add_lang_code.'" class="form-control item_description" rows="3">'.$add_item_desc.'</textarea>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<label class="form-label">'.__('Image').'</label>';
+                                            $html .= '<input type="file" style="display:none;" name="item_image" id="'.$add_lang_code.'_item_image" class="form-control item_image" onchange="imageCropper('.$add_input_lang_code.',this)">';
+                                            $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
+
+                                            if(!empty($item_image))
+                                            {
+                                                $html .= '<div class="row" id="edit-img">';
+                                                    $html .= '<div class="col-md-3">';
+                                                        $html .= '<div class="position-relative" id="itemImage">';
+                                                            $html .= '<label for="'.$add_lang_code.'_item_image" style="cursor:pointer"><img src="'.$item_image.'" class="w-100" style="border-radius:10px;"></label>';
+                                                            $html .= '<a href="'.$delete_item_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: 0; right: -45px;"><i class="bi bi-trash"></i></a>';
+                                                        $html .= '</div>';
+                                                    $html .= '</div>';
+                                                $html .= '</div>';
+
+                                                $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
+                                                    $html .= '<div class="col-md-3" id="img-label">';
+                                                        $html .= '<label for="'.$add_lang_code.'_item_image" style="cursor: pointer">';
+                                                            $html .= '<img src="" class="w-100 h-100" style="border-radius:10px;" id="crp-img-prw">';
+                                                        $html .= '</label>';
+                                                    $html .= '</div>';
+                                                $html .= '</div>';
+                                            }
+                                            else
+                                            {
+                                                $html .= '<div class="mt-3" id="itemImage">';
+                                                    $html .= '<div class="col-md-3" id="img-label">';
+                                                        $html .= '<label style="cursor:pointer;" for="'.$add_lang_code.'_item_image"><img src="'.$default_image.'" class="w-100 h-100" style="border-radius:10px;" id="crp-img-prw"></label>';
+                                                    $html .= '</div>';
+                                                $html .= '</div>';
+                                            }
+                                            $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<div class="row">';
+                                                $html .= '<div class="col-md-8 img-crop-sec mb-2" style="display: none">';
+                                                    $html .= '<img src="" alt="" id="resize-image" class="w-100 resize-image">';
+                                                    $html .= '<div class="mt-3">';
+                                                        $html .= '<a class="btn btn-sm btn-success" onclick="saveCropper('.$add_form_name.')">Save</a>';
+                                                        $html .= '<a class="btn btn-sm btn-danger mx-2" onclick="resetCropper()">Reset</a>';
+                                                        $html .= '<a class="btn btn-sm btn-secondary" onclick="cancelCropper('.$add_form_name.')">Cancel</a>';
+                                                    $html .= '</div>';
+                                                $html .= '</div>';
+                                                $html .= '<div class="col-md-4 img-crop-sec" style="display: none;">';
+                                                    $html .= '<div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>';
+                                                $html .= '</div>';
                                             $html .= '</div>';
-                                            $html .= '<div class="col-md-6 mark_sign mb-2">';
-                                                $html .= '<label class="switch me-2">';
-                                                    $html .= '<input type="checkbox" id="mark_sign" name="is_sign" value="1" '.$item_as_sign.'>';
-                                                    $html .= '<span class="slider round">';
-                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                    $html .= '</span>';
-                                                $html .= '</label>';
-                                                $html .= '<label for="mark_sign" class="form-label">'.__('Mark Item as Signature').'</label>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<label class="form-label" for="ingredients">'.__('Indicative Icons').'</label>';
+                                            $html .= '<select name="ingredients[]" id="'.$add_lang_code.'_ingredients" class="form-select" multiple>';
+                                                if(count($ingredients) > 0)
+                                                {
+                                                    foreach($ingredients as $ing)
+                                                    {
+                                                        $html .= '<option value="'.$ing["id"].'"';
+                                                            if(in_array($ing["id"],$item_ingredients))
+                                                            {
+                                                                $html .= 'selected';
+                                                            }
+                                                        $html .='>'.$ing["name"].'</option>';
+                                                    }
+                                                }
+                                            $html .= '</select>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<label class="form-label" for="tags">'.__('Tags').'</label>';
+                                            $html .= '<select name="tags[]" id="'.$add_lang_code.'_tags" class="form-select" multiple>';
+                                                if(count($tags) > 0)
+                                                {
+                                                    foreach($tags as $tag)
+                                                    {
+                                                        $html .= '<option value="'.$tag["name"].'"';
+                                                            if(in_array($tag["name"],$tag_data))
+                                                            {
+                                                                $html .= 'selected';
+                                                            }
+                                                        $html .='>'.$tag["name"].'</option>';
+                                                    }
+                                                }
+                                            $html .= '</select>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="form-group calories_div mb-3">';
+                                            $html .= '<label class="form-label" for="calories">'.__('Calories').'</label>';
+                                            $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$add_item_calories.'">';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
+                                            $html .= '<select name="options[]" id="'.$add_lang_code.'_options" class="form-select" multiple>';
+                                                if(count($options) > 0)
+                                                {
+                                                    foreach($options as $opt)
+                                                    {
+                                                        $html .= '<option value="'.$opt["id"].'"';
+                                                            if(in_array($opt["id"],$item_options))
+                                                            {
+                                                                $html .= 'selected';
+                                                            }
+                                                        $html .='>'.$opt["title"].'</option>';
+                                                    }
+                                                }
+                                            $html .= '</select>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<div class="row">';
+                                                $html .= '<div class="col-md-6 mark_new mb-2">';
+                                                    $html .= '<label class="switch me-2">';
+                                                        $html .= '<input type="checkbox" id="mark_new" name="is_new" value="1" '.$item_is_new.'>';
+                                                        $html .= '<span class="slider round">';
+                                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                        $html .= '</span>';
+                                                    $html .= '</label>';
+                                                    $html .= '<label for="mark_new" class="form-label">'.__('New').'</label>';
+                                                $html .= '</div>';
+                                                $html .= '<div class="col-md-6 mark_sign mb-2">';
+                                                    $html .= '<label class="switch me-2">';
+                                                        $html .= '<input type="checkbox" id="mark_sign" name="is_sign" value="1" '.$item_as_sign.'>';
+                                                        $html .= '<span class="slider round">';
+                                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                        $html .= '</span>';
+                                                    $html .= '</label>';
+                                                    $html .= '<label for="mark_sign" class="form-label">'.__('Recommended').'</label>';
+                                                $html .= '</div>';
+                                            $html .= '</div>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<div class="row">';
+                                                $html .= '<div class="col-md-6 day_special mb-2">';
+                                                    $html .= '<label class="switch me-2">';
+                                                        $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';
+                                                        $html .= '<span class="slider round">';
+                                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                        $html .= '</span>';
+                                                    $html .= '</label>';
+                                                    $html .= '<label for="day_special" class="form-label">'.__('Day Special').'</label>';
+                                                $html .= '</div>';
+                                                $html .= '<div class="col-md-6 mb-2">';
+                                                    $html .= '<label class="switch me-2">';
+                                                        $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
+                                                        $html .= '<span class="slider round">';
+                                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                        $html .= '</span>';
+                                                    $html .= '</label>';
+                                                    $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
+                                                $html .= '</div>';
                                             $html .= '</div>';
                                         $html .= '</div>';
                                     $html .= '</div>';
 
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<div class="row">';
-                                            $html .= '<div class="col-md-6 day_special mb-2">';
-                                                $html .= '<label class="switch me-2">';
-                                                    $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';
-                                                    $html .= '<span class="slider round">';
-                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                    $html .= '</span>';
-                                                $html .= '</label>';
-                                                $html .= '<label for="day_special" class="form-label">'.__('Mark Item as Day Special').'</label>';
-                                            $html .= '</div>';
-                                            $html .= '<div class="col-md-6 mb-2">';
-                                                $html .= '<label class="switch me-2">';
-                                                    $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
-                                                    $html .= '<span class="slider round">';
-                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                    $html .= '</span>';
-                                                $html .= '</label>';
-                                                $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
-                                            $html .= '</div>';
-                                        $html .= '</div>';
-                                    $html .= '</div>';
 
                                     $html .= '<div class="form-group mb-3">';
                                         $html .= '<a class="btn btn btn-success" onclick="updateItem('.$add_input_lang_code.')">'.__('Update').'</a>';
@@ -1028,98 +1086,6 @@ class ItemsController extends Controller
                         $html .= '<input type="text" name="item_name" id="item_name" class="form-control" value="'.$primary_item_name.'">';
                     $html .= '</div>';
 
-                    $html .= '<div class="form-group mb-3">';
-                        $html .= '<label class="form-label" for="item_description">Desription</label>';
-                        $html .= '<textarea name="item_description" id="item_description_'.$primary_lang_code.'" class="form-control item_description" rows="3">'.$primary_item_desc.'</textarea>';
-                    $html .= '</div>';
-
-                    $html .= '<div class="form-group mb-3">';
-                        $html .= '<label class="form-label" for="item_image">Image</label>';
-                        $html .= '<input type="file" style="display:none;" name="item_image" id="'.$primary_lang_code.'_item_image" class="form-control item_image" onchange="imageCropper('.$primary_input_lang_code.',this)">';
-                        $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
-
-                        if(!empty($item_image))
-                        {
-                            $html .= '<div class="row mt-2" id="edit-img">';
-                                $html .= '<div class="col-md-3">';
-                                    $html .= '<div class="mt-3 position-relative" id="itemImage">';
-                                        $html .= '<label for="'.$primary_lang_code.'_item_image" style="cursor:pointer"><img src="'.$item_image.'" class="w-100"></label>';
-                                        $html .= '<a href="'.$delete_item_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>';
-                                    $html .= '</div>';
-                                $html .= '</div>';
-                            $html .= '</div>';
-
-                            $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
-                                $html .= '<div class="col-md-3" id="img-label">';
-                                    $html .= '<label for="'.$primary_lang_code.'_item_image" style="cursor: pointer">';
-                                        $html .= '<img src="" class="w-100" id="crp-img-prw">';
-                                    $html .= '</label>';
-                                $html .= '</div>';
-                            $html .= '</div>';
-                        }
-                        else
-                        {
-                            $html .= '<div class="mt-3" id="itemImage">';
-                                $html .= '<div class="col-md-3" id="img-label">';
-                                    $html .= '<label style="cursor:pointer;" for="'.$primary_lang_code.'_item_image"><img src="'.$default_image.'" class="w-100" id="crp-img-prw"></label>';
-                                $html .= '</div>';
-                            $html .= '</div>';
-                        }
-                        $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
-                    $html .= '</div>';
-
-                    $html .= '<div class="form-group mb-3">';
-                            $html .= '<div class="row">';
-                                $html .= '<div class="col-md-8 img-crop-sec mb-2" style="display: none">';
-                                    $html .= '<img src="" alt="" id="resize-image" class="w-100 resize-image">';
-                                    $html .= '<div class="mt-3">';
-                                        $html .= '<a class="btn btn-sm btn-success" onclick="saveCropper('.$primary_form_name.')">Save</a>';
-                                        $html .= '<a class="btn btn-sm btn-danger mx-2" onclick="resetCropper()">Reset</a>';
-                                        $html .= '<a class="btn btn-sm btn-secondary" onclick="cancelCropper('.$primary_form_name.')">Cancel</a>';
-                                    $html .= '</div>';
-                                $html .= '</div>';
-                                $html .= '<div class="col-md-4 img-crop-sec" style="display: none;">';
-                                    $html .= '<div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>';
-                                $html .= '</div>';
-                            $html .= '</div>';
-                        $html .= '</div>';
-
-                    $html .= '<div class="form-group mb-3">';
-                        $html .= '<label class="form-label" for="ingredients">Indicative Icons</label>';
-                        $html .= '<select name="ingredients[]" id="'.$primary_lang_code.'_ingredients" class="form-select" multiple>';
-                            if(count($ingredients) > 0)
-                            {
-                                foreach($ingredients as $ing)
-                                {
-                                    $html .= '<option value="'.$ing["id"].'"';
-                                        if(in_array($ing["id"],$item_ingredients))
-                                        {
-                                            $html .= 'selected';
-                                        }
-                                    $html .='>'.$ing["name"].'</option>';
-                                }
-                            }
-                        $html .= '</select>';
-                    $html .= '</div>';
-
-                    $html .= '<div class="form-group mb-3">';
-                        $html .= '<label class="form-label" for="tags">Tags</label>';
-                        $html .= '<select name="tags[]" id="'.$primary_lang_code.'_tags" class="form-select" multiple>';
-                            if(count($tags) > 0)
-                            {
-                                foreach($tags as $tag)
-                                {
-                                    $html .= '<option value="'.$tag["name"].'"';
-                                        if(in_array($tag["name"],$tag_data))
-                                        {
-                                            $html .= 'selected';
-                                        }
-                                    $html .='>'.$tag["name"].'</option>';
-                                }
-                            }
-                        $html .= '</select>';
-                    $html .= '</div>';
-
                     $html .= '<div class="form-group price_div priceDiv mb-3" id="priceDiv">';
                         $html .= '<label class="form-label">Price</label>';
 
@@ -1155,60 +1121,177 @@ class ItemsController extends Controller
                             $html .= '<a onclick="addPrice(\''.$primary_lang_code.'_item_form\')" class="btn addPriceBtn btn-info text-white">'.__('Add Price').'</a>';
                     $html .= '</div>';
 
-                    $html .= '<div class="form-group calories_div mb-3">';
-                        $html .= '<label class="form-label" for="calories">Calories</label>';
-                        $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$primary_item_calories.'">';
+                    $html .= '<div class="form-group mb-3 text-center">';
+                        $html .= '<a class="btn btn-sm btn-primary" style="cursor: pointer" onclick="toggleMoreDetails('.$primary_form_name.')" id="more_dt_btn">More Details.. <i class="bi bi-eye-slash"></i></a>';
                     $html .= '</div>';
 
-                    $html .= '<div class="form-group mb-3">';
-                        $html .= '<div class="row">';
-                            $html .= '<div class="col-md-6 mb-2 mark_new">';
-                                $html .= '<label class="switch me-2">';
-                                    $html .= '<input type="checkbox" id="mark_new" name="is_new" value="1" '.$item_is_new.'>';
-                                    $html .= '<span class="slider round">';
-                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                    $html .= '</span>';
-                                $html .= '</label>';
-                                $html .= '<label for="mark_new" class="form-label">Mark Item as New</label>';
+                    $html .= '<div class="form-group mb-3" id="more_details" style="display: none;">';
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<label class="form-label" for="item_description">Desription</label>';
+                            $html .= '<textarea name="item_description" id="item_description_'.$primary_lang_code.'" class="form-control item_description" rows="3">'.$primary_item_desc.'</textarea>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<label class="form-label" for="item_image">Image</label>';
+                            $html .= '<input type="file" style="display:none;" name="item_image" id="'.$primary_lang_code.'_item_image" class="form-control item_image" onchange="imageCropper('.$primary_input_lang_code.',this)">';
+                            $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
+
+                            if(!empty($item_image))
+                            {
+                                $html .= '<div class="row" id="edit-img">';
+                                    $html .= '<div class="col-md-3">';
+                                        $html .= '<div class="position-relative" id="itemImage">';
+                                            $html .= '<label for="'.$primary_lang_code.'_item_image" style="cursor:pointer"><img src="'.$item_image.'" class="w-100" style="border-radius:10px;"></label>';
+                                            $html .= '<a href="'.$delete_item_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: 0; right: -45px;"><i class="bi bi-trash"></i></a>';
+                                        $html .= '</div>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+
+                                $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
+                                    $html .= '<div class="col-md-3" id="img-label">';
+                                        $html .= '<label for="'.$primary_lang_code.'_item_image" style="cursor: pointer">';
+                                            $html .= '<img src="" class="w-100 h-100" style="border-radius:10px;" id="crp-img-prw">';
+                                        $html .= '</label>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+                            }
+                            else
+                            {
+                                $html .= '<div class="mt-3" id="itemImage">';
+                                    $html .= '<div class="col-md-3" id="img-label">';
+                                        $html .= '<label style="cursor:pointer;" for="'.$primary_lang_code.'_item_image"><img src="'.$default_image.'" class="w-100 h-100" style="border-radius:10px;" id="crp-img-prw"></label>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+                            }
+                            $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<div class="row">';
+                                $html .= '<div class="col-md-8 img-crop-sec mb-2" style="display: none">';
+                                    $html .= '<img src="" alt="" id="resize-image" class="w-100 resize-image">';
+                                    $html .= '<div class="mt-3">';
+                                        $html .= '<a class="btn btn-sm btn-success" onclick="saveCropper('.$primary_form_name.')">Save</a>';
+                                        $html .= '<a class="btn btn-sm btn-danger mx-2" onclick="resetCropper()">Reset</a>';
+                                        $html .= '<a class="btn btn-sm btn-secondary" onclick="cancelCropper('.$primary_form_name.')">Cancel</a>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-4 img-crop-sec" style="display: none;">';
+                                    $html .= '<div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>';
+                                $html .= '</div>';
                             $html .= '</div>';
-                            $html .= '<div class="col-md-6 mb-2 mark_sign">';
-                                $html .= '<label class="switch me-2">';
-                                    $html .= '<input type="checkbox" id="mark_sign" name="is_sign" value="1" '.$item_as_sign.'>';
-                                    $html .= '<span class="slider round">';
-                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                    $html .= '</span>';
-                                $html .= '</label>';
-                                $html .= '<label for="mark_sign" class="form-label">Mark Item as Signature</label>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<label class="form-label" for="ingredients">Indicative Icons</label>';
+                            $html .= '<select name="ingredients[]" id="'.$primary_lang_code.'_ingredients" class="form-select" multiple>';
+                                if(count($ingredients) > 0)
+                                {
+                                    foreach($ingredients as $ing)
+                                    {
+                                        $html .= '<option value="'.$ing["id"].'"';
+                                            if(in_array($ing["id"],$item_ingredients))
+                                            {
+                                                $html .= 'selected';
+                                            }
+                                        $html .='>'.$ing["name"].'</option>';
+                                    }
+                                }
+                            $html .= '</select>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<label class="form-label" for="tags">Tags</label>';
+                            $html .= '<select name="tags[]" id="'.$primary_lang_code.'_tags" class="form-select" multiple>';
+                                if(count($tags) > 0)
+                                {
+                                    foreach($tags as $tag)
+                                    {
+                                        $html .= '<option value="'.$tag["name"].'"';
+                                            if(in_array($tag["name"],$tag_data))
+                                            {
+                                                $html .= 'selected';
+                                            }
+                                        $html .='>'.$tag["name"].'</option>';
+                                    }
+                                }
+                            $html .= '</select>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group calories_div mb-3">';
+                            $html .= '<label class="form-label" for="calories">Calories</label>';
+                            $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$primary_item_calories.'">';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
+                            $html .= '<select name="options[]" id="'.$primary_lang_code.'_options" class="form-select" multiple>';
+                                if(count($options) > 0)
+                                {
+                                    foreach($options as $opt)
+                                    {
+                                        $html .= '<option value="'.$opt["id"].'"';
+                                            if(in_array($opt["id"],$item_options))
+                                            {
+                                                $html .= 'selected';
+                                            }
+                                        $html .='>'.$opt["title"].'</option>';
+                                    }
+                                }
+                            $html .= '</select>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<div class="row">';
+                                $html .= '<div class="col-md-6 mb-2 mark_new">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="mark_new" name="is_new" value="1" '.$item_is_new.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="mark_new" class="form-label">'.__('New').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-6 mb-2 mark_sign">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="mark_sign" name="is_sign" value="1" '.$item_as_sign.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="mark_sign" class="form-label">'.__('Recommended').'</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<div class="row">';
+                                $html .= '<div class="col-md-6 day_special mb-2">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="day_special" class="form-label">'.__('Day Special').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-6 mb-2">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="publish" class="form-label">Published</label>';
+                                $html .= '</div>';
                             $html .= '</div>';
                         $html .= '</div>';
                     $html .= '</div>';
 
-                    $html .= '<div class="form-group mb-3">';
-                        $html .= '<div class="row">';
-                            $html .= '<div class="col-md-6 day_special mb-2">';
-                                $html .= '<label class="switch me-2">';
-                                    $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';
-                                    $html .= '<span class="slider round">';
-                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                    $html .= '</span>';
-                                $html .= '</label>';
-                                $html .= '<label for="day_special" class="form-label">Mark Item as Day Special</label>';
-                            $html .= '</div>';
-                            $html .= '<div class="col-md-6 mb-2">';
-                                $html .= '<label class="switch me-2">';
-                                    $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
-                                    $html .= '<span class="slider round">';
-                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                    $html .= '</span>';
-                                $html .= '</label>';
-                                $html .= '<label for="publish" class="form-label">Published</label>';
-                            $html .= '</div>';
-                        $html .= '</div>';
-                    $html .= '</div>';
 
                     $html .= '<div class="form-group mb-3">';
                         $html .= '<a class="btn btn btn-success" onclick="updateItem('.$primary_input_lang_code.')">Update</a>';
@@ -1269,6 +1352,7 @@ class ItemsController extends Controller
         $price_array['priceID'] = isset($request->price['priceID']) ? $request->price['priceID'] : [];
 
         $ingredients = (isset($request->ingredients) && count($request->ingredients) > 0) ? serialize($request->ingredients) : '';
+        $options = (isset($request->options) && count($request->options) > 0) ? serialize($request->options) : '';
         $tags = isset($request->tags) ? $request->tags : [];
 
         if(count($price_array['price']) > 0)
@@ -1298,6 +1382,7 @@ class ItemsController extends Controller
                 $item->as_sign = $is_sign;
                 $item->day_special = $day_special;
                 $item->ingredients = $ingredients;
+                $item->options = $options;
                 $item->type = $item_type;
 
                 $item->name = $item_name;
@@ -1374,7 +1459,7 @@ class ItemsController extends Controller
                 {
                     foreach($tags as $val)
                     {
-                        $findTag = Tags::where('name',$val)->orWhere($name_key,$val)->where('shop_id',$shop_id)->first();
+                        $findTag = Tags::where($name_key,$val)->where('shop_id',$shop_id)->first();
                         $tag_id = (isset($findTag->id) && !empty($findTag->id)) ? $findTag->id : '';
 
                         if(!empty($tag_id) || $tag_id != '')

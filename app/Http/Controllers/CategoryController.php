@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AdditionalLanguage;
 use App\Models\Category;
+use App\Models\CategoryImages;
 use App\Models\Items;
 use App\Models\Languages;
 use Illuminate\Http\Request;
@@ -13,11 +14,55 @@ class CategoryController extends Controller
 {
 
     // Get all Categories
-    public function index()
+    public function index($uri = NULL)
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
-        $data['categories'] = Category::where('shop_id',$shop_id)->orderBy('order_key')->get();
-        return view('client.categories.categories',$data);
+        $categories = Category::query();
+
+        $cat_type_arr = ['page','link','image_gallary','check_in_page','pdf_category'];
+
+        if(!empty($uri) && is_numeric($uri))
+        {
+            $cat = Category::with(['categoryImages'])->where('id',$uri)->first();
+            $category_type = (isset($cat->category_type)) ? $cat->category_type : '';
+            if(empty($category_type) || $category_type != 'parent_category')
+            {
+                return redirect()->route('categories')->with('error','This Action is Unauthorized!');
+            }
+            $categories = $categories->where('parent_id',$uri);
+        }
+        elseif(!empty($uri) && !is_numeric($uri))
+        {
+            if(in_array($uri,$cat_type_arr))
+            {
+                $cat = '';
+                $categories = $categories->where('category_type',$uri);
+            }
+            else
+            {
+                return redirect()->route('categories')->with('error','This Action is Unauthorized!');
+            }
+        }
+        else
+        {
+            $cat = '';
+            $categories = $categories->where('parent_id',$uri)->whereIn('category_type',['product_category','parent_category']);
+        }
+
+        $categories = $categories->where('shop_id',$shop_id)->orderBy('order_key')->get();
+        $data['categories'] = $categories;
+        $data['parent_cat_id'] = $uri;
+        $data['cat_details'] = $cat;
+        $data['parent_categories'] = Category::where('shop_id',$shop_id)->where('parent_category',1)->get();
+
+        if($uri == 'page' || $uri == 'link' || $uri == 'pdf_category' || $uri == 'check_in_page')
+        {
+            return view('client.categories.categories_list',$data);
+        }
+        else
+        {
+            return view('client.categories.categories',$data);
+        }
     }
 
 
@@ -28,6 +73,15 @@ class CategoryController extends Controller
         $request->validate([
             'name'   => 'required',
         ]);
+
+        $category_type = $request->category_type;
+
+        if($category_type == 'link')
+        {
+            $request->validate([
+                'url' => 'required',
+            ]);
+        }
 
         // Shop ID
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
@@ -52,47 +106,130 @@ class CategoryController extends Controller
         $max_category_order_key = Category::max('order_key');
         $category_order = (isset($max_category_order_key) && !empty($max_category_order_key)) ? ($max_category_order_key + 1) : 1;
 
-       try
-       {
-            $category = new Category();
-            $category->name = $name;
-            $category->description = $description;
+        $schedule_arr = $request->schedule_array;
+        $schedule = isset($request->schedule) ? $request->schedule : 0;
 
-            $category->$category_name_key = $name;
-            $category->$category_description_key = $description;
+        try
+        {
+                $category = new Category();
+                $category->name = $name;
+                $category->category_type = $category_type;
+                $category->$category_name_key = $name;
+                $category->schedule = $schedule;
+                $category->schedule_value = $schedule_arr;
 
-            $category->published = $published;
-            $category->shop_id = $shop_id;
-            $category->order_key = $category_order;
+                // Description
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in_page')
+                {
+                    $category->description = $description;
+                    $category->$category_description_key = $description;
+                }
 
-            // Insert Category Image if is Exists
-            if(isset($request->og_image) && !empty($request->og_image) && $request->hasFile('image'))
-            {
-                $og_image = $request->og_image;
-                $image_arr = explode(";base64,", $og_image);
-                $image_base64 = base64_decode($image_arr[1]);
+                // Cover
+                if($category_type == 'page' || $category_type == 'link' || $category_type == 'image_gallary' || $category_type == 'check_in_page' || $category_type == 'parent_category' || $category_type == 'pdf_category')
+                {
+                    if($request->hasFile('cover'))
+                    {
+                        $cover_name = "cover_".time().".". $request->file('cover')->getClientOriginalExtension();
+                        $request->file('cover')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories/'), $cover_name);
+                        $category->cover = $cover_name;
+                    }
+                }
 
-                $imgname = "category_".time().".". $request->file('image')->getClientOriginalExtension();
-                $img_path = public_path('client_uploads/shops/'.$shop_slug.'/categories/'.$imgname);
-                file_put_contents($img_path,$image_base64);
-                // $request->file('image')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories'), $imgname);
-                $category->image = $imgname;
-            }
+                // URL
+                if($category_type == 'link')
+                {
+                    $category->link_url = isset($request->url) ? $request->url : '';
+                }
 
-            $category->save();
+                // Bg Color
+                if($category_type == 'check_in_page')
+                {
+                    $category->styles = isset($request->checkin_styles) ? serialize($request->checkin_styles) : '';
+                }
 
-            return response()->json([
-                'success' => 1,
-                'message' => "Category has been Inserted SuccessFully....",
-            ]);
-       }
-       catch (\Throwable $th)
-       {
-            return response()->json([
-                'success' => 0,
-                'message' => "Internal Server Error!",
-            ]);
-       }
+                // Parent Category
+                if($category_type == 'parent_category')
+                {
+                    if(isset($request->parent_cat) && !empty($request->parent_cat) && $request->parent_cat == 0)
+                    {
+                        $category->parent_category = 1;
+                    }
+                    elseif(empty($request->parent_cat) || !isset($request->parent_cat))
+                    {
+                        $category->parent_category = 1;
+                    }
+                    else
+                    {
+                        $category->parent_id = $request->parent_cat;
+                        $category->category_type = 'product_category';
+                    }
+                }
+
+                // Pdf File
+                if($category_type == 'pdf_category')
+                {
+                    if($request->hasFile('pdf'))
+                    {
+                        $file_name = "pdf_".time().".". $request->file('pdf')->getClientOriginalExtension();
+                        $request->file('pdf')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories/'), $file_name);
+                        $category->file = $file_name;
+                    }
+                }
+
+                if(isset($request->parent_cat_id) && !empty($request->parent_cat_id))
+                {
+                    $category->parent_id = $request->parent_cat_id;
+                }
+
+                $category->published = $published;
+                $category->shop_id = $shop_id;
+                $category->order_key = $category_order;
+                $category->save();
+
+                // Multiple Images
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'image_gallary' || $category_type == 'parent_category')
+                {
+                    // Insert Category Image if is Exists
+                    $all_images = (isset($request->og_image)) ? $request->og_image : [];
+                    if(count($all_images) > 0)
+                    {
+                        foreach($all_images as $image)
+                        {
+                            $image_token = genratetoken(10);
+                            $og_image = $image;
+                            $image_arr = explode(";base64,", $og_image);
+                            $image_type_ext = explode("image/", $image_arr[0]);
+                            $image_base64 = base64_decode($image_arr[1]);
+
+                            $imgname = "category_".$image_token.".".$image_type_ext[1];
+                            $img_path = public_path('client_uploads/shops/'.$shop_slug.'/categories/'.$imgname);
+                            file_put_contents($img_path,$image_base64);
+                            // $request->file('image')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories'), $imgname);
+
+                            // Insert Image
+                            $new_img = new CategoryImages();
+                            $new_img->category_id = $category->id;
+                            $new_img->image = $imgname;
+                            $new_img->save();
+
+                        }
+                    }
+                }
+
+
+                return response()->json([
+                    'success' => 1,
+                    'message' => "Category has been Inserted SuccessFully....",
+                ]);
+        }
+        catch (\Throwable $th)
+        {
+                return response()->json([
+                    'success' => 0,
+                    'message' => "Internal Server Error!",
+                ]);
+        }
 
     }
 
@@ -109,6 +246,9 @@ class CategoryController extends Controller
             // Category Items Count
             $items_count = Items::where('category_id',$id)->count();
 
+            // Category Details
+            $category_details = Category::where('id',$id)->first();
+
             if($items_count > 0)
             {
                 return response()->json([
@@ -118,17 +258,42 @@ class CategoryController extends Controller
             }
             else
             {
-                $category = Category::where('id',$id)->first();
-                $category_image = isset($category->image) ? $category->image : '';
+                $category_images = CategoryImages::where('category_id',$id)->get();
 
-                // Delete Category Image
-                if(!empty($category->image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category_image))
+                if(count($category_images) > 0)
                 {
-                    unlink('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category_image);
+                    foreach($category_images as $cat_image)
+                    {
+                        // Delete Category Image
+                        if(!empty($cat_image->image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image->image))
+                        {
+                            unlink('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image->image);
+                        }
+                    }
                 }
+
+
+                // PDF file Delete
+                $pdf_file = isset($category_details['file']) ? $category_details['file'] : '';
+                if(!empty($pdf_file) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$pdf_file))
+                {
+                    unlink('public/client_uploads/shops/'.$shop_slug.'/categories/'.$pdf_file);
+                }
+
+
+                // Cover Image Delete
+                $cover_image = isset($category_details['cover']) ? $category_details['cover'] : '';
+                if(!empty($cover_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cover_image))
+                {
+                    unlink('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cover_image);
+                }
+
 
                 // Delete Category
                 Category::where('id',$id)->delete();
+
+                // Delete Category Images from DB
+                CategoryImages::where('category_id',$id)->delete();
 
                 return response()->json([
                     'success' => 1,
@@ -155,14 +320,33 @@ class CategoryController extends Controller
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
 
+        // Category Details
+        $category = Category::where('id',$category_id)->first();
+
+        $parent_categories = Category::where('shop_id',$shop_id)->where('id','!=',$category_id)->where('parent_category',1)->get();
+
+        $category_types = [
+            'product_category' => 'Category',
+            'page' => 'Page',
+            'link' => 'Link',
+            'image_gallary' => 'Image Gallery',
+            'check_in_page' => 'Check-In Page',
+            'pdf_category' => 'PDF Category',
+        ];
+
+        if($category->parent_id == null)
+        {
+            $category_types['parent_category'] = 'Child Category';
+        }
+
         try
         {
-            // Category Details
-            $category = Category::where('id',$category_id)->first();
-            $default_image = asset('public/client_images/not-found/no_image_1.jpg');
-            $category_image = (isset($category['image']) && !empty($category['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category['image']) : '';
+            $category_images = CategoryImages::where('category_id',$category_id)->get();
             $category_status = (isset($category['published']) && $category['published'] == 1) ? 'checked' : '';
-            $delete_cat_image_url = route('categories.delete.image',$category_id);
+            $schedule = isset($category->schedule) ? $category->schedule : 0;
+            $schedule_active_text = ($schedule == 1) ? 'Scheduling Active' : 'Scheduling Not Active';
+            $schedule_active = ($schedule == 1) ? 'checked' : '';
+            $schedule_arr = isset($category->schedule_value) ? json_decode($category->schedule_value,true) : [];
 
             // Get Language Settings
             $language_settings = clientLanguageSettings($shop_id);
@@ -178,9 +362,17 @@ class CategoryController extends Controller
             $primary_cat_desc = isset($category[$primary_lang_code."_description"]) ? $category[$primary_lang_code."_description"] : '';
             $primary_input_lang_code = "'$primary_lang_code'";
             $primary_form_name = "'$primary_lang_code"."_category_form'";
+            $root_parent_cat_checked = ($category['parent_category'] == 1) ? 'checked' : '';
 
             // Additional Languages
             $additional_languages = AdditionalLanguage::where('shop_id',$shop_id)->get();
+
+            // Check In Page Styles
+            $check_page_style = (isset($category['styles']) && !empty($category['styles'])) ? unserialize($category['styles']) : '';
+            $bg_color = isset($check_page_style['background_color']) ? $check_page_style['background_color'] : '';
+            $font_color = isset($check_page_style['font_color']) ? $check_page_style['font_color'] : '';
+            $btn_color = isset($check_page_style['button_color']) ? $check_page_style['button_color'] : '';
+            $btn_text_color = isset($check_page_style['button_text_color']) ? $check_page_style['button_text_color'] : '';
 
             if(count($additional_languages) > 0)
             {
@@ -217,48 +409,142 @@ class CategoryController extends Controller
                             $html .= csrf_field();
                             $html .= '<input type="hidden" name="lang_code" id="lang_code" value="'.$primary_lang_code.'">';
                             $html .= '<input type="hidden" name="category_id" id="category_id" value="'.$category['id'].'">';
+                            $html .= '<input type="hidden" name="category_type" id="category_type" value="'.$category->category_type.'">';
                             $html .= '<div class="row">';
+
+                                // Type
+                                // $html .= '<div class="form-group mb-3">';
+                                //     $html .= '<label class="form-label" for="category_type">'.__('Type').'</label>';
+                                //     $html .= '<select onchange="changeElements('.$primary_form_name.')" name="category_type" id="category_type" class="form-select category_type">';
+                                //         foreach($category_types as $cat_type_key => $cat_type)
+                                //         {
+                                //             $html .= '<option value="'.$cat_type_key.'"';
+
+                                //                 if($cat_type_key == $category->category_type)
+                                //                 {
+                                //                     $html .= 'selected';
+                                //                 }
+
+                                //             $html.='>'.$cat_type.'</option>';
+                                //         }
+                                //     $html .= '</select>';
+                                // $html .= '</div>';
+
+                                // Category
+                                $html .= '<div class="form-group cat_div mb-3">';
+                                    $html .= '<label class="form-label">'.__('Category').'</label>';
+                                    $html .= '<div id="categories_div">';
+                                        $html .= '<input type="radio" name="parent_cat" id="root" value="0" '.$root_parent_cat_checked.'> <label for="root">Root</label> <br>';
+
+                                        if(count($parent_categories) > 0)
+                                        {
+                                            foreach ($parent_categories as $key => $pcategory)
+                                            {
+                                                $parent_cat_check = ($pcategory->parent_id == $pcategory->id) ? 'checked' : '';
+                                                $html .= '<input type="radio" name="parent_cat" id="pcat_'.$key.'" value="'.$pcategory->id.'" '.$parent_cat_check.'> <label for="pcat_'.$key.'">'.$pcategory->name.'</label><br>';
+                                            }
+                                        }
+                                    $html .= '</div>';
+                                $html .= '</div>';
+
+                                // Name
                                 $html .= '<div class="form-group mb-3">';
                                     $html .= '<label class="form-label" for="category_name">'.__('Name').'</label>';
                                     $html .= '<input type="text" name="category_name" id="category_name" class="form-control" value="'.$primary_cat_name.'">';
                                 $html .= '</div>';
+
+                                // Sort Order
                                 $html .= '<div class="form-group mb-3">';
+                                    $html .= '<label class="form-label" for="sort_order">'.__('Sort Order').'</label>';
+                                    $html .= '<input type="text" name="sort_order" id="sort_order" class="form-control" value="'.$category['order_key'].'">';
+                                $html .= '</div>';
+
+                                // Url
+                                $url_active = ($category->category_type == 'link') ? 'block' : 'none';
+                                $html .= '<div class="form-group mb-3 url" style="display: '.$url_active.'">';
+                                    $html .= '<label class="form-label" for="url">'.__('URL').'</label>';
+                                    $html .= '<input type="text" name="url" id="url" class="form-control" value="'.$category->link_url.'">';
+                                $html .= '</div>';
+
+                                $check_page_style_active = ($category->category_type == 'check_in_page') ? 'block' : 'none';
+                                // Bg Color
+                                $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                                    $html .= '<label class="form-label" for="background_color">'.__('Background Color').'</label>';
+                                    $html .= '<input type="color" name="checkin_styles[background_color]" id="background_color" class="form-control" value="'.$bg_color.'">';
+                                $html .= '</div>';
+
+                                // Font Color
+                                $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                                    $html .= '<label class="form-label" for="font_color">'.__('Font Color').'</label>';
+                                    $html .= '<input type="color" name="checkin_styles[font_color]" id="font_color" class="form-control" value="'.$font_color.'">';
+                                $html .= '</div>';
+
+                                // Button Color
+                                $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                                    $html .= '<label class="form-label" for="button_color">'.__('Button Color').'</label>';
+                                    $html .= '<input type="color" name="checkin_styles[button_color]" id="button_color" class="form-control" value="'.$btn_color.'">';
+                                $html .= '</div>';
+
+                                // Button Text Color
+                                $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                                    $html .= '<label class="form-label" for="button_text_color">'.__('Button Text Color').'</label>';
+                                    $html .= '<input type="color" name="checkin_styles[button_text_color]" id="button_text_color" class="form-control" value="'.$btn_text_color.'">';
+                                $html .= '</div>';
+
+                                // Description
+                                $html .= '<div class="form-group mb-3 description">';
                                     $html .= '<label class="form-label" for="category_description">'.__('Desription').'</label>';
                                     $html .= '<textarea name="category_description" id="category_description_'.$primary_lang_code.'" class="form-control category_description" rows="3">'.$primary_cat_desc.'</textarea>';
                                 $html .= '</div>';
+
+                                // Images
                                 $html .= '<div class="form-group mb-3">';
-                                    $html .= '<label class="form-label">'.__('Image').'</label>';
-                                    $html .= '<input type="file" name="category_image" id="'.$primary_lang_code.'_category_image" class="form-control category_image" onchange="imageCropper('.$primary_input_lang_code.',this)" style="display:none">';
-                                    $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
+                                    $html .= '<div class="row">';
+                                        $html .= '<div class="col-md-12 mb-2 d-flex flex-wrap" id="edit_images_div">';
+                                            if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'parent_category')
+                                            {
+                                                if(count($category_images) > 0)
+                                                {
+                                                    foreach($category_images as $key => $cat_image)
+                                                    {
+                                                        $no = $key + 1;
 
-                                    if(!empty($category_image))
-                                    {
-                                        $html .= '<div class="row mt-2" id="edit-img">';
-                                            $html .= '<div class="col-md-3">';
-                                                $html .= '<div class="mt-3 position-relative" id="categoryImage">';
-                                                    $html .= '<label style="cursor:pointer" for="'.$primary_lang_code.'_category_image"><img src="'.$category_image.'" class="w-100"></label>';
-                                                    $html .= '<a href="'.$delete_cat_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>';
-                                                $html .= '</div>';
-                                            $html .= '</div>';
+                                                        if(!empty($cat_image['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image['image']))
+                                                        {
+                                                            $html .= '<div class="inner-img edit_img_'.$no.'">';
+                                                                $html .= '<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image['image']).'" class="w-100 h-100">';
+                                                                $html .= '<a class="btn btn-sm btn-danger del-pre-btn" onclick="deleteCategoryImage('.$no.','.$cat_image->id.')"><i class="fa fa-trash"></i></a>';
+                                                            $html .= '</div>';
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         $html .= '</div>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
 
-                                        $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
-                                            $html .= '<div class="col-md-3" id="img-label">';
-                                                $html .= '<label for="'.$primary_lang_code.'_category_image" style="cursor: pointer">';
-                                                    $html .= '<img src="" class="w-100" id="crp-img-prw">';
-                                                $html .= '</label>';
-                                            $html .= '</div>';
+                                $html .= '<div class="form-group mb-3">';
+                                    $html .= '<div class="row">';
+                                        $html .= '<div class="col-md-12 mb-2 d-flex flex-wrap" id="images_div"></div>';
+                                        $html .= '<div class="col-md-12 mul-image" id="img-val"></div>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+
+                                $html .= '<div class="form-group mb-3 mul-image">';
+                                    $html .= '<div class="row">';
+                                        $html .= '<div class="col-md-12">';
+                                            $html .= '<label class="form-label">'. __('Image').'</label>';
                                         $html .= '</div>';
-                                    }
-                                    else
-                                    {
-                                        $html .= '<div class="row mt-3" id="categoryImage">';
-                                            $html .= '<div class="col-md-3" id="img-label">';
-                                                $html .= '<label style="cursor:pointer;" for="'.$primary_lang_code.'_category_image"><img src="'.$default_image.'" class="w-100" id="crp-img-prw"></label>';
+                                        $html .= '<div class="col-md-12">';
+                                            $html .= '<div id="img-label">';
+                                                $html .= '<label for="'.$primary_lang_code.'_category_image">Upload Images</label>';
                                             $html .= '</div>';
+                                            $html .= '<input type="file" name="category_image" id="'.$primary_lang_code.'_category_image" class="form-control category_image" onchange="imageCropper('.$primary_input_lang_code.',this)" style="display:none">';
                                         $html .= '</div>';
-                                    }
-                                    $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                                        $html .= '<div class="col-md-12">';
+                                            $html .= '<code class="img-upload-label">Upload Image in (200*200) Dimensions</code>';
+                                        $html .= '</div>';
+                                    $html .= '</div>';
                                 $html .= '</div>';
 
                                 $html .= '<div class="form-group mb-3">';
@@ -277,6 +563,42 @@ class CategoryController extends Controller
                                     $html .= '</div>';
                                 $html .= '</div>';
 
+
+                                // COVER
+                                $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'image_gallary' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category') ? '' : 'none';
+                                if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
+                                {
+                                    $cover_image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover);
+                                }
+                                else
+                                {
+                                    $cover_image = asset('public/client_images/not-found/no_image_1.jpg');
+                                }
+
+                                $html .= '<div class="form-group mb-3 cover" style="display: '.$cover_active.'" id="cover_label">';
+                                    $html .= '<label class="form-label">'. __('Thumbnail').'</label>';
+                                    $html .= '<input type="file" onchange="CoverPreview('.$primary_form_name.',this)" id="'.$primary_lang_code.'_cover" name="cover" style="display: none">';
+                                    $html .= '<div class="page-cover">';
+                                        $html .= '<label for="'.$primary_lang_code.'_cover" id="upload-page-cover-image">';
+                                            $html .= '<img src="'.$cover_image.'" class="w-100 h-100">';
+                                        $html .= '</label>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+
+                                // PDF FILE
+                                $pdf_active = ($category->category_type == 'pdf_category') ? '' : 'none';
+                                $html .= '<div class="form-group mb-3 pdf" style="display: '.$pdf_active.'" id="pdf_label">';
+                                    $html .= '<label class="form-label">'. __('PDF File').'</label>';
+                                    $html .= '<input type="file" onchange="PdfPreview('.$primary_form_name.',this)" id="'.$primary_lang_code.'_pdf" name="pdf" style="display: none">';
+                                    $html .= '<div class="pdf-file">';
+                                        $html .= '<label for="'.$primary_lang_code.'_pdf" id="upload-pdf-file">';
+                                            $html .= '<img src="'.asset('public/client_images/not-found/no_image_1.jpg').'" class="w-100 h-100">';
+                                        $html .= '</label>';
+                                    $html .= '</div>';
+                                    $html .= '<h4 class="mt-2" id="pdf-name">'.$category->file.'</h4>';
+                                $html .= '</div>';
+
+                                // Status
                                 $html .= '<div class="form-group mb-3">';
                                     $html .= '<label class="form-label me-3" for="published">'.__('Published').'</label>';
                                     $html .= '<label class="switch">';
@@ -287,6 +609,86 @@ class CategoryController extends Controller
                                         $html .= '</span>';
                                     $html .= '</label>';
                                 $html .= '</div>';
+
+                                // Schedule
+                                $html .= '<div class="form-group mb-3">';
+                                    $html .= '<div class="row">';
+
+                                        $html .= '<div class="col-md-12">';
+                                            $html .= '<div class="input-label text-primary schedule-toggle">';
+                                                $html .= '<i class="fa fa-clock" onclick="$(\'#editCategoryModal #schedule-main-div\').toggle()"></i> <span>'.$schedule_active_text.'</span>';
+                                            $html .= '</div>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="col-md-12" id="schedule-main-div" style="display: ';
+                                        $html .= ($schedule == 1) ? '' : 'none';
+                                        $html .= ';">';
+                                            $html .= '<div class="row">';
+
+                                                $html .= '<div class="col-md-12 text-end">';
+                                                    $html .= '<label class="switch">';
+                                                        $html .= '<input type="checkbox" id="schedule" name="schedule" value="1" onchange="changeScheduleLabel('.$primary_form_name.')" '.$schedule_active.'>';
+                                                        $html .= '<span class="slider round">';
+                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                    $html .= '</label>';
+                                                $html .= '</div>';
+
+                                                $html .= '<div class="col-md-12 sc_inner">';
+                                                    $html .= '<div class="sc_array_section" id="sc_array_section">';
+                                                        if(count($schedule_arr) > 0)
+                                                        {
+                                                            foreach($schedule_arr as $key => $sched)
+                                                            {
+                                                                $active_day = ($sched['enabled'] == 1) ? 'checked' : '';
+                                                                $time_arr = $sched['timesSchedules'];
+
+
+                                                                $html .= '<div class="p-2" id="'.$key.'_sec">';
+
+                                                                    $html .= '<div class="text-center">';
+                                                                        $html .= '<input type="checkbox" class="me-2" name="" id="'.$key.'" '.$active_day.'> <label for="'.$key.'">'.$sched['name'].'</label>';
+                                                                    $html .= '</div>';
+
+                                                                    $html .= '<div class="sch-sec">';
+
+                                                                        if(count($time_arr) > 0)
+                                                                        {
+                                                                            foreach($time_arr as $tkey => $sc_time)
+                                                                            {
+                                                                                $time_key = $tkey + 1;
+                                                                                $sc_start_time = $sc_time['startTime'];
+                                                                                $sc_end_time = $sc_time['endTime'];
+
+                                                                                $html .= '<div class="sch_'.$time_key.'">';
+                                                                                    if($time_key > 1)
+                                                                                    {
+                                                                                        $html .= '<div class="sch-minus"><i class="bi bi-dash-circle" onclick="$(\'#editCategoryModal #'.$key.'_sec .sch_'.$time_key.'\').remove()"></i></div>';
+                                                                                    }
+                                                                                    $html .= '<input type="time" class="form-control mt-2" name="startTime" id="startTime" value="'.$sc_start_time.'">';
+                                                                                    $html .= '<input type="time" class="form-control mt-2" name="endTime" id="endTime" value="'.$sc_end_time.'">';
+                                                                                $html .= '</div>';
+                                                                            }
+                                                                        }
+
+                                                                    $html .= '</div>';
+
+                                                                    $html .= '<div class="sch-plus">';
+                                                                        $html .= '<i class="bi bi-plus-circle" onclick="addNewSchedule(\''.$key.'_sec\','.$primary_form_name.')"></i>';
+                                                                    $html .= '</div>';
+
+                                                                $html .= '</div>';
+                                                            }
+                                                        }
+                                                    $html .= '</div>';
+                                                $html .= '</div>';
+
+                                            $html .= '</div>';
+                                        $html .= '</div>';
+
+                                    $html .= '</div>';
+                                $html .= '</div>';
+
                                 $html .= '<div class="form-group mb-3">';
                                     $html .= '<a class="btn btn btn-success" onclick="updateCategory('.$primary_input_lang_code.')">'.__('Update').'</a>';
                                 $html .= '</div>';
@@ -313,48 +715,143 @@ class CategoryController extends Controller
                                 $html .= csrf_field();
                                 $html .= '<input type="hidden" name="lang_code" id="lang_code" value="'.$add_lang_code.'">';
                                 $html .= '<input type="hidden" name="category_id" id="category_id" value="'.$category['id'].'">';
+                                $html .= '<input type="hidden" name="category_type" id="category_type" value="'.$category->category_type.'">';
                                 $html .= '<div class="row">';
+
+                                    // Type
+                                    // $html .= '<div class="form-group mb-3">';
+                                    //     $html .= '<label class="form-label" for="category_type">'.__('Type').'</label>';
+                                    //     $html .= '<select onchange="changeElements('.$add_form_name.')" name="category_type" id="category_type" class="form-select category_type">';
+                                    //         foreach($category_types as $cat_type_key => $cat_type)
+                                    //         {
+                                    //             $html .= '<option value="'.$cat_type_key.'"';
+
+                                    //                 if($cat_type_key == $category->category_type)
+                                    //                 {
+                                    //                     $html .= 'selected';
+                                    //                 }
+
+                                    //             $html.='>'.$cat_type.'</option>';
+                                    //         }
+                                    //     $html .= '</select>';
+                                    // $html .= '</div>';
+
+
+                                    // Category
+                                    $html .= '<div class="form-group cat_div mb-3">';
+                                        $html .= '<label class="form-label">'.__('Category').'</label>';
+                                        $html .= '<div id="categories_div">';
+                                            $html .= '<input type="radio" name="parent_cat" id="root" value="0" '.$root_parent_cat_checked.'> <label for="root">Root</label> <br>';
+
+                                            if(count($parent_categories) > 0)
+                                            {
+                                                foreach ($parent_categories as $key => $pcategory)
+                                                {
+                                                    $parent_cat_check = ($pcategory->parent_id == $pcategory->id) ? 'checked' : '';
+                                                    $html .= '<input type="radio" name="parent_cat" id="pcat_'.$key.'" value="'.$pcategory->id.'" '.$parent_cat_check.'> <label for="pcat_'.$key.'">'.$pcategory->name.'</label><br>';
+                                                }
+                                            }
+                                        $html .= '</div>';
+                                    $html .= '</div>';
+
+                                    // Name
                                     $html .= '<div class="form-group mb-3">';
                                         $html .= '<label class="form-label" for="category_name">'.__('Name').'</label>';
                                         $html .= '<input type="text" name="category_name" id="category_name" class="form-control" value="'.$add_cat_name.'">';
                                     $html .= '</div>';
+
+                                    // Sort Order
                                     $html .= '<div class="form-group mb-3">';
+                                        $html .= '<label class="form-label" for="sort_order">'.__('Sort Order').'</label>';
+                                        $html .= '<input type="text" name="sort_order" id="sort_order" class="form-control" value="'.$category['order_key'].'">';
+                                    $html .= '</div>';
+
+                                    // Url
+                                    $url_active = ($category->category_type == 'link') ? 'block' : 'none';
+                                    $html .= '<div class="form-group mb-3 url" style="display: '.$url_active.'">';
+                                        $html .= '<label class="form-label" for="url">'.__('URL').'</label>';
+                                        $html .= '<input type="text" name="url" id="url" class="form-control" value="'.$category->link_url.'">';
+                                    $html .= '</div>';
+
+                                    $check_page_style_active = ($category->category_type == 'check_in_page') ? 'block' : 'none';
+                                    // Bg Color
+                                    $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                                        $html .= '<label class="form-label" for="background_color">'.__('Background Color').'</label>';
+                                        $html .= '<input type="color" name="checkin_styles[background_color]" id="background_color" class="form-control" value="'.$bg_color.'">';
+                                    $html .= '</div>';
+
+                                    // Font Color
+                                    $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                                        $html .= '<label class="form-label" for="font_color">'.__('Font Color').'</label>';
+                                        $html .= '<input type="color" name="checkin_styles[font_color]" id="font_color" class="form-control" value="'.$font_color.'">';
+                                    $html .= '</div>';
+
+                                    // Button Color
+                                    $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                                        $html .= '<label class="form-label" for="button_color">'.__('Button Color').'</label>';
+                                        $html .= '<input type="color" name="checkin_styles[button_color]" id="button_color" class="form-control" value="'.$btn_color.'">';
+                                    $html .= '</div>';
+
+                                    // Button Text Color
+                                    $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                                        $html .= '<label class="form-label" for="button_text_color">'.__('Button Text Color').'</label>';
+                                        $html .= '<input type="color" name="checkin_styles[button_text_color]" id="button_text_color" class="form-control" value="'.$btn_text_color.'">';
+                                    $html .= '</div>';
+
+                                    // Description
+                                    $html .= '<div class="form-group mb-3 description">';
                                         $html .= '<label class="form-label" for="category_description">'.__('Desription').'</label>';
                                         $html .= '<textarea name="category_description" id="category_description_'.$add_lang_code.'" class="form-control category_description" rows="3">'.$add_cat_desc.'</textarea>';
                                     $html .= '</div>';
+
+                                    // Images
                                     $html .= '<div class="form-group mb-3">';
-                                        $html .= '<label class="form-label">'.__('Image').'</label>';
-                                        $html .= '<input style="display:none;" type="file" name="category_image" id="'.$add_lang_code.'_category_image" class="form-control category_image" onchange="imageCropper('.$add_input_lang_code.',this)">';
-                                        $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
+                                        $html .= '<div class="row">';
+                                            $html .= '<div class="col-md-12 mb-2 d-flex flex-wrap" id="edit_images_div">';
+                                                if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'parent_category')
+                                                {
+                                                    if(count($category_images) > 0)
+                                                    {
+                                                        foreach($category_images as $key => $cat_image)
+                                                        {
+                                                            $no = $key + 1;
 
-                                        if(!empty($category_image))
-                                        {
-                                            $html .= '<div class="row mt-2" id="edit-img">';
-                                                $html .= '<div class="col-md-3">';
-                                                    $html .= '<div class="mt-3 position-relative" id="categoryImage">';
-                                                        $html .= '<label for="'.$add_lang_code.'_category_image" style="cursor:pointer"><img src="'.$category_image.'" class="w-100"></label>';
-                                                        $html .= '<a href="'.$delete_cat_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>';
-                                                    $html .= '</div>';
-                                                $html .= '</div>';
+                                                            if(!empty($cat_image['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image['image']))
+                                                            {
+                                                                $html .= '<div class="inner-img edit_img_'.$no.'">';
+                                                                    $html .= '<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image['image']).'" class="w-100 h-100">';
+                                                                    $html .= '<a class="btn btn-sm btn-danger del-pre-btn" onclick="deleteCategoryImage('.$no.','.$cat_image->id.')"><i class="fa fa-trash"></i></a>';
+                                                                $html .= '</div>';
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             $html .= '</div>';
+                                        $html .= '</div>';
+                                    $html .= '</div>';
 
-                                            $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
-                                                $html .= '<div class="col-md-3" id="img-label">';
-                                                    $html .= '<label for="'.$add_lang_code.'_category_image" style="cursor: pointer">';
-                                                        $html .= '<img src="" class="w-100" id="crp-img-prw">';
-                                                    $html .= '</label>';
-                                                $html .= '</div>';
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<div class="row">';
+                                            $html .= '<div class="col-md-12 mb-2 d-flex flex-wrap" id="images_div"></div>';
+                                            $html .= '<div class="col-md-12 mul-image" id="img-val"></div>';
+                                        $html .= '</div>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="form-group mb-3 mul-image">';
+                                        $html .= '<div class="row">';
+                                            $html .= '<div class="col-md-12">';
+                                                $html .= '<label class="form-label">'. __('Image').'</label>';
                                             $html .= '</div>';
-                                        }
-                                        else
-                                        {
-                                            $html .= '<div class="row mt-3" id="categoryImage">';
-                                                $html .= '<div class="col-md-3" id="img-label">';
-                                                    $html .= '<label style="cursor:pointer;" for="'.$add_lang_code.'_category_image"><img src="'.$default_image.'" class="w-100" id="crp-img-prw"></label>';
+                                            $html .= '<div class="col-md-12">';
+                                                $html .= '<div id="img-label">';
+                                                    $html .= '<label for="'.$add_lang_code.'_category_image">Upload Images</label>';
                                                 $html .= '</div>';
+                                                $html .= '<input type="file" name="category_image" id="'.$add_lang_code.'_category_image" class="form-control category_image" onchange="imageCropper('.$add_input_lang_code.',this)" style="display:none">';
                                             $html .= '</div>';
-                                        }
-                                        $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                                            $html .= '<div class="col-md-12">';
+                                                $html .= '<code class="img-upload-label">Upload Image in (200*200) Dimensions</code>';
+                                            $html .= '</div>';
+                                        $html .= '</div>';
                                     $html .= '</div>';
 
                                     $html .= '<div class="form-group mb-3">';
@@ -373,6 +870,42 @@ class CategoryController extends Controller
                                         $html .= '</div>';
                                     $html .= '</div>';
 
+
+                                     // COVER
+                                    $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'image_gallary' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category') ? '' : 'none';
+                                    if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
+                                    {
+                                        $cover_image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover);
+                                    }
+                                    else
+                                    {
+                                        $cover_image = asset('public/client_images/not-found/no_image_1.jpg');
+                                    }
+
+                                    $html .= '<div class="form-group mb-3 cover" style="display: '.$cover_active.'" id="cover_label">';
+                                        $html .= '<label class="form-label">'. __('Thumbnail').'</label>';
+                                        $html .= '<input type="file" onchange="CoverPreview('.$add_form_name.',this)" id="'.$add_lang_code.'_cover" name="cover" style="display: none">';
+                                        $html .= '<div class="page-cover">';
+                                            $html .= '<label for="'.$add_lang_code.'_cover" id="upload-page-cover-image">';
+                                                $html .= '<img src="'.$cover_image.'" class="w-100 h-100">';
+                                            $html .= '</label>';
+                                        $html .= '</div>';
+                                    $html .= '</div>';
+
+                                    // PDF FILE
+                                    $pdf_active = ($category->category_type == 'pdf_category') ? '' : 'none';
+                                    $html .= '<div class="form-group mb-3 pdf" style="display: '.$pdf_active.'" id="pdf_label">';
+                                        $html .= '<label class="form-label">'. __('PDF File').'</label>';
+                                        $html .= '<input type="file" onchange="PdfPreview('.$add_form_name.',this)"id="'.$add_lang_code.'_pdf" name="pdf" style="display: none">';
+                                        $html .= '<div class="pdf-file">';
+                                            $html .= '<label for="'.$add_lang_code.'_pdf" id="upload-pdf-file">';
+                                                $html .= '<img src="'.asset('public/client_images/not-found/no_image_1.jpg').'" class="w-100 h-100">';
+                                            $html .= '</label>';
+                                        $html .= '</div>';
+                                        $html .= '<h4 class="mt-2" id="pdf-name">'.$category->file.'</h4>';
+                                    $html .= '</div>';
+
+                                    // Status
                                     $html .= '<div class="form-group mb-3">';
                                         $html .= '<label class="form-label me-3" for="published">'.__('Published').'</label>';
                                         $html .= '<label class="switch">';
@@ -383,6 +916,86 @@ class CategoryController extends Controller
                                             $html .= '</span>';
                                         $html .= '</label>';
                                     $html .= '</div>';
+
+                                    // Schedule
+                                    $html .= '<div class="form-group mb-3">';
+                                        $html .= '<div class="row">';
+
+                                            $html .= '<div class="col-md-12">';
+                                                $html .= '<div class="input-label text-primary schedule-toggle">';
+                                                    $html .= '<i class="fa fa-clock" onclick="$(\'#editCategoryModal #schedule-main-div\').toggle()"></i> <span>'.$schedule_active_text.'</span>';
+                                                $html .= '</div>';
+                                            $html .= '</div>';
+
+                                            $html .= '<div class="col-md-12" id="schedule-main-div" style="display: ';
+                                            $html .= ($schedule == 1) ? '' : 'none';
+                                            $html .= ';">';
+                                                $html .= '<div class="row">';
+
+                                                    $html .= '<div class="col-md-12 text-end">';
+                                                        $html .= '<label class="switch">';
+                                                            $html .= '<input type="checkbox" id="schedule" name="schedule" value="1" onchange="changeScheduleLabel('.$add_form_name.')" '.$schedule_active.'>';
+                                                            $html .= '<span class="slider round">';
+                                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                        $html .= '</label>';
+                                                    $html .= '</div>';
+
+                                                    $html .= '<div class="col-md-12 sc_inner">';
+                                                        $html .= '<div class="sc_array_section" id="sc_array_section">';
+                                                            if(count($schedule_arr) > 0)
+                                                            {
+                                                                foreach($schedule_arr as $key => $sched)
+                                                                {
+                                                                    $active_day = ($sched['enabled'] == 1) ? 'checked' : '';
+                                                                    $time_arr = $sched['timesSchedules'];
+
+
+                                                                    $html .= '<div class="p-2" id="'.$key.'_sec">';
+
+                                                                        $html .= '<div class="text-center">';
+                                                                            $html .= '<input type="checkbox" class="me-2" name="" id="'.$key.'" '.$active_day.'> <label for="'.$key.'">'.$sched['name'].'</label>';
+                                                                        $html .= '</div>';
+
+                                                                        $html .= '<div class="sch-sec">';
+
+                                                                            if(count($time_arr) > 0)
+                                                                            {
+                                                                                foreach($time_arr as $tkey => $sc_time)
+                                                                                {
+                                                                                    $time_key = $tkey + 1;
+                                                                                    $sc_start_time = $sc_time['startTime'];
+                                                                                    $sc_end_time = $sc_time['endTime'];
+
+                                                                                    $html .= '<div class="sch_'.$time_key.'">';
+                                                                                        if($time_key > 1)
+                                                                                        {
+                                                                                            $html .= '<div class="sch-minus"><i class="bi bi-dash-circle" onclick="$(\'#editCategoryModal #'.$key.'_sec .sch_'.$time_key.'\').remove()"></i></div>';
+                                                                                        }
+                                                                                        $html .= '<input type="time" class="form-control mt-2" name="startTime" id="startTime" value="'.$sc_start_time.'">';
+                                                                                        $html .= '<input type="time" class="form-control mt-2" name="endTime" id="endTime" value="'.$sc_end_time.'">';
+                                                                                    $html .= '</div>';
+                                                                                }
+                                                                            }
+
+                                                                        $html .= '</div>';
+
+                                                                        $html .= '<div class="sch-plus">';
+                                                                            $html .= '<i class="bi bi-plus-circle" onclick="addNewSchedule(\''.$key.'_sec\','.$add_form_name.')"></i>';
+                                                                        $html .= '</div>';
+
+                                                                    $html .= '</div>';
+                                                                }
+                                                            }
+                                                        $html .= '</div>';
+                                                    $html .= '</div>';
+
+                                                $html .= '</div>';
+                                            $html .= '</div>';
+
+                                        $html .= '</div>';
+                                    $html .= '</div>';
+
                                     $html .= '<div class="form-group mb-3">';
                                         $html .= '<a class="btn btn btn-success" onclick="updateCategory('.$add_input_lang_code.')">'.__('Update').'</a>';
                                     $html .= '</div>';
@@ -403,51 +1016,142 @@ class CategoryController extends Controller
                     $html .= csrf_field();
                     $html .= '<input type="hidden" name="lang_code" id="lang_code" value="'.$primary_lang_code.'">';
                     $html .= '<input type="hidden" name="category_id" id="category_id" value="'.$category['id'].'">';
+                    $html .= '<input type="hidden" name="category_type" id="category_type" value="'.$category->category_type.'">';
                     $html .= '<div class="row">';
 
+                        // Type
+                        // $html .= '<div class="form-group mb-3">';
+                        //     $html .= '<label class="form-label" for="category_type">'.__('Type').'</label>';
+                        //     $html .= '<select onchange="changeElements('.$primary_form_name.')" name="category_type" id="category_type" class="form-select category_type">';
+                        //         foreach($category_types as $cat_type_key => $cat_type)
+                        //         {
+                        //             $html .= '<option value="'.$cat_type_key.'"';
+
+                        //                 if($cat_type_key == $category->category_type)
+                        //                 {
+                        //                     $html .= 'selected';
+                        //                 }
+
+                        //             $html.='>'.$cat_type.'</option>';
+                        //         }
+                        //     $html .= '</select>';
+                        // $html .= '</div>';
+
+                        // Category
+                    //     $html .= '<div class="form-group cat_div mb-3">';
+                    //     $html .= '<label class="form-label">'.__('Category').'</label>';
+                    //     $html .= '<div id="categories_div">';
+                    //         $html .= '<input type="radio" name="parent_cat" id="root" value="0" '.$root_parent_cat_checked.'> <label for="root">Root</label> <br>';
+
+                    //         if(count($parent_categories) > 0)
+                    //         {
+                    //             foreach ($parent_categories as $key => $pcategory)
+                    //             {
+                    //                 $parent_cat_check = ($pcategory->parent_id == $pcategory->id) ? 'checked' : '';
+                    //                 $html .= '<input type="radio" name="parent_cat" id="pcat_'.$key.'" value="'.$pcategory->id.'" '.$parent_cat_check.'> <label for="pcat_'.$key.'">'.$pcategory->name.'</label><br>';
+                    //             }
+                    //         }
+                    //     $html .= '</div>';
+                    // $html .= '</div>';
+
+                        // Name
                         $html .= '<div class="form-group mb-3">';
-                            $html .= '<label class="form-label" for="category_name">Name</label>';
+                            $html .= '<label class="form-label" for="category_name">'.__('Name').'</label>';
                             $html .= '<input type="text" name="category_name" id="category_name" class="form-control" value="'.$primary_cat_name.'">';
                         $html .= '</div>';
 
+                        // Sort Order
                         $html .= '<div class="form-group mb-3">';
-                            $html .= '<label class="form-label" for="category_description">Desription</label>';
+                            $html .= '<label class="form-label" for="sort_order">'.__('Sort Order').'</label>';
+                            $html .= '<input type="text" name="sort_order" id="sort_order" class="form-control" value="'.$category['order_key'].'">';
+                        $html .= '</div>';
+
+                        // Url
+                        $url_active = ($category->category_type == 'link') ? 'block' : 'none';
+                        $html .= '<div class="form-group mb-3 url" style="display: '.$url_active.'">';
+                            $html .= '<label class="form-label" for="url">'.__('URL').'</label>';
+                            $html .= '<input type="text" name="url" id="url" class="form-control" value="'.$category->link_url.'">';
+                        $html .= '</div>';
+
+                        $check_page_style_active = ($category->category_type == 'check_in_page') ? 'block' : 'none';
+                        // Bg Color
+                        $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                            $html .= '<label class="form-label" for="background_color">'.__('Background Color').'</label>';
+                            $html .= '<input type="color" name="checkin_styles[background_color]" id="background_color" class="form-control" value="'.$bg_color.'">';
+                        $html .= '</div>';
+
+                        // Font Color
+                        $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                            $html .= '<label class="form-label" for="font_color">'.__('Font Color').'</label>';
+                            $html .= '<input type="color" name="checkin_styles[font_color]" id="font_color" class="form-control" value="'.$font_color.'">';
+                        $html .= '</div>';
+
+                        // Button Color
+                        $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                            $html .= '<label class="form-label" for="button_color">'.__('Button Color').'</label>';
+                            $html .= '<input type="color" name="checkin_styles[button_color]" id="button_color" class="form-control" value="'.$btn_color.'">';
+                        $html .= '</div>';
+
+                        // Button Text Color
+                        $html .= '<div class="form-group mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
+                            $html .= '<label class="form-label" for="button_text_color">'.__('Button Text Color').'</label>';
+                            $html .= '<input type="color" name="checkin_styles[button_text_color]" id="button_text_color" class="form-control" value="'.$btn_text_color.'">';
+                        $html .= '</div>';
+
+                        // Description
+                        $html .= '<div class="form-group mb-3 description">';
+                            $html .= '<label class="form-label" for="category_description">'.__('Desription').'</label>';
                             $html .= '<textarea name="category_description" id="category_description_'.$primary_lang_code.'" class="form-control category_description" rows="3">'.$primary_cat_desc.'</textarea>';
                         $html .= '</div>';
 
+                        // Images
                         $html .= '<div class="form-group mb-3">';
-                            $html .= '<label class="form-label">Image</label>';
-                            $html .= '<input style="display:none;" type="file" name="category_image" id="'.$primary_lang_code.'_category_image" class="form-control category_image" onchange="imageCropper('.$primary_input_lang_code.',this)">';
-                            $html .= '<input type="hidden" name="og_image" id="og_image" class="og_image">';
+                            $html .= '<div class="row">';
+                                $html .= '<div class="col-md-12 mb-2 d-flex flex-wrap" id="edit_images_div">';
+                                    if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'parent_category')
+                                    {
+                                        if(count($category_images) > 0)
+                                        {
+                                            foreach($category_images as $key => $cat_image)
+                                            {
+                                                $no = $key + 1;
 
-                            if(!empty($category_image))
-                            {
-                                $html .= '<div class="row mt-2" id="edit-img">';
-                                    $html .= '<div class="col-md-3">';
-                                        $html .= '<div class="mt-3 position-relative" id="categoryImage">';
-                                            $html .= '<label for="'.$primary_lang_code.'_category_image" style="cursor:pointer"><img src="'.$category_image.'" class="w-100"></label>';
-                                            $html .= '<a href="'.$delete_cat_image_url.'" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>';
-                                        $html .= '</div>';
-                                    $html .= '</div>';
+                                                if(!empty($cat_image['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image['image']))
+                                                {
+                                                    $html .= '<div class="inner-img edit_img_'.$no.'">';
+                                                        $html .= '<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image['image']).'" class="w-100 h-100">';
+                                                        $html .= '<a class="btn btn-sm btn-danger del-pre-btn" onclick="deleteCategoryImage('.$no.','.$cat_image->id.')"><i class="fa fa-trash"></i></a>';
+                                                    $html .= '</div>';
+                                                }
+                                            }
+                                        }
+                                    }
                                 $html .= '</div>';
+                            $html .= '</div>';
+                        $html .= '</div>';
 
-                                $html .= '<div class="row mt-2" id="rep-image" style="display:none;">';
-                                    $html .= '<div class="col-md-3" id="img-label">';
-                                        $html .= '<label for="'.$primary_lang_code.'_category_image" style="cursor: pointer">';
-                                            $html .= '<img src="" class="w-100" id="crp-img-prw">';
-                                        $html .= '</label>';
-                                    $html .= '</div>';
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<div class="row">';
+                                $html .= '<div class="col-md-12 mb-2 d-flex flex-wrap" id="images_div"></div>';
+                                $html .= '<div class="col-md-12 mul-image" id="img-val"></div>';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="form-group mb-3 mul-image">';
+                            $html .= '<div class="row">';
+                                $html .= '<div class="col-md-12">';
+                                    $html .= '<label class="form-label">'. __('Image').'</label>';
                                 $html .= '</div>';
-                            }
-                            else
-                            {
-                                $html .= '<div class="row mt-3" id="categoryImage">';
-                                    $html .= '<div class="col-md-3" id="img-label">';
-                                        $html .= '<label style="cursor:pointer;" for="'.$primary_lang_code.'_category_image"><img src="'.$default_image.'" class="w-100" id="crp-img-prw"></label>';
+                                $html .= '<div class="col-md-12">';
+                                    $html .= '<div id="img-label">';
+                                        $html .= '<label for="'.$primary_lang_code.'_category_image">Upload Images</label>';
                                     $html .= '</div>';
+                                    $html .= '<input type="file" name="category_image" id="'.$primary_lang_code.'_category_image" class="form-control category_image" onchange="imageCropper('.$primary_input_lang_code.',this)" style="display:none">';
                                 $html .= '</div>';
-                            }
-                            $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                                $html .= '<div class="col-md-12">';
+                                    $html .= '<code class="img-upload-label">Upload Image in (200*200) Dimensions</code>';
+                                $html .= '</div>';
+                            $html .= '</div>';
                         $html .= '</div>';
 
                         $html .= '<div class="form-group mb-3">';
@@ -466,6 +1170,42 @@ class CategoryController extends Controller
                             $html .= '</div>';
                         $html .= '</div>';
 
+
+                        // COVER
+                        $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'image_gallary' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category') ? '' : 'none';
+                        if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
+                        {
+                            $cover_image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover);
+                        }
+                        else
+                        {
+                            $cover_image = asset('public/client_images/not-found/no_image_1.jpg');
+                        }
+                        $html .= '<div class="form-group mb-3 cover" style="display: '.$cover_active.'" id="cover_label">';
+                            $html .= '<label class="form-label">'. __('Thumbnail').'</label>';
+                            $html .= '<input type="file" onchange="CoverPreview('.$primary_form_name.',this)" id="'.$primary_lang_code.'_cover" name="cover" style="display: none">';
+                            $html .= '<div class="page-cover">';
+                                $html .= '<label for="'.$primary_lang_code.'_cover" id="upload-page-cover-image">';
+                                    $html .= '<img src="'.$cover_image.'" class="w-100 h-100">';
+                                $html .= '</label>';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
+
+                        // PDF FILE
+                        $pdf_active = ($category->category_type == 'pdf_category') ? '' : 'none';
+                        $html .= '<div class="form-group mb-3 pdf" style="display: '.$pdf_active.'" id="pdf_label">';
+                            $html .= '<label class="form-label">'. __('PDF File').'</label>';
+                            $html .= '<input type="file" onchange="PdfPreview('.$primary_form_name.',this)" id="'.$primary_lang_code.'_pdf" name="pdf" style="display: none">';
+                            $html .= '<div class="pdf-file">';
+                                $html .= '<label for="'.$primary_lang_code.'_pdf" id="upload-pdf-file">';
+                                    $html .= '<img src="'.asset('public/client_images/not-found/no_image_1.jpg').'" class="w-100 h-100">';
+                                $html .= '</label>';
+                            $html .= '</div>';
+                            $html .= '<h4 class="mt-2" id="pdf-name">'.$category->file.'</h4>';
+                        $html .= '</div>';
+
+                        // Status
                         $html .= '<div class="form-group mb-3">';
                             $html .= '<label class="form-label me-3" for="published">Published</label>';
                             $html .= '<label class="switch">';
@@ -475,6 +1215,85 @@ class CategoryController extends Controller
                                     $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
                                 $html .= '</span>';
                             $html .= '</label>';
+                        $html .= '</div>';
+
+                        // Schedule
+                        $html .= '<div class="form-group mb-3">';
+                            $html .= '<div class="row">';
+
+                                $html .= '<div class="col-md-12">';
+                                    $html .= '<div class="input-label text-primary schedule-toggle">';
+                                        $html .= '<i class="fa fa-clock" onclick="$(\'#editCategoryModal #schedule-main-div\').toggle()"></i> <span>'.$schedule_active_text.'</span>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+
+                                $html .= '<div class="col-md-12" id="schedule-main-div" style="display: ';
+                                $html .= ($schedule == 1) ? '' : 'none';
+                                $html .= ';">';
+                                    $html .= '<div class="row">';
+
+                                        $html .= '<div class="col-md-12 text-end">';
+                                            $html .= '<label class="switch">';
+                                                $html .= '<input type="checkbox" id="schedule" name="schedule" value="1" onchange="changeScheduleLabel('.$primary_form_name.')" '.$schedule_active.'>';
+                                                $html .= '<span class="slider round">';
+                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                            $html .= '</label>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="col-md-12 sc_inner">';
+                                            $html .= '<div class="sc_array_section" id="sc_array_section">';
+                                                if(count($schedule_arr) > 0)
+                                                {
+                                                    foreach($schedule_arr as $key => $sched)
+                                                    {
+                                                        $active_day = ($sched['enabled'] == 1) ? 'checked' : '';
+                                                        $time_arr = $sched['timesSchedules'];
+
+
+                                                        $html .= '<div class="p-2" id="'.$key.'_sec">';
+
+                                                            $html .= '<div class="text-center">';
+                                                                $html .= '<input type="checkbox" class="me-2" name="" id="'.$key.'" '.$active_day.'> <label for="'.$key.'">'.$sched['name'].'</label>';
+                                                            $html .= '</div>';
+
+                                                            $html .= '<div class="sch-sec">';
+
+                                                                if(count($time_arr) > 0)
+                                                                {
+                                                                    foreach($time_arr as $tkey => $sc_time)
+                                                                    {
+                                                                        $time_key = $tkey + 1;
+                                                                        $sc_start_time = $sc_time['startTime'];
+                                                                        $sc_end_time = $sc_time['endTime'];
+
+                                                                        $html .= '<div class="sch_'.$time_key.'">';
+                                                                            if($time_key > 1)
+                                                                            {
+                                                                                $html .= '<div class="sch-minus"><i class="bi bi-dash-circle" onclick="$(\'#editCategoryModal #'.$key.'_sec .sch_'.$time_key.'\').remove()"></i></div>';
+                                                                            }
+                                                                            $html .= '<input type="time" class="form-control mt-2" name="startTime" id="startTime" value="'.$sc_start_time.'">';
+                                                                            $html .= '<input type="time" class="form-control mt-2" name="endTime" id="endTime" value="'.$sc_end_time.'">';
+                                                                        $html .= '</div>';
+                                                                    }
+                                                                }
+
+                                                            $html .= '</div>';
+
+                                                            $html .= '<div class="sch-plus">';
+                                                                $html .= '<i class="bi bi-plus-circle" onclick="addNewSchedule(\''.$key.'_sec\','.$primary_form_name.')"></i>';
+                                                            $html .= '</div>';
+
+                                                        $html .= '</div>';
+                                                    }
+                                                }
+                                            $html .= '</div>';
+                                        $html .= '</div>';
+
+                                    $html .= '</div>';
+                                $html .= '</div>';
+
+                            $html .= '</div>';
                         $html .= '</div>';
 
                         $html .= '<div class="form-group mb-3">';
@@ -490,6 +1309,7 @@ class CategoryController extends Controller
                 'message' => "Category Details has been Retrived Successfully..",
                 'data'=> $html,
                 'primary_code' => $primary_lang_code,
+                'category_type' => $category->category_type,
             ]);
         }
         catch (\Throwable $th)
@@ -507,12 +1327,15 @@ class CategoryController extends Controller
     public function update(Request $request)
     {
         $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+        $category_type = $request->category_type;
 
         $category_id = $request->category_id;
         $lang_code = $request->lang_code;
         $category_name = $request->category_name;
         $category_description = $request->category_description;
         $published = isset($request->published) ? $request->published : 0;
+        $schedule_arr = $request->schedule_array;
+        $schedule = isset($request->schedule) ? $request->schedule : 0;
 
         $name_key = $lang_code."_name";
         $description_key = $lang_code."_description";
@@ -521,6 +1344,13 @@ class CategoryController extends Controller
             'category_name'   => 'required',
         ]);
 
+        if($category_type == 'link')
+        {
+            $request->validate([
+                'url' => 'required',
+            ]);
+        }
+
         try
         {
             $category = Category::find($category_id);
@@ -528,30 +1358,125 @@ class CategoryController extends Controller
             if($category)
             {
                 $category->name = $category_name;
-                $category->description = $category_description;
                 $category->$name_key = $category_name;
-                $category->$description_key = $category_description;
-                $category->published = $published;
+                $category->category_type = $category_type;
+                $category->order_key = $request->sort_order;
 
-                // Insert Category Image if is Exists
-                if(isset($request->og_image) && !empty($request->og_image) && $request->hasFile('category_image'))
+                // Description
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in_page')
                 {
-                    $og_image = $request->og_image;
-                    $image_arr = explode(";base64,", $og_image);
-                    $image_base64 = base64_decode($image_arr[1]);
+                    $category->description = $category_description;
+                    $category->$description_key = $category_description;
+                }
 
-                    // Delete old Image
-                    $category_image = isset($category->image) ? $category->image : '';
-                    if(!empty($category_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category_image))
+                // Cover
+                if($category_type == 'page' || $category_type == 'link' || $category_type == 'image_gallary' || $category_type == 'check_in_page' || $category_type == 'parent_category' || $category_type == 'pdf_category')
+                {
+                    if($request->hasFile('cover'))
                     {
-                        unlink('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category_image);
-                    }
+                        // Delete Old Cover
+                        $old_cover = isset($category->cover) ? $category->cover : '';
+                        if(!empty($old_cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$old_cover))
+                        {
+                            unlink('public/client_uploads/shops/'.$shop_slug.'/categories/'.$old_cover);
+                        }
 
-                    // Insert new Image
-                    $imgname = "category_".time().".". $request->file('category_image')->getClientOriginalExtension();
-                    $img_path = public_path('client_uploads/shops/'.$shop_slug.'/categories/'.$imgname);
-                    file_put_contents($img_path,$image_base64);
-                    $category->image = $imgname;
+                        $cover_name = "cover_".time().".". $request->file('cover')->getClientOriginalExtension();
+                        $request->file('cover')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories/'), $cover_name);
+                        $category->cover = $cover_name;
+                    }
+                }
+
+                // URL
+                if($category_type == 'link')
+                {
+                    $category->link_url = isset($request->url) ? $request->url : '';
+                }
+
+                // Bg Color
+                if($category_type == 'check_in_page')
+                {
+                    $category->styles = isset($request->checkin_styles) ? serialize($request->checkin_styles) : '';
+                }
+
+                // Parent Category
+                if($category_type == 'parent_category')
+                {
+                    if(isset($request->parent_cat) && !empty($request->parent_cat) && $request->parent_cat == 0)
+                    {
+                        $category->parent_category = 1;
+                    }
+                    elseif(empty($request->parent_cat) || !isset($request->parent_cat))
+                    {
+                        $category->parent_category = 1;
+                    }
+                    else
+                    {
+                        $category->parent_id = $request->parent_cat;
+                        $category->category_type = 'product_category';
+                    }
+                }
+
+                // Pdf File
+                if($category_type == 'pdf_category')
+                {
+                    if($request->hasFile('pdf'))
+                    {
+                        // Delete Old PDF
+                        $old_pdf = isset($category->file) ? $category->file : '';
+                        if(!empty($old_pdf) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$old_pdf))
+                        {
+                            unlink('public/client_uploads/shops/'.$shop_slug.'/categories/'.$old_pdf);
+                        }
+
+                        $file_name = "pdf_".time().".". $request->file('pdf')->getClientOriginalExtension();
+                        $request->file('pdf')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories/'), $file_name);
+                        $category->file = $file_name;
+                    }
+                }
+
+                if(isset($request->parent_cat_id) && !empty($request->parent_cat_id))
+                {
+                    $category->parent_id = $request->parent_cat_id;
+                }
+
+                $category->published = $published;
+                $category->schedule = $schedule;
+                $category->schedule_value = $schedule_arr;
+
+                // Multiple Images
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'image_gallary' || $category_type == 'parent_category')
+                {
+                    // Insert Category Image if is Exists
+                    $all_images = (isset($request->og_image)) ? $request->og_image : [];
+                    if(count($all_images) > 0)
+                    {
+                        // Delete Old Images
+                        if($category_type != 'image_gallary')
+                        {
+                            CategoryImages::where('category_id',$category_id)->delete();
+                        }
+
+                        foreach($all_images as $image)
+                        {
+                            $image_token = genratetoken(10);
+                            $og_image = $image;
+                            $image_arr = explode(";base64,", $og_image);
+                            $image_type_ext = explode("image/", $image_arr[0]);
+                            $image_base64 = base64_decode($image_arr[1]);
+
+                            $imgname = "category_".$image_token.".".$image_type_ext[1];
+                            $img_path = public_path('client_uploads/shops/'.$shop_slug.'/categories/'.$imgname);
+                            file_put_contents($img_path,$image_base64);
+                            // $request->file('image')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories'), $imgname);
+
+                            // Insert Image
+                            $new_img = new CategoryImages();
+                            $new_img->category_id = $category_id;
+                            $new_img->image = $imgname;
+                            $new_img->save();
+                        }
+                    }
                 }
 
                 $category->update();
@@ -609,6 +1534,7 @@ class CategoryController extends Controller
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
         $keyword = $request->keywords;
+        $parent_category_id = $request->par_cat_id;
 
         if(session()->has('lang_code'))
         {
@@ -622,7 +1548,18 @@ class CategoryController extends Controller
         try
         {
             $name_key = $curr_lang_code."_name";
-            $categories = Category::where($name_key,'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->get();
+            $categories = Category::with(['categoryImages'])->where($name_key,'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id);
+
+            if((empty($parent_category_id)) || (!empty($parent_category_id) && is_numeric($parent_category_id)))
+            {
+                $categories = $categories->where('parent_id',$parent_category_id);
+            }
+            else
+            {
+                $categories = $categories->where('category_type',$parent_category_id);
+            }
+
+            $categories = $categories->orderBy('order_key')->get();
             $html = '';
 
             if(count($categories) > 0)
@@ -632,36 +1569,98 @@ class CategoryController extends Controller
                     $newStatus = ($category->published == 1) ? 0 : 1;
                     $checked = ($category->published == 1) ? 'checked' : '';
 
-                    if(!empty($category->image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->image))
+                    // Category Type
+                    $category_type = '';
+                    if($category->category_type == 'product_category')
                     {
-                        $image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->image);
+                        $category_type = 'Category';
+                    }
+                    elseif ($category->category_type == 'page')
+                    {
+                        $category_type = 'Page';
+                    }
+                    elseif ($category->category_type == 'link')
+                    {
+                        $category_type = 'Link';
+                    }
+                    elseif ($category->category_type == 'image_gallary')
+                    {
+                        $category_type = 'Image Gallery';
+                    }
+                    elseif ($category->category_type == 'check_in_page')
+                    {
+                        $category_type = 'Check-In Page';
+                    }
+                    elseif ($category->category_type == 'parent_category')
+                    {
+                        $category_type = 'Child Category';
+                    }
+                    elseif ($category->category_type == 'pdf_category')
+                    {
+                        $category_type = 'PDF';
+                    }
+
+
+                    if($category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'link' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category')
+                    {
+                        $cat_image = isset($category->cover) ? $category->cover : '';
+                    }
+                    else
+                    {
+                        $cat_image = isset($category->categoryImages[0]['image']) ? $category->categoryImages[0]['image'] : '';
+                    }
+
+
+                    if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
+                    {
+                        $image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image);
                     }
                     else
                     {
                         $image = asset('public/client_images/not-found/no_image_1.jpg');
                     }
 
+                    $par_cat_url = route('categories',$category->id);
+
                     $html .= '<div class="col-md-3">';
                         $html .= '<div class="item_box">';
                             $html .= '<div class="item_img">';
                                 $html .= '<a><img src="'.$image.'" class="w-100"></a>';
                                 $html .= '<div class="edit_item_bt">';
-                                    $html .= '<button type="button" class="btn edit_item">'.__('ADD OR EDIT ITEMS').'</button>';
-                                    $html .= '<button class="btn edit_category" onclick="editCategory('.$category->id.')">'.__('EDIT CATEGORY').'</button>';
+
+                                    if($category->category_type == 'product_category')
+                                    {
+                                        $html .= '<button type="button" class="btn edit_item">'.__('ADD OR EDIT ITEMS').'</button>';
+                                    }
+
+                                    if($category->category_type == 'parent_category')
+                                    {
+                                        $html .= '<a href="'.$par_cat_url.'" class="btn edit_item">'.__("ADD OR EDIT CHILD CATEGORY").'</a>';
+                                    }
+
+                                    $html .= '<button class="btn edit_category" onclick="editCategory('.$category->id.')">'.__('EDIT').'</button>';
                                 $html .= '</div>';
+                                if($category->category_type == 'parent_category')
+                                {
+                                    $html .= '<a class="btn-search-cat" href="'.$par_cat_url.'"><i class="fa-solid fa-magnifying-glass"></i></a>';
+                                }
                                 $html .= '<a class="delet_bt" onclick="deleteCategory('.$category->id.')" style="cursor: pointer;"><i class="fa-solid fa-trash"></i></a>';
                                 $html .= '<a class="cat_edit_bt" onclick="editCategory('.$category->id.')"><i class="fa-solid fa-edit"></i></a>';
 
                                 $item_redirect_path = route('items',$category->id);
 
-                                $html .= '<a class="item_add_bt" href="'.$item_redirect_path.'"><i class="fa-solid fa-add"></i></a>';
+                                if($category->category_type == 'product_category')
+                                {
+                                    $html .= '<a class="item_add_bt" href="'.$item_redirect_path.'"><i class="fa-solid fa-add"></i></a>';
+                                }
+
                             $html .= '</div>';
                             $html .= '<div class="item_info">';
                                 $html .= '<div class="item_name">';
                                     $html .= '<h3>'.$category->en_name.'</h3>';
                                     $html .= '<div class="form-check form-switch"><input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeStatus('.$category->id.','.$newStatus.')" value="1" '.$checked.'></div>';
                                 $html .= '</div>';
-                                $html .= '<h2>'.__('Product Category').'</h2>';
+                                $html .= '<h2>'.$category_type.'</h2>';
                             $html .= '</div>';
                         $html .= '</div>';
                     $html .= '</div>';
@@ -721,6 +1720,39 @@ class CategoryController extends Controller
 
     }
 
+
+
+    // Delete Multiple Images
+    public function deleteCategoryImages(Request $request)
+    {
+        $image_id = $request->img_id;
+        $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
+        try
+        {
+            $cat_image = CategoryImages::where('id',$image_id)->first();
+            $image = isset($cat_image->image) ? $cat_image->image : '';
+
+            if(!empty($image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$image))
+            {
+                unlink('public/client_uploads/shops/'.$shop_slug.'/categories/'.$image);
+            }
+
+            CategoryImages::where('id',$image_id)->delete();
+
+            return response()->json([
+                'success' => 1,
+                "message" => "Image has been Removed SuccessFully...",
+            ]);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => "Internal Server Error!",
+            ]);
+        }
+    }
 
 
     // Function for Sorting Category.

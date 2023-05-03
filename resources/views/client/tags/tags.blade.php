@@ -21,7 +21,10 @@
                     <h5 class="modal-title" id="editTagModalLabel">{{ __('Edit Tag')}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="tag_lang_div">
+                <div class="modal-body" id="tag_edit_div">
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-success" onclick="updateTag()">{{ __('Update') }}</a>
                 </div>
             </div>
         </div>
@@ -161,8 +164,6 @@
             toastr.clear();
         });
 
-
-
         // Function for Save Tag
         function saveTag()
         {
@@ -224,14 +225,14 @@
         function editTag(tagID)
         {
             // Reset All Form
-            $('#editCategoryModal #tag_lang_div').html('');
+            $('#editTagModal #tag_edit_div').html('');
 
             // Clear all Toastr Messages
             toastr.clear();
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('language.tags.edit') }}",
+                url: "{{ route('tags.edit') }}",
                 dataType: "JSON",
                 data: {
                     '_token': "{{ csrf_token() }}",
@@ -241,8 +242,7 @@
                 {
                     if (response.success == 1)
                     {
-                        $('#editTagModal #tag_lang_div').html('');
-                        $('#editTagModal #tag_lang_div').append(response.data);
+                        $('#editTagModal #tag_edit_div').html(response.data);
                         $('#editTagModal').modal('show');
                     }
                     else
@@ -254,21 +254,58 @@
         }
 
 
-        // Function for Update Tag
-        function updateTag(langCode)
+        // Update Tag By Language Code
+        function updateByCode(next_lang_code)
         {
-            var formID = langCode+"_tag_form";
-            var myFormData = new FormData(document.getElementById(formID));
-
-            // Remove Validation Class
-            $("#"+formID+' #tag_name').removeClass('is-invalid');
+            const myFormData = new FormData(document.getElementById('editTagForm'));
+            myFormData.append('next_lang_code',next_lang_code);
 
             // Clear all Toastr Messages
             toastr.clear();
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('language.tags.update') }}",
+                url: "{{ route('tags.update-by-lang') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#editTagModal #tag_edit_div').html('');
+                        $('#editTagModal #tag_edit_div').html(response.data);
+                    }
+                    else
+                    {
+                        $('#editTagModal').modal('hide');
+                        $('#editTagModal #tag_edit_div').html('');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    $.each(response.responseJSON.errors, function (i, error) {
+                        toastr.error(error);
+                    });
+                }
+            });
+        }
+
+
+        // Update Tag
+        function updateTag()
+        {
+            const myFormData = new FormData(document.getElementById('editTagForm'));
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('tags.update') }}",
                 data: myFormData,
                 dataType: "JSON",
                 contentType: false,
@@ -279,6 +316,7 @@
                     if(response.success == 1)
                     {
                         $('#editTagModal').modal('hide');
+                        $('#editTagModal #tag_edit_div').html('');
                         toastr.success(response.message);
                         setTimeout(() => {
                             location.reload();
@@ -287,29 +325,18 @@
                     else
                     {
                         $('#editTagModal').modal('hide');
+                        $('#editTagModal #tag_edit_div').html('');
                         toastr.error(response.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
                     }
                 },
                 error: function(response)
                 {
-                    // All Validation Errors
-                    const validationErrors = (response?.responseJSON?.errors) ? response.responseJSON.errors : '';
-
-                    if (validationErrors != '')
-                    {
-                        // Name Error
-                        var nameError = (validationErrors.tag_name) ? validationErrors.tag_name : '';
-                        if (nameError != '')
-                        {
-                            $("#"+formID+' #tag_name').addClass('is-invalid');
-                            toastr.error(nameError);
-                        }
-                    }
+                    $.each(response.responseJSON.errors, function (i, error) {
+                        toastr.error(error);
+                    });
                 }
             });
+
         }
 
     </script>

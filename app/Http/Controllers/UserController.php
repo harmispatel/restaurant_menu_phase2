@@ -414,8 +414,8 @@ class UserController extends Controller
         if(!empty($shop_id))
         {
             $shop = Shop::where('id',$shop_id)->first();
-            $shop_directory = isset($shop->directory) ? $shop->directory : '';
-
+            $shop_slug = $shop->shop_slug;
+            $shop_directory = public_path('client_uploads/shops/'.$shop_slug);
             if(!empty($shop_directory))
             {
                 File::deleteDirectory($shop_directory);
@@ -613,10 +613,14 @@ class UserController extends Controller
                 'shop_logo'             =>      'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             ]);
 
+            $explode_emails = explode(',',str_replace(' ','',$request->contact_emails));
+            $contact_emails = serialize($explode_emails);
+
             // User Update
             $user->firstname = $request->firstname;
             $user->lastname = $request->lastname;
             $user->email = $request->email;
+            $user->contact_emails = $contact_emails;
 
             if(!empty($request->password))
             {

@@ -14,18 +14,28 @@
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
                             <label class="form-label">{{ __('Title')}}</label>
-                            <input class="form-control" type="text" name="title">
+                            <input class="form-control {{ $errors->has('title') ? 'is-invalid' : ''}}" type="text" name="title">
+                            @if($errors->has('title'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('title') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="form-group">
+                            <label class="form-label">{{ __('Message')}}</label>
+                            <textarea name="message" id="message" class="form-control {{ $errors->has('message') ? 'is-invalid' : ''}}"></textarea>
+                            @if($errors->has('message'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('message') }}
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="form-label">{{ __('Message')}}</label>
-                            <textarea name="message" id="" class="form-control"></textarea>
-                        </div>
+                        <button class="btn btn-success">{{ __('Send')}}</button>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <button class="btn btn-success">{{ __('Send')}}</button>
                 </div>
         </form>
     </section>

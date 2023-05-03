@@ -44,17 +44,107 @@
             <div class="col-md-12">
                 <div class="row">
                     <!-- Categories Card -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card info-card sales-card">
                             <div class="card-body">
-                                <h5 class="card-title"><a href="{{ route('categories') }}">{{ __('Categories')}}</a></h5>
+                                <h5 class="card-title p-0"><a href="{{ route('categories') }}">{{ __('Categories')}}</a></h5>
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="ri-restaurant-2-line"></i>
                                     </div>
                                     <div class="ps-3">
                                         <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
-                                            - {{ isset($category['total']) ? $category['total'] : 0 }}</span>
+                                            - {{ isset($category['total_category']) ? $category['total_category'] : 0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page Card -->
+                    <div class="col-md-3">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title p-0"><a href="{{ route('categories','page') }}">{{ __('Pages')}}</a></h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-files"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            - {{ isset($category['total_page']) ? $category['total_page'] : 0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Link Card -->
+                    <div class="col-md-3">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title p-0"><a href="{{ route('categories','link') }}">{{ __('Links')}}</a></h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-hash"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            - {{ isset($category['total_link']) ? $category['total_link'] : 0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Galleries Card -->
+                    <div class="col-md-3">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title p-0"><a href="{{ route('categories','image_gallary') }}">{{ __('Image Galleries')}}</a></h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-images"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            - {{ isset($category['image_gallary']) ? $category['image_gallary'] : 0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PDF Card -->
+                    <div class="col-md-3">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title p-0"><a href="{{ route('categories','pdf_category') }}">{{ __('PDF')}}</a></h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-file-earmark-pdf"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            - {{ isset($category['pdf_category']) ? $category['pdf_category'] : 0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Check In Page Card -->
+                    <div class="col-md-3">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title p-0"><a href="{{ route('categories','check_in_page') }}">{{ __('Check In Pages')}}</a></h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-check-fill"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            - {{ isset($category['check_in_page']) ? $category['check_in_page'] : 0 }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -62,10 +152,10 @@
                     </div>
 
                     <!-- Items Card -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card info-card sales-card">
                             <div class="card-body">
-                                <h5 class="card-title"><a href="{{ route('items') }}">{{ __('Items')}}</a></h5>
+                                <h5 class="card-title p-0"><a href="{{ route('items') }}">{{ __('Items')}}</a></h5>
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="ri-restaurant-2-line"></i>
@@ -99,6 +189,11 @@
                                     <tbody>
                                         @if(count($categories) > 0)
                                             @foreach ($categories as $cat)
+                                                @php
+                                                    // echo '<pre>';
+                                                    // print_r($cat);
+                                                    // exit();
+                                                @endphp
                                                 <tr>
                                                     <th scope="row">
                                                         @if(!empty($cat['image']))
@@ -107,7 +202,15 @@
                                                             <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35">
                                                         @endif
                                                     </th>
-                                                    <td>{{ $cat->$name_key }}</td>
+                                                    <td>
+                                                        @if($cat['parent_category'] == 0 && empty($cat['parent_id']))
+                                                            <a href="{{ route('categories',$cat['category_type']) }}">{{ $cat->$name_key }}</a>
+                                                        @elseif ($cat['category_type'] == 'product_category' && !empty($cat['parent_id']))
+                                                            <a href="{{ route('categories',$cat['parent_id']) }}">{{ $cat->$name_key }}</a>
+                                                        @else
+                                                            <a href="{{ route('categories') }}">{{ $cat->$name_key }}</a>
+                                                        @endif
+                                                    </td>
                                                     <td>{{ date('d-m-Y h:i:s',strtotime($cat->updated_at)) }}</td>
                                                 </tr>
                                             @endforeach
@@ -146,7 +249,9 @@
                                                         @endif
                                                     </th>
                                                     <td>{{ isset($val->category[$name_key]) ? $val->category[$name_key] :  "" }}</td>
-                                                    <td>{{ $val->$name_key }}</td>
+                                                    <td>
+                                                        <a href="{{ route('items',$val['category_id']) }}">{{ $val->$name_key }}</a>
+                                                    </td>
                                                     <td>{{ date('d-m-Y h:i:s',strtotime($val->updated_at)) }}</td>
                                                 </tr>
                                             @endforeach

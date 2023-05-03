@@ -5,6 +5,9 @@
     $search_box_position = isset($theme_settings['search_box_position']) ? $theme_settings['search_box_position'] : '';
 
     $shop_slug = isset($shop_details['shop_slug']) ? $shop_details['shop_slug'] : '';
+
+    // Cart Quantity
+    $total_quantity = getCartQuantity();
 @endphp
 
 <header class="header_preview header-sticky">
@@ -52,12 +55,17 @@
                         @endif
                     </a>
                 @elseif ($search_box_position == 'left')
-                    <button class="btn search_bt" id="openSearchBox">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                    <button class="btn search_bt d-none" id="closeSearchBox">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
+                    <div>
+                        @if($total_quantity > 0)
+                            <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                        @endif
+                        <button class="btn search_bt" id="openSearchBox">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button class="btn search_bt d-none" id="closeSearchBox">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
                 @endif
 
                 {{-- Center Position --}}
@@ -70,12 +78,17 @@
                         @endif
                     </a>
                 @elseif ($search_box_position == 'center')
-                    <button class="btn search_bt" id="openSearchBox">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                    <button class="btn search_bt d-none" id="closeSearchBox">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
+                    <div>
+                        @if($total_quantity > 0)
+                            <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                        @endif
+                        <button class="btn search_bt" id="openSearchBox">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button class="btn search_bt d-none" id="closeSearchBox">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
                 @endif
 
                 {{-- Right Position --}}
@@ -117,12 +130,17 @@
                         @endif
                     </a>
                 @elseif ($search_box_position == 'right')
-                    <button class="btn search_bt" id="openSearchBox">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                    <button class="btn search_bt d-none" id="closeSearchBox">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
+                    <div>
+                        @if($total_quantity > 0)
+                            <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                        @endif
+                        <button class="btn search_bt" id="openSearchBox">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button class="btn search_bt d-none" id="closeSearchBox">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
                 @endif
 
                 <div class="search_input">
@@ -165,12 +183,17 @@
                         <img src="{{ $default_logo }}" width="160">
                     @endif
                 </a>
-                <button class="btn search_bt" id="openSearchBox">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-                <button class="btn search_bt d-none" id="closeSearchBox">
-                    <i class="fa-solid fa-times"></i>
-                </button>
+                <div>
+                    @if($total_quantity > 0)
+                        <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                    @endif
+                    <button class="btn search_bt" id="openSearchBox">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <button class="btn search_bt d-none" id="closeSearchBox">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
                 <div class="search_input">
                     <input type="text" class="form-control w-100" name="search" id="search">
                 </div>

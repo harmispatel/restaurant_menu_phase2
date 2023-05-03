@@ -1,12 +1,17 @@
 @php
-    $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : "";
-    $primary_lang_details = clientLanguageSettings($shop_id);
 
+    // Shop ID & Slug
+    $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : "";
+    $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
+    // Primary Language Details
+    $primary_lang_details = clientLanguageSettings($shop_id);
     $language = getLangDetails(isset($primary_lang_details['primary_language']) ? $primary_lang_details['primary_language'] : '');
     $language_code = isset($language['code']) ? $language['code'] : '';
+
+    // Name Language Key
     $name_key = $language_code."_name";
 
-    $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
 @endphp
 
 @extends('client.layouts.client-layout')
@@ -26,128 +31,44 @@
                 <div class="modal-body">
                     <form id="addItemForm" enctype="multipart/form-data">
                         @csrf
-                        {{-- <input type="hidden" name="category_id" id="category_id" value="{{ $category->id }}"> --}}
+                        {{-- Product Type --}}
                         <div class="row mb-3">
-                            <div class="col-md-3">
+                            <div class="col-md-12">
                                 <label for="type" class="form-label">{{ __('Type')}}</label>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="form-group">
-                                    <select name="type" id="type" onchange="togglePrice('add')" class="form-control">
-                                        <option value="1">{{ __('Product')}}</option>
-                                        <option value="2">{{ __('Divider')}}</option>
-                                    </select>
-                                </div>
+                                <select name="type" id="type" onchange="togglePrice('add')" class="form-control">
+                                    <option value="1">{{ __('Product')}}</option>
+                                    <option value="2">{{ __('Divider')}}</option>
+                                </select>
                             </div>
                         </div>
+
+                        {{-- Category --}}
                         <div class="row mb-3">
-                            <div class="col-md-3">
+                            <div class="col-md-12">
                                 <label for="category" class="form-label">{{ __('Category')}}</label>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="form-group">
-                                    <select name="category" id="category" class="form-control">
-                                        <option value="">Choose Category</option>
-                                        @if(count($categories) > 0)
-                                            @foreach ($categories as $cat)
-                                                <option value="{{ $cat->id }}" {{ ($cat_id == $cat->id) ? 'selected' : '' }}>{{ $cat->en_name }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
+                                <select name="category" id="category" class="form-control">
+                                    <option value="">Choose Category</option>
+                                    @if(count($categories) > 0)
+                                        @foreach ($categories as $cat)
+                                            <option value="{{ $cat->id }}" {{ ($cat_id == $cat->id) ? 'selected' : '' }}>{{ $cat->en_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
                         </div>
+
+                        {{-- Name --}}
                         <div class="row mb-3">
-                            <div class="col-md-3">
+                            <div class="col-md-12">
                                 <label for="name" class="form-label">{{ __('Name')}}</label>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="form-group">
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Item Name">
-                                </div>
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Item Name">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label for="description" class="form-label">{{ __('Description')}}</label>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="form-group">
-                                    <textarea class="form-control" name="description" id="description" rows="5" placeholder="Item Description"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label for="image" class="form-label">{{ __('Image')}}</label>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <div id="img-label">
-                                                <label for="image" style="cursor: pointer">
-                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100" id="crp-img-prw">
-                                                </label>
-                                            </div>
-                                            <input type="file" name="image" id="image" class="form-control" style="display: none;">
-                                            <input type="hidden" name="og_image" id="og_image">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <code>Upload Image in (200*200) Dimensions</code>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8 img-crop-sec mb-2" style="display: none">
-                                <img src="" alt="" id="resize-image" class="w-100">
-                                <div class="mt-3">
-                                    <a class="btn btn-sm btn-success" onclick="saveCropper('addItemForm')">Save</a>
-                                    <a class="btn btn-sm btn-danger" onclick="resetCropper()">Reset</a>
-                                    <a class="btn btn-sm btn-secondary" onclick="cancelCropper('addItemForm')">Cancel</a>
-                                </div>
-                            </div>
-                            <div class="col-md-4 img-crop-sec" style="display: none;">
-                                <div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label for="ingredients" class="form-label">{{ __('Indicative Icons')}}</label>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="form-group">
-                                    <select name="ingredients[]" id="ingredients" class="form-control" multiple>
-                                        @if(count($ingredients) > 0)
-                                            @foreach ($ingredients as $ingredient)
-                                                <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label for="tags" class="form-label">{{ __('Tags')}}</label>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="form-group">
-                                    <select name="tags[]" id="tags" class="form-control" multiple>
-                                        @if(count($tags) > 0)
-                                            @foreach ($tags as $tag)
-                                                <option value="{{ $tag->name }}">{{ $tag->name }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3 price_div">
-                            <div class="col-md-3">
+
+                        {{-- Price --}}
+                        <div class="row price_div">
+                            <div class="col-md-12 priceDiv" id="priceDiv">
                                 <label for="price" class="form-label">{{ __('Price')}}</label>
-                            </div>
-                            <div class="col-md-9 priceDiv" id="priceDiv">
                                 <div class="row mb-3 align-items-center price price_1">
                                     <div class="col-md-5 mb-1">
                                         <input type="text" name="price[price][]" class="form-control" placeholder="Enter Price">
@@ -168,63 +89,158 @@
                                 <a onclick="addPrice('add')" class="btn addPriceBtn btn-info text-white">{{ __('Add Price')}}</a>
                             </div>
                         </div>
-                        <div class="row mb-3 calories_div">
-                            <div class="col-md-3">
-                                <label for="calories" class="form-label">{{ __('Calories')}}</label>
+
+                        {{-- More Details --}}
+                        <div class="row mb-3">
+                            <div class="col-md-12 text-center">
+                                <a class="btn btn-sm btn-primary" style="cursor: pointer" onclick="toggleMoreDetails('addItemForm')" id="more_dt_btn">More Details.. <i class="bi bi-eye-slash"></i></a>
                             </div>
-                            <div class="col-md-9">
-                                <div class="form-group">
+                        </div>
+                        <div id="more_details" style="display: none;">
+
+                            {{-- Description --}}
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="description" class="form-label">{{ __('Description')}}</label>
+                                    <textarea class="form-control" name="description" id="description" rows="5" placeholder="Item Description"></textarea>
+                                </div>
+                            </div>
+
+                            {{-- Image --}}
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="image" class="form-label">{{ __('Image')}}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <div id="img-label">
+                                                    <label for="image" style="cursor: pointer">
+                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100 h-100" id="crp-img-prw" style="border-radius: 10px;">
+                                                    </label>
+                                                </div>
+                                                <input type="file" name="image" id="image" class="form-control" style="display: none;">
+                                                <input type="hidden" name="og_image" id="og_image">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <code>Upload Image in (200*200) Dimensions</code>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 img-crop-sec mb-2" style="display: none">
+                                    <img src="" alt="" id="resize-image" class="w-100">
+                                    <div class="mt-3">
+                                        <a class="btn btn-sm btn-success" onclick="saveCropper('addItemForm')">Save</a>
+                                        <a class="btn btn-sm btn-danger" onclick="resetCropper()">Reset</a>
+                                        <a class="btn btn-sm btn-secondary" onclick="cancelCropper('addItemForm')">Cancel</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 img-crop-sec" style="display: none;">
+                                    <div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>
+                                </div>
+                            </div>
+
+                            {{-- Indicative Icons --}}
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="ingredients" class="form-label">{{ __('Indicative Icons')}}</label>
+                                    <select name="ingredients[]" id="ingredients" class="form-control" multiple>
+                                        @if(count($ingredients) > 0)
+                                            @foreach ($ingredients as $ingredient)
+                                                <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{-- Tags --}}
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="tags" class="form-label">{{ __('Tags')}}</label>
+                                    <select name="tags[]" id="tags" class="form-control" multiple>
+                                        @if(count($tags) > 0)
+                                            @foreach ($tags as $tag)
+                                                <option value="{{ (isset($tag[$name_key])) ? $tag[$name_key] : '' }}">{{ (isset($tag[$name_key])) ? $tag[$name_key] : '' }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{-- Calories --}}
+                            <div class="row mb-3 calories_div">
+                                <div class="col-md-12">
+                                    <label for="calories" class="form-label">{{ __('Calories')}}</label>
                                     <input type="text" name="calories" class="form-control" id="calories" placeholder="Enter Calories">
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 mark_new">
-                                <div class="form-group">
-                                    <label class="switch me-2">
-                                        <input type="checkbox" id="mark_new" name="is_new" value="1">
-                                        <span class="slider round">
-                                            <i class="fa-solid fa-circle-check check_icon"></i>
-                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                        </span>
-                                    </label>
-                                    <label for="mark_new" class="form-label">{{ __('Mark Item as New')}}</label>
+
+                            {{-- Attributes --}}
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="options" class="form-label">{{ __('Attributes')}}</label>
+                                    <select name="options[]" id="options" class="form-control" multiple>
+                                        @if(count($options) > 0)
+                                            @foreach ($options as $option)
+                                                <option value="{{ $option->id }}">{{ $option->title }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 mark_sign">
-                                <div class="form-group">
-                                    <label class="switch me-2">
-                                        <input type="checkbox" id="mark_sign" name="is_sign" value="1">
-                                        <span class="slider round">
-                                            <i class="fa-solid fa-circle-check check_icon"></i>
-                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                        </span>
-                                    </label>
-                                    <label for="mark_sign" class="form-label">{{ __('Mark Item as Signature')}}</label>
+
+                            {{-- Status Buttons --}}
+                            <div class="row mb-3">
+                                <div class="col-md-6 mark_new">
+                                    <div class="form-group">
+                                        <label class="switch me-2">
+                                            <input type="checkbox" id="mark_new" name="is_new" value="1">
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="mark_new" class="form-label">{{ __('New')}}</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mt-2 day_special">
-                                <div class="form-group">
-                                    <label class="switch me-2">
-                                        <input type="checkbox" id="day_special" name="day_special" value="1">
-                                        <span class="slider round">
-                                            <i class="fa-solid fa-circle-check check_icon"></i>
-                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                        </span>
-                                    </label>
-                                    <label for="day_special" class="form-label">{{ __('Mark Item as Day Special')}}</label>
+                                <div class="col-md-6 mark_sign">
+                                    <div class="form-group">
+                                        <label class="switch me-2">
+                                            <input type="checkbox" id="mark_sign" name="is_sign" value="1">
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="mark_sign" class="form-label">{{ __('Recommended')}}</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mt-2">
-                                <div class="form-group">
-                                    <label class="switch me-2">
-                                        <input type="checkbox" id="publish" name="published" value="1">
-                                        <span class="slider round">
-                                            <i class="fa-solid fa-circle-check check_icon"></i>
-                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                        </span>
-                                    </label>
-                                    <label for="publish" class="form-label">{{ __('Published')}}</label>
+                                <div class="col-md-6 mt-2 day_special">
+                                    <div class="form-group">
+                                        <label class="switch me-2">
+                                            <input type="checkbox" id="day_special" name="day_special" value="1">
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="day_special" class="form-label">{{ __('Day Special')}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <div class="form-group">
+                                        <label class="switch me-2">
+                                            <input type="checkbox" id="publish" name="published" value="1">
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="publish" class="form-label">{{ __('Published')}}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -253,30 +269,18 @@
     </div>
 
     {{-- EditTag Modal --}}
-    <div class="modal fade" id="updateTagModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateTagModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editTagModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editTagModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="updateTagModalLabel">{{ __('Edit Tag')}}</h5>
+                    <h5 class="modal-title" id="editTagModalLabel">{{ __('Edit Tag')}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="updateTagForm" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="tag_id" id="tag_id" value="">
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input type="text" name="tag_name" id="tag_name" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close')}}</button>
-                        <a class="btn btn-primary" id="updateTag" onclick="updateTag()">{{ __('Update')}}</a>
-                    </div>
-                </form>
+                <div class="modal-body" id="tag_edit_div">
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-success" onclick="updateTag()">{{ __('Update') }}</a>
+                </div>
             </div>
         </div>
     </div>
@@ -391,7 +395,7 @@
                                             </div>
                                             <div class="item_info">
                                                 <div class="item_name">
-                                                    <h3>{{ $item->en_name }}</h3>
+                                                    <h3>{{ isset($item[$name_key]) ? $item[$name_key] : '' }}</h3>
                                                     <div class="form-check form-switch">
                                                         @php
                                                             $newStatus = ($item->published == 1) ? 0 : 1;
@@ -451,6 +455,7 @@
 
             // Remove Validation Class
             $('#addItemForm #name').removeClass('is-invalid');
+            $('#addItemForm #category').removeClass('is-invalid');
             $('#addItemForm #image').removeClass('is-invalid');
 
             // Clear all Toastr Messages
@@ -460,6 +465,12 @@
             $("#addItemForm #ingredients").select2({
                 dropdownParent: $("#addItemModal"),
                 placeholder: "Select Indicative Icons",
+            });
+
+            // Intialized Options SelectBox
+            $("#addItemForm #options").select2({
+                dropdownParent: $("#addItemModal"),
+                placeholder: "Select Attributes",
             });
 
             // Intialized Tags SelectBox
@@ -579,6 +590,8 @@
             deleteCropper('addItemForm');
             $('.ck-editor').remove();
             addItemEditor = "";
+            $('#addItemForm').trigger('reset');
+            toggleMoreDetails('addItemForm')
         });
 
         // Remove Text Editor from Edit Item Modal
@@ -733,6 +746,7 @@
 
             // Remove Validation Class
             $('#addItemForm #name').removeClass('is-invalid');
+            $('#addItemForm #category').removeClass('is-invalid');
             $('#addItemForm #image').removeClass('is-invalid');
 
             // Clear all Toastr Messages
@@ -777,6 +791,14 @@
                         {
                             $('#addItemForm #name').addClass('is-invalid');
                             toastr.error(nameError);
+                        }
+
+                        // Category Error
+                        var categoryError = (validationErrors.category) ? validationErrors.category : '';
+                        if (categoryError != '')
+                        {
+                            $('#addItemForm #category').addClass('is-invalid');
+                            toastr.error(categoryError);
                         }
 
                         // Image Error
@@ -964,11 +986,18 @@
                             {
                                 var ingredientsEle = "#editItemModal #"+value+"_ingredients";
                                 var tagsEle = "#editItemModal #"+value+"_tags";
+                                var optionsEle = "#editItemModal #"+value+"_options";
 
                                 // Intialized Ingredients SelectBox
                                 $(ingredientsEle).select2({
                                     dropdownParent: $("#editItemModal"),
                                     placeholder: "Select Indicative Icons",
+                                });
+
+                                // Intialized Options SelectBox
+                                $(optionsEle).select2({
+                                    dropdownParent: $("#editItemModal"),
+                                    placeholder: "Select Attributes",
                                 });
 
                                 // Intialized Tags SelectBox
@@ -1250,13 +1279,10 @@
 
 
         // Function for Edit Tag
-        function editTag(Id)
+        function editTag(tagID)
         {
-            // Reset editItemForm
-            $('#updateTagForm').trigger('reset');
-
-            // Remove Validation Class
-            $('#updateTagForm #tag_name').removeClass('is-invalid');
+            // Reset All Form
+            $('#editTagModal #tag_edit_div').html('');
 
             // Clear all Toastr Messages
             toastr.clear();
@@ -1267,21 +1293,14 @@
                 dataType: "JSON",
                 data: {
                     '_token': "{{ csrf_token() }}",
-                    'id': Id,
+                    'id': tagID,
                 },
                 success: function(response)
                 {
                     if (response.success == 1)
                     {
-                        // Tag Data's
-                        const tag = response.tag;
-
-                        // Add values in editItemForm
-                        $('#updateTagForm #tag_name').val(tag.name);
-                        $('#updateTagForm #tag_id').val(tag.id);
-
-                        // Show Modal
-                        $('#updateTagModal').modal('show');
+                        $('#editTagModal #tag_edit_div').html(response.data);
+                        $('#editTagModal').modal('show');
                     }
                     else
                     {
@@ -1292,13 +1311,51 @@
         }
 
 
-        // Function for Update Tag
+        // Update Tag By Language Code
+        function updateByCode(next_lang_code)
+        {
+            const myFormData = new FormData(document.getElementById('editTagForm'));
+            myFormData.append('next_lang_code',next_lang_code);
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('tags.update-by-lang') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#editTagModal #tag_edit_div').html('');
+                        $('#editTagModal #tag_edit_div').html(response.data);
+                    }
+                    else
+                    {
+                        $('#editTagModal').modal('hide');
+                        $('#editTagModal #tag_edit_div').html('');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    $.each(response.responseJSON.errors, function (i, error) {
+                        toastr.error(error);
+                    });
+                }
+            });
+        }
+
+
+        // Update Tag
         function updateTag()
         {
-            const myFormData = new FormData(document.getElementById('updateTagForm'));
-
-            // Remove Validation Class
-            $('#updateTagForm #tag_name').removeClass('is-invalid');
+            const myFormData = new FormData(document.getElementById('editTagForm'));
 
             // Clear all Toastr Messages
             toastr.clear();
@@ -1315,8 +1372,8 @@
                 {
                     if(response.success == 1)
                     {
-                        $('#updateTagForm').trigger('reset');
-                        $('#updateTagModal').modal('hide');
+                        $('#editTagModal').modal('hide');
+                        $('#editTagModal #tag_edit_div').html('');
                         toastr.success(response.message);
                         setTimeout(() => {
                             location.reload();
@@ -1324,26 +1381,16 @@
                     }
                     else
                     {
-                        $('#updateTagForm').trigger('reset');
-                        $('#updateTagModal').modal('hide');
+                        $('#editTagModal').modal('hide');
+                        $('#editTagModal #tag_edit_div').html('');
                         toastr.error(response.message);
                     }
                 },
                 error: function(response)
                 {
-                    // All Validation Errors
-                    const validationErrors = (response?.responseJSON?.errors) ? response.responseJSON.errors : '';
-
-                    if (validationErrors != '')
-                    {
-                        // Name Error
-                        var nameError = (validationErrors.tag_name) ? validationErrors.tag_name : '';
-                        if (nameError != '')
-                        {
-                            $('#updateTagForm #tag_name').addClass('is-invalid');
-                            toastr.error(nameError);
-                        }
-                    }
+                    $.each(response.responseJSON.errors, function (i, error) {
+                        toastr.error(error);
+                    });
                 }
             });
 
@@ -1641,6 +1688,30 @@
                 $('#'+formID+' #rep-image').hide();
             }
 
+        }
+
+        // Function for Toggle more Information
+        function toggleMoreDetails(fid)
+        {
+            if(fid == 'addItemForm')
+            {
+                var formId = '#'+fid;
+            }
+            else
+            {
+                var formId = '#editItemModal';
+            }
+
+            var curr_icon = $(formId+' #more_dt_btn i').attr('class');
+            if(curr_icon == 'bi bi-eye-slash')
+            {
+                $(formId+' #more_dt_btn i').attr('class','bi bi-eye');
+            }
+            else
+            {
+                $(formId+' #more_dt_btn i').attr('class','bi bi-eye-slash');
+            }
+            $(formId+' #more_details').toggle();
         }
 
     </script>

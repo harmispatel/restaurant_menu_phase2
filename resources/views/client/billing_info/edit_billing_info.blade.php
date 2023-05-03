@@ -137,6 +137,18 @@
                                             <input type="text" name="zipcode" id="zipcode" value="{{ $user->zipcode }}" class="form-control" placeholder="Plase Enter your Zip">
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">{{__('Mobile No.')}}</label>
+                                            <input type="number" name="mobile" id="mobile" value="{{ $user->mobile }}" class="form-control" placeholder="Plase Enter your Mobile Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">{{__('Telephone')}}</label>
+                                            <input type="text" name="telephone" id="telephone" value="{{ $user->telephone }}" class="form-control" placeholder="Plase Enter your Telephone">
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 invoice_div" style="display: none;">
                                         <div class="form-group mb-3">
                                             <label for="vat_id" class="form-label">{{ __('VAT ID')}}</label>
@@ -152,6 +164,12 @@
                                         <div class="form-group mb-3">
                                             <label for="gemi_id" class="form-label">{{ __('G.E.M.I ID')}}</label>
                                             <input type="text" name="gemi_id" id="gemi_id" class="form-control" placeholder="Enter G.E.M.I ID" value="{{ $user->gemi_id }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 invoice_div" style="display: none;">
+                                        <div class="form-group mb-3">
+                                            <label for="tax_office" class="form-label">{{ __('Tax Office')}}</label>
+                                            <input type="text" name="tax_office" id="tax_office" class="form-control" placeholder="Enter Tax Office" value="{{ $user->tax_office }}">
                                         </div>
                                     </div>
                                 </div>

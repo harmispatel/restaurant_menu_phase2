@@ -13,4 +13,9 @@ class UserShop extends Model
     {
         return $this->hasOne(Shop::class,'id','shop_id');
     }
+
+    public function user()
+    {
+        return $this->hasOne(User::class,'id','user_id');
+    }
 }

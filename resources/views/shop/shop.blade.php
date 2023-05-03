@@ -23,11 +23,9 @@
     $language_details = getLangDetailsbyCode($current_lang_code);
 
     // Get Banner Settings
-    $banner_setting = getBannerSetting($shop_details['id']);
+    $shop_banners = getBanners($shop_details['id']);
     $banner_key = $language_details['code']."_image";
-    $banner_text_key = $language_details['code']."_title";
-    $banner_image = isset($banner_setting[$banner_key]) ? $banner_setting[$banner_key] : "";
-    $banner_text = isset($banner_setting[$banner_text_key]) ? $banner_setting[$banner_text_key] : "";
+    $banner_text_key = $language_details['code']."_description";
 
     // Theme Settings
     $theme_settings = themeSettings($shop_theme_id);
@@ -49,21 +47,34 @@
 @section('content')
 
     <input type="hidden" name="shop_id" id="shop_id" value="{{ encrypt($shop_details['id']); }}">
+    <input type="hidden" name="current_cat_id" id="current_cat_id" value="{{ $current_cat_id }}">
 
     @if(isset($package_permissions['banner']) && !empty($package_permissions['banner']) && $package_permissions['banner'] == 1)
         @if(isset($theme_settings['banner_position']) && !empty($theme_settings['banner_position']) && $theme_settings['banner_position'] == 'top')
-            @if($theme_settings['banner_type'] == 'image')
-                @if(!empty($banner_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_image))
-                    <div class="banner-image banner-img">
-                        {{-- <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_image) }}" class="w-100"> --}}
+            @if(count($shop_banners) > 0)
+                <section class="home_main_slider">
+                    <div class="swiper-container h-100">
+                        <div class="swiper-wrapper">
+                            @foreach ($shop_banners as $key => $banner)
+                                @if(($banner->display == 'both' || $banner->display == 'image') && (isset($banner[$banner_key]) && !empty($banner[$banner_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key])))
+                                    <div class="swiper-slide" style="background-image: url('{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key]) }}')">
+                                @else
+                                    <div class="swiper-slide">
+                                @endif
+                                    @if($banner->display == 'both' || $banner->display == 'description')
+                                        @if(isset($banner[$banner_text_key]) && !empty($banner[$banner_text_key]))
+                                            <div class="swiper-text">
+                                                {!! $banner[$banner_text_key] !!}
+                                            </div>
+                                        @endif
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
+                        <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
                     </div>
-                @endif
-            @else
-                @if(!empty($banner_text))
-                    <div class="banner-image">
-                        <div class="container">{!! $banner_text !!}</div>
-                    </div>
-                @endif
+                </section>
             @endif
         @endif
     @endif
@@ -78,18 +89,41 @@
                         @php
                             $default_cat_img = asset('public/client_images/not-found/no_image_1.jpg');
                             $name_code = $current_lang_code."_name";
-                        @endphp
+                            $cat_image = isset($category->categoryImages[0]['image']) ? $category->categoryImages[0]['image'] : '';
+                            $thumb_image = isset($category->cover) ? $category->cover : '';
 
-                        <div class="menu_list_item">
-                            <a href="{{ route('items.preview',[$shop_details['shop_slug'],$category->id]) }}">
-                                @if(!empty($category->image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->image))
-                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->image) }}" class="w-100">
-                                @else
-                                    <img src="{{ $default_cat_img }}" class="w-100">
-                                @endif
-                                <h3 class="item_name">{{ isset($category->$name_code) ? $category->$name_code : '' }}</h3>
-                            </a>
-                        </div>
+                            $active_cat = checkCategorySchedule($category->id,$category->shop_id);
+                        @endphp
+                            @if($active_cat == 1)
+                                <div class="menu_list_item">
+                                    @if($category->category_type == 'link')
+                                        <a href="{{ (isset($category->link_url) && !empty($category->link_url)) ? $category->link_url : '#' }}" target="_blank">
+                                    @elseif($category->category_type == 'parent_category')
+                                        <a href="{{ route('restaurant',[$shop_slug,$category->id]) }}">
+                                    @else
+                                        <a href="{{ route('items.preview',[$shop_details['shop_slug'],$category->id]) }}">
+                                    @endif
+
+                                        {{-- Image Section --}}
+                                        @if($category->category_type == 'product_category')
+                                            @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
+                                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" class="w-100">
+                                            @else
+                                                <img src="{{ $default_cat_img }}" class="w-100">
+                                            @endif
+                                        @else
+                                            @if(!empty($thumb_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$thumb_image))
+                                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$thumb_image) }}" class="w-100">
+                                            @else
+                                                <img src="{{ $default_cat_img }}" class="w-100">
+                                            @endif
+                                        @endif
+
+                                        {{-- Name Section --}}
+                                        <h3 class="item_name">{{ isset($category->$name_code) ? $category->$name_code : '' }}</h3>
+                                    </a>
+                                </div>
+                            @endif
                     @endforeach
                 </div>
             @else
@@ -100,18 +134,30 @@
 
     @if(isset($package_permissions['banner']) && !empty($package_permissions['banner']) && $package_permissions['banner'] == 1)
         @if(isset($theme_settings['banner_position']) && !empty($theme_settings['banner_position']) && $theme_settings['banner_position'] == 'bottom')
-            @if($theme_settings['banner_type'] == 'image')
-                @if(!empty($banner_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_image))
-                    <div class="banner-image banner-img">
-                        {{-- <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_image) }}" class="w-100"> --}}
+            @if(count($shop_banners) > 0)
+                <section class="home_main_slider">
+                    <div class="swiper-container h-100">
+                        <div class="swiper-wrapper">
+                            @foreach ($shop_banners as $key => $banner)
+                                @if(($banner->display == 'both' || $banner->display == 'image') && (isset($banner[$banner_key]) && !empty($banner[$banner_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key])))
+                                    <div class="swiper-slide" style="background-image: url('{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key]) }}')">
+                                @else
+                                    <div class="swiper-slide">
+                                @endif
+                                    @if($banner->display == 'both' || $banner->display == 'description')
+                                        @if(isset($banner[$banner_text_key]) && !empty($banner[$banner_text_key]))
+                                            <div class="swiper-text">
+                                                {!! $banner[$banner_text_key] !!}
+                                            </div>
+                                        @endif
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
+                        <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
                     </div>
-                @endif
-            @else
-                @if(!empty($banner_text))
-                    <div class="banner-image">
-                        <div class="container">{!! $banner_text !!}</div>
-                    </div>
-                @endif
+                </section>
             @endif
         @endif
     @endif
@@ -150,6 +196,13 @@
                             </li>
                         @endif
 
+                        {{-- Pinterest Link --}}
+                        @if(isset($shop_settings['pinterest_link']) && !empty($shop_settings['pinterest_link']))
+                            <li>
+                                <a target="_blank" href="{{ $shop_settings['pinterest_link'] }}"><i class="fa-brands fa-pinterest"></i></a>
+                            </li>
+                        @endif
+
                         {{-- FourSquare Link --}}
                         @if(isset($shop_settings['foursquare_link']) && !empty($shop_settings['foursquare_link']))
                             <li>
@@ -160,7 +213,7 @@
                         {{-- TripAdvisor Link --}}
                         @if(isset($shop_settings['tripadvisor_link']) && !empty($shop_settings['tripadvisor_link']))
                             <li>
-                                <a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><img src="{{ asset('public/client_images/bs-icon/tripadvisor_green.png') }}" style="width: 37px; height: 35px;"></a>
+                                <a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><i class="fa-solid fa-mask"></i></a>
                             </li>
                         @endif
 
@@ -253,6 +306,7 @@
         {
             var keywords = $(this).val();
             var shopID = $('#shop_id').val();
+            var currCatID = $('#current_cat_id').val();
 
             $.ajax({
                 type: "POST",
@@ -261,6 +315,7 @@
                     "_token": "{{ csrf_token() }}",
                     'keywords':keywords,
                     'shopID':shopID,
+                    'current_cat_id':currCatID,
                 },
                 dataType: 'JSON',
                 success: function(response)

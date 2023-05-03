@@ -15,11 +15,13 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
 {
     private $category;
     private $languages;
+    private $client_langs;
 
-    public function __construct($category,$languages)
+    public function __construct($category,$languages,$client_langs)
     {
         $this->category = $category;
         $this->languages = $languages;
+        $this->client_langs = $client_langs;
     }
 
     // Export Category With Items
@@ -31,20 +33,22 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
         $all_excel_data = [];
 
         // Category Name By Language
-        if(count($all_lang) > 0)
+        if(count($this->client_langs) > 0 && count($all_lang) > 0)
         {
-            foreach($all_lang as $lang)
+            foreach($this->client_langs as $langkey => $lang)
             {
-                $lang_code = isset($lang->code) ? $lang->code : '';
+                $lang_code = $lang;
+                $lang_id = $langkey;
+
                 if(!empty($cat_dt) && !empty($lang_code))
                 {
                     $name_code = $lang_code."_name";
                     $data[] = isset($cat_dt[$name_code]) ? $cat_dt[$name_code] : '';
                 }
+
             }
             $all_excel_data[] = $data;
         }
-
 
         // Titles Array
         $title_data = [
@@ -82,11 +86,12 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
 
 
         // Items Section
-        if(count($all_lang) > 0)
+        if(count($this->client_langs) > 0 && count($all_lang) > 0)
         {
-            foreach($all_lang as $lang)
+            foreach($this->client_langs as $langkey => $lang)
             {
-                $lang_code = isset($lang->code) ? $lang->code : '';
+                $lang_code = $lang;
+                $lang_id = $langkey;
 
                 $items = Items::where('category_id',$cat_dt['id'])->get();
                 if(count($items) > 0)
@@ -207,11 +212,13 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
     {
         $all_lang = $this->languages;
         $lang_arr = [];
-        if(count($all_lang) > 0)
+        if(count($this->client_langs) > 0 && count($all_lang) > 0)
         {
-            foreach($all_lang as $lang)
+            foreach($this->client_langs as $langkey => $lang)
             {
-                $lang_arr[] = $lang['code'];
+                $lang_code = $lang;
+                $lang_id = $langkey;
+                $lang_arr[] = $lang_code;
             }
         }
         return $lang_arr;

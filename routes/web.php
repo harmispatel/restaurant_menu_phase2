@@ -7,12 +7,17 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DesignController;
+use App\Http\Controllers\EveryPayController;
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LanguagesController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OptionController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\ShopBannerController;
 use App\Http\Controllers\ShopController;
@@ -24,8 +29,10 @@ use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\TutorialController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersSubscriptionsController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Magarrent\LaravelCurrencyFormatter\Facades\Currency;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +56,7 @@ Route::get('config-clear', function () {
 
 Route::get('/', function () {
     return view('frontend.index');
-});
+})->name('home');
 
 
 // Auth Routes
@@ -150,7 +157,7 @@ Route::group(['prefix' => 'client'], function()
         Route::get('dashboard', [DashboardController::class,'clientDashboard'])->name('client.dashboard');
 
         // Categories
-        Route::get('categories',[CategoryController::class,'index'])->name('categories');
+        Route::get('categories/{cat_id?}',[CategoryController::class,'index'])->name('categories');
         Route::post('store-categories',[CategoryController::class,'store'])->name('categories.store');
         Route::post('delete-categories',[CategoryController::class,'destroy'])->name('categories.delete');
         Route::post('edit-categories',[CategoryController::class,'edit'])->name('categories.edit');
@@ -158,6 +165,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('status-categories',[CategoryController::class,'status'])->name('categories.status');
         Route::post('search-categories',[CategoryController::class,'searchCategories'])->name('categories.search');
         Route::post('sorting-categories',[CategoryController::class,'sorting'])->name('categories.sorting');
+        Route::post('delete-categories-images',[CategoryController::class,'deleteCategoryImages'])->name('categories.delete.images');
         Route::get('delete-categories-image/{id}',[CategoryController::class,'deleteCategoryImage'])->name('categories.delete.image');
 
         // Items
@@ -172,6 +180,15 @@ Route::group(['prefix' => 'client'], function()
         Route::post('delete-price-items',[ItemsController::class,'deleteItemPrice'])->name('items.delete.price');
         Route::get('delete-items-image/{id}',[ItemsController::class,'deleteItemImage'])->name('items.delete.image');
 
+        // Options
+        Route::get('options',[OptionController::class,'index'])->name('options');
+        Route::post('store-options',[OptionController::class,'store'])->name('options.store');
+        Route::post('delete-options',[OptionController::class,'destroy'])->name('options.delete');
+        Route::post('edit-options',[OptionController::class,'edit'])->name('options.edit');
+        Route::post('update-options-by-lang',[OptionController::class,'updateByLangCode'])->name('options.update-by-lang');
+        Route::post('update-options',[OptionController::class,'update'])->name('options.update');
+        Route::post('delete-price-options',[OptionController::class,'deleteOptionPrice'])->name('options.price.delete');
+
         // Designs
         Route::get('/design-logo', [DesignController::class,'logo'])->name('design.logo');
         Route::post('/design-logo-upload', [DesignController::class,'logoUpload'])->name('design.logo.upload');
@@ -184,15 +201,20 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/design-cover', [DesignController::class,'cover'])->name('design.cover');
         Route::get('/design-cover-delete', [DesignController::class,'deleteCover'])->name('design.cover.delete');
 
-        Route::get('/design-banner', [ShopBannerController::class,'index'])->name('design.banner');
-        Route::post('/design-banner-update', [ShopBannerController::class,'update'])->name('design.banner.update');
-        Route::get('/design-banner-delete/{key}', [ShopBannerController::class,'deleteBanner'])->name('design.banner.delete');
+        Route::get('/banners', [ShopBannerController::class,'index'])->name('banners');
+        Route::post('/banners-store', [ShopBannerController::class,'store'])->name('banners.store');
+        Route::post('/banners-delete', [ShopBannerController::class,'destroy'])->name('banners.delete');
+        Route::post('/banners-edit', [ShopBannerController::class,'edit'])->name('banners.edit');
+        Route::post('/banners-update', [ShopBannerController::class,'update'])->name('banners.update');
+        Route::get('/banners-image-delete/{key}', [ShopBannerController::class,'deleteBanner'])->name('banners.delete.image');
+        Route::post('update-banners-by-lang',[ShopBannerController::class,'updateByLangCode'])->name('banners.update-by-lang');
 
         Route::get('/design-general-info', [DesignController::class,'generalInfo'])->name('design.general-info');
         Route::post('/design-generalInfoUpdate', [DesignController::class,'generalInfoUpdate'])->name('design.generalInfoUpdate');
 
         // Billing Infor
         Route::get('billing-info',[BillingInfoController::class, 'billingInfo'])->name('billing.info');
+        Route::get('my-subscription',[BillingInfoController::class, 'clientSubscription'])->name('client.subscription');
         Route::get('edit-billing-info',[BillingInfoController::class, 'editBillingInfo'])->name('billing.info.edit');
         Route::post('billing-info-update',[BillingInfoController::class, 'updateBillingInfo'])->name('update.billing.info');
 
@@ -229,8 +251,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('edit-tags',[TagsController::class,'edit'])->name('tags.edit');
         Route::post('update-tags',[TagsController::class,'update'])->name('tags.update');
         Route::post('sorting-tags',[TagsController::class,'sorting'])->name('tags.sorting');
-        Route::post('edit-language-tags',[TagsController::class,'editTag'])->name('language.tags.edit');
-        Route::post('update-language-tags',[TagsController::class,'updateTag'])->name('language.tags.update');
+        Route::post('update-tags-by-lang',[TagsController::class,'updateByLangCode'])->name('tags.update-by-lang');
 
         // Preview
         Route::get('/preview',[PreviewController::class,'index'])->name('preview');
@@ -256,17 +277,70 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/delete-theme/{id}', [ThemeController::class,'destroy'])->name('theme.delete');
         Route::get('/clone-theme/{id}', [ThemeController::class,'cloneView'])->name('theme.clone');
 
+
+        // Orders
+        Route::get('/orders-settings',[OrderController::class,'OrderSettings'])->name('order.settings');
+        Route::post('/orders-settings-update',[OrderController::class,'UpdateOrderSettings'])->name('update.order.settings');
+        Route::get('/orders',[OrderController::class,'index'])->name('client.orders');
+        Route::get('/orders-history',[OrderController::class,'ordersHistory'])->name('client.orders.history');
+        Route::post('/orders-change-estimate',[OrderController::class,'changeOrderEstimate'])->name('change.order.estimate');
+        Route::post('/accept-order',[OrderController::class,'acceptOrder'])->name('accept.order');
+        Route::get('/order-view/{id}',[OrderController::class,'viewOrder'])->name('view.order');
+
+        // Payment
+        Route::get('/payment-settings',[PaymentController::class,'paymentSettings'])->name('payment.settings');
+        Route::post('/payment-settings-update',[PaymentController::class,'UpdatePaymentSettings'])->name('update.payment.settings');
+
     });
 });
 
+// Get Total with currency
+Route::post('total-with-currency',function(Request $request)
+{
+    try
+    {
+        $total = Currency::currency($request->currency)->format($request->total);
+        return response()->json([
+            'success' => 1,
+            'total' => $total,
+        ]);
+    }
+    catch (\Throwable $th)
+    {
+        return response()->json([
+            'success' => 0,
+            'message' => "Internal Server Error!",
+        ]);
+    }
 
-// Shops Preview
-Route::get('/{shop_slug}',[ShopController::class,'index'])->name('restaurant');
+})->name('total.with.currency');
+
+// Shops
+Route::get('/{shop_slug}/{catID?}',[ShopController::class,'index'])->name('restaurant');
 Route::get('{shop_slug}/items/{catID}',[ShopController::class,'itemPreview'])->name('items.preview');
 Route::post('shop-locale-change',[ShopController::class,'changeShopLocale'])->name('shop.locale.change');
 Route::post('search-shop-categories',[ShopController::class,'searchCategories'])->name('shop.categories.search');
 Route::post('search-shop-items',[ShopController::class,'searchItems'])->name('shop.items.search');
 Route::post('details-items',[ShopController::class,'getDetails'])->name('items.get.details');
+Route::post('do-check-in',[ShopController::class,'checkIn'])->name('do.check.in');
+Route::post('shop-add-to-cart',[ShopController::class,'addToCart'])->name('shop.add.to.cart');
+Route::post('shop-update-cart',[ShopController::class,'updateCart'])->name('shop.update.cart');
+Route::post('shop-remove-cart-item',[ShopController::class,'removeCartItem'])->name('shop.remove.cart.item');
+Route::get('{my_shop_slug}/my/cart/',[ShopController::class,'viewCart'])->name('shop.cart');
+Route::get('{my_shop_slug}/my/cart/checkout/',[ShopController::class,'cartCheckout'])->name('shop.cart.checkout');
+Route::post('{my_shop_slug}/my/cart/checkout/processing/',[ShopController::class,'checkoutProcessing'])->name('shop.cart.processing');
+Route::get('{my_shop_slug}/checkout/success/{id}',[ShopController::class,'checkoutSuccess'])->name('shop.checkout.success');
+Route::post('set-checkout-type',[ShopController::class,'setCheckoutType'])->name('set.checkout.type');
+Route::post('check-order-status',[ShopController::class,'checkOrderStatus'])->name('check.order.status');
+
+// Paypal Payment
+Route::get('{my_shop_slug}/paypal/payment/',[PaypalController::class,'payWithpaypal'])->name('paypal.payment');
+Route::get('{my_shop_slug}/paypal/payment/status',[PaypalController::class,'getPaymentStatus'])->name('paypal.payment.status');
+Route::get('{my_shop_slug}/paypal/payment/cancel',[PaypalController::class,'paymentCancel'])->name('paypal.payment.cancel');
+
+// EveryPay Payment
+Route::post('{my_shop_slug}/everypay/payment/',[EveryPayController::class,'payWithEveryPay'])->name('everypay.payment');
+Route::get('{my_shop_slug}/my/cart/checkout/processing/everypay',[EveryPayController::class,'gotoEveryPayCheckout'])->name('everypay.checkout.view');
 
 // Change Backend Language
 Route::post('/change-backend-language', [DashboardController::class, 'changeBackendLanguage'])->name('change.backend.language');

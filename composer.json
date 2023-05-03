@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "everypay/everypay-php": "^3.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
@@ -15,6 +16,7 @@
         "maatwebsite/excel": "^3.1",
         "magarrent/laravel-currency-formatter": "^1.0",
         "outhebox/blade-flags": "^1.2",
+        "paypal/rest-api-sdk-php": "^1.14",
         "simplesoftwareio/simple-qrcode": "4.2"
     },
     "require-dev": {

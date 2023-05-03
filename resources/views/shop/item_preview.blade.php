@@ -52,6 +52,7 @@
 
     $cat_name = isset($cat_details[$name_key]) ? $cat_details[$name_key] : '';
     $shop_title = "$shop_name | $cat_name";
+
 @endphp
 
 
@@ -66,6 +67,7 @@
     <input type="hidden" name="is_cat_tab" id="is_cat_tab" value="{{ count($cat_tags) }}">
     <input type="hidden" name="shop_id" id="shop_id" value="{{ $shop_details['id'] }}">
     <input type="hidden" name="tag_id" id="tag_id" value="">
+    <input type="hidden" name="parent_id" id="parent_id" value="{{ $parent_id }}">
 
     <section class="item_sec_main">
         <div class="container">
@@ -76,24 +78,48 @@
 
                     @if(count($categories) > 0)
                         @foreach ($categories as $cat)
-                            <li class="nav-item" role="presentation">
-                                <a href="{{ route('items.preview',[$shop_details['shop_slug'],$cat->id]) }}" class="nav-link cat-btn {{ ($cat->id == $current_cat_id) ? 'active' : '' }}">
-                                    <div class="img_box">
-                                        @if(!empty($cat->image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->image))
-                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->image) }}" class="w-100">
-                                        @else
-                                            <img src="{{ $default_image }}" class="w-100">
-                                        @endif
-                                        <span>{{ isset($cat->$name_key) ? $cat->$name_key : "" }}</span>
-                                    </div>
-                                </a>
-                            </li>
+                            @php
+                                $active_cat = checkCategorySchedule($cat->id,$cat->shop_id);
+                            @endphp
+
+                            @if($active_cat == 1)
+                                <li class="nav-item" role="presentation">
+                                    @if($cat->category_type == 'link')
+                                        <a href="{{ $cat->link_url }}" target="_blank" class="nav-link cat-btn">
+                                    @else
+                                        <a href="{{ route('items.preview',[$shop_details['shop_slug'],$cat->id]) }}" class="nav-link cat-btn {{ ($cat->id == $current_cat_id) ? 'active' : '' }}">
+                                    @endif
+                                        <div class="img_box">
+                                            {{-- Img Section --}}
+                                            @if($cat->category_type == 'page' || $cat->category_type == 'image_gallary' || $cat->category_type == 'link' || $cat->category_type == 'check_in_page' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_category')
+                                                @if(!empty($cat->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover))
+                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover) }}" class="w-100">
+                                                @else
+                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                @endif
+                                            @else
+                                                @php
+                                                    $cat_image = isset($cat->categoryImages[0]['image']) ? $cat->categoryImages[0]['image'] : '';
+                                                @endphp
+
+                                                @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
+                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" class="w-100">
+                                                @else
+                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                @endif
+                                            @endif
+                                            <span>{{ isset($cat->$name_key) ? $cat->$name_key : "" }}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            @endif
                         @endforeach
                     @endif
                 </ul>
 
                     <div class="item_list_div">
                         <h3 class="mb-3 cat_name">{{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : "" }}</h3>
+                        <p class="mb-3">{!! isset($cat_details[$description_key]) ? $cat_details[$description_key] : "" !!}</p>
 
                         <div class="item_inr_info">
 
@@ -597,6 +623,13 @@
                             </li>
                         @endif
 
+                        {{-- Pinterest Link --}}
+                        @if(isset($shop_settings['pinterest_link']) && !empty($shop_settings['pinterest_link']))
+                            <li>
+                                <a target="_blank" href="{{ $shop_settings['pinterest_link'] }}"><i class="fa-brands fa-pinterest"></i></a>
+                            </li>
+                        @endif
+
                         {{-- FourSquare Link --}}
                         @if(isset($shop_settings['foursquare_link']) && !empty($shop_settings['foursquare_link']))
                             <li>
@@ -607,7 +640,7 @@
                         {{-- TripAdvisor Link --}}
                         @if(isset($shop_settings['tripadvisor_link']) && !empty($shop_settings['tripadvisor_link']))
                             <li>
-                                <a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><img src="{{ asset('public/client_images/bs-icon/tripadvisor_green.png') }}" style="width: 37px; height: 35px;"></a>
+                                <a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><i class="fa-solid fa-mask"></i></a></a>
                             </li>
                         @endif
 
@@ -674,6 +707,7 @@
             var catID = $('#current_category_id').val();
             var tabID = $('#current_tab_id').val();
             var tag_id = $('#tag_id').val();
+            var parent_id = $('#parent_id').val();
             var shop_id = $('#shop_id').val();
             var keyword = $(this).val();
 
@@ -687,6 +721,7 @@
                     "keyword" : keyword,
                     "shop_id" : shop_id,
                     "tag_id" : tag_id,
+                    "parent_id" : parent_id,
                 },
                 dataType: "JSON",
                 success: function (response) {

@@ -383,6 +383,7 @@ class DesignController extends Controller
         $all_data['homepage_intro'] = $request->homepage_intro;
         $all_data['map_url'] = $request->map_url;
         $all_data['website_url'] = $request->website_url;
+        $all_data['pinterest_link'] = $request->pinterest_link;
 
         // Update Shop Name
         $shop = Shop::find($shop_id);

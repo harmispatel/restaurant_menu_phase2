@@ -4,9 +4,16 @@
 {{-- Jquery --}}
 <script src="{{ asset('public/client/assets/js/jquery.min.js') }}"></script>
 
+<script src="{{ asset('public/client/assets/js/swiper-bundle.min.js') }}"></script>
+
 {{-- Toastr --}}
 <script src="{{ asset('public/admin/assets/vendor/js/toastr.min.js') }}"></script>
 
+{{-- Custom JS --}}
+<script src="{{ asset('public/client/assets/js/custom.js') }}"></script>
+
+{{-- Masonary --}}
+<script src="{{ asset('public/client/assets/js/lightbox.js') }}"></script>
 
 {{-- Common JS Functions --}}
 <script type="text/javascript">
@@ -98,6 +105,238 @@
                 }
             }
         });
+    }
+
+    // Update Price
+    function updatePrice()
+    {
+        var base_price = 0.00;
+        var radio_price = 0.00;
+        var checkbox_price = 0.00;
+        var def_currency = $('#def_currency').val();
+        const option_ids = JSON.parse($('#option_ids').val());
+        let quantity = $('#itemDetailsModal #quantity').val();
+
+        if($('#itemDetailsModal input[name="base_price"]:checked').val() != undefined)
+        {
+            base_price = $('#itemDetailsModal input[name="base_price"]:checked').val();
+        }
+
+        if(option_ids.length > 0)
+        {
+            $.each(option_ids, function (opt_key, option_id)
+            {
+                var inner_radio = 0.00;
+                if($('#itemDetailsModal input[name="option_price_radio_'+opt_key+'"]:checked').val())
+                {
+                    inner_radio = $('#itemDetailsModal input[name="option_price_radio_'+opt_key+'"]:checked').val();
+                }
+
+                var checkbox_array = $('input[name="option_price_checkbox_'+opt_key+'"]:checked').map(function () {
+                    if(this.value)
+                    {
+                        checkbox_price += parseInt(this.value);
+                    }
+                }).get();
+                radio_price += parseInt(inner_radio);
+            });
+        }
+
+        base_price = (parseInt(base_price) + parseInt(radio_price) + parseInt(checkbox_price)) * parseInt(quantity);
+        base_price = base_price.toFixed(2);
+
+        // Get Total with Currency
+        $.ajax({
+            type: "POST",
+            url: "{{ route('total.with.currency') }}",
+            data: {
+                '_token' : "{{ csrf_token() }}",
+                'total':base_price,
+                'currency':def_currency,
+            },
+            dataType: "JSON",
+            success: function (response)
+            {
+                if(response.success == 1)
+                {
+                    $('#itemDetailsModal #total_price').html('');
+                    $('#itemDetailsModal #total_price').append(response.total);
+                    $('#itemDetailsModal #total_amount').val(base_price);
+                }
+            }
+        });
+
+    }
+
+    // Add to Cart
+    function addToCart(itemId)
+    {
+        const option_ids = JSON.parse($('#option_ids').val());
+        let cart_data = {};
+        let categories_data = {};
+
+        // Quantity
+        cart_data['quantity'] = $('#itemDetailsModal #quantity').val();
+        cart_data['total_amount'] = $('#itemDetailsModal #total_amount').val();
+        cart_data['total_amount_text'] = $('#itemDetailsModal #total_price').html();
+        cart_data['item_id'] = $('#itemDetailsModal #item_id').val();
+        cart_data['shop_id'] = $('#itemDetailsModal #shop_id').val();
+        cart_data['currency'] = $('#itemDetailsModal #def_currency').val();
+        cart_data['option_id'] = $('#itemDetailsModal input[name="base_price"]:checked').attr('option-id');
+
+        if(option_ids.length > 0)
+        {
+            $.each(option_ids, function (ids_key, option_id)
+            {
+                var options = [];
+                // CheckBox Value
+                $('#itemDetailsModal input[name="option_price_checkbox_'+ids_key+'"]:checked').map(function ()
+                {
+                    if(this.value)
+                    {
+                        var check_id = this.id;
+                        var attr_val = $('#'+check_id).attr('opt_price_id');
+                        options.push(attr_val);
+                    }
+                }).get();
+
+                if(options.length > 0)
+                {
+                    categories_data[option_id] = options;
+                }
+
+                // Radio Button Value
+                if($('#itemDetailsModal input[name="option_price_radio_'+ids_key+'"]:checked').val())
+                {
+                    categories_data[option_id] = $('#itemDetailsModal input[name="option_price_radio_'+ids_key+'"]:checked').attr('opt_price_id');
+                }
+            });
+            cart_data['categories_data'] = JSON.stringify(categories_data);
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('shop.add.to.cart') }}",
+            data: {
+                '_token': "{{ csrf_token() }}",
+                'cart_data':cart_data,
+            },
+            dataType: "JSON",
+            success: function (response)
+            {
+                if(response.success == 1)
+                {
+                    $('#itemDetailsModal #item_dt_div').html('');
+                    $('#itemDetailsModal').modal('hide');
+                    toastr.success(response.message);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1200);
+                }
+                else
+                {
+                    $('#itemDetailsModal #item_dt_div').html('');
+                    $('#itemDetailsModal').modal('hide');
+                    toastr.error(response.message);
+                }
+            }
+        });
+    }
+
+
+    // Quantity Increment Decrement
+    function QuntityIncDec(ele)
+    {
+        var fieldName = $(ele).attr('data-field');
+        var type = $(ele).attr('data-type');
+        var input = $("input[name='"+fieldName+"']");
+        var currentVal = parseInt(input.val());
+        var name = $(input).attr('name');
+
+        if (!isNaN(currentVal))
+        {
+            if(type == 'minus')
+            {
+                if(currentVal > input.attr('min'))
+                {
+                    input.val(currentVal - 1).change();
+                }
+
+                if(parseInt(input.val()) == input.attr('min'))
+                {
+                    $(ele).attr('disabled', true);
+                }
+            }
+            else if(type == 'plus')
+            {
+                if(currentVal < input.attr('max'))
+                {
+                    input.val(currentVal + 1).change();
+                }
+
+                if(parseInt(input.val()) == input.attr('max'))
+                {
+                    $(ele).attr('disabled', true);
+                }
+            }
+        }
+        else
+        {
+            input.val(1);
+        }
+
+        var changedVal = parseInt(input.val());
+        var minValue =  parseInt($(input).attr('min'));
+        var maxValue =  parseInt($(input).attr('max'));
+
+        if(changedVal > minValue)
+        {
+            $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled');
+        }
+
+        if(changedVal < maxValue)
+        {
+            $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled');
+        }
+
+        updatePrice();
+    }
+
+    function QuntityIncDecOnChange(ele)
+    {
+        var minValue =  parseInt($(ele).attr('min'));
+        var maxValue =  parseInt($(ele).attr('max'));
+        var valueCurrent = parseInt($(ele).val());
+        var name = $(ele).attr('name');
+
+        if(!$.isNumeric(valueCurrent))
+        {
+            alert('Sorry, Please Enter Valid Quantity Number');
+            $(ele).val(1);
+            updatePrice();
+            return false;
+        }
+
+        if(valueCurrent >= minValue)
+        {
+            $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+        }
+        else
+        {
+            alert('Sorry, the minimum value was reached');
+            $(ele).val(1);
+        }
+
+        if(valueCurrent <= maxValue)
+        {
+            $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+        }
+        else
+        {
+            alert('Sorry, the maximum value was reached');
+            $(ele).val(1);
+        }
+        updatePrice();
     }
 
 </script>

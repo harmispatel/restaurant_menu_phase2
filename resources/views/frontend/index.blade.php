@@ -7,6 +7,8 @@
     <title>Smart QR</title>
     <link href="{{ asset('public/admin_images/favicons/home.png') }}" rel="icon">
     <link rel="stylesheet" href="{{ asset('public/admin/assets/vendor/bootstrap/css/bootstrap.min.css') }}">
+    {{-- Toastr CSS --}}
+    <link rel="stylesheet" href="{{ asset('public/admin/assets/vendor/css/toastr.min.css') }}">
     <style>
 
         .bgimg {
@@ -29,5 +31,25 @@
             <a href="{{ route('login') }}" class="btn btn-success">Login to Access Your Account</a>
         </div>
     </div>
+
+    <script src="{{ asset('public/client/assets/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('public/admin/assets/vendor/js/toastr.min.js') }}"></script>
+
+    <script type="text/javascript">
+
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            timeOut: 4000
+        }
+
+        // Error Messages
+        @if (Session::has('error'))
+            toastr.error('{{ Session::get('error') }}')
+        @endif
+
+    </script>
+
 </body>
 </html>

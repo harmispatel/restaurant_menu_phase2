@@ -83,6 +83,26 @@
                                             @endif
                                         </div>
                                     </div>
+                                    @php
+                                        $email_arr = isset($user['contact_emails']) ? $user['contact_emails'] : '';
+                                        if($email_arr)
+                                        {
+                                            $unserialize_emails = unserialize($email_arr);
+                                            $emails  = implode(",",$unserialize_emails);
+                                        }
+                                        else {
+                                            $emails = '';
+                                        }
+                                    @endphp
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="contact_emails" class="form-label">{{ __('Contact Emails')}}</label>
+                                            <input type="text" name="contact_emails" id="contact_emails" class="form-control" value="{{ $emails }}">
+                                            <code>Notes</code> <br>
+                                            <code>1) enter mail id's in this format : abc@gmail.com,xyz@gmail.com</code> <br>
+                                            <code>2) Space Not Allowed after email</code>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="password" class="form-label">{{ __('Password')}}</label>

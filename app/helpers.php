@@ -1,19 +1,8 @@
 <?php
 
-    use App\Models\AdminSettings;
-    use App\Models\CategoryProductTags;
-    use App\Models\ClientSettings;
-    use App\Models\Ingredient;
-    use App\Models\ItemPrice;
-    use App\Models\Languages;
-    use App\Models\LanguageSettings;
-    use App\Models\ShopBanner;
-use App\Models\Subscriptions;
-use App\Models\ThemeSettings;
-    use App\Models\User;
-use App\Models\UserShop;
-use App\Models\UsersSubscriptions;
-use Illuminate\Support\Facades\Auth;
+    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings,Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop};
+    use Carbon\Carbon;
+    use Illuminate\Support\Facades\Auth;
 
     // Get Admin's Settings
     function getAdminSettings()
@@ -68,6 +57,7 @@ use Illuminate\Support\Facades\Auth;
             'default_currency',
             'business_telephone',
             'instagram_link',
+            'pinterest_link',
             'twitter_link',
             'facebook_link',
             'foursquare_link',
@@ -83,6 +73,63 @@ use Illuminate\Support\Facades\Auth;
         foreach($keys as $key)
         {
             $query = ClientSettings::select('value')->where('shop_id',$shop_id)->where('key',$key)->first();
+            $settings[$key] = isset($query->value) ? $query->value : '';
+        }
+
+        return $settings;
+    }
+
+
+    // Get Order Settings
+    function getOrderSettings($shopID)
+    {
+        // Keys
+        $keys = ([
+            'delivery',
+            'takeaway',
+            'room_delivery',
+            'table_service',
+            'only_cart',
+            'auto_order_approval',
+            'scheduler_active',
+            'min_amount_for_delivery',
+            'discount_percentage',
+            'order_arrival_minutes',
+            'schedule_array',
+        ]);
+
+        $settings = [];
+
+        foreach($keys as $key)
+        {
+            $query = OrderSetting::select('value')->where('shop_id',$shopID)->where('key',$key)->first();
+            $settings[$key] = isset($query->value) ? $query->value : '';
+        }
+
+        return $settings;
+    }
+
+
+    // Get Payment Settings
+    function getPaymentSettings($shopID)
+    {
+        // Keys
+        $keys = [
+            'paypal',
+            'paypal_mode',
+            'paypal_public_key',
+            'paypal_private_key',
+            'every_pay',
+            'everypay_mode',
+            'every_pay_public_key',
+            'every_pay_private_key',
+        ];
+
+        $settings = [];
+
+        foreach($keys as $key)
+        {
+            $query = PaymentSettings::select('value')->where('shop_id',$shopID)->where('key',$key)->first();
             $settings[$key] = isset($query->value) ? $query->value : '';
         }
 
@@ -220,10 +267,10 @@ use Illuminate\Support\Facades\Auth;
 
 
     // Get Banner Settings
-    function getBannerSetting($shopID)
+    function getBanners($shopID)
     {
-        $banner = ShopBanner::where('shop_id',$shopID)->where('key','shop_banner')->first();
-        return $banner;
+        $banners = ShopBanner::where('shop_id',$shopID)->where('key','shop_banner')->get();
+        return $banners;
     }
 
 
@@ -253,6 +300,149 @@ use Illuminate\Support\Facades\Auth;
     {
         $prices = ItemPrice::where('item_id',$itemID)->get();
         return $prices;
+    }
+
+
+    // Function for Genrate random Token
+    function genratetoken($length = 32)
+    {
+        $string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $max = strlen($string) - 1;
+        $token = '';
+
+        for ($i = 0; $i < $length; $i++)
+        {
+            $token .= $string[mt_rand(0, $max)];
+        }
+
+        return $token;
+    }
+
+
+    // Check Schedule
+    function checkCategorySchedule($catID,$shop_id)
+    {
+        $current_date = Carbon::now();
+        $today = strtolower($current_date->format('l'));
+        $current_time = strtotime($current_date->format('G:i'));
+        $cat_details = Category::where('id',$catID)->where('shop_id',$shop_id)->first();
+        $schedule = $cat_details['schedule'];
+        if($schedule == 0)
+        {
+            return 1;
+        }
+        else
+        {
+            $schedule_arr = (isset($cat_details['schedule_value']) && !empty($cat_details['schedule_value'])) ? json_decode($cat_details['schedule_value'],true) : '';
+            if(count($schedule_arr) > 0)
+            {
+                $current_day = (isset($schedule_arr[$today])) ? $schedule_arr[$today] : '';
+                if(isset($current_day['enabled']) && $current_day['enabled'] == 1)
+                {
+                    $time_schedule_arr = isset($current_day['timesSchedules']) ? $current_day['timesSchedules'] : [];
+
+                    if(count($time_schedule_arr) > 0)
+                    {
+                        $count = 1;
+                        $total_count = count($time_schedule_arr);
+                        foreach($time_schedule_arr as $tsarr)
+                        {
+                            $start_time = strtotime($tsarr['startTime']);
+                            $end_time = strtotime($tsarr['endTime']);
+
+                            if($current_time > $start_time && $current_time < $end_time)
+                            {
+                                return 1;
+                            }
+                            else
+                            {
+                                if($count == $total_count)
+                                {
+                                    return 0;
+                                }
+                            }
+                            $count ++;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+    // Get total Quantity of Cart
+    function getCartQuantity()
+    {
+        $cart = session()->get('cart', []);
+        $total_quantity = 0;
+        if(count($cart) > 0)
+        {
+            foreach($cart as $val)
+            {
+                $total_quantity += (isset($val['quantity'])) ? $val['quantity'] : 0;
+            }
+        }
+        return $total_quantity;
+    }
+
+    // Get Item Details
+    function itemDetails($itemID)
+    {
+        $item_details = Items::with(['category'])->where('id',$itemID)->first();
+        return $item_details;
+    }
+
+
+    // Function for get client PayPal Config
+    function getPayPalConfig($shop_slug)
+    {
+        $shop = Shop::where('shop_slug',$shop_slug)->first();
+        $shop_id = isset($shop['id']) ? $shop['id'] : '';
+
+        // Get Payment Settings
+        $payment_settings = getPaymentSettings($shop_id);
+
+        $paypal_config = [
+            'client_id' => (isset($payment_settings['paypal_public_key'])) ? $payment_settings['paypal_public_key'] : '',
+            'secret' => (isset($payment_settings['paypal_private_key'])) ? $payment_settings['paypal_private_key'] : '',
+            'settings' => [
+                'mode' => (isset($payment_settings['paypal_mode'])) ? $payment_settings['paypal_mode'] : '',
+                'http.ConnectionTimeOut' => 30,
+                'log.LogEnabled' => 1,
+                'log.FileName' => storage_path() . '/logs/paypal.log',
+                'log.LogLevel' => 'ERROR',
+            ]
+        ];
+        return $paypal_config;
+    }
+
+
+    // Function for get client EveryPay Config
+    function getEveryPayConfig($shop_slug)
+    {
+        $shop = Shop::where('shop_slug',$shop_slug)->first();
+        $shop_id = isset($shop['id']) ? $shop['id'] : '';
+
+        // Get Payment Settings
+        $payment_settings = getPaymentSettings($shop_id);
+
+        $every_pay_config = [
+            'public_key' => (isset($payment_settings['every_pay_public_key'])) ? $payment_settings['every_pay_public_key'] : '',
+            'secret_key' => (isset($payment_settings['every_pay_private_key'])) ? $payment_settings['every_pay_private_key'] : '',
+            'mode' => (isset($payment_settings['everypay_mode'])) ? $payment_settings['everypay_mode'] : 1,
+        ];
+        return $every_pay_config;
     }
 
 ?>

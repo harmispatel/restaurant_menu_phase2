@@ -58,7 +58,7 @@ class AdminSettingsController extends Controller
             'contact_us_subject'            =>          'required',
         ]);
 
-        $explode = explode(',',$request->contact_us_email);
+        $explode = explode(',',str_replace(' ','',$request->contact_us_email));
 
         $all_data['favourite_client_limit'] = $request->favourite_client_limit;
         $all_data['copyright_text'] = $request->copyright_text;

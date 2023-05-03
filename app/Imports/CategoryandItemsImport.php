@@ -191,7 +191,8 @@ class CategoryandItemsImport implements ToCollection
                                                 foreach ($tags as $key => $tag)
                                                 {
                                                     $tag_name_key = $item[1]."_name";
-                                                    $findTag = Tags::where('shop_id',$this->shop_id)->where('name',$tag)->where($tag_name_key,$tag)->first();
+                                                    // $findTag = Tags::where('shop_id',$this->shop_id)->where('name',$tag)->where($tag_name_key,$tag)->first();
+                                                    $findTag = Tags::where('shop_id',$this->shop_id)->where($tag_name_key,$tag)->first();
                                                     $tag_id = (isset($findTag->id) && !empty($findTag->id)) ? $findTag->id : '';
 
                                                     if(!empty($tag_id) || $tag_id != '')
@@ -350,13 +351,6 @@ class CategoryandItemsImport implements ToCollection
                                                     foreach ($lang_tags as $key => $tag)
                                                     {
                                                         $ins_tag_id = isset($tag_ids[$def_tag_key]) ? $tag_ids[$def_tag_key] : '';
-
-                                                        // if($edit_item->en_name == 'Yellow Cheese')
-                                                        // {
-                                                        //     echo '<pre>';
-                                                        //     print_r($tag_ids[$def_tag_key]);
-                                                        //     exit();
-                                                        // }
 
                                                         if(!empty($ins_tag_id))
                                                         {

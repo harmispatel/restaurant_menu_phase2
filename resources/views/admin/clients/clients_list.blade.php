@@ -59,7 +59,7 @@
                                         <th>{{ __('Name')}}</th>
                                         <th>{{ __('email')}}</th>
                                         <th>{{ __('Status')}}</th>
-                                        <th>{{ __('Favourite')}}</th>
+                                        <th>{{ __('Favorite')}}</th>
                                         <th>{{ __('Actions')}}</th>
                                     </tr>
                                 </thead>

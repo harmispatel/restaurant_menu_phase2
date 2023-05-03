@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AdminSettings;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\ClientSupport;
 use Mail;
 
 
@@ -17,7 +18,13 @@ class ContactController extends Controller
 
     public function send(Request $request)
     {
-        $from_mail = Auth::user()->email;
+        $request->validate([
+            'title' => 'required',
+            'message' => 'required',
+        ]);
+
+        // Get Client Details
+        $user_details = Auth::user();
 
         // Keys
         $keys = ([
@@ -25,51 +32,45 @@ class ContactController extends Controller
             'contact_us_subject',
         ]);
 
+        // Get To Mails & Subject
         $settings = [];
-
         foreach($keys as $key)
         {
             $query = AdminSettings::select('value')->where('key',$key)->first();
             $settings[$key] = isset($query->value) ? $query->value : '';
         }
-        $title = $settings['contact_us_subject'].'-'.$request->title.' Email:'.$from_mail;
 
+        // Get Subject from Site
+        $subject_content = (isset($settings['contact_us_subject'])) ? $settings['contact_us_subject'] : 'Smart QR Support |';
+
+        // Client Message
         $contact_message = $request->message;
-        $email_array =  unserialize($settings['contact_us_email']);
-        $data = [$title,$contact_message];
 
+        // To Mails
+        $email_array =  (isset($settings['contact_us_email']) && !empty($settings['contact_us_email'])) ? unserialize($settings['contact_us_email']) : [];
+
+        // If found to Mails then sent Mail
         if(count($email_array) > 0)
         {
-            foreach($email_array as $to_mail)
+            foreach($email_array as $email)
             {
+                $subject = $subject_content." ".$request->title;
 
-                $to = $to_mail;
-                $subject = $title;
-                $txt = $contact_message;
-                $headers = "From: ".$from_mail. "\r\n";
+                $data = [
+                    'message' => $contact_message,
+                    'subject' => $subject,
+                    'client_details' => $user_details,
+                ];
 
-                mail($to,$subject,$txt,$headers);
+                Mail::to($email)->send(new ClientSupport($data));
 
-               /*  Mail::send([],$data,function ($message) use ($to_mail,$from_mail,$title,$contact_message)
-                {
-                        $message->from($from_mail, "Contact");
-                        $message->to($to_mail);
-                        $message->subject($title);
-                        $message->setbody($contact_message);
-                }); */
+                // mail($mail,$data['subject'],$data['description']);
             }
         }
         else
         {
-            // Mail::send([],$data,function ($message) use ($to_mail,$from_mail,$title,$contact_message)
-            //     {
-            //             $message->from($from_mail, "Contact");
-            //             $message->to($to_mail);
-            //             $message->subject($title);
-            //             $message->setbody($contact_message);
-            //     });
+            return redirect()->route('contact')->with('error','Internal Server Error!');
         }
-
 
         return redirect()->route('contact')->with('success','Email has been Sent SuccessFully....');
 

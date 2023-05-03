@@ -17,22 +17,23 @@ class CreateShopBannersTable extends Migration
             $table->id();
             $table->integer('shop_id');
             $table->string('key');
+            $table->string('display')->nullable();
 
-            $table->longText('title')->nullable();
-            $table->longText('en_title')->nullable();
-            $table->longText('fr_title')->nullable();
-            $table->longText('el_title')->nullable();
-            $table->longText('it_title')->nullable();
-            $table->longText('es_title')->nullable();
-            $table->longText('de_title')->nullable();
-            $table->longText('bg_title')->nullable();
-            $table->longText('tr_title')->nullable();
-            $table->longText('ro_title')->nullable();
-            $table->longText('sr_title')->nullable();
-            $table->longText('zh_title')->nullable();
-            $table->longText('ru_title')->nullable();
-            $table->longText('pl_title')->nullable();
-            $table->longText('ka_title')->nullable();
+            $table->longText('description')->nullable();
+            $table->longText('en_description')->nullable();
+            $table->longText('fr_description')->nullable();
+            $table->longText('el_description')->nullable();
+            $table->longText('it_description')->nullable();
+            $table->longText('es_description')->nullable();
+            $table->longText('de_description')->nullable();
+            $table->longText('bg_description')->nullable();
+            $table->longText('tr_description')->nullable();
+            $table->longText('ro_description')->nullable();
+            $table->longText('sr_description')->nullable();
+            $table->longText('zh_description')->nullable();
+            $table->longText('ru_description')->nullable();
+            $table->longText('pl_description')->nullable();
+            $table->longText('ka_description')->nullable();
 
             $table->string('image')->nullable();
             $table->string('en_image')->nullable();
@@ -49,7 +50,6 @@ class CreateShopBannersTable extends Migration
             $table->string('ru_image')->nullable();
             $table->string('pl_image')->nullable();
             $table->string('ka_image')->nullable();
-
             $table->timestamps();
         });
     }

@@ -16,6 +16,12 @@ class BillingInfoController extends Controller
         return view('client.billing_info.billing_info',$data);
     }
 
+    public function clientSubscription()
+    {
+        $data['expire_date'] =  (isset(Auth::user()->hasOneSubscription['end_date'])) ? \Carbon\Carbon::now()->diffInDays(Auth::user()->hasOneSubscription['end_date'], false) : '';
+        return view('client.billing_info.client_subscription',$data);
+    }
+
     public function editBillingInfo()
     {
         $data['expire_date'] =  (isset(Auth::user()->hasOneSubscription['end_date'])) ? \Carbon\Carbon::now()->diffInDays(Auth::user()->hasOneSubscription['end_date'], false) : '';
@@ -49,6 +55,9 @@ class BillingInfoController extends Controller
         $user->zipcode = $request->zipcode;
         $user->vat_id = $request->vat_id;
         $user->gemi_id = $request->gemi_id;
+        $user->mobile = $request->mobile;
+        $user->telephone = $request->telephone;
+        $user->tax_office = $request->tax_office;
         $user->update();
 
         return redirect()->route('billing.info')->with('success', "Billing Information has Been Updated SuccessFully...");

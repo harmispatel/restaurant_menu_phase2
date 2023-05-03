@@ -1,201 +1,163 @@
 @php
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+    $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
 
+    // Language Settings
+    $language_settings = clientLanguageSettings($shop_id);
+    $primary_lang_id = isset($language_settings['primary_language']) ? $language_settings['primary_language'] : '';
+
+    // Language Details
+    $language_detail = App\Models\Languages::where('id',$primary_lang_id)->first();
+    $lang_code = isset($language_detail->code) ? $language_detail->code : '';
+
+    $description_key = $lang_code."_description";
+    $image_key = $lang_code."_image";
 @endphp
 
 @extends('client.layouts.client-layout')
 
-@section('title', __('Banner'))
+@section('title', __('Banners'))
 
 @section('content')
 
-    <section class="logo_sec">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="add_logo_sec">
-                    <div class="add_logo_sec_header">
-                        <h2>{{ __('Banner')}}</h2>
-                        <code>{{ __('Banner Dimensions (1920*300)') }}</code>
-                    </div>
-
-                    @php
-                        $primary_code = isset($primary_language_detail['code']) ? $primary_language_detail['code'] : '';
-                        $primary_name = isset($primary_language_detail['name']) ? $primary_language_detail['name'] : '';
-
-                        $primary_banner_id = $primary_code."_banner_img";
-                        $primary_form_id = $primary_code."_banner_form";
-
-                        $primary_title_key = $primary_code."_title";
-                        $primary_banner_key = $primary_code."_image";
-
-                        $primary_banner_text = isset($banner_setting[$primary_title_key]) ? $banner_setting[$primary_title_key] : '';
-
-                        $primary_banner_image = isset($banner_setting[$primary_banner_key]) ? $banner_setting[$primary_banner_key] : '';
-                    @endphp
-
-                    @if(count($additional_languages) > 0)
-                        <div class="add_logo_sec_body">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-
-                                {{-- For Primary Language --}}
-                                <li class="nav-item" role="presentation">
-                                    <button title="{{ $primary_name }}" class="nav-link active" id="{{ $primary_code }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $primary_code }}" type="button" role="tab" aria-controls="{{ $primary_code }}" aria-selected="true" onclick="setTextEditor('{{ $primary_code }}')">{{ strtoupper($primary_code) }}</button>
-                                </li>
-
-                                {{-- For Additional Language --}}
-                                @foreach ($additional_languages as $value)
-                                    @php
-                                        // Additional Language Details
-                                        $add_lang_detail = App\Models\Languages::where('id',$value->language_id)->first();
-                                        $add_lang_code = isset($add_lang_detail->code) ? $add_lang_detail->code : '';
-                                        $add_lang_name = isset($add_lang_detail->name) ? $add_lang_detail->name : '';
-                                    @endphp
-
-                                    <li class="nav-item" role="presentation">
-                                        <button title="{{ $add_lang_name }}" data-bs-toggle="tab"  class="nav-link" id="{{ $add_lang_code }}-tab" data-bs-target="#{{ $add_lang_code }}" type="butto
-                                        " role="tab" aria-controls="{{ $add_lang_code }}" aria-selected="false" onclick="setTextEditor('{{ $add_lang_code }}')">{{ strtoupper($add_lang_code) }}</button>
-                                    </li>
-                                @endforeach
-                            </ul>
-
-                            <div class="tab-content" id="myTabContent">
-
-                                {{-- Primary Tab --}}
-                                <div class="tab-pane fade show active mt-3" id="{{ $primary_code }}" role="tabpanel" aria-labelledby="{{ $primary_code }}-tab">
-                                    <form method="POST" id="{{ $primary_form_id }}" action="{{ route('design.banner.update') }}" enctype="multipart/form-data">
-                                        @csrf
-                                        <input type="hidden" name="shop_id" id="shop_id" value="{{ $shop_id }}">
-                                        <input type="hidden" name="lang_code" id="lang_code" value="{{ $primary_code }}">
-
-                                        <div class="add_logo_sec_body">
-                                            <label class="form-label">{{ __('Banner will appear on the top of your menu')}}</label>
-                                            <div class="add_logo_sec_body_inr">
-                                                <label class="position-relative" for="{{ $primary_banner_id }}" style="cursor: pointer;">
-                                                    @if(!empty($primary_banner_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$primary_banner_image))
-                                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$primary_banner_image) }}" width="200px">
-                                                        <a href="{{ route('design.banner.delete',$primary_code) }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
-                                                    @else
-                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
-                                                    @endif
-                                                </label>
-                                                <input type="file" name="banner" onchange="uploadImage('{{ $primary_form_id }}')" id="{{ $primary_banner_id }}" style="display: none;" />
-                                            </div>
-                                        </div>
-
-                                        <div class="banner_text">
-                                            <label class="form-label">{{ __('Banner Text')}}</label>
-                                            <textarea class="form-control" name="banner_text" id="banner_text">{{ $primary_banner_text }}</textarea>
-                                        </div>
-
-                                        <div class="add_logo_sec_body">
-                                            <button class="btn btn-success">{{ __('Update')}}</button>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                {{-- Additional Tabs --}}
-                                @foreach($additional_languages as $value)
-                                    @php
-                                        // Additional Language Details
-                                        $add_lang_detail = App\Models\Languages::where('id',$value->language_id)->first();
-                                        $add_lang_code = isset($add_lang_detail->code) ? $add_lang_detail->code : '';
-                                        $add_lang_name = isset($add_lang_detail->name) ? $add_lang_detail->name : '';
-                                        $add_input_lang_code = "'$add_lang_code'";
-
-                                        $add_banner_id = $add_lang_code."_banner_img";
-                                        $add_form_id = $add_lang_code."_banner_form";
-
-                                        $add_title_key = $add_lang_code."_title";
-                                        $add_banner_key = $add_lang_code."_image";
-
-                                        $add_banner_text = isset($banner_setting[$add_title_key]) ? $banner_setting[$add_title_key] : '';
-
-                                        $add_banner_image = isset($banner_setting[$add_banner_key]) ? $banner_setting[$add_banner_key] : '';
-
-                                    @endphp
-
-                                    <div class="tab-pane fade show mt-3" id="{{ $add_lang_code }}" role="tabpanel" aria-labelledby="{{ $add_lang_code }}-tab">
-                                        <form method="POST" id="{{ $add_form_id }}" action="{{ route('design.banner.update') }}" enctype="multipart/form-data">
-                                            @csrf
-                                            <input type="hidden" name="shop_id" id="shop_id" value="{{ $shop_id }}">
-                                            <input type="hidden" name="lang_code" id="lang_code" value="{{ $add_lang_code }}">
-
-                                            <div class="add_logo_sec_body">
-                                                <label class="form-label">{{ __('Banner will appear on the top of your menu')}}</label>
-                                                <div class="add_logo_sec_body_inr">
-                                                    <label class="position-relative" for="{{ $add_banner_id }}" style="cursor: pointer;">
-                                                        @if(!empty($add_banner_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$add_banner_image))
-                                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$add_banner_image) }}" width="200px">
-                                                            <a href="{{ route('design.banner.delete',$add_lang_code) }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
-                                                        @else
-                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
-                                                        @endif
-                                                    </label>
-                                                    <input type="file" name="banner" onchange="uploadImage('{{ $add_form_id }}')" id="{{ $add_banner_id }}" style="display: none;" />
-                                                </div>
-                                            </div>
-
-                                            <div class="banner_text">
-                                                <label class="form-label">{{ __('Banner Text')}}</label>
-                                                <textarea class="form-control" name="banner_text" id="banner_text">{{ $add_banner_text }}</textarea>
-                                            </div>
-
-                                            <div class="add_logo_sec_body">
-                                                <button class="btn btn-success">{{ __('Update')}}</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                @endforeach
+    {{-- Add Modal --}}
+    <div class="modal fade" id="addBannerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addBannerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBannerModalLabel">{{ __('Add Banner')}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="addBannerForm" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="image" class="form-label">{{ __('Image') }}</label>
+                                <input type="file" name="image" id="image" class="form-control">
+                                <code>{{ __('Banner Dimensions (1920*300)') }}</code>
                             </div>
                         </div>
-                    @else
-
-                        <form method="POST" id="{{ $primary_form_id }}" action="{{ route('design.banner.update') }}" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="shop_id" id="shop_id" value="{{ $shop_id }}">
-                            <input type="hidden" name="lang_code" id="lang_code" value="{{ $primary_code }}">
-
-                            <div class="add_logo_sec_body">
-                                <label class="form-label">{{ __('Banner will appear on the top of your menu')}}</label>
-                                <div class="add_logo_sec_body_inr">
-                                    <label class="position-relative" for="{{ $primary_banner_id }}" style="cursor: pointer;">
-                                        @if(!empty($primary_banner_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$primary_banner_image))
-                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$primary_banner_image) }}" width="200px">
-                                            <a href="{{ route('design.banner.delete',$primary_code) }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
-                                        @else
-                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
-                                        @endif
-                                    </label>
-                                    <input type="file" name="banner" onchange="uploadImage('{{ $primary_form_id }}')" id="{{ $primary_banner_id }}" style="display: none;" />
-                                </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="display" class="form-label">{{ __('Display') }}</label>
+                                <select name="display" id="display" class="form-select">
+                                    <option value="both">Both</option>
+                                    <option value="image">Image</option>
+                                    <option value="description">Description</option>
+                                </select>
                             </div>
-
-                            <div class="banner_text">
-                                <label class="form-label">{{ __('Banner Text')}}</label>
-                                <textarea class="form-control" name="banner_text" id="banner_text">{{ $primary_banner_text }}</textarea>
-                            </div>
-
-                            <div class="add_logo_sec_body">
-                                <button class="btn btn-success">{{ __('Update')}}</button>
-                            </div>
-
-                        </form>
-                    @endif
-                    {{-- <div class="banner_text">
-                        <label class="form-label">Banner Text</label>
-                        <textarea name="" id="" class="form-control" rows="4"></textarea>
-                    </div>
-                    <div class="add_logo_sec_body">
-                        <label class="form-label">Banner will appear on the top of your menu</label>
-                        <div class="add_logo_sec_body_inr">
-                            <input type="image" src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
-                            <input type="file" id="my_file" style="display: none;" />
                         </div>
-                    </div> --}}
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="description" class="form-label">{{ __('Description') }}</label>
+                                <textarea name="description" id="description" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" id="saveBanner" onclick="saveBanner()">{{ __('Save')}}</a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
+    {{-- Edit Modal --}}
+    <div class="modal fade" id="editBannerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editBannerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editBannerModalLabel">{{ __('Edit Banner')}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="banner_edit_div">
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-success" onclick="updateBanner()">{{ __('Update') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Page Title --}}
+    <div class="pagetitle">
+        <h1>{{ __('Banners')}}</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">{{ __('Banners') }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+     {{-- Banners Section --}}
+     <section class="section dashboard">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title mb-3 p-0">
+                            <button data-bs-toggle="modal" id="addBannerBtn" data-bs-target="#addBannerModal" class="btn btn-primary"><i class="bi bi-plus-circle"></i></button>
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 12%">Banner</th>
+                                            <th style="width: 75%">Description</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($banners as $banner)
+                                            @php
+                                                $banner_image = isset($banner->$image_key) ? $banner->$image_key : '';
+                                                $banner_description = isset($banner->$description_key) ? $banner->$description_key : '';
+                                            @endphp
+
+                                            <tr>
+                                                <td>
+                                                    @if(!empty($banner_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_image))
+                                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_image) }}" class="w-100">
+                                                    @else
+                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" style="width: 249px; height: 160px;">
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        @php
+                                                            $banner_description = strip_tags($banner_description);
+                                                        @endphp
+                                                        {{ substr($banner_description,0,170) }} ...
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-sm btn-primary mt-2" onclick="editBanner({{ $banner->id }})"><i class="bi bi-pencil"></i></a>
+                                                    <a class="btn btn-sm btn-danger mt-2" onclick="deleteBanner({{ $banner->id }})"><i class="bi bi-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <h4 class="text-center">
+                                                Records Not Found !
+                                            </h4>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </section>
 
 @endsection
 
@@ -204,118 +166,30 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function()
+        var addBanEditor;
+        var editBanEditor;
+        var addKey=0;
+
+        // Reset New BannerForm when Click on add New Banner
+        $('#addBannerBtn').on('click',function()
         {
-            @if (Session::has('success'))
-                toastr.success('{{ Session::get('success') }}')
-            @endif
+            // Reset NewCategoryForm
+            $('#addBannerForm').trigger('reset');
 
-            // Text Editor
-            CKEDITOR.ClassicEditor.create(document.getElementById("banner_text"),
-            {
-                toolbar: {
-                    items: [
-                        'heading', '|',
-                        'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                        'bulletedList', 'numberedList', 'todoList', '|',
-                        'outdent', 'indent', '|',
-                        'undo', 'redo',
-                        '-',
-                        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-                        'alignment', '|',
-                        'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-                        'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                        'sourceEditing'
-                    ],
-                    shouldNotGroupWhenFull: true
-                },
-                list: {
-                    properties: {
-                        styles: true,
-                        startIndex: true,
-                        reversed: true
-                    }
-                },
-                'height':500,
-                fontSize: {
-                    options: [ 10, 12, 14, 'default', 18, 20, 22 ],
-                    supportAllValues: true
-                },
-                htmlSupport: {
-                    allow: [
-                        {
-                            name: /.*/,
-                            attributes: true,
-                            classes: true,
-                            styles: true
-                        }
-                    ]
-                },
-                htmlEmbed: {
-                    showPreviews: true
-                },
-                link: {
-                    decorators: {
-                        addTargetToExternalLinks: true,
-                        defaultProtocol: 'https://',
-                        toggleDownloadable: {
-                            mode: 'manual',
-                            label: 'Downloadable',
-                            attributes: {
-                                download: 'file'
-                            }
-                        }
-                    }
-                },
-                mention: {
-                    feeds: [
-                        {
-                            marker: '@',
-                            feed: [
-                                '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
-                                '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
-                                '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
-                                '@sugar', '@sweet', '@topping', '@wafer'
-                            ],
-                            minimumCharacters: 1
-                        }
-                    ]
-                },
-                removePlugins: [
-                    'CKBox',
-                    'CKFinder',
-                    'EasyImage',
-                    'RealTimeCollaborativeComments',
-                    'RealTimeCollaborativeTrackChanges',
-                    'RealTimeCollaborativeRevisionHistory',
-                    'PresenceList',
-                    'Comments',
-                    'TrackChanges',
-                    'TrackChangesData',
-                    'RevisionHistory',
-                    'Pagination',
-                    'WProofreader',
-                    'MathType'
-                ]
-            });
-        });
+            // Remove Validation Class
+            $('#addBannerForm #image').removeClass('is-invalid');
 
-        // Submit Form After Select Image
-        function uploadImage(formID)
-        {
-            $('#'+formID).submit();
-        }
-
-
-        function setTextEditor(tabID)
-        {
-            var text_id = "#"+tabID+" #banner_text";
-            var textarea = $(text_id)[0];
+            // Clear all Toastr Messages
+            toastr.clear();
 
             $('.ck-editor').remove();
+            addBanEditor = "";
+            addKey = 0;
+
+            var cat_textarea = $('#addBannerForm #description')[0];
 
             // Text Editor
-            CKEDITOR.ClassicEditor.create(textarea,
+            CKEDITOR.ClassicEditor.create(cat_textarea,
             {
                 toolbar: {
                     items: [
@@ -401,7 +275,432 @@
                     'WProofreader',
                     'MathType'
                 ]
+            }).then( editor => {
+                addBanEditor = editor;
             });
+
+        });
+
+        // Remove Some Fetaures when Close Edit Modal
+        $('#editBannerModal .btn-close').on('click',function(){
+            editBanEditor = "";
+            $('.ck-editor').remove();
+            $('#editBannerModal #banner_edit_div').html('');
+        });
+
+        // Function for Save Banner
+        function saveBanner()
+        {
+            const myFormData = new FormData(document.getElementById('addBannerForm'));
+            myDesc = (addBanEditor?.getData()) ? addBanEditor.getData() : '';
+            myFormData.set('description',myDesc);
+
+            // Remove Validation Class
+            $('#addBannerForm #image').removeClass('is-invalid');
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('banners.store') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#addBannerForm').trigger('reset');
+                        $('#addBannerModal').modal('hide');
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                    else
+                    {
+                        $('#addBannerForm').trigger('reset');
+                        $('#addBannerModal').modal('hide');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    // All Validation Errors
+                    const validationErrors = (response?.responseJSON?.errors) ? response.responseJSON.errors : '';
+
+                    if (validationErrors != '')
+                    {
+                        // Image Error
+                        var imageError = (validationErrors.image) ? validationErrors.image : '';
+                        if (imageError != '')
+                        {
+                            $('#addBannerForm #image').addClass('is-invalid');
+                            toastr.error(imageError);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function for Delete Banner
+        function deleteBanner(bannerID)
+        {
+            swal({
+                title: "Are you sure You want to Delete It ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelBanner) =>
+            {
+                if (willDelBanner)
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ route("banners.delete") }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'id': bannerID,
+                        },
+                        dataType: 'JSON',
+                        success: function(response)
+                        {
+                            if (response.success == 1)
+                            {
+                                swal(response.message, {
+                                    icon: "success",
+                                });
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1300);
+                            }
+                            else
+                            {
+                                toastr.error(response.message);
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Cancelled", "", "error");
+                }
+            });
+        }
+
+        // Function for Edit Banners
+        function editBanner(bannerID)
+        {
+            // Reset All Form
+            $('#editBannerModal #banner_edit_div').html('');
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('banners.edit') }}",
+                dataType: "JSON",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'id': bannerID,
+                },
+                success: function(response)
+                {
+                    if (response.success == 1)
+                    {
+                        $('#editBannerModal #banner_edit_div').html(response.data);
+                        $('#editBannerModal').modal('show');
+
+                        $('.ck-editor').remove();
+                        editBanEditor = "";
+
+                        var my_banner_textarea = $('#editBannerForm #description')[0];
+
+                        CKEDITOR.ClassicEditor.create(my_banner_textarea,
+                        {
+                            toolbar: {
+                                items: [
+                                    'heading', '|',
+                                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                                    'bulletedList', 'numberedList', 'todoList', '|',
+                                    'outdent', 'indent', '|',
+                                    'undo', 'redo',
+                                    '-',
+                                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                                    'alignment', '|',
+                                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                                    'sourceEditing'
+                                ],
+                                shouldNotGroupWhenFull: true
+                            },
+                            list: {
+                                properties: {
+                                    styles: true,
+                                    startIndex: true,
+                                    reversed: true
+                                }
+                            },
+                            'height':500,
+                            fontSize: {
+                                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                                supportAllValues: true
+                            },
+                            htmlSupport: {
+                                allow: [
+                                    {
+                                        name: /.*/,
+                                        attributes: true,
+                                        classes: true,
+                                        styles: true
+                                    }
+                                ]
+                            },
+                            htmlEmbed: {
+                                showPreviews: true
+                            },
+                            link: {
+                                decorators: {
+                                    addTargetToExternalLinks: true,
+                                    defaultProtocol: 'https://',
+                                    toggleDownloadable: {
+                                        mode: 'manual',
+                                        label: 'Downloadable',
+                                        attributes: {
+                                            download: 'file'
+                                        }
+                                    }
+                                }
+                            },
+                            mention: {
+                                feeds: [
+                                    {
+                                        marker: '@',
+                                        feed: [
+                                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                            '@sugar', '@sweet', '@topping', '@wafer'
+                                        ],
+                                        minimumCharacters: 1
+                                    }
+                                ]
+                            },
+                            removePlugins: [
+                                'CKBox',
+                                'CKFinder',
+                                'EasyImage',
+                                'RealTimeCollaborativeComments',
+                                'RealTimeCollaborativeTrackChanges',
+                                'RealTimeCollaborativeRevisionHistory',
+                                'PresenceList',
+                                'Comments',
+                                'TrackChanges',
+                                'TrackChangesData',
+                                'RevisionHistory',
+                                'Pagination',
+                                'WProofreader',
+                                'MathType'
+                            ]
+                        }).then( editor => {
+                            editBanEditor = editor;
+                        });
+
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        }
+
+        // Update Banner By Language Code
+        function updateByCode(next_lang_code)
+        {
+            const myFormData = new FormData(document.getElementById('editBannerForm'));
+            myDesc = (editBanEditor?.getData()) ? editBanEditor.getData() : '';
+            myFormData.set('description',myDesc);
+            myFormData.append('next_lang_code',next_lang_code);
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('banners.update-by-lang') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#editBannerModal #banner_edit_div').html('');
+                        $('#editBannerModal #banner_edit_div').html(response.data);
+
+                        $('.ck-editor').remove();
+                        editBanEditor = "";
+
+                        var my_banner_textarea = $('#editBannerForm #description')[0];
+
+                        CKEDITOR.ClassicEditor.create(my_banner_textarea,
+                        {
+                            toolbar: {
+                                items: [
+                                    'heading', '|',
+                                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                                    'bulletedList', 'numberedList', 'todoList', '|',
+                                    'outdent', 'indent', '|',
+                                    'undo', 'redo',
+                                    '-',
+                                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                                    'alignment', '|',
+                                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                                    'sourceEditing'
+                                ],
+                                shouldNotGroupWhenFull: true
+                            },
+                            list: {
+                                properties: {
+                                    styles: true,
+                                    startIndex: true,
+                                    reversed: true
+                                }
+                            },
+                            'height':500,
+                            fontSize: {
+                                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                                supportAllValues: true
+                            },
+                            htmlSupport: {
+                                allow: [
+                                    {
+                                        name: /.*/,
+                                        attributes: true,
+                                        classes: true,
+                                        styles: true
+                                    }
+                                ]
+                            },
+                            htmlEmbed: {
+                                showPreviews: true
+                            },
+                            link: {
+                                decorators: {
+                                    addTargetToExternalLinks: true,
+                                    defaultProtocol: 'https://',
+                                    toggleDownloadable: {
+                                        mode: 'manual',
+                                        label: 'Downloadable',
+                                        attributes: {
+                                            download: 'file'
+                                        }
+                                    }
+                                }
+                            },
+                            mention: {
+                                feeds: [
+                                    {
+                                        marker: '@',
+                                        feed: [
+                                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                            '@sugar', '@sweet', '@topping', '@wafer'
+                                        ],
+                                        minimumCharacters: 1
+                                    }
+                                ]
+                            },
+                            removePlugins: [
+                                'CKBox',
+                                'CKFinder',
+                                'EasyImage',
+                                'RealTimeCollaborativeComments',
+                                'RealTimeCollaborativeTrackChanges',
+                                'RealTimeCollaborativeRevisionHistory',
+                                'PresenceList',
+                                'Comments',
+                                'TrackChanges',
+                                'TrackChangesData',
+                                'RevisionHistory',
+                                'Pagination',
+                                'WProofreader',
+                                'MathType'
+                            ]
+                        }).then( editor => {
+                            editBanEditor = editor;
+                        });
+                    }
+                    else
+                    {
+                        $('#editBannerModal').modal('hide');
+                        $('#editBannerModal #banner_edit_div').html('');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    $.each(response.responseJSON.errors, function (i, error) {
+                        toastr.error(error);
+                    });
+                }
+            });
+        }
+
+        // Update Banner
+        function updateBanner()
+        {
+            const myFormData = new FormData(document.getElementById('editBannerForm'));
+            myDesc = (editBanEditor?.getData()) ? editBanEditor.getData() : '';
+            myFormData.set('description',myDesc);
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('banners.update') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#editBannerModal').modal('hide');
+                        $('#editBannerModal #banner_edit_div').html('');
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                    else
+                    {
+                        $('#editBannerModal').modal('hide');
+                        $('#editBannerModal #banner_edit_div').html('');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    $.each(response.responseJSON.errors, function (i, error) {
+                        toastr.error(error);
+                    });
+                }
+            });
+
         }
 
     </script>

@@ -13,4 +13,9 @@ class Category extends Model
     {
         return $this->hasMany(Items::class,'category_id','id');
     }
+
+    public function categoryImages()
+    {
+        return $this->hasMany(CategoryImages::class,'category_id','id');
+    }
 }

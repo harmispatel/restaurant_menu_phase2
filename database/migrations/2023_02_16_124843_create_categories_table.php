@@ -16,9 +16,19 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->integer('shop_id')->nullable();
+            $table->string('category_type')->nullable();
+            $table->tinyInteger('parent_category')->default(0);
+            $table->integer('parent_id')->nullable();
+            $table->longText('styles')->nullable();
             $table->string('name')->nullable();
+            $table->tinyInteger('schedule')->default(0);
+            $table->longText('schedule_value')->nullable();
             $table->text('description')->nullable();
             $table->integer('order_key')->nullable();
+            $table->string('link_url')->nullable();
+            $table->string('file')->nullable();
+            $table->string('cover')->nullable();
+            $table->tinyInteger('published')->default(0);
 
             $table->string('en_name')->nullable();
             $table->text('en_description')->nullable();
@@ -48,9 +58,6 @@ class CreateCategoriesTable extends Migration
             $table->text('pl_description')->nullable();
             $table->string('ka_name')->nullable();
             $table->text('ka_description')->nullable();
-
-            $table->string('image')->nullable();
-            $table->tinyInteger('published')->default(0);
             $table->timestamps();
         });
     }

@@ -39,7 +39,12 @@ class DashboardController extends Controller
         $data['primary_language_detail'] = Languages::where('id',$primary_lang_id)->first();
 
         // Total Category Count
-        $category['total'] = Category::where('shop_id',$data['shop_id'])->count();
+        $category['total_category'] = Category::where('shop_id',$data['shop_id'])->whereIn('category_type',['product_category','parent_category'])->count();
+        $category['total_page'] = Category::where('shop_id',$data['shop_id'])->where('category_type','page')->count();
+        $category['total_link'] = Category::where('shop_id',$data['shop_id'])->where('category_type','link')->count();
+        $category['image_gallary'] = Category::where('shop_id',$data['shop_id'])->where('category_type','image_gallary')->count();
+        $category['pdf_category'] = Category::where('shop_id',$data['shop_id'])->where('category_type','pdf_category')->count();
+        $category['check_in_page'] = Category::where('shop_id',$data['shop_id'])->where('category_type','check_in_page')->count();
 
         // All Categories List
         $data['categories'] = Category::where('shop_id',$data['shop_id'])->limit(8)->latest('created_at')->get();

@@ -107,6 +107,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label class="form-label" for="pinterest_link">{{ __('Pinterest')}}</label>
+                                <div class="position-relative">
+                                    <input type="text" class="form-control icon-input" name="pinterest_link" id="pinterest_link" value="{{ (isset($client_settings['pinterest_link']) && !empty($client_settings['pinterest_link'])) ? $client_settings['pinterest_link'] : '' }}">
+                                    <i class="fa-brands fa-pinterest input-icon"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-4">

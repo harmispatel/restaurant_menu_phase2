@@ -15,11 +15,11 @@
     // Language Bar Position
     $language_bar_position = isset($theme_settings['language_bar_position']) ? $theme_settings['language_bar_position'] : '';
 
-    $banner_setting = getBannerSetting($shop_details['id']);
-    $banner_key = $language_details['code']."_image";
-    $banner_text_key = $language_details['code']."_title";
-    $banner_image = isset($banner_setting[$banner_key]) ? $banner_setting[$banner_key] : "";
-    $banner_text = isset($banner_setting[$banner_text_key]) ? $banner_setting[$banner_text_key] : "";
+    // $banner_setting = getBannerSetting($shop_details['id']);
+    // $banner_key = $language_details['code']."_image";
+    // $banner_text_key = $language_details['code']."_title";
+    // $banner_image = isset($banner_setting[$banner_key]) ? $banner_setting[$banner_key] : "";
+    // $banner_text = isset($banner_setting[$banner_text_key]) ? $banner_setting[$banner_text_key] : "";
 
 @endphp
 
@@ -32,12 +32,27 @@
 <!-- font awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"/>
 
+{{-- Bootstarp Icons --}}
+<link rel="stylesheet" href="{{ asset('public/admin/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}">
+
 {{-- Toastr CSS --}}
 <link rel="stylesheet" href="{{ asset('public/admin/assets/vendor/css/toastr.min.css') }}">
 
+{{-- Swiper --}}
+<link rel="stylesheet" href="{{ asset('public/client/assets/css/swiper-bundle.min.css') }}">
+
+{{-- Masonary --}}
+<link rel="stylesheet" href="{{ asset('public/client/assets/css/lightbox.css') }}">
 
 {{-- Dynamic CSS --}}
 <style>
+
+    #itemDetailsModal .btn:disabled
+    {
+        cursor: not-allowed;
+        pointer-events: auto;
+    }
+
     @if(!empty($shop_theme_id))
 
         /* Header Color  */
@@ -70,7 +85,10 @@
 
         /* Social Media Icons Color */
         @if(isset($theme_settings['social_media_icon_color']) && !empty($theme_settings['social_media_icon_color']))
-            .footer_media ul li a{
+            .footer_media ul li a, .footer_media h3{
+                color : {{ $theme_settings['social_media_icon_color'] }}!important;
+            }
+            .footer-inr p{
                 color : {{ $theme_settings['social_media_icon_color'] }}!important;
             }
         @endif
@@ -176,18 +194,10 @@
             }
         @endif
 
-        @if (isset($theme_settings['banner_type']) && !empty($theme_settings['banner_type']))
-            .banner-img{
-                background:url('{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_image) }}');
-                background-size: 100% 300px;
-                background-repeat: no-repeat;
-                min-height: 300px;
-            }
-        @endif
 
         /* Search Box Icon Color */
         @if (isset($theme_settings['search_box_icon_color']) && !empty($theme_settings['search_box_icon_color']))
-            #openSearchBox i{
+            #openSearchBox i, #closeSearchBox i, .cart-btn{
                 color : {{ $theme_settings['search_box_icon_color'] }} !important;
             }
         @endif

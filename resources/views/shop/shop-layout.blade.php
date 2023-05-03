@@ -25,7 +25,7 @@
 
     {{-- Item Details Modal --}}
     <div class="modal fade" id="itemDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="itemDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable" style="max-width: 500px !important;">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

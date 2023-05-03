@@ -24,7 +24,11 @@ class CreateUsersTable extends Migration
             $table->string('zipcode')->nullable();
             $table->string('vat_id')->nullable();
             $table->string('gemi_id')->nullable();
+            $table->string('mobile')->nullable();
+            $table->string('telephone')->nullable();
+            $table->string('tax_office')->nullable();
             $table->string('email')->unique();
+            $table->longText('contact_emails')->nullable();
             $table->string('image')->nullable();
             $table->tinyInteger('user_type')->nullable();
             $table->tinyInteger('status')->default(0);

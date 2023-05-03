@@ -1,12 +1,29 @@
 @php
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+    $head_title = (!is_numeric($parent_cat_id) && $parent_cat_id != '') ? ucfirst($parent_cat_id).'s' : 'Categories';
+    $head_title = ($head_title == 'Image_gallarys') ? 'Galleries' : $head_title;
+
+    $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
+
+    // Get Language Settings
+    $language_settings = clientLanguageSettings($shop_id);
+    $primary_lang_id = isset($language_settings['primary_language']) ? $language_settings['primary_language'] : '';
+
+    // Primary Language Details
+    $primary_language_detail = \App\Models\Languages::where('id',$primary_lang_id)->first();
+    $primary_lang_code = isset($primary_language_detail->code) ? $primary_language_detail->code : '';
+    $primary_lang_name = isset($primary_language_detail->name) ? $primary_language_detail->name : '';
+
+    $name_key = $primary_lang_code."_name";
 @endphp
 
 @extends('client.layouts.client-layout')
 
-@section('title', __('Categories'))
+@section('title', __($head_title))
 
 @section('content')
+
+    <input type="hidden" name="par_cat_id" id="par_cat_id" value="{{ $parent_cat_id }}">
 
     {{-- Edit Modal --}}
     <div class="modal fade" id="editCategoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
@@ -32,8 +49,45 @@
                 </div>
                 <form id="addCategoryForm" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="parent_cat_id" id="parent_cat_id" value="{{ $parent_cat_id }}">
+                    <input type="hidden" name="schedule_array" id="schedule_array">
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-md-2">
+                                <div class="input_label">
+                                    <label for="tyep" class="form-label">{{ __('Type') }}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="form-group mb-3">
+                                    <select name="category_type" id="category_type" class="form-select" onchange="changeElements('addCategoryForm')">
+                                        <option value="product_category">Category</option>
+                                        <option value="page">Page</option>
+                                        <option value="link">Link</option>
+                                        <option value="image_gallary">Image Gallery</option>
+                                        <option value="check_in_page">Check-In Page</option>
+                                        @if(empty($parent_cat_id))
+                                            <option value="parent_category">Child Category</option>
+                                        @endif
+                                        <option value="pdf_category">PDF Category</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2 cat_div" style="display: none;">
+                                <div class="input_label">
+                                    <label class="form-label">{{ __('Category') }}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10 cat_div" style="display: none;">
+                                <div class="form-group mb-3" id="categories_div">
+                                    <input type="radio" name="parent_cat" id="root" value="0" checked> <label for="root">Root</label> <br>
+                                    @if(count($parent_categories) > 0)
+                                        @foreach ($parent_categories as $key => $pcategory)
+                                            <input type="radio" name="parent_cat" id="pcat_{{ $key }}" value="{{ $pcategory->id }}"> <label for="pcat_{{ $key }}">{{ $pcategory->name }}</label><br>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
                             <div class="col-md-2">
                                 <div class="input_label">
                                     <label class="form-label" for="name">{{ __('Name')}}</label>
@@ -44,36 +98,90 @@
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Category Title">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2 url" style="display: none;">
+                                <div class="input_label">
+                                    <label class="form-label" for="url">{{ __('URL')}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10 url" style="display: none;">
+                                <div class="form-group mb-3">
+                                    <input type="text" name="url" class="form-control" id="url" placeholder="Enter Your Link Url">
+                                </div>
+                            </div>
+                            <div class="col-md-2 chk_page_styles" style="display: none;">
+                                <div class="input_label">
+                                    <label class="form-label" for="background_color">{{ __('Background Color')}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10 chk_page_styles" style="display: none;">
+                                <div class="form-group mb-3">
+                                    <input type="color" name="checkin_styles[background_color]" class="form-control" id="background_color" placeholder="Enter Background Color">
+                                </div>
+                            </div>
+                            <div class="col-md-2 chk_page_styles" style="display: none;">
+                                <div class="input_label">
+                                    <label class="form-label" for="font_color">{{ __('Font Color')}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10 chk_page_styles" style="display: none;">
+                                <div class="form-group mb-3">
+                                    <input type="color" name="checkin_styles[font_color]" class="form-control" id="font_color" placeholder="Enter Background Color">
+                                </div>
+                            </div>
+                            <div class="col-md-2 chk_page_styles" style="display: none;">
+                                <div class="input_label">
+                                    <label class="form-label" for="button_color">{{ __('Button Color')}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10 chk_page_styles" style="display: none;">
+                                <div class="form-group mb-3">
+                                    <input type="color" name="checkin_styles[button_color]" class="form-control" id="button_color" placeholder="Enter Background Color">
+                                </div>
+                            </div>
+                            <div class="col-md-2 chk_page_styles" style="display: none;">
+                                <div class="input_label">
+                                    <label class="form-label" for="button_text_color">{{ __('Button Text Color')}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10 chk_page_styles" style="display: none;">
+                                <div class="form-group mb-3">
+                                    <input type="color" name="checkin_styles[button_text_color]" class="form-control" id="button_text_color" placeholder="Enter Background Color">
+                                </div>
+                            </div>
+                            <div class="col-md-2 description">
                                 <div class="input_label">
                                     <label class="form-label" for="description">{{ __('Description')}}</label>
                                 </div>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-10 description">
                                 <div class="form-group mb-3">
                                     <textarea class="form-control" name="description" id="description" rows="5"></textarea>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10 mt-2 mb-2 d-flex flex-wrap" id="images_div">
+                            </div>
+                            <div class="col-md-12 mul-image" id="img-val"></div>
+                            <div class="col-md-2 mul-image">
                                 <div class="input_label">
                                     <label class="form-label" for="image">{{ __('Image')}}</label>
                                 </div>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-10 mul-image">
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
                                             <div id="img-label">
-                                                <label for="image" style="cursor: pointer">
-                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100" id="crp-img-prw">
+                                                <label for="image">
+                                                    Upload Images
+                                                    {{-- <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100" id="crp-img-prw"> --}}
                                                 </label>
                                             </div>
                                            <input type="file" name="image" id="image" class="form-control" style="display: none;">
-                                           <input type="hidden" name="og_image" id="og_image">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <code>Upload Image in (200*200) Dimensions</code>
+                                        <code class="img-upload-label">Upload Image in (200*200) Dimensions</code>
                                     </div>
                                 </div>
                             </div>
@@ -88,12 +196,43 @@
                             <div class="col-md-4 img-crop-sec" style="display: none;">
                                 <div class="preview" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2 mt-2 cover" style="display: none;">
+                                <div class="input_label">
+                                    <label class="form-label">{{ __('Thumbnail')}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10 mt-2 cover" id="cover_label" style="display: none;">
+                                <div class="form-group">
+                                    <input type="file" onchange="CoverPreview('addCategoryForm',this)" id="cover" name="cover" style="display: none">
+                                    <div class="page-cover">
+                                        <label for="cover" id="upload-page-cover-image">
+                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100 h-100">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-2 pdf" style="display: none;">
+                                <div class="input_label">
+                                    <label class="form-label">{{ __('PDF File')}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-10 mt-2 pdf" id="pdf_label" style="display: none;">
+                                <div class="form-group">
+                                    <input type="file" onchange="PdfPreview('addCategoryForm',this)" id="pdf" name="pdf" style="display: none">
+                                    <div class="pdf-file">
+                                        <label for="pdf" id="upload-pdf-file">
+                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100 h-100">
+                                        </label>
+                                    </div>
+                                    <h4 id="pdf-name" style="display: none;"></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-3">
                                 <div class="input_label">
                                     <label class="form-label" for="publish">{{ __('Published')}}</label>
                                 </div>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-10 mt-3">
                                 <div class="form-group mb-3">
                                     <label class="switch">
                                         <input type="checkbox" id="publish" name="published" value="1">
@@ -102,6 +241,126 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="input-label text-primary schedule-toggle">
+                                    <i class="fa fa-clock" onclick="$('#schedule-main-div').toggle()"></i> <span>Scheduling Not Active</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3" id="schedule-main-div" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-12 text-end">
+                                        <label class="switch">
+                                            <input type="checkbox" id="schedule" name="schedule" value="1" onchange="changeScheduleLabel('addCategoryForm')">
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-12 sc_inner">
+                                        <div class="sc_array_section" id="sc_array_section">
+                                            <div class="p-2" id="sunday_sec">
+                                               <div class="text-center">
+                                                    <input type="checkbox" class="me-2" name="" id="sunday"> <label for="sunday">Sun</label>
+                                               </div>
+                                                <div class="sch-sec">
+                                                    <div class="sch_1">
+                                                        <input type="time" class="form-control mt-2" name="startTime" id="startTime">
+                                                        <input type="time" class="form-control mt-2" name="endTime" id="endTime">
+                                                    </div>
+                                                </div>
+                                                <div class="sch-plus">
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('sunday_sec','addCatgeoryForm')"></i>
+                                                </div>
+                                            </div>
+                                            <div class="p-2" id="monday_sec">
+                                                <div class="text-center">
+                                                    <input type="checkbox" class="me-2" name="" id="monday"> <label for="monday">Mon</label>
+                                               </div>
+                                                <div class="sch-sec">
+                                                    <div class="sch_1">
+                                                        <input type="time" class="form-control mt-2" name="startTime" id="startTime">
+                                                        <input type="time" class="form-control mt-2" name="endTime" id="endTime">
+                                                    </div>
+                                                </div>
+                                                <div class="sch-plus">
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('monday_sec','addCatgeoryForm')"></i>
+                                                </div>
+                                            </div>
+                                            <div class="p-2" id="tuesday_sec">
+                                                <div class="text-center">
+                                                    <input type="checkbox" class="me-2" name="" id="tuesday"> <label for="tuesday">Tue</label>
+                                               </div>
+                                                <div class="sch-sec">
+                                                    <div class="sch_1">
+                                                        <input type="time" class="form-control mt-2" name="startTime" id="startTime">
+                                                        <input type="time" class="form-control mt-2" name="endTime" id="endTime">
+                                                    </div>
+                                                </div>
+                                                <div class="sch-plus">
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('tuesday_sec','addCatgeoryForm')"></i>
+                                                </div>
+                                            </div>
+                                            <div class="p-2" id="wednesday_sec">
+                                                <div class="text-center">
+                                                    <input type="checkbox" class="me-2" name="" id="wednesday"> <label for="wednesday">Wed</label>
+                                               </div>
+                                                <div class="sch-sec">
+                                                    <div class="sch_1">
+                                                        <input type="time" class="form-control mt-2" name="startTime" id="startTime">
+                                                        <input type="time" class="form-control mt-2" name="endTime" id="endTime">
+                                                    </div>
+                                                </div>
+                                                <div class="sch-plus">
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('wednesday_sec','addCatgeoryForm')"></i>
+                                                </div>
+                                            </div>
+                                            <div class="p-2" id="thursday_sec">
+                                                <div class="text-center">
+                                                    <input type="checkbox" class="me-2" name="" id="thursday"> <label for="thursday">Thu</label>
+                                               </div>
+                                                <div class="sch-sec">
+                                                    <div class="sch_1">
+                                                        <input type="time" class="form-control mt-2" name="startTime" id="startTime">
+                                                        <input type="time" class="form-control mt-2" name="endTime" id="endTime">
+                                                    </div>
+                                                </div>
+                                                <div class="sch-plus">
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('thursday_sec','addCatgeoryForm')"></i>
+                                                </div>
+                                            </div>
+                                            <div class="p-2" id="friday_sec">
+                                                <div class="text-center">
+                                                    <input type="checkbox" class="me-2" name="" id="friday"> <label for="friday">Fri</label>
+                                               </div>
+                                                <div class="sch-sec">
+                                                    <div class="sch_1">
+                                                        <input type="time" class="form-control mt-2" name="startTime" id="startTime">
+                                                        <input type="time" class="form-control mt-2" name="endTime" id="endTime">
+                                                    </div>
+                                                </div>
+                                                <div class="sch-plus">
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('friday_sec','addCatgeoryForm')"></i>
+                                                </div>
+                                            </div>
+                                            <div class="p-2" id="saturday_sec">
+                                                <div class="text-center">
+                                                    <input type="checkbox" class="me-2" name="" id="saturday"> <label for="saturday">Sat</label>
+                                               </div>
+                                                <div class="sch-sec">
+                                                    <div class="sch_1">
+                                                        <input type="time" class="form-control mt-2" name="startTime" id="startTime">
+                                                        <input type="time" class="form-control mt-2" name="endTime" id="endTime">
+                                                    </div>
+                                                </div>
+                                                <div class="sch-plus">
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('saturday_sec','addCatgeoryForm')"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -117,13 +376,20 @@
 
     {{-- Page Title --}}
     <div class="pagetitle">
-        <h1>{{ __('Categories')}}</h1>
+        <h1>{{ __($head_title)}}</h1>
         <div class="row">
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
                         {{-- <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">Dashboard</a></li> --}}
-                        <li class="breadcrumb-item active">{{ __('Categories')}}</li>
+                        @if(!empty($parent_cat_id))
+                            <li class="breadcrumb-item"><a href="{{ route('categories') }}">{{ __($head_title)}}</a></li>
+                            @if(isset($cat_details['en_name']) && !empty($cat_details['en_name']))
+                                <li class="breadcrumb-item active">{{ $cat_details['en_name'] }}</li>
+                            @endif
+                        @else
+                            <li class="breadcrumb-item active">{{ __($head_title)}}</li>
+                        @endif
                     </ol>
                 </nav>
             </div>
@@ -167,7 +433,7 @@
                             </div>
                         </div>
                         <div class="sec_title">
-                            <h1>{{ __('Categories')}}</h1>
+                            <h1>{{ __($head_title)}}</h1>
                             <p> {{ __('Menu categories define the core structure of your menu. Move your mouse over a category to ‘Add or edit category items’ (aka products) or ‘Edit category’')}}
                             </p>
                         </div>
@@ -180,29 +446,52 @@
                                         <div class="item_box">
                                             <div class="item_img">
                                                 <a>
-                                                    @if(!empty($category->image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->image))
-                                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->image) }}" class="w-100">
+                                                    @if($category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'link' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category')
+                                                        @if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
+                                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover) }}" class="w-100">
+                                                        @else
+                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                        @endif
                                                     @else
-                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                        @php
+                                                            $cat_image = isset($category->categoryImages[0]['image']) ? $category->categoryImages[0]['image'] : '';
+                                                        @endphp
+
+                                                        @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
+                                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" class="w-100">
+                                                        @else
+                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                        @endif
                                                     @endif
                                                 </a>
                                                 <div class="edit_item_bt">
-                                                    <a href="{{ route('items',$category->id) }}" class="btn edit_item" >{{ __('ADD OR EDIT ITEMS')}}</a>
-                                                    <button class="btn edit_category" onclick="editCategory({{ $category->id }})">{{ __('EDIT CATEGORY')}}</button>
+                                                    @if ($category->category_type == 'product_category')
+                                                        <a href="{{ route('items',$category->id) }}" class="btn edit_item" >{{ __('ADD OR EDIT ITEMS')}}</a>
+                                                    @endif
+
+                                                    @if($category->category_type == 'parent_category')
+                                                        <a href="{{ route('categories',$category->id) }}" class="btn edit_item">{{ __('ADD OR EDIT CHILD CATEGORY') }}</a>
+                                                    @endif
+                                                    <button class="btn edit_category" onclick="editCategory({{ $category->id }})">{{ __('EDIT')}}</button>
                                                 </div>
+                                                @if($category->category_type == 'parent_category')
+                                                    <a class="btn-search-cat" href="{{ route('categories',$category->id) }}"><i class="fa-solid fa-magnifying-glass"></i></a>
+                                                @endif
                                                 <a class="delet_bt" onclick="deleteCategory({{ $category->id }})" style="cursor: pointer;">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </a>
                                                 <a class="cat_edit_bt" onclick="editCategory({{ $category->id }})">
                                                     <i class="fa-solid fa-edit"></i>
                                                 </a>
-                                                <a class="item_add_bt" href="{{ route('items',$category->id) }}">
-                                                    <i class="fa-solid fa-add"></i>
-                                                </a>
+                                                @if ($category->category_type == 'product_category')
+                                                    <a class="item_add_bt" href="{{ route('items',$category->id) }}">
+                                                        <i class="fa-solid fa-add"></i>
+                                                    </a>
+                                                @endif
                                             </div>
                                             <div class="item_info">
                                                 <div class="item_name">
-                                                    <h3>{{ $category->en_name }}</h3>
+                                                    <h3>{{ isset($category[$name_key]) ? $category[$name_key] : '' }}</h3>
                                                     <div class="form-check form-switch">
                                                         @php
                                                             $newStatus = ($category->published == 1) ? 0 : 1;
@@ -210,7 +499,23 @@
                                                         <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeStatus({{ $category->id }},{{ $newStatus }})" value="1" {{ ($category->published == 1) ? 'checked' : '' }}>
                                                     </div>
                                                 </div>
-                                                <h2>{{ __('Item Category')}}</h2>
+                                                <h2>
+                                                    @if($category->category_type == 'product_category')
+                                                        Category
+                                                    @elseif ($category->category_type == 'page')
+                                                        Page
+                                                    @elseif ($category->category_type == 'link')
+                                                        Link
+                                                    @elseif ($category->category_type == 'image_gallary')
+                                                        Image Gallery
+                                                    @elseif ($category->category_type == 'check_in_page')
+                                                        Check-In Page
+                                                    @elseif ($category->category_type == 'parent_category')
+                                                        Parent Category
+                                                    @elseif ($category->category_type == 'pdf_category')
+                                                        PDF
+                                                    @endif
+                                                </h2>
                                             </div>
                                         </div>
                                     </div>
@@ -226,7 +531,7 @@
                                         </a>
                                     </div>
                                     <div class="item_info text-center">
-                                        <h2>{{ __('Add New Category')}}</h2>
+                                        <h2>{{ __('Add New')}}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -247,6 +552,7 @@
         var cropper;
         var addCatEditor;
         var editCatEditor;
+        var addKey=0;
 
         // Reset New CategoryForm
         $('#NewCategoryBtn').on('click',function(){
@@ -254,15 +560,21 @@
             // Reset NewCategoryForm
             $('#addCategoryForm').trigger('reset');
 
+            // Reset Elements
+            changeElements('addCategoryForm');
+
             // Remove Validation Class
             $('#addCategoryForm #name').removeClass('is-invalid');
-            $('#addCategoryForm #image').removeClass('is-invalid');
+            $('#addCategoryForm #url').removeClass('is-invalid');
 
             // Clear all Toastr Messages
             toastr.clear();
 
             $('.ck-editor').remove();
             addCatEditor = "";
+            $('#addCategoryForm #images_div').html('');
+            $('#addCategoryForm #img-val').html('');
+            addKey = 0;
 
             var cat_textarea = $('#addCategoryForm #description')[0];
 
@@ -362,15 +674,37 @@
                 cancelCropper('addCategoryForm');
             }
 
+            // Refresh Schedule Content
+            $('#addCategoryModal #schedule-main-div .sc_inner').load(document.URL + ' #sc_array_section');
+            $('.schedule-toggle span').html('');
+            $('.schedule-toggle span').append('Scheduling Not Active');
+            $('#schedule-main-div').hide();
+
         });
 
 
         // Remove Some Fetaures when Close Add Modal
         $('#addCategoryModal .btn-close, #addCategoryModal .close-btn').on('click',function()
         {
-            deleteCropper('addCategoryForm');
-            $('.ck-editor').remove();
+            // Reset NewCategoryForm
+            $('#addCategoryForm').trigger('reset');
+
+            // Reset Elements
+            changeElements('addCategoryForm');
+
+            // Blank Multiple Image Div
+            $('#addCategoryForm #images_div').html('');
+            $('#addCategoryForm #img-val').html('');
+
+            addKey = 0;
             addCatEditor = "";
+            $('.ck-editor').remove();
+
+            // Refresh Schedule Content
+            $('.schedule-toggle span').html('');
+            $('.schedule-toggle span').append('Scheduling Not Active');
+            $('#schedule-main-div').hide();
+
         });
 
 
@@ -386,15 +720,250 @@
         });
 
 
+        // Image Cropper Functionality for Add Model
+        $('#addCategoryModal #image').on('change',function()
+        {
+            const myFormID = this.form.id;
+            const currentFile = this.files[0];
+            var img_crp_size = getImageCroppedSize(myFormID);
+
+            if (currentFile)
+            {
+                fileSize = currentFile.size / 1024 / 1024;
+                fileName = currentFile.name;
+                fileType = fileName.split('.').pop().toLowerCase();
+
+                if(fileSize > 2)
+                {
+                    toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
+                    $('#'+myFormID+' #image').val('');
+                    return false;
+                }
+                else
+                {
+                    if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
+                    {
+                        toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
+                        $('#'+myFormID+' #image').val('');
+                        return false;
+                    }
+                    else
+                    {
+                        if(cropper)
+                        {
+                            cropper.destroy();
+                        }
+
+                        $('#'+myFormID+' #resize-image').attr('src',"");
+                        $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
+                        $('#'+myFormID+' .img-crop-sec').show();
+
+                        const CrpImage = document.getElementById('resize-image');
+                        cropper = new Cropper(CrpImage, {
+                            aspectRatio: img_crp_size.ratio,
+                            zoomable:false,
+                            cropBoxResizable: false,
+                            preview: '#'+myFormID+' .preview',
+                        });
+                    }
+                }
+            }
+        });
+
+
+        // Image Cropper Functionality for Edit Modal
+        function imageCropper(formID,ele)
+        {
+            var currentFile = ele.files[0];
+            var myFormID = formID+"_category_form";
+            const catType = $('#'+formID+' #category_type').val();
+            var img_crp_size = getImageCroppedSize(formID);
+
+            if (currentFile)
+            {
+                fileSize = currentFile.size / 1024 / 1024;
+                fileName = currentFile.name;
+                fileType = fileName.split('.').pop().toLowerCase();
+
+                if(fileSize > 2)
+                {
+                    toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
+                    $('#'+myFormID+' #'+formID+'category_image').val('');
+                    return false;
+                }
+                else
+                {
+                    if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
+                    {
+                        toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
+                        $('#'+myFormID+' #'+formID+'category_image').val('');
+                        return false;
+                    }
+                    else
+                    {
+                        if(cropper)
+                        {
+                            cropper.destroy();
+                            $('.resize-image').attr('src',"");
+                            $('.img-crop-sec').hide();
+                        }
+
+                        $('#'+myFormID+' #resize-image').attr('src',"");
+                        $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
+                        $('#'+myFormID+' .img-crop-sec').show();
+
+                        // const CrpImage = document.getElementById('resize-image');
+                        const CrpImage = $('#'+myFormID+' #resize-image')[0];
+
+                        cropper = new Cropper(CrpImage, {
+                            // aspectRatio: 1 / 1,
+                            aspectRatio : img_crp_size.ratio,
+                            zoomable:false,
+                            cropBoxResizable: false,
+                            preview: '#'+myFormID+' .preview',
+                        });
+                    }
+                }
+            }
+        }
+
+        // Reset Copper
+        function resetCropper(){
+            cropper.reset();
+        }
+
+
+        // Canel Cropper
+        function cancelCropper(formID)
+        {
+            cropper.destroy();
+            $('#'+formID+' #resize-image').attr('src',"");
+            $('#'+formID+' .img-crop-sec').hide();
+            $('#'+formID+' #image').val('');
+            $('#'+formID+' #'+formID+'category_image').val('');
+        }
+
+
+        // Save Cropper Image
+        function saveCropper(formID)
+        {
+            const catType = $('#'+formID+' #category_type').val();
+            var img_crp_size = getImageCroppedSize(formID);
+
+            var canvas = cropper.getCroppedCanvas({
+                width:img_crp_size.width,
+                height:img_crp_size.height
+		    });
+
+            canvas.toBlob(function(blob)
+            {
+                addKey++;
+                var html = '';
+
+                if(catType != 'image_gallary')
+                {
+                    $('#'+formID+' #images_div').html('');
+                    $('#'+formID+' #img-val').html('');
+                }
+
+                var image = URL.createObjectURL(blob);
+                html += '<div class="inner-img img_'+addKey+'">'
+                html += '<img src="'+image+'" class="w-100 h-100">';
+                html += '<a class="btn btn-sm btn-danger del-pre-btn" onclick="$(\'#'+formID+' .img_'+addKey+', #'+formID+' #img_inp_'+addKey+'\').remove()"><i class="fa fa-trash"></a>';
+                html += '</div>';
+
+                $('#'+formID+" #images_div").append(html);
+                url = URL.createObjectURL(blob);
+                var reader = new FileReader(url);
+                reader.readAsDataURL(blob);
+                reader.onloadend = function()
+                {
+                    var base64data = reader.result;
+                    $('#'+formID+' #img-val').append('<input type="hidden" name="og_image[]" value="'+base64data+'" id="img_inp_'+addKey+'">');
+                };
+            });
+
+            cropper.destroy();
+            $('#'+formID+' #resize-image').attr('src',"");
+            $('#'+formID+' .img-crop-sec').hide();
+
+            $('#'+formID+' #image').val('');
+            $('#'+formID+' #'+formID+'category_image').val('');
+        }
+
+
+        // Delete Cropper
+        function deleteCropper(formID)
+        {
+            if(cropper)
+            {
+                cropper.destroy();
+            }
+
+            $('#'+formID+' #resize-image').attr('src',"");
+            $('#'+formID+' .img-crop-sec').hide();
+            $('#'+formID+' #og_image').val('');
+            $('#'+formID+" #del-img").remove();
+
+            if(formID == 'addCategoryForm')
+            {
+                $('#'+formID+' #image').val('');
+                $('#'+formID+" #crp-img-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+            }
+            else
+            {
+                $('#'+formID+' #'+formID+'category_image').val('');
+                $('#'+formID+" #crp-img-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+                $('#'+formID+' #edit-img').show();
+                $('#'+formID+' #rep-image').hide();
+            }
+
+        }
+
+
         // Save New Category
         function saveCategory()
         {
+            var main_arr = {};
+            var days_arr = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+            $.each(days_arr, function (indexInArray, day)
+            {
+                var dayName = $('#addCategoryForm #'+day+'_sec label').html();
+                var checkedVal = $('#addCategoryForm #'+day+'_sec #'+day).is(":checked");
+                var scheduleLength = $('#addCategoryForm #'+day+'_sec .sch-sec').children('div').length;
+                var sch_all_childs = $('#addCategoryForm #'+day+'_sec .sch-sec').children('div');
+
+                var time_arr = [];
+                var inner_arr_1 = {};
+
+                inner_arr_1['name'] = dayName;
+                inner_arr_1['enabled'] = checkedVal;
+                inner_arr_1['dayInWeek'] = indexInArray;
+
+                for(var i=0;i<scheduleLength;i++)
+                {
+                    var inner_arr_2 = {};
+                    var sch_child = sch_all_childs[i];
+                    var className = sch_child.getAttribute('class');
+
+                    inner_arr_2['startTime'] = $('#addCategoryForm #'+day+'_sec .sch-sec .'+className+' #startTime').val();
+                    inner_arr_2['endTime'] = $('#addCategoryForm #'+day+'_sec .sch-sec .'+className+' #endTime').val();
+                    time_arr.push(inner_arr_2);
+                }
+
+                inner_arr_1['timesSchedules'] = time_arr;
+                main_arr[day] = inner_arr_1;
+            });
+
             const myFormData = new FormData(document.getElementById('addCategoryForm'));
-            myFormData.set('description',addCatEditor.getData());
+            myDesc = (addCatEditor?.getData()) ? addCatEditor.getData() : '';
+            myFormData.set('description',myDesc);
+            myFormData.append('schedule_array', JSON.stringify(main_arr));
 
             // Remove Validation Class
             $('#addCategoryForm #name').removeClass('is-invalid');
-            $('#addCategoryForm #image').removeClass('is-invalid');
+            $('#addCategoryForm #url').removeClass('is-invalid');
 
             // Clear all Toastr Messages
             toastr.clear();
@@ -440,12 +1009,12 @@
                             toastr.error(nameError);
                         }
 
-                        // Image Error
-                        var imageError = (validationErrors.image) ? validationErrors.image : '';
-                        if (imageError != '')
+                        // URL Error
+                        var urlError = (validationErrors.url) ? validationErrors.url : '';
+                        if (urlError != '')
                         {
-                            $('#addCategoryForm #image').addClass('is-invalid');
-                            toastr.error(imageError);
+                            $('#addCategoryForm #url').addClass('is-invalid');
+                            toastr.error(urlError);
                         }
                     }
                 }
@@ -527,6 +1096,83 @@
                         $('#editCategoryModal #cat_lang_div').html('');
                         $('#editCategoryModal #cat_lang_div').append(response.data);
                         $('#editCategoryModal').modal('show');
+
+                        // Set Elements
+                        if(response.category_type == 'page')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (700*400) Dimensions');
+                        }
+                        else if(response.category_type == 'product_category')
+                        {
+                            $('#editCategoryModal .cover').hide();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                        }
+                        else if(response.category_type == 'link')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').show();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+                        else if(response.category_type == 'image_gallary')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                        }
+                        else if(response.category_type == 'check_in_page')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').show();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+                        else if(response.category_type == 'parent_category')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').show();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                        }
+                        else if(response.category_type == 'pdf_category')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').show();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+
 
                         $('.ck-editor').remove();
                         editCatEditor = "";
@@ -738,8 +1384,42 @@
         function updateCategory(langCode)
         {
             var formID = langCode+"_category_form";
+            var main_arr = {};
+            var days_arr = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+            $.each(days_arr, function (indexInArray, day)
+            {
+                var dayName = $('#'+formID+' #'+day+'_sec label').html();
+                var checkedVal = $('#'+formID+' #'+day+'_sec #'+day).is(":checked");
+                var scheduleLength = $('#'+formID+' #'+day+'_sec .sch-sec').children('div').length;
+                var sch_all_childs = $('#'+formID+' #'+day+'_sec .sch-sec').children('div');
+
+                var time_arr = [];
+                var inner_arr_1 = {};
+
+                inner_arr_1['name'] = dayName;
+                inner_arr_1['enabled'] = checkedVal;
+                inner_arr_1['dayInWeek'] = indexInArray;
+
+                for(var i=0;i<scheduleLength;i++)
+                {
+                    var inner_arr_2 = {};
+                    var sch_child = sch_all_childs[i];
+                    var className = sch_child.getAttribute('class');
+
+                    inner_arr_2['startTime'] = $('#'+formID+' #'+day+'_sec .sch-sec .'+className+' #startTime').val();
+                    inner_arr_2['endTime'] = $('#'+formID+' #'+day+'_sec .sch-sec .'+className+' #endTime').val();
+                    time_arr.push(inner_arr_2);
+                }
+
+                inner_arr_1['timesSchedules'] = time_arr;
+                main_arr[day] = inner_arr_1;
+            });
+
             var myFormData = new FormData(document.getElementById(formID));
-            myFormData.set('category_description',editCatEditor.getData());
+            myDesc = (editCatEditor?.getData()) ? editCatEditor.getData() : '';
+            myFormData.set('category_description',myDesc);
+            myFormData.append('schedule_array', JSON.stringify(main_arr));
 
             // Remove Validation Class
             $("#"+formID+' #category_name').removeClass('is-invalid');
@@ -843,6 +1523,7 @@
         $('#search').on('keyup',function()
         {
             var keywords = $(this).val();
+            var par_cat_id = $('#par_cat_id').val();
 
             $.ajax({
                 type: "POST",
@@ -850,6 +1531,7 @@
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'keywords':keywords,
+                    'par_cat_id':par_cat_id,
                 },
                 dataType: 'JSON',
                 success: function(response)
@@ -911,189 +1593,368 @@
         });
 
 
-        // Image Cropper Functionality for Add Model
-        $('#addCategoryModal #image').on('change',function()
+        // Function for Cover Image Preview
+        function CoverPreview(formID,ele)
         {
-            const myFormID = this.form.id;
-            const currentFile = this.files[0];
+            currentFile = ele.files[0];
+            fileName = currentFile.name;
+            fileType = fileName.split('.').pop().toLowerCase();
 
-            if (currentFile)
+            if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
             {
-                fileSize = currentFile.size / 1024 / 1024;
-                fileName = currentFile.name;
-                fileType = fileName.split('.').pop().toLowerCase();
-
-                if(fileSize > 2)
-                {
-                    toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
-                    $('#'+myFormID+' #image').val('');
-                    return false;
-                }
-                else
-                {
-                    if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
-                    {
-                        toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
-                        $('#'+myFormID+' #image').val('');
-                        return false;
-                    }
-                    else
-                    {
-                        if(cropper)
-                        {
-                            cropper.destroy();
-                        }
-
-                        $('#'+myFormID+' #resize-image').attr('src',"");
-                        $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
-                        $('#'+myFormID+' .img-crop-sec').show();
-
-                        const CrpImage = document.getElementById('resize-image');
-                        cropper = new Cropper(CrpImage, {
-                            aspectRatio: 1 / 1,
-                            zoomable:false,
-                            cropBoxResizable: false,
-                            preview: '#'+myFormID+' .preview',
-                        });
-                    }
-                }
+                toastr.error("The Cover Image must be a file of type: png, jpg, svg, jpeg");
+                $('#'+myFormID+' #cover').val('');
+                return false;
             }
-        });
-
-
-        // Image Cropper Functionality for Edit Modal
-        function imageCropper(formID,ele)
-        {
-            var currentFile = ele.files[0];
-            var myFormID = formID+"_category_form";
-
-            if (currentFile)
+            else
             {
-                fileSize = currentFile.size / 1024 / 1024;
-                fileName = currentFile.name;
-                fileType = fileName.split('.').pop().toLowerCase();
-
-                if(fileSize > 2)
+                if(formID == 'addCategoryForm')
                 {
-                    toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
-                    $('#'+myFormID+' #'+formID+'category_image').val('');
-                    return false;
+                    $('#'+formID+' #upload-page-cover-image img').attr('src',URL.createObjectURL(currentFile));
+                    $('#'+formID+' .page-cover .btn-danger').remove();
+                    $('#'+formID+' .page-cover').append('<a onclick="removeCover(\''+formID+'\')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>');
                 }
                 else
                 {
-                    if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
-                    {
-                        toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
-                        $('#'+myFormID+' #'+formID+'category_image').val('');
-                        return false;
-                    }
-                    else
-                    {
-                        if(cropper)
-                        {
-                            cropper.destroy();
-                            $('.resize-image').attr('src',"");
-                            $('.img-crop-sec').hide();
-                        }
-
-                        $('#'+myFormID+' #resize-image').attr('src',"");
-                        $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
-                        $('#'+myFormID+' .img-crop-sec').show();
-
-                        // const CrpImage = document.getElementById('resize-image');
-                        const CrpImage = $('#'+myFormID+' #resize-image')[0];
-
-                        cropper = new Cropper(CrpImage, {
-                            aspectRatio: 1 / 1,
-                            zoomable:false,
-                            cropBoxResizable: false,
-                            preview: '#'+myFormID+' .preview',
-                        });
-                    }
+                    $('#editCategoryModal #upload-page-cover-image img').attr('src',URL.createObjectURL(currentFile));
                 }
             }
         }
 
-        // Reset Copper
-        function resetCropper(){
-            cropper.reset();
+
+        // Function for Delete Cover Preview
+        function removeCover(formID)
+        {
+            $('#'+formID+' #upload-page-cover-image img').attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+            $('#'+formID+' .page-cover .btn-danger').remove();
+            $('#'+formID+' #cover').val('');
         }
 
-        // Canel Cropper
-        function cancelCropper(formID)
-        {
-            cropper.destroy();
-            $('#'+formID+' #resize-image').attr('src',"");
-            $('#'+formID+' .img-crop-sec').hide();
-            $('#'+formID+' #image').val('');
-            $('#'+formID+' #'+formID+'category_image').val('');
-            $('#'+formID+' #og_image').val('');
-        }
 
-        // Save Cropper Image
-        function saveCropper(formID)
+        // Function for Preview PDF
+        function PdfPreview(formID,ele)
         {
-            var canvas = cropper.getCroppedCanvas({
-                width:200,
-                height:200
-		    });
+            currentFile = ele.files[0];
+            fileName = currentFile.name;
+            fileType = fileName.split('.').pop().toLowerCase();
 
-            canvas.toBlob(function(blob)
+            if($.inArray(fileType, ['pdf']) == -1)
             {
-                $('#'+formID+" #crp-img-prw").attr('src',URL.createObjectURL(blob));
-                url = URL.createObjectURL(blob);
-                var reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = function()
+                toastr.error("The File must be a file of type: pdf");
+                $('#'+myFormID+' #pdf').val('');
+                return false;
+            }
+            else
+            {
+                if(formID == 'addCategoryForm')
                 {
-                    var base64data = reader.result;
-                    $('#'+formID+' #og_image').val(base64data);
-                };
+                    $('#'+formID+' #pdf-name').html('');
+                    $('#'+formID+' .pdf-file').hide();
+                    $('#'+formID+' #pdf-name').html(fileName);
+                    $('#'+formID+' #pdf-name').show();
+                    $('#'+formID+' #pdf-name').append('<a onclick="removePdf(\''+formID+'\')" class="btn btn-sm btn-danger ms-2"><i class="fa fa-trash">');
+                }
+                else
+                {
+                    $('#editCategoryModal #pdf-name').html('');
+                    $('#editCategoryModal #pdf-name').html(fileName);
+                }
+            }
+        }
+
+
+
+        // Function for Delete Pdf Preview
+        function removePdf(formID)
+        {
+            $('#'+formID+' #pdf-name').html('');
+            $('#'+formID+' .pdf-file').show();
+            $('#'+formID+' #pdf-name').hide();
+            $('#'+formID+' #pdf').val('');
+        }
+
+
+
+        // Change Elements According Category Type
+        function changeElements(formID)
+        {
+            const cat_type = $('#'+formID+' #category_type :selected').val();
+            $('#'+formID+' #images_div').html('');
+            $('#'+formID+' #img-val').html('');
+
+            if(formID == 'addCategoryForm')
+            {
+                // Clear PDF
+                $('#'+formID+' #pdf-name').html('');
+                $('#'+formID+' .pdf-file').show();
+                $('#'+formID+' #pdf-name').hide();
+                $('#'+formID+' #pdf').val('');
+
+                // Clear Cover
+                $('#'+formID+' #upload-page-cover-image img').attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+                $('#'+formID+' .page-cover .btn-danger').remove();
+                $('#'+formID+' #cover').val('');
+
+                if(cat_type == 'page')
+                {
+                    $('#'+formID+' .cover').show();
+                    $('#'+formID+' .url').hide();
+                    $('#'+formID+' .description').show();
+                    $('#'+formID+' .mul-image').show();
+                    $('#'+formID+' .pdf').hide();
+                    $('#'+formID+' .chk_page_styles').hide();
+                    $('#'+formID+' .cat_div').hide();
+                    $('#'+formID+' .img-upload-label').html('Upload Image in (700*400) Dimensions');
+                }
+                else if(cat_type == 'product_category')
+                {
+                    $('#'+formID+' .cover').hide();
+                    $('#'+formID+' .url').hide();
+                    $('#'+formID+' .description').show();
+                    $('#'+formID+' .mul-image').show();
+                    $('#'+formID+' .pdf').hide();
+                    $('#'+formID+' .chk_page_styles').hide();
+                    $('#'+formID+' .cat_div').hide();
+                    $('#'+formID+' .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                }
+                else if(cat_type == 'link')
+                {
+                    $('#'+formID+' .cover').show();
+                    $('#'+formID+' .url').show();
+                    $('#'+formID+' .description').hide();
+                    $('#'+formID+' .mul-image').hide();
+                    $('#'+formID+' .pdf').hide();
+                    $('#'+formID+' .chk_page_styles').hide();
+                    $('#'+formID+' .cat_div').hide();
+                }
+                else if(cat_type == 'image_gallary')
+                {
+                    $('#'+formID+' .cover').show();
+                    $('#'+formID+' .url').hide();
+                    $('#'+formID+' .description').hide();
+                    $('#'+formID+' .mul-image').show();
+                    $('#'+formID+' .pdf').hide();
+                    $('#'+formID+' .chk_page_styles').hide();
+                    $('#'+formID+' .cat_div').hide();
+                    $('#'+formID+' .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                }
+                else if(cat_type == 'check_in_page')
+                {
+                    $('#'+formID+' .cover').show();
+                    $('#'+formID+' .url').hide();
+                    $('#'+formID+' .description').show();
+                    $('#'+formID+' .mul-image').hide();
+                    $('#'+formID+' .pdf').hide();
+                    $('#'+formID+' .chk_page_styles').show();
+                    $('#'+formID+' .cat_div').hide();
+                }
+                else if(cat_type == 'parent_category')
+                {
+                    $('#'+formID+' .cover').show();
+                    $('#'+formID+' .url').hide();
+                    $('#'+formID+' .description').hide();
+                    $('#'+formID+' .mul-image').show();
+                    $('#'+formID+' .pdf').hide();
+                    $('#'+formID+' .chk_page_styles').hide();
+                    $('#'+formID+' .cat_div').show();
+                    $('#'+formID+' .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                }
+                else if(cat_type == 'pdf_category')
+                {
+                    $('#'+formID+' .cover').show();
+                    $('#'+formID+' .url').hide();
+                    $('#'+formID+' .description').hide();
+                    $('#'+formID+' .mul-image').hide();
+                    $('#'+formID+' .pdf').show();
+                    $('#'+formID+' .chk_page_styles').hide();
+                    $('#'+formID+' .cat_div').hide();
+                }
+            }
+            else
+            {
+                $('#editCategoryModal .category_type option:selected').removeAttr('selected');
+                $("#editCategoryModal .category_type option[value='"+cat_type+"']").attr("selected", "selected");
+
+                if(cat_type == 'page')
+                {
+                    $('#editCategoryModal .cover').show();
+                    $('#editCategoryModal .url').hide();
+                    $('#editCategoryModal .description').show();
+                    $('#editCategoryModal .mul-image').show();
+                    $('#editCategoryModal .pdf').hide();
+                    $('#editCategoryModal .chk_page_styles').hide();
+                    $('#editCategoryModal .cat_div').hide();
+                    $('#editCategoryModal .img-upload-label').html('Upload Image in (700*400) Dimensions');
+                }
+                else if(cat_type == 'product_category')
+                {
+                    $('#editCategoryModal .cover').hide();
+                    $('#editCategoryModal .url').hide();
+                    $('#editCategoryModal .description').show();
+                    $('#editCategoryModal .mul-image').show();
+                    $('#editCategoryModal .pdf').hide();
+                    $('#editCategoryModal .chk_page_styles').hide();
+                    $('#editCategoryModal .cat_div').hide();
+                    $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                }
+                else if(cat_type == 'link')
+                {
+                    $('#editCategoryModal .cover').show();
+                    $('#editCategoryModal .url').show();
+                    $('#editCategoryModal .description').hide();
+                    $('#editCategoryModal .mul-image').hide();
+                    $('#editCategoryModal .pdf').hide();
+                    $('#editCategoryModal .chk_page_styles').hide();
+                    $('#editCategoryModal .cat_div').hide();
+                }
+                else if(cat_type == 'image_gallary')
+                {
+                    $('#editCategoryModal .cover').show();
+                    $('#editCategoryModal .url').hide();
+                    $('#editCategoryModal .description').hide();
+                    $('#editCategoryModal .mul-image').show();
+                    $('#editCategoryModal .pdf').hide();
+                    $('#editCategoryModal .chk_page_styles').hide();
+                    $('#editCategoryModal .cat_div').hide();
+                    $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                }
+                else if(cat_type == 'check_in_page')
+                {
+                    $('#editCategoryModal .cover').show();
+                    $('#editCategoryModal .url').hide();
+                    $('#editCategoryModal .description').show();
+                    $('#editCategoryModal .mul-image').hide();
+                    $('#editCategoryModal .pdf').hide();
+                    $('#editCategoryModal .chk_page_styles').show();
+                    $('#editCategoryModal .cat_div').hide();
+                }
+                else if(cat_type == 'parent_category')
+                {
+                    $('#editCategoryModal .cover').show();
+                    $('#editCategoryModal .url').hide();
+                    $('#editCategoryModal .description').hide();
+                    $('#editCategoryModal .mul-image').show();
+                    $('#editCategoryModal .pdf').hide();
+                    $('#editCategoryModal .chk_page_styles').hide();
+                    $('#editCategoryModal .cat_div').show();
+                    $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                }
+                else if(cat_type == 'pdf_category')
+                {
+                    $('#editCategoryModal .cover').show();
+                    $('#editCategoryModal .url').hide();
+                    $('#editCategoryModal .description').hide();
+                    $('#editCategoryModal .mul-image').hide();
+                    $('#editCategoryModal .pdf').show();
+                    $('#editCategoryModal .chk_page_styles').hide();
+                    $('#editCategoryModal .cat_div').hide();
+                }
+            }
+
+        }
+
+
+        // Function for Delete Category
+        function deleteCategoryImage(no,imgID)
+        {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('categories.delete.images') }}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "img_id" : imgID,
+                },
+                dataType: "JSON",
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#editCategoryModal .edit_img_'+no).remove();
+                        toastr.success(response.message);
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                    }
+                }
             });
+        }
 
-            cropper.destroy();
-            $('#'+formID+' #resize-image').attr('src',"");
-            $('#'+formID+' .img-crop-sec').hide();
+
+        // Add New Schedule
+        function addNewSchedule(divID,formID)
+        {
+            // sch-sec
+            var html = '';
+            var counter;
+            counter = $('#'+formID+' #'+divID+' .sch-sec').children('div').length + 1;
+
+            html += '<div class="sch_'+counter+'">';
+                html += '<div class="sch-minus">';
+                    html += '<i class="bi bi-dash-circle" onclick="$(this).parent().parent().remove()"></i>';
+                html += '</div>';
+                html += '<input type="time" name="startTime" id="startTime" class="form-control mt-2">';
+                html += '<input type="time" name="endTime" id="endTime" class="form-control mt-2">';
+            html += '</div>';
 
             if(formID == 'addCategoryForm')
             {
-                $('#'+formID+" #img-label").append('<a class="btn btn-sm btn-danger" id="del-img" style="border-radius:50%" onclick="deleteCropper(\''+formID+'\')"><i class="fa fa-trash"></i></a>');
+                $('#'+formID+' #'+divID+" .sch-sec").append(html);
             }
             else
             {
-                $('#'+formID+' #edit-img').hide();
-                $('#'+formID+" #img-label").append('<a class="btn btn-sm btn-danger" id="del-img" style="border-radius:50%" onclick="deleteCropper(\''+formID+'\')"><i class="fa fa-trash"></i></a>');
-                $('#'+formID+' #rep-image').show();
+                console.log('#editCategoryModal .'+divID+" .sch-sec");
+                $('#editCategoryModal #'+divID+" .sch-sec").append(html);
             }
         }
 
 
-        // Delete Cropper
-        function deleteCropper(formID)
+        // Function for Change Schedule Label
+        function changeScheduleLabel(formID)
         {
-            if(cropper)
+            var status = $('#'+formID+' #schedule').is(":checked");
+            if(status == true)
             {
-                cropper.destroy();
-            }
-
-            $('#'+formID+' #resize-image').attr('src',"");
-            $('#'+formID+' .img-crop-sec').hide();
-            $('#'+formID+' #og_image').val('');
-            $('#'+formID+" #del-img").remove();
-
-            if(formID == 'addCategoryForm')
-            {
-                $('#'+formID+' #image').val('');
-                $('#'+formID+" #crp-img-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+                $('.schedule-toggle span').html('');
+                $('.schedule-toggle span').append('Scheduling Active');
             }
             else
             {
-                $('#'+formID+' #'+formID+'category_image').val('');
-                $('#'+formID+" #crp-img-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
-                $('#'+formID+' #edit-img').show();
-                $('#'+formID+' #rep-image').hide();
+                $('.schedule-toggle span').html('');
+                $('.schedule-toggle span').append('Scheduling Not Active');
             }
+        }
 
+
+        // Function for get width height & Accept Ratio
+        function getImageCroppedSize(formID)
+        {
+            const catType = $('#'+formID+' #category_type').val();
+            var crp_height,crp_width,crp_ratio;
+            var imageSize = [];
+
+            if(catType == 'page')
+            {
+                crp_width = 700;
+                crp_height = 400;
+            }
+            else if(catType == 'image_gallary')
+            {
+                crp_width = 400;
+                crp_height = 400;
+            }
+            else
+            {
+                crp_width = 200;
+                crp_height = 200;
+            }
+            crp_ratio = crp_width / crp_height;
+
+            imageSize.width = crp_width;
+            imageSize.height = crp_height;
+            imageSize.ratio = crp_ratio;
+
+            return imageSize;
         }
 
     </script>

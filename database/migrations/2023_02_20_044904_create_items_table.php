@@ -21,6 +21,7 @@ class CreateItemsTable extends Migration
             $table->tinyInteger('type')->default(1);
             $table->string('name')->nullable();
             $table->string('calories')->nullable();
+            $table->longText('options')->nullable();
             $table->text('description')->nullable();
 
             $table->string('en_name')->nullable();
