@@ -6,11 +6,21 @@ use App\Http\Requests\ClientRequest;
 use App\Models\AdditionalLanguage;
 use App\Models\Category;
 use App\Models\CategoryProductTags;
+use App\Models\CategoryVisit;
+use App\Models\CheckIn;
+use App\Models\Clicks;
 use App\Models\ClientSettings;
 use App\Models\ItemPrice;
 use App\Models\Items;
+use App\Models\ItemsVisit;
 use App\Models\Languages;
 use App\Models\LanguageSettings;
+use App\Models\Option;
+use App\Models\OptionPrice;
+use App\Models\Order;
+use App\Models\OrderItems;
+use App\Models\OrderSetting;
+use App\Models\PaymentSettings;
 use App\Models\QrSettings;
 use App\Models\Shop;
 use App\Models\ShopBanner;
@@ -21,6 +31,7 @@ use App\Models\ThemeSettings;
 use App\Models\User;
 use App\Models\UserShop;
 use App\Models\UsersSubscriptions;
+use App\Models\UserVisits;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -291,6 +302,51 @@ class UserController extends Controller
 
             }
 
+            // Insert Order Settings
+            $order_settings_keys = [
+                'delivery' => 0,
+                'takeaway' => 0,
+                'room_delivery' => 0,
+                'table_service' => 0,
+                'only_cart' => 0,
+                'auto_order_approval' => 0,
+                'scheduler_active' => 0,
+                'min_amount_for_delivery' => '',
+                'discount_percentage' => '',
+                'order_arrival_minutes' => 30,
+                'schedule_array' => '{"sunday":{"name":"Sun","enabled":false,"dayInWeek":0,"timesSchedules":[{"startTime":"","endTime":""}]},"monday":{"name":"Mon","enabled":false,"dayInWeek":1,"timesSchedules":[{"startTime":"","endTime":""}]},"tuesday":{"name":"Tue","enabled":false,"dayInWeek":2,"timesSchedules":[{"startTime":"","endTime":""}]},"wednesday":{"name":"Wed","enabled":false,"dayInWeek":3,"timesSchedules":[{"startTime":"","endTime":""}]},"thursday":{"name":"Thu","enabled":false,"dayInWeek":4,"timesSchedules":[{"startTime":"","endTime":""}]},"friday":{"name":"Fri","enabled":false,"dayInWeek":5,"timesSchedules":[{"startTime":"","endTime":""}]},"saturday":{"name":"Sat","enabled":false,"dayInWeek":6,"timesSchedules":[{"startTime":"","endTime":""}]}}',
+            ];
+            foreach($order_settings_keys as $key => $value)
+            {
+                $settings = new OrderSetting();
+                $settings->shop_id = $shop->id;
+                $settings->key = $key;
+                $settings->value = $value;
+                $settings->save();
+            }
+
+
+            // Insert Payment Settings
+            $payment_settings_keys = [
+                'paypal' => 0,
+                'paypal_mode' => 'sandbox',
+                'paypal_public_key' => '',
+                'paypal_private_key' => '',
+                'every_pay' => 0,
+                'everypay_mode' => 1,
+                'every_pay_public_key' => '',
+                'every_pay_private_key' => '',
+            ];
+            foreach($payment_settings_keys as $key => $value)
+            {
+                $settings = new PaymentSettings();
+                $settings->shop_id = $shop->id;
+                $settings->key = $key;
+                $settings->value = $value;
+                $settings->save();
+            }
+
+
             // Add Client Default Language
             $primary_lang = new LanguageSettings();
             $primary_lang->shop_id = $shop->id;
@@ -462,11 +518,32 @@ class UserController extends Controller
             // Delete Shop Categories
             Category::where('shop_id',$shop_id)->delete();
 
+            // Delete Category Visits
+            CategoryVisit::where('shop_id',$shop_id)->delete();
+
             // Delete Shop Items
             Items::where('shop_id',$shop_id)->delete();
 
+            // Delete Item Prices
+            ItemPrice::where('shop_id',$shop_id)->delete();
+
+            // Delete Item Visits
+            ItemsVisit::where('shop_id',$shop_id)->delete();
+
             // Delete Language Settings
             LanguageSettings::where('shop_id',$shop_id)->delete();
+
+            // Delete Order Settings
+            OrderSetting::where('shop_id',$shop_id)->delete();
+
+            // Delete Payment Settings
+            PaymentSettings::where('shop_id',$shop_id)->delete();
+
+            // Delete Orders
+            Order::where('shop_id',$shop_id)->delete();
+
+            // Delete Order Items
+            OrderItems::where('shop_id',$shop_id)->delete();
 
             // Delete QR Settings
             QrSettings::where('shop_id',$shop_id)->delete();
@@ -485,6 +562,21 @@ class UserController extends Controller
 
             // Tags Delete
             Tags::where('shop_id',$shop_id)->delete();
+
+            // Delete Users Visits
+            UserVisits::where('shop_id',$shop_id)->delete();
+
+            // Delete Options
+            Option::where('shop_id',$shop_id)->delete();
+
+            // Delete Option Prices
+            OptionPrice::where('shop_id',$shop_id)->delete();
+
+            // Delete Clicks
+            Clicks::where('shop_id',$shop_id)->delete();
+
+            // Delete CheckIns History
+            CheckIn::where('shop_id',$shop_id)->delete();
 
         }
 

@@ -49,9 +49,9 @@ class OrderController extends Controller
         $all_data['only_cart'] = (isset($request->only_cart)) ? $request->only_cart : 0;
         $all_data['auto_order_approval'] = (isset($request->auto_order_approval)) ? $request->auto_order_approval : 0;
         $all_data['scheduler_active'] = (isset($request->scheduler_active)) ? $request->scheduler_active : 0;
-        $all_data['min_amount_for_delivery'] = (isset($request->min_amount_for_delivery)) ? $request->min_amount_for_delivery : 30;
+        $all_data['min_amount_for_delivery'] = (isset($request->min_amount_for_delivery)) ? $request->min_amount_for_delivery : '';
         $all_data['discount_percentage'] = (isset($request->discount_percentage)) ? $request->discount_percentage : '';
-        $all_data['order_arrival_minutes'] = (isset($request->order_arrival_minutes)) ? $request->order_arrival_minutes : '';
+        $all_data['order_arrival_minutes'] = (isset($request->order_arrival_minutes)) ? $request->order_arrival_minutes : 30;
         $all_data['schedule_array'] = $request->schedule_array;
 
         try
