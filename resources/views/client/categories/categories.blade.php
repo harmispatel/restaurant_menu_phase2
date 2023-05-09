@@ -35,6 +35,9 @@
                 </div>
                 <div class="modal-body" id="cat_lang_div">
                 </div>
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-success" onclick="updateCategory()">{{ __('Update') }}</a>
+                </div>
             </div>
         </div>
     </div>
@@ -250,7 +253,13 @@
                             </div>
                             <div class="col-md-12 mb-3" id="schedule-main-div" style="display: none;">
                                 <div class="row">
-                                    <div class="col-md-12 text-end">
+                                    <div class="col-md-6 mb-2">
+                                        <select name="schedule_type" id="schedule_type" onchange="changeScheduleType('addCategoryModal')" class="form-select">
+                                            <option value="time">Time</option>
+                                            <option value="date">Date</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-2 text-end">
                                         <label class="switch">
                                             <input type="checkbox" id="schedule" name="schedule" value="1" onchange="changeScheduleLabel('addCategoryForm')">
                                             <span class="slider round">
@@ -259,7 +268,7 @@
                                             </span>
                                         </label>
                                     </div>
-                                    <div class="col-md-12 sc_inner">
+                                    <div class="col-md-12 sc_inner sc_time">
                                         <div class="sc_array_section" id="sc_array_section">
                                             <div class="p-2" id="sunday_sec">
                                                <div class="text-center">
@@ -272,7 +281,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="sch-plus">
-                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('sunday_sec','addCatgeoryForm')"></i>
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('sunday_sec','addCategoryForm')"></i>
                                                 </div>
                                             </div>
                                             <div class="p-2" id="monday_sec">
@@ -286,7 +295,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="sch-plus">
-                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('monday_sec','addCatgeoryForm')"></i>
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('monday_sec','addCategoryForm')"></i>
                                                 </div>
                                             </div>
                                             <div class="p-2" id="tuesday_sec">
@@ -300,7 +309,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="sch-plus">
-                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('tuesday_sec','addCatgeoryForm')"></i>
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('tuesday_sec','addCategoryForm')"></i>
                                                 </div>
                                             </div>
                                             <div class="p-2" id="wednesday_sec">
@@ -314,7 +323,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="sch-plus">
-                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('wednesday_sec','addCatgeoryForm')"></i>
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('wednesday_sec','addCategoryForm')"></i>
                                                 </div>
                                             </div>
                                             <div class="p-2" id="thursday_sec">
@@ -328,7 +337,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="sch-plus">
-                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('thursday_sec','addCatgeoryForm')"></i>
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('thursday_sec','addCategoryForm')"></i>
                                                 </div>
                                             </div>
                                             <div class="p-2" id="friday_sec">
@@ -342,7 +351,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="sch-plus">
-                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('friday_sec','addCatgeoryForm')"></i>
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('friday_sec','addCategoryForm')"></i>
                                                 </div>
                                             </div>
                                             <div class="p-2" id="saturday_sec">
@@ -356,8 +365,20 @@
                                                     </div>
                                                 </div>
                                                 <div class="sch-plus">
-                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('saturday_sec','addCatgeoryForm')"></i>
+                                                    <i class="bi bi-plus-circle" onclick="addNewSchedule('saturday_sec','addCategoryForm')"></i>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 sc_date" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="start_date" class="form-label">Start Date</label>
+                                                <input type="date" name="start_date" id="start_date" class="form-control">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="end_date" class="form-label">End Date</label>
+                                                <input type="date" name="end_date" id="end_date" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -566,6 +587,8 @@
             // Remove Validation Class
             $('#addCategoryForm #name').removeClass('is-invalid');
             $('#addCategoryForm #url').removeClass('is-invalid');
+            $('#addCategoryForm #start_date').removeClass('is-invalid');
+            $('#addCategoryForm #end_date').removeClass('is-invalid');
 
             // Clear all Toastr Messages
             toastr.clear();
@@ -771,11 +794,749 @@
         });
 
 
+        // Save New Category
+        function saveCategory()
+        {
+            var main_arr = {};
+            var days_arr = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+            $.each(days_arr, function (indexInArray, day)
+            {
+                var dayName = $('#addCategoryForm #'+day+'_sec label').html();
+                var checkedVal = $('#addCategoryForm #'+day+'_sec #'+day).is(":checked");
+                var scheduleLength = $('#addCategoryForm #'+day+'_sec .sch-sec').children('div').length;
+                var sch_all_childs = $('#addCategoryForm #'+day+'_sec .sch-sec').children('div');
+
+                var time_arr = [];
+                var inner_arr_1 = {};
+
+                inner_arr_1['name'] = dayName;
+                inner_arr_1['enabled'] = checkedVal;
+                inner_arr_1['dayInWeek'] = indexInArray;
+
+                for(var i=0;i<scheduleLength;i++)
+                {
+                    var inner_arr_2 = {};
+                    var sch_child = sch_all_childs[i];
+                    var className = sch_child.getAttribute('class');
+                    inner_arr_2['startTime'] = $('#addCategoryForm #'+day+'_sec .sch-sec .'+className+' #startTime').val();
+                    inner_arr_2['endTime'] = $('#addCategoryForm #'+day+'_sec .sch-sec .'+className+' #endTime').val();
+                    time_arr.push(inner_arr_2);
+                }
+
+                inner_arr_1['timesSchedules'] = time_arr;
+                main_arr[day] = inner_arr_1;
+            });
+
+            const myFormData = new FormData(document.getElementById('addCategoryForm'));
+            myDesc = (addCatEditor?.getData()) ? addCatEditor.getData() : '';
+            myFormData.set('description',myDesc);
+            myFormData.append('schedule_array', JSON.stringify(main_arr));
+
+            // Remove Validation Class
+            $('#addCategoryForm #name').removeClass('is-invalid');
+            $('#addCategoryForm #url').removeClass('is-invalid');
+            $('#addCategoryForm #start_date').removeClass('is-invalid');
+            $('#addCategoryForm #end_date').removeClass('is-invalid');
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('categories.store') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#addCategoryForm').trigger('reset');
+                        $('#addCategoryModal').modal('hide');
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                    else
+                    {
+                        $('#addCategoryForm').trigger('reset');
+                        $('#addCategoryModal').modal('hide');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    // All Validation Errors
+                    const validationErrors = (response?.responseJSON?.errors) ? response.responseJSON.errors : '';
+
+                    if (validationErrors != '')
+                    {
+                        // Name Error
+                        var nameError = (validationErrors.name) ? validationErrors.name : '';
+                        if (nameError != '')
+                        {
+                            $('#addCategoryForm #name').addClass('is-invalid');
+                            toastr.error(nameError);
+                        }
+
+                        // URL Error
+                        var urlError = (validationErrors.url) ? validationErrors.url : '';
+                        if (urlError != '')
+                        {
+                            $('#addCategoryForm #url').addClass('is-invalid');
+                            toastr.error(urlError);
+                        }
+
+                        // Start Date Error
+                        var strDateError = (validationErrors.start_date) ? validationErrors.start_date : '';
+                        if (strDateError != '')
+                        {
+                            $('#addCategoryForm #start_date').addClass('is-invalid');
+                            toastr.error(strDateError);
+                        }
+
+                        // Enf Date Error
+                        var endDateError = (validationErrors.end_date) ? validationErrors.end_date : '';
+                        if (endDateError != '')
+                        {
+                            $('#addCategoryForm #end_date').addClass('is-invalid');
+                            toastr.error(endDateError);
+                        }
+                    }
+                }
+            });
+        }
+
+
+        // Function for Delete Category
+        function deleteCategory(catId)
+        {
+            swal({
+                title: "Are you sure You want to Delete It ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDeleteCategory) =>
+            {
+                if (willDeleteCategory)
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ route("categories.delete") }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'id': catId,
+                        },
+                        dataType: 'JSON',
+                        success: function(response)
+                        {
+                            if (response.success == 1)
+                            {
+                                toastr.success(response.message);
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1300);
+                            }
+                            else
+                            {
+                                toastr.error(response.message);
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Cancelled", "", "error");
+                }
+            });
+        }
+
+
+        // Function for Edit Category
+        function editCategory(catID)
+        {
+            // Reset All Form
+            $('#editCategoryModal #cat_lang_div').html('');
+
+            $('.ck-editor').remove();
+            editCatEditor = "";
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('categories.edit') }}",
+                dataType: "JSON",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'id': catID,
+                },
+                success: function(response)
+                {
+                    if (response.success == 1)
+                    {
+                        $('#editCategoryModal #cat_lang_div').html('');
+                        $('#editCategoryModal #cat_lang_div').append(response.data);
+                        $('#editCategoryModal').modal('show');
+
+                        // Set Elements
+                        if(response.category_type == 'page')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (700*400) Dimensions');
+                        }
+                        else if(response.category_type == 'product_category')
+                        {
+                            $('#editCategoryModal .cover').hide();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                        }
+                        else if(response.category_type == 'link')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').show();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+                        else if(response.category_type == 'image_gallary')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                        }
+                        else if(response.category_type == 'check_in_page')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').show();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+                        else if(response.category_type == 'parent_category')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').show();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                        }
+                        else if(response.category_type == 'pdf_category')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').show();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+
+                        changeScheduleType('editCategoryModal');
+
+                        var my_cat_textarea = $('#editCategoryModal #category_description')[0];
+
+                        // Text Editor
+                        CKEDITOR.ClassicEditor.create(my_cat_textarea,
+                        {
+                            toolbar: {
+                                items: [
+                                    'heading', '|',
+                                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                                    'bulletedList', 'numberedList', 'todoList', '|',
+                                    'outdent', 'indent', '|',
+                                    'undo', 'redo',
+                                    '-',
+                                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                                    'alignment', '|',
+                                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                                    'sourceEditing'
+                                ],
+                                shouldNotGroupWhenFull: true
+                            },
+                            list: {
+                                properties: {
+                                    styles: true,
+                                    startIndex: true,
+                                    reversed: true
+                                }
+                            },
+                            'height':500,
+                            fontSize: {
+                                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                                supportAllValues: true
+                            },
+                            htmlSupport: {
+                                allow: [
+                                    {
+                                        name: /.*/,
+                                        attributes: true,
+                                        classes: true,
+                                        styles: true
+                                    }
+                                ]
+                            },
+                            htmlEmbed: {
+                                showPreviews: true
+                            },
+                            link: {
+                                decorators: {
+                                    addTargetToExternalLinks: true,
+                                    defaultProtocol: 'https://',
+                                    toggleDownloadable: {
+                                        mode: 'manual',
+                                        label: 'Downloadable',
+                                        attributes: {
+                                            download: 'file'
+                                        }
+                                    }
+                                }
+                            },
+                            mention: {
+                                feeds: [
+                                    {
+                                        marker: '@',
+                                        feed: [
+                                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                            '@sugar', '@sweet', '@topping', '@wafer'
+                                        ],
+                                        minimumCharacters: 1
+                                    }
+                                ]
+                            },
+                            removePlugins: [
+                                'CKBox',
+                                'CKFinder',
+                                'EasyImage',
+                                'RealTimeCollaborativeComments',
+                                'RealTimeCollaborativeTrackChanges',
+                                'RealTimeCollaborativeRevisionHistory',
+                                'PresenceList',
+                                'Comments',
+                                'TrackChanges',
+                                'TrackChangesData',
+                                'RevisionHistory',
+                                'Pagination',
+                                'WProofreader',
+                                'MathType'
+                            ]
+                        }).then( editor => {
+                            editCatEditor = editor;
+                        });
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                    }
+                }
+            });
+
+        }
+
+
+        // Update Tag By Language Code
+        function updateByCode(next_lang_code)
+        {
+            var formID = "edit_category_form";
+            var main_arr = {};
+            var days_arr = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+            $.each(days_arr, function (indexInArray, day)
+            {
+                var dayName = $('#'+formID+' #'+day+'_sec label').html();
+                var checkedVal = $('#'+formID+' #'+day+'_sec #'+day).is(":checked");
+                var scheduleLength = $('#'+formID+' #'+day+'_sec .sch-sec').children('div').length;
+                var sch_all_childs = $('#'+formID+' #'+day+'_sec .sch-sec').children('div');
+
+                var time_arr = [];
+                var inner_arr_1 = {};
+
+                inner_arr_1['name'] = dayName;
+                inner_arr_1['enabled'] = checkedVal;
+                inner_arr_1['dayInWeek'] = indexInArray;
+
+                for(var i=0;i<scheduleLength;i++)
+                {
+                    var inner_arr_2 = {};
+                    var sch_child = sch_all_childs[i];
+                    var className = sch_child.getAttribute('class');
+
+                    inner_arr_2['startTime'] = $('#'+formID+' #'+day+'_sec .sch-sec .'+className+' #startTime').val();
+                    inner_arr_2['endTime'] = $('#'+formID+' #'+day+'_sec .sch-sec .'+className+' #endTime').val();
+                    time_arr.push(inner_arr_2);
+                }
+
+                inner_arr_1['timesSchedules'] = time_arr;
+                main_arr[day] = inner_arr_1;
+            });
+
+            var myFormData = new FormData(document.getElementById(formID));
+            myDesc = (editCatEditor?.getData()) ? editCatEditor.getData() : '';
+            myFormData.set('category_description',myDesc);
+            myFormData.append('schedule_array', JSON.stringify(main_arr));
+            myFormData.append('next_lang_code',next_lang_code);
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('categories.update.by.lang') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('.ck-editor').remove();
+                        editCatEditor = "";
+
+                        $('#editCategoryModal #cat_lang_div').html('');
+                        $('#editCategoryModal #cat_lang_div').html(response.data);
+
+                        // Set Elements
+                        if(response.category_type == 'page')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (700*400) Dimensions');
+                        }
+                        else if(response.category_type == 'product_category')
+                        {
+                            $('#editCategoryModal .cover').hide();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                        }
+                        else if(response.category_type == 'link')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').show();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+                        else if(response.category_type == 'image_gallary')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                        }
+                        else if(response.category_type == 'check_in_page')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').show();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').show();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+                        else if(response.category_type == 'parent_category')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').show();
+                            $('#editCategoryModal .pdf').hide();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').show();
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                        }
+                        else if(response.category_type == 'pdf_category')
+                        {
+                            $('#editCategoryModal .cover').show();
+                            $('#editCategoryModal .url').hide();
+                            $('#editCategoryModal .description').hide();
+                            $('#editCategoryModal .mul-image').hide();
+                            $('#editCategoryModal .pdf').show();
+                            $('#editCategoryModal .chk_page_styles').hide();
+                            $('#editCategoryModal .cat_div').hide();
+                        }
+
+                        changeScheduleType('editCategoryModal');
+
+                        var my_cat_textarea = $('#editCategoryModal #category_description')[0];
+
+                        // Text Editor
+                        CKEDITOR.ClassicEditor.create(my_cat_textarea,
+                        {
+                            toolbar: {
+                                items: [
+                                    'heading', '|',
+                                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                                    'bulletedList', 'numberedList', 'todoList', '|',
+                                    'outdent', 'indent', '|',
+                                    'undo', 'redo',
+                                    '-',
+                                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                                    'alignment', '|',
+                                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                                    'sourceEditing'
+                                ],
+                                shouldNotGroupWhenFull: true
+                            },
+                            list: {
+                                properties: {
+                                    styles: true,
+                                    startIndex: true,
+                                    reversed: true
+                                }
+                            },
+                            'height':500,
+                            fontSize: {
+                                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                                supportAllValues: true
+                            },
+                            htmlSupport: {
+                                allow: [
+                                    {
+                                        name: /.*/,
+                                        attributes: true,
+                                        classes: true,
+                                        styles: true
+                                    }
+                                ]
+                            },
+                            htmlEmbed: {
+                                showPreviews: true
+                            },
+                            link: {
+                                decorators: {
+                                    addTargetToExternalLinks: true,
+                                    defaultProtocol: 'https://',
+                                    toggleDownloadable: {
+                                        mode: 'manual',
+                                        label: 'Downloadable',
+                                        attributes: {
+                                            download: 'file'
+                                        }
+                                    }
+                                }
+                            },
+                            mention: {
+                                feeds: [
+                                    {
+                                        marker: '@',
+                                        feed: [
+                                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                            '@sugar', '@sweet', '@topping', '@wafer'
+                                        ],
+                                        minimumCharacters: 1
+                                    }
+                                ]
+                            },
+                            removePlugins: [
+                                'CKBox',
+                                'CKFinder',
+                                'EasyImage',
+                                'RealTimeCollaborativeComments',
+                                'RealTimeCollaborativeTrackChanges',
+                                'RealTimeCollaborativeRevisionHistory',
+                                'PresenceList',
+                                'Comments',
+                                'TrackChanges',
+                                'TrackChangesData',
+                                'RevisionHistory',
+                                'Pagination',
+                                'WProofreader',
+                                'MathType'
+                            ]
+                        }).then( editor => {
+                            editCatEditor = editor;
+                        });
+                    }
+                    else
+                    {
+                        $('#editCategoryModal').modal('hide');
+                        $('#editCategoryModal #cat_lang_div').html('');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    $.each(response.responseJSON.errors, function (i, error) {
+                        toastr.error(error);
+                    });
+                }
+            });
+        }
+
+
+        // Function for Update Category
+        function updateCategory()
+        {
+            var formID = "edit_category_form";
+            var main_arr = {};
+            var days_arr = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+            $.each(days_arr, function (indexInArray, day)
+            {
+                var dayName = $('#'+formID+' #'+day+'_sec label').html();
+                var checkedVal = $('#'+formID+' #'+day+'_sec #'+day).is(":checked");
+                var scheduleLength = $('#'+formID+' #'+day+'_sec .sch-sec').children('div').length;
+                var sch_all_childs = $('#'+formID+' #'+day+'_sec .sch-sec').children('div');
+
+                var time_arr = [];
+                var inner_arr_1 = {};
+
+                inner_arr_1['name'] = dayName;
+                inner_arr_1['enabled'] = checkedVal;
+                inner_arr_1['dayInWeek'] = indexInArray;
+
+                for(var i=0;i<scheduleLength;i++)
+                {
+                    var inner_arr_2 = {};
+                    var sch_child = sch_all_childs[i];
+                    var className = sch_child.getAttribute('class');
+
+                    inner_arr_2['startTime'] = $('#'+formID+' #'+day+'_sec .sch-sec .'+className+' #startTime').val();
+                    inner_arr_2['endTime'] = $('#'+formID+' #'+day+'_sec .sch-sec .'+className+' #endTime').val();
+                    time_arr.push(inner_arr_2);
+                }
+
+                inner_arr_1['timesSchedules'] = time_arr;
+                main_arr[day] = inner_arr_1;
+            });
+
+            var myFormData = new FormData(document.getElementById(formID));
+            myDesc = (editCatEditor?.getData()) ? editCatEditor.getData() : '';
+            myFormData.set('category_description',myDesc);
+            myFormData.append('schedule_array', JSON.stringify(main_arr));
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('categories.update') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        // $('#editCategoryModal').modal('hide');
+                        toastr.success(response.message);
+                        // setTimeout(() => {
+                        //     location.reload();
+                        // }, 1000);
+                    }
+                    else
+                    {
+                        $('#editCategoryModal').modal('hide');
+                        toastr.error(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                },
+                error: function(response)
+                {
+                    $.each(response.responseJSON.errors, function (i, error) {
+                        toastr.error(error);
+                    });
+                }
+            });
+
+        }
+
+
+        // Function for Change Category Status
+        function changeStatus(catId, status)
+        {
+            $.ajax({
+                type: "POST",
+                url: '{{ route("categories.status") }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'status':status,
+                    'id':catId
+                },
+                dataType: 'JSON',
+                success: function(response)
+                {
+                    if (response.success == 1)
+                    {
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+                    }
+                }
+            });
+        }
+
+
         // Image Cropper Functionality for Edit Modal
         function imageCropper(formID,ele)
         {
             var currentFile = ele.files[0];
-            var myFormID = formID+"_category_form";
+            var myFormID = formID;
             const catType = $('#'+formID+' #category_type').val();
             var img_crp_size = getImageCroppedSize(formID);
 
@@ -788,7 +1549,7 @@
                 if(fileSize > 2)
                 {
                     toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
-                    $('#'+myFormID+' #'+formID+'category_image').val('');
+                    $('#'+myFormID+' #category_image').val('');
                     return false;
                 }
                 else
@@ -796,7 +1557,7 @@
                     if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
                     {
                         toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
-                        $('#'+myFormID+' #'+formID+'category_image').val('');
+                        $('#'+myFormID+' #category_image').val('');
                         return false;
                     }
                     else
@@ -919,604 +1680,6 @@
             }
 
         }
-
-
-        // Save New Category
-        function saveCategory()
-        {
-            var main_arr = {};
-            var days_arr = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
-
-            $.each(days_arr, function (indexInArray, day)
-            {
-                var dayName = $('#addCategoryForm #'+day+'_sec label').html();
-                var checkedVal = $('#addCategoryForm #'+day+'_sec #'+day).is(":checked");
-                var scheduleLength = $('#addCategoryForm #'+day+'_sec .sch-sec').children('div').length;
-                var sch_all_childs = $('#addCategoryForm #'+day+'_sec .sch-sec').children('div');
-
-                var time_arr = [];
-                var inner_arr_1 = {};
-
-                inner_arr_1['name'] = dayName;
-                inner_arr_1['enabled'] = checkedVal;
-                inner_arr_1['dayInWeek'] = indexInArray;
-
-                for(var i=0;i<scheduleLength;i++)
-                {
-                    var inner_arr_2 = {};
-                    var sch_child = sch_all_childs[i];
-                    var className = sch_child.getAttribute('class');
-
-                    inner_arr_2['startTime'] = $('#addCategoryForm #'+day+'_sec .sch-sec .'+className+' #startTime').val();
-                    inner_arr_2['endTime'] = $('#addCategoryForm #'+day+'_sec .sch-sec .'+className+' #endTime').val();
-                    time_arr.push(inner_arr_2);
-                }
-
-                inner_arr_1['timesSchedules'] = time_arr;
-                main_arr[day] = inner_arr_1;
-            });
-
-            const myFormData = new FormData(document.getElementById('addCategoryForm'));
-            myDesc = (addCatEditor?.getData()) ? addCatEditor.getData() : '';
-            myFormData.set('description',myDesc);
-            myFormData.append('schedule_array', JSON.stringify(main_arr));
-
-            // Remove Validation Class
-            $('#addCategoryForm #name').removeClass('is-invalid');
-            $('#addCategoryForm #url').removeClass('is-invalid');
-
-            // Clear all Toastr Messages
-            toastr.clear();
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('categories.store') }}",
-                data: myFormData,
-                dataType: "JSON",
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function (response)
-                {
-                    if(response.success == 1)
-                    {
-                        $('#addCategoryForm').trigger('reset');
-                        $('#addCategoryModal').modal('hide');
-                        toastr.success(response.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
-                    }
-                    else
-                    {
-                        $('#addCategoryForm').trigger('reset');
-                        $('#addCategoryModal').modal('hide');
-                        toastr.error(response.message);
-                    }
-                },
-                error: function(response)
-                {
-                    // All Validation Errors
-                    const validationErrors = (response?.responseJSON?.errors) ? response.responseJSON.errors : '';
-
-                    if (validationErrors != '')
-                    {
-                        // Name Error
-                        var nameError = (validationErrors.name) ? validationErrors.name : '';
-                        if (nameError != '')
-                        {
-                            $('#addCategoryForm #name').addClass('is-invalid');
-                            toastr.error(nameError);
-                        }
-
-                        // URL Error
-                        var urlError = (validationErrors.url) ? validationErrors.url : '';
-                        if (urlError != '')
-                        {
-                            $('#addCategoryForm #url').addClass('is-invalid');
-                            toastr.error(urlError);
-                        }
-                    }
-                }
-            });
-        }
-
-
-
-        // Function for Delete Category
-        function deleteCategory(catId)
-        {
-            swal({
-                title: "Are you sure You want to Delete It ?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDeleteCategory) =>
-            {
-                if (willDeleteCategory)
-                {
-                    $.ajax({
-                        type: "POST",
-                        url: '{{ route("categories.delete") }}',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            'id': catId,
-                        },
-                        dataType: 'JSON',
-                        success: function(response)
-                        {
-                            if (response.success == 1)
-                            {
-                                toastr.success(response.message);
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1300);
-                            }
-                            else
-                            {
-                                toastr.error(response.message);
-                            }
-                        }
-                    });
-                }
-                else
-                {
-                    swal("Cancelled", "", "error");
-                }
-            });
-        }
-
-
-
-        // Function for Edit Category
-        function editCategory(catID)
-        {
-            // Reset All Form
-            $('#editCategoryModal #cat_lang_div').html('');
-
-            $('.ck-editor').remove();
-            editCatEditor = "";
-
-            // Clear all Toastr Messages
-            toastr.clear();
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('categories.edit') }}",
-                dataType: "JSON",
-                data: {
-                    '_token': "{{ csrf_token() }}",
-                    'id': catID,
-                },
-                success: function(response)
-                {
-                    if (response.success == 1)
-                    {
-                        $('#editCategoryModal #cat_lang_div').html('');
-                        $('#editCategoryModal #cat_lang_div').append(response.data);
-                        $('#editCategoryModal').modal('show');
-
-                        // Set Elements
-                        if(response.category_type == 'page')
-                        {
-                            $('#editCategoryModal .cover').show();
-                            $('#editCategoryModal .url').hide();
-                            $('#editCategoryModal .description').show();
-                            $('#editCategoryModal .mul-image').show();
-                            $('#editCategoryModal .pdf').hide();
-                            $('#editCategoryModal .chk_page_styles').hide();
-                            $('#editCategoryModal .cat_div').hide();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (700*400) Dimensions');
-                        }
-                        else if(response.category_type == 'product_category')
-                        {
-                            $('#editCategoryModal .cover').hide();
-                            $('#editCategoryModal .url').hide();
-                            $('#editCategoryModal .description').show();
-                            $('#editCategoryModal .mul-image').show();
-                            $('#editCategoryModal .pdf').hide();
-                            $('#editCategoryModal .chk_page_styles').hide();
-                            $('#editCategoryModal .cat_div').hide();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
-                        }
-                        else if(response.category_type == 'link')
-                        {
-                            $('#editCategoryModal .cover').show();
-                            $('#editCategoryModal .url').show();
-                            $('#editCategoryModal .description').hide();
-                            $('#editCategoryModal .mul-image').hide();
-                            $('#editCategoryModal .pdf').hide();
-                            $('#editCategoryModal .chk_page_styles').hide();
-                            $('#editCategoryModal .cat_div').hide();
-                        }
-                        else if(response.category_type == 'image_gallary')
-                        {
-                            $('#editCategoryModal .cover').show();
-                            $('#editCategoryModal .url').hide();
-                            $('#editCategoryModal .description').hide();
-                            $('#editCategoryModal .mul-image').show();
-                            $('#editCategoryModal .pdf').hide();
-                            $('#editCategoryModal .chk_page_styles').hide();
-                            $('#editCategoryModal .cat_div').hide();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
-                        }
-                        else if(response.category_type == 'check_in_page')
-                        {
-                            $('#editCategoryModal .cover').show();
-                            $('#editCategoryModal .url').hide();
-                            $('#editCategoryModal .description').show();
-                            $('#editCategoryModal .mul-image').hide();
-                            $('#editCategoryModal .pdf').hide();
-                            $('#editCategoryModal .chk_page_styles').show();
-                            $('#editCategoryModal .cat_div').hide();
-                        }
-                        else if(response.category_type == 'parent_category')
-                        {
-                            $('#editCategoryModal .cover').show();
-                            $('#editCategoryModal .url').hide();
-                            $('#editCategoryModal .description').hide();
-                            $('#editCategoryModal .mul-image').show();
-                            $('#editCategoryModal .pdf').hide();
-                            $('#editCategoryModal .chk_page_styles').hide();
-                            $('#editCategoryModal .cat_div').show();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
-                        }
-                        else if(response.category_type == 'pdf_category')
-                        {
-                            $('#editCategoryModal .cover').show();
-                            $('#editCategoryModal .url').hide();
-                            $('#editCategoryModal .description').hide();
-                            $('#editCategoryModal .mul-image').hide();
-                            $('#editCategoryModal .pdf').show();
-                            $('#editCategoryModal .chk_page_styles').hide();
-                            $('#editCategoryModal .cat_div').hide();
-                        }
-
-
-                        $('.ck-editor').remove();
-                        editCatEditor = "";
-
-                        var my_cat_textarea = $('#category_description_'+response.primary_code)[0];
-
-                        // Text Editor
-                        CKEDITOR.ClassicEditor.create(my_cat_textarea,
-                        {
-                            toolbar: {
-                                items: [
-                                    'heading', '|',
-                                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                                    'bulletedList', 'numberedList', 'todoList', '|',
-                                    'outdent', 'indent', '|',
-                                    'undo', 'redo',
-                                    '-',
-                                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-                                    'alignment', '|',
-                                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-                                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                                    'sourceEditing'
-                                ],
-                                shouldNotGroupWhenFull: true
-                            },
-                            list: {
-                                properties: {
-                                    styles: true,
-                                    startIndex: true,
-                                    reversed: true
-                                }
-                            },
-                            'height':500,
-                            fontSize: {
-                                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
-                                supportAllValues: true
-                            },
-                            htmlSupport: {
-                                allow: [
-                                    {
-                                        name: /.*/,
-                                        attributes: true,
-                                        classes: true,
-                                        styles: true
-                                    }
-                                ]
-                            },
-                            htmlEmbed: {
-                                showPreviews: true
-                            },
-                            link: {
-                                decorators: {
-                                    addTargetToExternalLinks: true,
-                                    defaultProtocol: 'https://',
-                                    toggleDownloadable: {
-                                        mode: 'manual',
-                                        label: 'Downloadable',
-                                        attributes: {
-                                            download: 'file'
-                                        }
-                                    }
-                                }
-                            },
-                            mention: {
-                                feeds: [
-                                    {
-                                        marker: '@',
-                                        feed: [
-                                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
-                                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
-                                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
-                                            '@sugar', '@sweet', '@topping', '@wafer'
-                                        ],
-                                        minimumCharacters: 1
-                                    }
-                                ]
-                            },
-                            removePlugins: [
-                                'CKBox',
-                                'CKFinder',
-                                'EasyImage',
-                                'RealTimeCollaborativeComments',
-                                'RealTimeCollaborativeTrackChanges',
-                                'RealTimeCollaborativeRevisionHistory',
-                                'PresenceList',
-                                'Comments',
-                                'TrackChanges',
-                                'TrackChangesData',
-                                'RevisionHistory',
-                                'Pagination',
-                                'WProofreader',
-                                'MathType'
-                            ]
-                        }).then( editor => {
-                            editCatEditor = editor;
-                        });
-                    }
-                    else
-                    {
-                        toastr.error(response.message);
-                    }
-                }
-            });
-
-        }
-
-
-        // Set TextEditor
-        function setTextEditor(formID)
-        {
-            var my_cat_textarea = $('#category_description_'+formID)[0];
-            editCatEditor = "";
-            $('.ck-editor').remove();
-
-            // Text Editor
-            CKEDITOR.ClassicEditor.create(my_cat_textarea,
-            {
-                toolbar: {
-                    items: [
-                        'heading', '|',
-                        'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                        'bulletedList', 'numberedList', 'todoList', '|',
-                        'outdent', 'indent', '|',
-                        'undo', 'redo',
-                        '-',
-                        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-                        'alignment', '|',
-                        'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-                        'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                        'sourceEditing'
-                    ],
-                    shouldNotGroupWhenFull: true
-                },
-                list: {
-                    properties: {
-                        styles: true,
-                        startIndex: true,
-                        reversed: true
-                    }
-                },
-                'height':500,
-                fontSize: {
-                    options: [ 10, 12, 14, 'default', 18, 20, 22 ],
-                    supportAllValues: true
-                },
-                htmlSupport: {
-                    allow: [
-                        {
-                            name: /.*/,
-                            attributes: true,
-                            classes: true,
-                            styles: true
-                        }
-                    ]
-                },
-                htmlEmbed: {
-                    showPreviews: true
-                },
-                link: {
-                    decorators: {
-                        addTargetToExternalLinks: true,
-                        defaultProtocol: 'https://',
-                        toggleDownloadable: {
-                            mode: 'manual',
-                            label: 'Downloadable',
-                            attributes: {
-                                download: 'file'
-                            }
-                        }
-                    }
-                },
-                mention: {
-                    feeds: [
-                        {
-                            marker: '@',
-                            feed: [
-                                '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
-                                '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
-                                '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
-                                '@sugar', '@sweet', '@topping', '@wafer'
-                            ],
-                            minimumCharacters: 1
-                        }
-                    ]
-                },
-                removePlugins: [
-                    'CKBox',
-                    'CKFinder',
-                    'EasyImage',
-                    'RealTimeCollaborativeComments',
-                    'RealTimeCollaborativeTrackChanges',
-                    'RealTimeCollaborativeRevisionHistory',
-                    'PresenceList',
-                    'Comments',
-                    'TrackChanges',
-                    'TrackChangesData',
-                    'RevisionHistory',
-                    'Pagination',
-                    'WProofreader',
-                    'MathType'
-                ]
-            }).then( editor => {
-                editCatEditor = editor;
-            });
-        }
-
-
-        // Function for Update Category
-        function updateCategory(langCode)
-        {
-            var formID = langCode+"_category_form";
-            var main_arr = {};
-            var days_arr = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
-
-            $.each(days_arr, function (indexInArray, day)
-            {
-                var dayName = $('#'+formID+' #'+day+'_sec label').html();
-                var checkedVal = $('#'+formID+' #'+day+'_sec #'+day).is(":checked");
-                var scheduleLength = $('#'+formID+' #'+day+'_sec .sch-sec').children('div').length;
-                var sch_all_childs = $('#'+formID+' #'+day+'_sec .sch-sec').children('div');
-
-                var time_arr = [];
-                var inner_arr_1 = {};
-
-                inner_arr_1['name'] = dayName;
-                inner_arr_1['enabled'] = checkedVal;
-                inner_arr_1['dayInWeek'] = indexInArray;
-
-                for(var i=0;i<scheduleLength;i++)
-                {
-                    var inner_arr_2 = {};
-                    var sch_child = sch_all_childs[i];
-                    var className = sch_child.getAttribute('class');
-
-                    inner_arr_2['startTime'] = $('#'+formID+' #'+day+'_sec .sch-sec .'+className+' #startTime').val();
-                    inner_arr_2['endTime'] = $('#'+formID+' #'+day+'_sec .sch-sec .'+className+' #endTime').val();
-                    time_arr.push(inner_arr_2);
-                }
-
-                inner_arr_1['timesSchedules'] = time_arr;
-                main_arr[day] = inner_arr_1;
-            });
-
-            var myFormData = new FormData(document.getElementById(formID));
-            myDesc = (editCatEditor?.getData()) ? editCatEditor.getData() : '';
-            myFormData.set('category_description',myDesc);
-            myFormData.append('schedule_array', JSON.stringify(main_arr));
-
-            // Remove Validation Class
-            $("#"+formID+' #category_name').removeClass('is-invalid');
-            $("#"+formID+' #category_image').removeClass('is-invalid');
-
-            // Clear all Toastr Messages
-            toastr.clear();
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('categories.update') }}",
-                data: myFormData,
-                dataType: "JSON",
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function (response)
-                {
-                    if(response.success == 1)
-                    {
-                        // $('#editCategoryModal').modal('hide');
-                        toastr.success(response.message);
-                        // setTimeout(() => {
-                        //     location.reload();
-                        // }, 1000);
-                    }
-                    else
-                    {
-                        $('#editCategoryModal').modal('hide');
-                        toastr.error(response.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
-                    }
-                },
-                error: function(response)
-                {
-                    // All Validation Errors
-                    const validationErrors = (response?.responseJSON?.errors) ? response.responseJSON.errors : '';
-
-                    if (validationErrors != '')
-                    {
-                        // Name Error
-                        var nameError = (validationErrors.category_name) ? validationErrors.category_name : '';
-                        if (nameError != '')
-                        {
-                            $("#"+formID+' #category_name').addClass('is-invalid');
-                            toastr.error(nameError);
-                        }
-
-                        // Image Error
-                        var imageError = (validationErrors.category_image) ? validationErrors.category_image : '';
-                        if (imageError != '')
-                        {
-                            $("#"+formID+' #category_image').addClass('is-invalid');
-                            toastr.error(imageError);
-                        }
-                    }
-                }
-            });
-
-        }
-
-
-
-        // Function for Change Category Status
-        function changeStatus(catId, status)
-        {
-            $.ajax({
-                type: "POST",
-                url: '{{ route("categories.status") }}',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    'status':status,
-                    'id':catId
-                },
-                dataType: 'JSON',
-                success: function(response)
-                {
-                    if (response.success == 1)
-                    {
-                        toastr.success(response.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1300);
-                    }
-                    else
-                    {
-                        toastr.error(response.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1300);
-                    }
-                }
-            });
-        }
-
 
 
         // Function for Get Filterd Categories
@@ -1663,7 +1826,6 @@
         }
 
 
-
         // Function for Delete Pdf Preview
         function removePdf(formID)
         {
@@ -1672,7 +1834,6 @@
             $('#'+formID+' #pdf-name').hide();
             $('#'+formID+' #pdf').val('');
         }
-
 
 
         // Change Elements According Category Type
@@ -1903,7 +2064,6 @@
             }
             else
             {
-                console.log('#editCategoryModal .'+divID+" .sch-sec");
                 $('#editCategoryModal #'+divID+" .sch-sec").append(html);
             }
         }
@@ -1955,6 +2115,23 @@
             imageSize.ratio = crp_ratio;
 
             return imageSize;
+        }
+
+
+        // Function for Change Schedule Type
+        function changeScheduleType(modelID)
+        {
+            var sc_type = $('#'+modelID+' #schedule_type').val();
+            if(sc_type == 'date')
+            {
+                $('#'+modelID+' .sc_date').show();
+                $('#'+modelID+' .sc_time').hide();
+            }
+            else
+            {
+                $('#'+modelID+' .sc_date').hide();
+                $('#'+modelID+' .sc_time').show();
+            }
         }
 
     </script>

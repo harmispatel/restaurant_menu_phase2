@@ -281,7 +281,7 @@ class TagsController extends Controller
             $tag_name_key = $primary_lang_code."_name";
         }
 
-        // Banner Details
+        // Tag Details
         $tag_details = Tags::where('id',$tag_id)->first();
         $tag_name = isset($tag_details[$tag_name_key]) ? $tag_details[$tag_name_key] : '';
 

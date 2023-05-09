@@ -333,35 +333,44 @@
         }
         else
         {
-            $schedule_arr = (isset($cat_details['schedule_value']) && !empty($cat_details['schedule_value'])) ? json_decode($cat_details['schedule_value'],true) : '';
-            if(count($schedule_arr) > 0)
+            $schedule_type = (isset($cat_details['schedule_type']) && !empty($cat_details['schedule_type'])) ? $cat_details['schedule_type'] : 'time';
+
+            if($schedule_type == 'time')
             {
-                $current_day = (isset($schedule_arr[$today])) ? $schedule_arr[$today] : '';
-                if(isset($current_day['enabled']) && $current_day['enabled'] == 1)
+                $schedule_arr = (isset($cat_details['schedule_value']) && !empty($cat_details['schedule_value'])) ? json_decode($cat_details['schedule_value'],true) : '';
+                if(count($schedule_arr) > 0)
                 {
-                    $time_schedule_arr = isset($current_day['timesSchedules']) ? $current_day['timesSchedules'] : [];
-
-                    if(count($time_schedule_arr) > 0)
+                    $current_day = (isset($schedule_arr[$today])) ? $schedule_arr[$today] : '';
+                    if(isset($current_day['enabled']) && $current_day['enabled'] == 1)
                     {
-                        $count = 1;
-                        $total_count = count($time_schedule_arr);
-                        foreach($time_schedule_arr as $tsarr)
-                        {
-                            $start_time = strtotime($tsarr['startTime']);
-                            $end_time = strtotime($tsarr['endTime']);
+                        $time_schedule_arr = isset($current_day['timesSchedules']) ? $current_day['timesSchedules'] : [];
 
-                            if($current_time > $start_time && $current_time < $end_time)
+                        if(count($time_schedule_arr) > 0)
+                        {
+                            $count = 1;
+                            $total_count = count($time_schedule_arr);
+                            foreach($time_schedule_arr as $tsarr)
                             {
-                                return 1;
-                            }
-                            else
-                            {
-                                if($count == $total_count)
+                                $start_time = strtotime($tsarr['startTime']);
+                                $end_time = strtotime($tsarr['endTime']);
+
+                                if($current_time > $start_time && $current_time < $end_time)
                                 {
-                                    return 0;
+                                    return 1;
                                 }
+                                else
+                                {
+                                    if($count == $total_count)
+                                    {
+                                        return 0;
+                                    }
+                                }
+                                $count ++;
                             }
-                            $count ++;
+                        }
+                        else
+                        {
+                            return 0;
                         }
                     }
                     else
@@ -376,10 +385,32 @@
             }
             else
             {
-                return 0;
+                $start_date =  strtotime($cat_details['sch_start_date']);
+                $end_date =  strtotime($cat_details['sch_end_date']);
+
+                if(empty($start_date) || empty($end_date))
+                {
+                    return 1;
+                }
+                else
+                {
+                    $curr_date = strtotime($current_date);
+
+                    if($curr_date > $start_date && $curr_date < $end_date)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                }
+
             }
         }
     }
+
 
     // Get total Quantity of Cart
     function getCartQuantity()
@@ -395,6 +426,7 @@
         }
         return $total_quantity;
     }
+
 
     // Get Item Details
     function itemDetails($itemID)

@@ -16,6 +16,8 @@
     // ShopName
     $shop_name = isset(Auth::user()->hasOneShop->shop['name']) ? Auth::user()->hasOneShop->shop['name'] : '';
 
+    $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
     // Current Route Name
     $routeName = Route::currentRouteName();
 
@@ -190,7 +192,7 @@
 
         {{-- Preview Nav --}}
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#previewModal" style="cursor: pointer">
+            <a class="nav-link" onclick="previewMyShop('{{ $shop_slug }}')" style="cursor: pointer">
                 <i class="fa-solid fa-eye"></i>
                 <span>{{ __('Preview') }}</span>
             </a>

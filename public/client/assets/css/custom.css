@@ -969,7 +969,7 @@
 
   .item_list_div{
       padding: 20px 0;
-      text-align: center;
+      /* text-align: center; */
   }
 
   .item_inr_info_sec{

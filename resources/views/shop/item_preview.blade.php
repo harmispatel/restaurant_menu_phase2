@@ -118,8 +118,8 @@
                 </ul>
 
                     <div class="item_list_div">
-                        <h3 class="mb-3 cat_name">{{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : "" }}</h3>
-                        <p class="mb-3">{!! isset($cat_details[$description_key]) ? $cat_details[$description_key] : "" !!}</p>
+                        <h3 class="mb-3 cat_name text-center">{{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : "" }}</h3>
+                        <div class="mb-3">{!! isset($cat_details[$description_key]) ? $cat_details[$description_key] : "" !!}</div>
 
                         <div class="item_inr_info">
 

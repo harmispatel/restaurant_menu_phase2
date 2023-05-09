@@ -22,6 +22,9 @@ class CreateCategoriesTable extends Migration
             $table->longText('styles')->nullable();
             $table->string('name')->nullable();
             $table->tinyInteger('schedule')->default(0);
+            $table->string('schedule_type')->nullable();
+            $table->date('sch_start_date')->nullable();
+            $table->date('sch_end_date')->nullable();
             $table->longText('schedule_value')->nullable();
             $table->text('description')->nullable();
             $table->integer('order_key')->nullable();

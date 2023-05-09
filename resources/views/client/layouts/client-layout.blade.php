@@ -31,7 +31,7 @@
                             <div class="mob_preview position-relative">
                                 <img src="{{ asset('public/client_images/mobile_view/mobile_view_1.png') }}" class="w-100 mobile_img" alt="">
                                 <div class="mob_preview_inr">
-                                    <iframe src="{{ route('restaurant',[$shop_slug]) }}" frameborder="0"></iframe>
+                                    <iframe src="" frameborder="0"></iframe>
                                 </div>
                             </div>
                         </div>

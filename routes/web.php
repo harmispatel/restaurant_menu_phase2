@@ -162,6 +162,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('delete-categories',[CategoryController::class,'destroy'])->name('categories.delete');
         Route::post('edit-categories',[CategoryController::class,'edit'])->name('categories.edit');
         Route::post('update-categories',[CategoryController::class,'update'])->name('categories.update');
+        Route::post('update-categories-by-lang',[CategoryController::class,'updateByLangCode'])->name('categories.update.by.lang');
         Route::post('status-categories',[CategoryController::class,'status'])->name('categories.status');
         Route::post('search-categories',[CategoryController::class,'searchCategories'])->name('categories.search');
         Route::post('sorting-categories',[CategoryController::class,'sorting'])->name('categories.sorting');

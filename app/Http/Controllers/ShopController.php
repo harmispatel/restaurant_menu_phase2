@@ -107,6 +107,7 @@ class ShopController extends Controller
     // function for shop's Items Preview
     public function itemPreview($shop_slug,$cat_id)
     {
+
         $current_date = Carbon::now()->format('Y-m-d');
 
         // Shop Details
@@ -114,6 +115,13 @@ class ShopController extends Controller
 
         // Shop ID
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
+
+        $is_active_cat = checkCategorySchedule($cat_id,$shop_id);
+
+        if($is_active_cat == 0)
+        {
+            return redirect()->route('restaurant',$shop_slug);
+        }
 
         // Category Details
         $data['cat_details'] = Category::with(['categoryImages'])->where('shop_id',$shop_id)->where('id',$cat_id)->first();
