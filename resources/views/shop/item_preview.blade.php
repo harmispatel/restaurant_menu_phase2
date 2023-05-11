@@ -198,9 +198,9 @@
                                                                     @php
                                                                         $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
                                                                     @endphp
-                                                                    @if(strlen($desc) > 200)
+                                                                    @if(strlen(strip_tags($desc)) > 180)
                                                                         <p>
-                                                                            {!! substr($desc, 0, 200) !!}... <br>
+                                                                            {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
                                                                             <a class="read-more-desc">{{ $read_more_label }}</a></p>
                                                                     @else
                                                                         <p>{!! $desc !!}</p>
@@ -351,9 +351,9 @@
                                                                         @php
                                                                             $desc = (isset($item->product[$description_key]) && !empty($item->product[$description_key])) ? $item->product[$description_key] : "";
                                                                         @endphp
-                                                                        @if(strlen($desc) > 200)
+                                                                        @if(strlen(strip_tags($desc)) > 180)
                                                                             <p>
-                                                                                {!! substr($desc, 0, 200) !!}... <br>
+                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
                                                                                 <a class="read-more-desc">{{ $read_more_label }}</a></p>
                                                                         @else
                                                                             <p>{!! $desc !!}</p>
@@ -498,9 +498,9 @@
                                                             @php
                                                                 $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
                                                             @endphp
-                                                            @if(strlen($desc) > 200)
+                                                            @if(strlen(strip_tags($desc)) > 180)
                                                                 <p>
-                                                                    {!! substr($desc, 0, 200) !!}... <br>
+                                                                    {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
                                                                     <a class="read-more-desc">{{ $read_more_label }}</a></p>
                                                             @else
                                                                 <p>{!! $desc !!}</p>

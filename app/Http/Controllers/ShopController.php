@@ -467,15 +467,15 @@ class ShopController extends Controller
 
                                             $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
 
-                                            if(strlen($desc) > 200)
+                                            if(strlen(strip_tags($desc)) > 180)
                                             {
-                                                $desc = substr($desc, 0, 200);
+                                                $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
                                                 $html .= '<p>'.$desc.' ... <br>
                                                 <a class="read-more-desc">'.$read_more_label.'</a></p>';
                                             }
                                             else
                                             {
-                                                $html .= '<p>'.$desc.'</p>';
+                                                $html .= '<p>'.strip_tags($desc).'</p>';
                                             }
 
                                             $html .= '<ul class="price_ul">';
@@ -700,15 +700,15 @@ class ShopController extends Controller
 
                                             $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
 
-                                            if(strlen($desc) > 200)
+                                            if(strlen(strip_tags($desc)) > 180)
                                             {
-                                                $desc = substr(strip_tags($desc), 0, 200);
-                                                $html .= '<p>'.json_decode($desc,true).' ... <br>
+                                                $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
+                                                $html .= '<p>'.$desc.' ... <br>
                                                 <a class="read-more-desc">'.$read_more_label.'</a></p>';
                                             }
                                             else
                                             {
-                                                $html .= '<p>'.json_decode($desc,true).'</p>';
+                                                $html .= '<p>'.strip_tags($desc).'</p>';
                                             }
 
                                             $html .= '<ul class="price_ul">';
@@ -876,15 +876,15 @@ class ShopController extends Controller
 
                                         $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
 
-                                        if(strlen($desc) > 200)
+                                        if(strlen(strip_tags($desc)) > 180)
                                         {
-                                            $desc = substr(strip_tags($desc), 0, 200);
-                                            $html .= '<p>'.json_decode($desc,true).' ... <br>
+                                            $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
+                                            $html .= '<p>'.$desc.' ... <br>
                                                 <a class="read-more-desc">'.$read_more_label.'</a></p>';
                                         }
                                         else
                                         {
-                                            $html .= '<p>'.json_decode($desc,true).'</p>';
+                                            $html .= '<p>'.strip_tags($desc).'</p>';
                                         }
 
                                         $html .= '<ul class="price_ul">';
