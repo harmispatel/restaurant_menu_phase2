@@ -184,7 +184,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <code class="img-upload-label">Upload Image in (200*200) Dimensions</code>
+                                        <code class="img-upload-label">Upload Image in (400*400) Dimensions</code>
                                     </div>
                                 </div>
                             </div>
@@ -749,45 +749,57 @@
             const myFormID = this.form.id;
             const currentFile = this.files[0];
             var img_crp_size = getImageCroppedSize(myFormID);
+            var fitPreview = 0;
 
             if (currentFile)
             {
-                fileSize = currentFile.size / 1024 / 1024;
-                fileName = currentFile.name;
-                fileType = fileName.split('.').pop().toLowerCase();
-
-                if(fileSize > 2)
+                var catImage = new Image();
+                catImage.src = URL.createObjectURL(currentFile);
+                catImage.onload = function()
                 {
-                    toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
-                    $('#'+myFormID+' #image').val('');
-                    return false;
-                }
-                else
-                {
-                    if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
+                    if(this.width === img_crp_size.width && this.height === img_crp_size.height)
                     {
-                        toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
+                        fitPreview = 1;
+                    }
+
+                    fileSize = currentFile.size / 1024 / 1024;
+                    fileName = currentFile.name;
+                    fileType = fileName.split('.').pop().toLowerCase();
+
+                    if(fileSize > 2)
+                    {
+                        toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
                         $('#'+myFormID+' #image').val('');
                         return false;
                     }
                     else
                     {
-                        if(cropper)
+                        if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
                         {
-                            cropper.destroy();
+                            toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
+                            $('#'+myFormID+' #image').val('');
+                            return false;
                         }
+                        else
+                        {
+                            if(cropper)
+                            {
+                                cropper.destroy();
+                            }
 
-                        $('#'+myFormID+' #resize-image').attr('src',"");
-                        $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
-                        $('#'+myFormID+' .img-crop-sec').show();
+                            $('#'+myFormID+' #resize-image').attr('src',"");
+                            $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
+                            $('#'+myFormID+' .img-crop-sec').show();
 
-                        const CrpImage = document.getElementById('resize-image');
-                        cropper = new Cropper(CrpImage, {
-                            aspectRatio: img_crp_size.ratio,
-                            zoomable:false,
-                            cropBoxResizable: false,
-                            preview: '#'+myFormID+' .preview',
-                        });
+                            const CrpImage = document.getElementById('resize-image');
+                            cropper = new Cropper(CrpImage, {
+                                aspectRatio: img_crp_size.ratio,
+                                zoomable:false,
+                                cropBoxResizable: false,
+                                autoCropArea: fitPreview,
+                                preview: '#'+myFormID+' .preview',
+                            });
+                        }
                     }
                 }
             }
@@ -1006,7 +1018,7 @@
                             $('#editCategoryModal .pdf').hide();
                             $('#editCategoryModal .chk_page_styles').hide();
                             $('#editCategoryModal .cat_div').hide();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                         }
                         else if(response.category_type == 'link')
                         {
@@ -1027,7 +1039,7 @@
                             $('#editCategoryModal .pdf').hide();
                             $('#editCategoryModal .chk_page_styles').hide();
                             $('#editCategoryModal .cat_div').hide();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (500*500) Dimensions');
                         }
                         else if(response.category_type == 'check_in_page')
                         {
@@ -1048,7 +1060,7 @@
                             $('#editCategoryModal .pdf').hide();
                             $('#editCategoryModal .chk_page_styles').hide();
                             $('#editCategoryModal .cat_div').show();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                         }
                         else if(response.category_type == 'pdf_category')
                         {
@@ -1250,7 +1262,7 @@
                             $('#editCategoryModal .pdf').hide();
                             $('#editCategoryModal .chk_page_styles').hide();
                             $('#editCategoryModal .cat_div').hide();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                         }
                         else if(response.category_type == 'link')
                         {
@@ -1271,7 +1283,7 @@
                             $('#editCategoryModal .pdf').hide();
                             $('#editCategoryModal .chk_page_styles').hide();
                             $('#editCategoryModal .cat_div').hide();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (500*500) Dimensions');
                         }
                         else if(response.category_type == 'check_in_page')
                         {
@@ -1292,7 +1304,7 @@
                             $('#editCategoryModal .pdf').hide();
                             $('#editCategoryModal .chk_page_styles').hide();
                             $('#editCategoryModal .cat_div').show();
-                            $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                            $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                         }
                         else if(response.category_type == 'pdf_category')
                         {
@@ -1539,50 +1551,62 @@
             var myFormID = formID;
             const catType = $('#'+formID+' #category_type').val();
             var img_crp_size = getImageCroppedSize(formID);
+            var fitPreview = 0;
 
             if (currentFile)
             {
-                fileSize = currentFile.size / 1024 / 1024;
-                fileName = currentFile.name;
-                fileType = fileName.split('.').pop().toLowerCase();
-
-                if(fileSize > 2)
+                var catImage = new Image();
+                catImage.src = URL.createObjectURL(currentFile);
+                catImage.onload = function()
                 {
-                    toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
-                    $('#'+myFormID+' #category_image').val('');
-                    return false;
-                }
-                else
-                {
-                    if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
+                    if(this.width === img_crp_size.width && this.height === img_crp_size.height)
                     {
-                        toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
+                        fitPreview = 1;
+                    }
+
+                    fileSize = currentFile.size / 1024 / 1024;
+                    fileName = currentFile.name;
+                    fileType = fileName.split('.').pop().toLowerCase();
+
+                    if(fileSize > 2)
+                    {
+                        toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
                         $('#'+myFormID+' #category_image').val('');
                         return false;
                     }
                     else
                     {
-                        if(cropper)
+                        if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
                         {
-                            cropper.destroy();
-                            $('.resize-image').attr('src',"");
-                            $('.img-crop-sec').hide();
+                            toastr.error("The Category Image must be a file of type: png, jpg, svg, jpeg");
+                            $('#'+myFormID+' #category_image').val('');
+                            return false;
                         }
+                        else
+                        {
+                            if(cropper)
+                            {
+                                cropper.destroy();
+                                $('.resize-image').attr('src',"");
+                                $('.img-crop-sec').hide();
+                            }
 
-                        $('#'+myFormID+' #resize-image').attr('src',"");
-                        $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
-                        $('#'+myFormID+' .img-crop-sec').show();
+                            $('#'+myFormID+' #resize-image').attr('src',"");
+                            $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
+                            $('#'+myFormID+' .img-crop-sec').show();
 
-                        // const CrpImage = document.getElementById('resize-image');
-                        const CrpImage = $('#'+myFormID+' #resize-image')[0];
+                            // const CrpImage = document.getElementById('resize-image');
+                            const CrpImage = $('#'+myFormID+' #resize-image')[0];
 
-                        cropper = new Cropper(CrpImage, {
-                            // aspectRatio: 1 / 1,
-                            aspectRatio : img_crp_size.ratio,
-                            zoomable:false,
-                            cropBoxResizable: false,
-                            preview: '#'+myFormID+' .preview',
-                        });
+                            cropper = new Cropper(CrpImage, {
+                                // aspectRatio: 1 / 1,
+                                aspectRatio : img_crp_size.ratio,
+                                zoomable:false,
+                                cropBoxResizable: false,
+                                preview: '#'+myFormID+' .preview',
+                                autoCropArea: fitPreview,
+                            });
+                        }
                     }
                 }
             }
@@ -1876,7 +1900,7 @@
                     $('#'+formID+' .pdf').hide();
                     $('#'+formID+' .chk_page_styles').hide();
                     $('#'+formID+' .cat_div').hide();
-                    $('#'+formID+' .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                    $('#'+formID+' .img-upload-label').html('Upload Image in (400*400) Dimensions');
                 }
                 else if(cat_type == 'link')
                 {
@@ -1897,7 +1921,7 @@
                     $('#'+formID+' .pdf').hide();
                     $('#'+formID+' .chk_page_styles').hide();
                     $('#'+formID+' .cat_div').hide();
-                    $('#'+formID+' .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                    $('#'+formID+' .img-upload-label').html('Upload Image in (500*500) Dimensions');
                 }
                 else if(cat_type == 'check_in_page')
                 {
@@ -1918,7 +1942,7 @@
                     $('#'+formID+' .pdf').hide();
                     $('#'+formID+' .chk_page_styles').hide();
                     $('#'+formID+' .cat_div').show();
-                    $('#'+formID+' .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                    $('#'+formID+' .img-upload-label').html('Upload Image in (400*400) Dimensions');
                 }
                 else if(cat_type == 'pdf_category')
                 {
@@ -1956,7 +1980,7 @@
                     $('#editCategoryModal .pdf').hide();
                     $('#editCategoryModal .chk_page_styles').hide();
                     $('#editCategoryModal .cat_div').hide();
-                    $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                    $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                 }
                 else if(cat_type == 'link')
                 {
@@ -1977,7 +2001,7 @@
                     $('#editCategoryModal .pdf').hide();
                     $('#editCategoryModal .chk_page_styles').hide();
                     $('#editCategoryModal .cat_div').hide();
-                    $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
+                    $('#editCategoryModal .img-upload-label').html('Upload Image in (500*500) Dimensions');
                 }
                 else if(cat_type == 'check_in_page')
                 {
@@ -1998,7 +2022,7 @@
                     $('#editCategoryModal .pdf').hide();
                     $('#editCategoryModal .chk_page_styles').hide();
                     $('#editCategoryModal .cat_div').show();
-                    $('#editCategoryModal .img-upload-label').html('Upload Image in (200*200) Dimensions');
+                    $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                 }
                 else if(cat_type == 'pdf_category')
                 {
@@ -2100,13 +2124,13 @@
             }
             else if(catType == 'image_gallary')
             {
-                crp_width = 400;
-                crp_height = 400;
+                crp_width = 500;
+                crp_height = 500;
             }
             else
             {
-                crp_width = 200;
-                crp_height = 200;
+                crp_width = 400;
+                crp_height = 400;
             }
             crp_ratio = crp_width / crp_height;
 

@@ -125,7 +125,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <code>Upload Image in (200*200) Dimensions</code>
+                                            <code>Upload Image in (400*400) Dimensions</code>
                                         </div>
                                     </div>
                                 </div>
@@ -1510,45 +1510,57 @@
         {
             const myFormID = this.form.id;
             const currentFile = this.files[0];
+            var fitPreview = 0;
 
             if (currentFile)
             {
-                fileSize = currentFile.size / 1024 / 1024;
-                fileName = currentFile.name;
-                fileType = fileName.split('.').pop().toLowerCase();
-
-                if(fileSize > 2)
+                var catImage = new Image();
+                catImage.src = URL.createObjectURL(currentFile);
+                catImage.onload = function()
                 {
-                    toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
-                    $('#'+myFormID+' #image').val('');
-                    return false;
-                }
-                else
-                {
-                    if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
+                    if(this.width === 400 && this.height === 400)
                     {
-                        toastr.error("The Item Image must be a file of type: png, jpg, svg, jpeg");
+                        fitPreview = 1;
+                    }
+
+                    fileSize = currentFile.size / 1024 / 1024;
+                    fileName = currentFile.name;
+                    fileType = fileName.split('.').pop().toLowerCase();
+
+                    if(fileSize > 2)
+                    {
+                        toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
                         $('#'+myFormID+' #image').val('');
                         return false;
                     }
                     else
                     {
-                        if(cropper)
+                        if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
                         {
-                            cropper.destroy();
+                            toastr.error("The Item Image must be a file of type: png, jpg, svg, jpeg");
+                            $('#'+myFormID+' #image').val('');
+                            return false;
                         }
+                        else
+                        {
+                            if(cropper)
+                            {
+                                cropper.destroy();
+                            }
 
-                        $('#'+myFormID+' #resize-image').attr('src',"");
-                        $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
-                        $('#'+myFormID+' .img-crop-sec').show();
+                            $('#'+myFormID+' #resize-image').attr('src',"");
+                            $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
+                            $('#'+myFormID+' .img-crop-sec').show();
 
-                        const CrpImage = document.getElementById('resize-image');
-                        cropper = new Cropper(CrpImage, {
-                            aspectRatio: 1 / 1,
-                            zoomable:false,
-                            cropBoxResizable: false,
-                            preview: '#'+myFormID+' .preview',
-                        });
+                            const CrpImage = document.getElementById('resize-image');
+                            cropper = new Cropper(CrpImage, {
+                                aspectRatio: 1 / 1,
+                                zoomable:false,
+                                cropBoxResizable: false,
+                                preview: '#'+myFormID+' .preview',
+                                autoCropArea: fitPreview,
+                            });
+                        }
                     }
                 }
             }
@@ -1560,49 +1572,61 @@
         {
             var currentFile = ele.files[0];
             var myFormID = formID+"_item_form";
+            var fitPreview = 0;
 
             if (currentFile)
             {
-                fileSize = currentFile.size / 1024 / 1024;
-                fileName = currentFile.name;
-                fileType = fileName.split('.').pop().toLowerCase();
-
-                if(fileSize > 2)
+                var catImage = new Image();
+                catImage.src = URL.createObjectURL(currentFile);
+                catImage.onload = function()
                 {
-                    toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
-                    $('#'+myFormID+' #'+formID+'item_image').val('');
-                    return false;
-                }
-                else
-                {
-                    if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
+                    if(this.width === 400 && this.height === 400)
                     {
-                        toastr.error("The Item Image must be a file of type: png, jpg, svg, jpeg");
+                        fitPreview = 1;
+                    }
+
+                    fileSize = currentFile.size / 1024 / 1024;
+                    fileName = currentFile.name;
+                    fileType = fileName.split('.').pop().toLowerCase();
+
+                    if(fileSize > 2)
+                    {
+                        toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
                         $('#'+myFormID+' #'+formID+'item_image').val('');
                         return false;
                     }
                     else
                     {
-                        if(cropper)
+                        if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
                         {
-                            cropper.destroy();
-                            $('.resize-image').attr('src',"");
-                            $('.img-crop-sec').hide();
+                            toastr.error("The Item Image must be a file of type: png, jpg, svg, jpeg");
+                            $('#'+myFormID+' #'+formID+'item_image').val('');
+                            return false;
                         }
+                        else
+                        {
+                            if(cropper)
+                            {
+                                cropper.destroy();
+                                $('.resize-image').attr('src',"");
+                                $('.img-crop-sec').hide();
+                            }
 
-                        $('#'+myFormID+' #resize-image').attr('src',"");
-                        $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
-                        $('#'+myFormID+' .img-crop-sec').show();
+                            $('#'+myFormID+' #resize-image').attr('src',"");
+                            $('#'+myFormID+' #resize-image').attr('src',URL.createObjectURL(currentFile));
+                            $('#'+myFormID+' .img-crop-sec').show();
 
-                        // const CrpImage = document.getElementById('resize-image');
-                        const CrpImage = $('#'+myFormID+' #resize-image')[0];
+                            // const CrpImage = document.getElementById('resize-image');
+                            const CrpImage = $('#'+myFormID+' #resize-image')[0];
 
-                        cropper = new Cropper(CrpImage, {
-                            aspectRatio: 1 / 1,
-                            zoomable:false,
-                            cropBoxResizable: false,
-                            preview: '#'+myFormID+' .preview',
-                        });
+                            cropper = new Cropper(CrpImage, {
+                                aspectRatio: 1 / 1,
+                                zoomable:false,
+                                cropBoxResizable: false,
+                                preview: '#'+myFormID+' .preview',
+                                autoCropArea: fitPreview,
+                            });
+                        }
                     }
                 }
             }
@@ -1629,8 +1653,8 @@
         function saveCropper(formID)
         {
             var canvas = cropper.getCroppedCanvas({
-                width:200,
-                height:200
+                width:400,
+                height:400
 		    });
 
             canvas.toBlob(function(blob)

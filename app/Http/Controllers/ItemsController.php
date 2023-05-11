@@ -609,7 +609,7 @@ class ItemsController extends Controller
                                                 $html .= '</div>';
                                             $html .= '</div>';
                                         }
-                                        $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                                        $html .= '</br><code>Upload Image in (400*400) Dimensions</code>';
                                     $html .= '</div>';
 
                                     $html .= '<div class="form-group mb-3">';
@@ -903,7 +903,7 @@ class ItemsController extends Controller
                                                     $html .= '</div>';
                                                 $html .= '</div>';
                                             }
-                                            $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                                            $html .= '</br><code>Upload Image in (400*400) Dimensions</code>';
                                         $html .= '</div>';
 
                                         $html .= '<div class="form-group mb-3">';
@@ -1176,7 +1176,7 @@ class ItemsController extends Controller
                                     $html .= '</div>';
                                 $html .= '</div>';
                             }
-                            $html .= '</br><code>Upload Image in (200*200) Dimensions</code>';
+                            $html .= '</br><code>Upload Image in (400*400) Dimensions</code>';
                         $html .= '</div>';
 
                         $html .= '<div class="form-group mb-3">';

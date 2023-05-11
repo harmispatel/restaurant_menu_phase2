@@ -578,7 +578,7 @@ class CategoryController extends Controller
                                     $html .= '</div>';
                                 $html .= '</div>';
                                 $html .= '<div class="col-md-12">';
-                                    $html .= '<code class="img-upload-label">Upload Image in (200*200) Dimensions</code>';
+                                    $html .= '<code class="img-upload-label">Upload Image in (400*400) Dimensions</code>';
                                 $html .= '</div>';
                             $html .= '</div>';
 
@@ -921,7 +921,7 @@ class CategoryController extends Controller
                                     $html .= '</div>';
                                 $html .= '</div>';
                                 $html .= '<div class="col-md-12">';
-                                    $html .= '<code class="img-upload-label">Upload Image in (200*200) Dimensions</code>';
+                                    $html .= '<code class="img-upload-label">Upload Image in (400*400) Dimensions</code>';
                                 $html .= '</div>';
                             $html .= '</div>';
 
@@ -1884,7 +1884,7 @@ class CategoryController extends Controller
                                 $html .= '</div>';
                             $html .= '</div>';
                             $html .= '<div class="col-md-12">';
-                                $html .= '<code class="img-upload-label">Upload Image in (200*200) Dimensions</code>';
+                                $html .= '<code class="img-upload-label">Upload Image in (400*400) Dimensions</code>';
                             $html .= '</div>';
                         $html .= '</div>';
 
@@ -2226,7 +2226,7 @@ class CategoryController extends Controller
                                 $html .= '</div>';
                             $html .= '</div>';
                             $html .= '<div class="col-md-12">';
-                                $html .= '<code class="img-upload-label">Upload Image in (200*200) Dimensions</code>';
+                                $html .= '<code class="img-upload-label">Upload Image in (400*400) Dimensions</code>';
                             $html .= '</div>';
                         $html .= '</div>';
 
