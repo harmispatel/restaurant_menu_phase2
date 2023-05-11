@@ -70,6 +70,8 @@ class ThemeController extends Controller
             'today_special_icon',
             'theme_preview_image',
             'search_box_icon_color',
+            'read_more_link_color',
+            'read_more_link_label',
         ]);
 
         $settings = [];
@@ -154,6 +156,8 @@ class ThemeController extends Controller
             'tag_label_color' => $request->tag_label_color,
             'category_bar_type' => $request->category_bar_type,
             'search_box_icon_color' => $request->search_box_icon_color,
+            'read_more_link_color' => $request->read_more_link_color,
+            'read_more_link_label' => $request->read_more_link_label,
         ];
 
         if($request->hasFile('today_special_icon'))
@@ -269,6 +273,8 @@ class ThemeController extends Controller
             'tag_label_color' => $request->tag_label_color,
             'category_bar_type' => $request->category_bar_type,
             'search_box_icon_color' => $request->search_box_icon_color,
+            'read_more_link_color' => $request->read_more_link_color,
+            'read_more_link_label' => $request->read_more_link_label,
         ];
 
         if($request->hasFile('today_special_icon'))
@@ -375,6 +381,8 @@ class ThemeController extends Controller
             'today_special_icon',
             'theme_preview_image',
             'search_box_icon_color',
+            'read_more_link_color',
+            'read_more_link_label',
         ]);
 
         $settings = [];

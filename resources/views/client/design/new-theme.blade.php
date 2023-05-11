@@ -397,6 +397,27 @@
                                                             </div>
                                                         </div>
                                                         <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>{{ __('Read More Link Color')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="read_more_link_color" name="read_more_link_color" class="form-control me-2 p-0" value="" onchange="changeVal('read_more_link_color','read_more_link_color_input')">
+                                                                    <input id="read_more_link_color_input" type="text" class="form-control" value="" onkeyup="changeColor('read_more_link_color_input','read_more_link_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>{{ __('Read More Link Label')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <input type="text" name="read_more_link_label" id="read_more_link_label" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
                                                             <div class="col-md-4">
                                                                 <span>{{ __('Today Special Icon')}}</span>
                                                             </div>

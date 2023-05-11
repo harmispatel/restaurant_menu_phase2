@@ -114,6 +114,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('items') }}" class="{{ ($routeName == 'items') ? 'active-link' : '' }}">
+                        <span>{{ __('Items') }}</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('categories','page') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'page')) ? 'active-link' : '' }}">
                         <span>{{ __('Pages') }}</span>
                     </a>
@@ -136,11 +141,6 @@
                 <li>
                     <a href="{{ route('categories','pdf_category') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'pdf_category')) ? 'active-link' : '' }}">
                         <span>{{ __('PDF') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('items') }}" class="{{ ($routeName == 'items') ? 'active-link' : '' }}">
-                        <span>{{ __('Items') }}</span>
                     </a>
                 </li>
                 <li>

@@ -39,6 +39,9 @@
     // Theme Settings
     $theme_settings = themeSettings($shop_theme_id);
 
+    // Read More Label
+    $read_more_label = (isset($theme_settings['read_more_link_label']) && !empty($theme_settings['read_more_link_label'])) ? $theme_settings['read_more_link_label'] : 'Read More';
+
     // Item Devider
     $item_devider = (isset($theme_settings['item_divider']) && !empty($theme_settings['item_divider'])) ? $theme_settings['item_divider'] : 0;
 
@@ -198,7 +201,7 @@
                                                                     @if(strlen($desc) > 200)
                                                                         <p>
                                                                             {!! substr($desc, 0, 200) !!}... <br>
-                                                                            <a style="cursor: pointer; color: blue">Read More</a></p>
+                                                                            <a class="read-more-desc">{{ $read_more_label }}</a></p>
                                                                     @else
                                                                         <p>{!! $desc !!}</p>
                                                                     @endif
@@ -351,7 +354,7 @@
                                                                         @if(strlen($desc) > 200)
                                                                             <p>
                                                                                 {!! substr($desc, 0, 200) !!}... <br>
-                                                                                <a style="cursor: pointer; color: blue">Read More</a></p>
+                                                                                <a class="read-more-desc">{{ $read_more_label }}</a></p>
                                                                         @else
                                                                             <p>{!! $desc !!}</p>
                                                                         @endif
@@ -498,7 +501,7 @@
                                                             @if(strlen($desc) > 200)
                                                                 <p>
                                                                     {!! substr($desc, 0, 200) !!}... <br>
-                                                                    <a style="cursor: pointer; color: blue">Read More</a></p>
+                                                                    <a class="read-more-desc">{{ $read_more_label }}</a></p>
                                                             @else
                                                                 <p>{!! $desc !!}</p>
                                                             @endif

@@ -239,6 +239,8 @@ class UserController extends Controller
                         'tag_label_color' => '#ffffff',
                         'category_bar_type' => '8px',
                         'search_box_icon_color' => '#000000',
+                        'read_more_link_color' => '#0000ff',
+                        'read_more_link_label' => 'Read More',
                     ];
 
                     foreach($setting_keys as $key => $val)
@@ -288,6 +290,8 @@ class UserController extends Controller
                         'tag_font_color' => '#ffffff',
                         'tag_label_color' => '#000000',
                         'search_box_icon_color' => '#ffffff',
+                        'read_more_link_color' => '#9f9f9f',
+                        'read_more_link_label' => 'Read More',
                     ];
 
                     foreach($setting_keys as $key => $val)

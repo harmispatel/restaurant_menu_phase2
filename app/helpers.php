@@ -212,6 +212,8 @@
             'today_special_icon',
             'theme_preview_image',
             'search_box_icon_color',
+            'read_more_link_color',
+            'read_more_link_label',
         ]);
 
         $settings = [];

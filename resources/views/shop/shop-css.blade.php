@@ -194,11 +194,23 @@
             }
         @endif
 
-
         /* Search Box Icon Color */
         @if (isset($theme_settings['search_box_icon_color']) && !empty($theme_settings['search_box_icon_color']))
             #openSearchBox i, #closeSearchBox i, .cart-btn{
                 color : {{ $theme_settings['search_box_icon_color'] }} !important;
+            }
+        @endif
+
+        /* Read More Link Color */
+        @if (isset($theme_settings['read_more_link_color']) && !empty($theme_settings['read_more_link_color']))
+            .read-more-desc{
+                color : {{ $theme_settings['read_more_link_color'] }} !important;
+                cursor : pointer;
+            }
+        @else
+            .read-more-desc{
+                color : blue!important;
+                cursor : pointer;
             }
         @endif
 

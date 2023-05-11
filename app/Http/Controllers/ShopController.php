@@ -264,6 +264,12 @@ class ShopController extends Controller
         $shop_settings = getClientSettings($shop_id);
         $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
 
+        // Theme Settings
+        $theme_settings = themeSettings($shop_theme_id);
+
+        // Read More Label
+        $read_more_label = (isset($theme_settings['read_more_link_label']) && !empty($theme_settings['read_more_link_label'])) ? $theme_settings['read_more_link_label'] : 'Read More';
+
         $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 
         try
@@ -465,7 +471,7 @@ class ShopController extends Controller
                                             {
                                                 $desc = substr($desc, 0, 200);
                                                 $html .= '<p>'.$desc.' ... <br>
-                                                <a style="cursor: pointer; color: blue">Read More</a></p>';
+                                                <a class="read-more-desc">'.$read_more_label.'</a></p>';
                                             }
                                             else
                                             {
@@ -548,6 +554,9 @@ class ShopController extends Controller
 
         // Theme Settings
         $theme_settings = themeSettings($shop_theme_id);
+
+        // Read More Label
+        $read_more_label = (isset($theme_settings['read_more_link_label']) && !empty($theme_settings['read_more_link_label'])) ? $theme_settings['read_more_link_label'] : 'Read More';
 
         // Today Special Icon
         $today_special_icon = isset($theme_settings['today_special_icon']) ? $theme_settings['today_special_icon'] : '';
@@ -695,7 +704,7 @@ class ShopController extends Controller
                                             {
                                                 $desc = substr(strip_tags($desc), 0, 200);
                                                 $html .= '<p>'.json_decode($desc,true).' ... <br>
-                                                <a style="cursor: pointer; color: blue">Read More</a></p>';
+                                                <a class="read-more-desc">'.$read_more_label.'</a></p>';
                                             }
                                             else
                                             {
@@ -871,7 +880,7 @@ class ShopController extends Controller
                                         {
                                             $desc = substr(strip_tags($desc), 0, 200);
                                             $html .= '<p>'.json_decode($desc,true).' ... <br>
-                                                <a style="cursor: pointer; color: blue">Read More</a></p>';
+                                                <a class="read-more-desc">'.$read_more_label.'</a></p>';
                                         }
                                         else
                                         {

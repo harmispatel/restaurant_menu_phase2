@@ -320,7 +320,7 @@
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
                                                                 <span>{{ __('Item Divider Color')}}</span>
-                                                            </div> 
+                                                            </div>
                                                             <div class="col-md-4">
                                                                 <div class="from-group d-flex align-items-center">
                                                                     <input type="color" id="item_divider_color" name="item_divider_color" class="form-control me-2 p-0" value="{{ isset($settings['item_divider_color']) ? $settings['item_divider_color'] : '' }}" onchange="changeVal('item_divider_color','item_divider_color_input')">
@@ -393,6 +393,27 @@
                                                                 <div class="from-group d-flex align-items-center">
                                                                     <input type="color" id="tag_label_color" name="tag_label_color" class="form-control me-2 p-0" value="{{ isset($settings['tag_label_color']) ? $settings['tag_label_color'] : '' }}" onchange="changeVal('tag_label_color','tag_label_color_input')">
                                                                     <input id="tag_label_color_input" type="text" class="form-control" value="{{ isset($settings['tag_label_color']) ? $settings['tag_label_color'] : '' }}" onkeyup="changeColor('tag_label_color_input','tag_label_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>{{ __('Read More Link Color')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="read_more_link_color" name="read_more_link_color" class="form-control me-2 p-0" value="{{ isset($settings['read_more_link_color']) ? $settings['read_more_link_color'] : '' }}" onchange="changeVal('read_more_link_color','read_more_link_color_input')">
+                                                                    <input id="read_more_link_color_input" type="text" class="form-control" value="{{ isset($settings['read_more_link_color']) ? $settings['read_more_link_color'] : '' }}" onkeyup="changeColor('read_more_link_color_input','read_more_link_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>{{ __('Read More Link Label')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <input type="text" name="read_more_link_label" id="read_more_link_label" class="form-control" value="{{ isset($settings['read_more_link_label']) ? $settings['read_more_link_label'] : '' }}" >
                                                                 </div>
                                                             </div>
                                                         </div>
