@@ -185,7 +185,7 @@
                                                                                 @endphp
 
                                                                                 @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                    <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="40px" height="40px">
+                                                                                    <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
                                                                                 @endif
                                                                             @endforeach
                                                                         </div>
@@ -265,7 +265,7 @@
                                                                                     @endphp
 
                                                                                     @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                        <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="40px" height="40px">
+                                                                                        <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
                                                                                     @endif
                                                                                 @endforeach
                                                                             </div>
@@ -338,7 +338,7 @@
                                                                                     @endphp
 
                                                                                     @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                        <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="40px" height="40px">
+                                                                                        <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
                                                                                     @endif
                                                                                 @endforeach
                                                                             </div>
@@ -417,7 +417,7 @@
                                                                                         @endphp
 
                                                                                         @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                            <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="40px" height="40px">
+                                                                                            <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
                                                                                         @endif
                                                                                     @endforeach
                                                                                 </div>
@@ -485,7 +485,7 @@
                                                                         @endphp
 
                                                                         @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                            <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="40px" height="40px">
+                                                                            <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
                                                                         @endif
                                                                     @endforeach
                                                                 </div>
@@ -564,7 +564,7 @@
                                                                             @endphp
 
                                                                             @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="40px" height="40px">
+                                                                                <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
                                                                             @endif
                                                                         @endforeach
                                                                     </div>

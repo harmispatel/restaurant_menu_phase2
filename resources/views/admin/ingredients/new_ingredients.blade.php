@@ -80,7 +80,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group mt-2">
-                                            <code>Valid Dimensions of Icon is up to (60*60)</code>
+                                            <code>Valid Dimensions of Icon is up to (80*80)</code>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">

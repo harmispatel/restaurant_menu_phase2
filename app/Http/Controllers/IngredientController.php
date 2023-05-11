@@ -29,7 +29,7 @@ class IngredientController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'icon' => 'required|mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG|dimensions:width=60,height=60',
+            'icon' => 'required|mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG|dimensions:width=80,height=80',
         ]);
 
         $ingredient = new Ingredient();
@@ -94,7 +94,7 @@ class IngredientController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'icon' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG|dimensions:width=60,height=60',
+            'icon' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG|dimensions:width=80,height=80',
         ]);
 
         $ingredient = Ingredient::find($request->ingredient_id);

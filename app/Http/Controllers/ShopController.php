@@ -383,7 +383,7 @@ class ShopController extends Controller
                                                             if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
                                                             {
                                                                 $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                                $html .= '<img src="'.$ing_icon.'" width="50px">';
+                                                                $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
                                                             }
                                                         }
                                                     $html .= '</div>';
@@ -453,7 +453,7 @@ class ShopController extends Controller
                                                         if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
                                                         {
                                                             $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                            $html .= '<img src="'.$ing_icon.'" width="50px">';
+                                                            $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
                                                         }
                                                     }
                                                 $html .= '</div>';
@@ -613,7 +613,7 @@ class ShopController extends Controller
                                                             if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
                                                             {
                                                                 $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                                $html .= '<img src="'.$ing_icon.'" width="50px">';
+                                                                $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
                                                             }
                                                         }
                                                     $html .= '</div>';
@@ -683,7 +683,7 @@ class ShopController extends Controller
                                                         if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
                                                         {
                                                             $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                            $html .= '<img src="'.$ing_icon.'" width="50px">';
+                                                            $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
                                                         }
                                                     }
                                                 $html .= '</div>';
@@ -788,7 +788,7 @@ class ShopController extends Controller
                                                         if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
                                                         {
                                                             $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                            $html .= '<img src="'.$ing_icon.'" width="50px">';
+                                                            $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
                                                         }
                                                     }
                                                 $html .= '</div>';
@@ -859,7 +859,7 @@ class ShopController extends Controller
                                                     if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
                                                     {
                                                         $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                        $html .= '<img src="'.$ing_icon.'" width="50px">';
+                                                        $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
                                                     }
                                                 }
                                             $html .= '</div>';
@@ -1090,8 +1090,9 @@ class ShopController extends Controller
 
                     if(!empty($item_image))
                     {
-                        $html .= '<div class="col-md-12 mb-2">';
-                            $html .= '<img src="'.$item_image.'" class="w-100" style="max-height:400px">';
+                        $html .= '<div class="col-md-12 mb-2 text-center">';
+                            // $html .= '<img src="'.$item_image.'" class="w-100" style="max-height:400px">';
+                            $html .= '<img src="'.$item_image.'">';
                         $html .= '</div>';
                     }
 
@@ -1129,7 +1130,7 @@ class ShopController extends Controller
                                     if(isset($ingredient['icon']) && !empty($ingredient['icon']) && file_exists('public/admin_uploads/ingredients/'.$ingredient['icon']))
                                     {
                                         $ing_icon = asset('public/admin_uploads/ingredients/'.$ingredient['icon']);
-                                        $html .= '<img src="'.$ing_icon.'" width="50" height="50" style="border: 1px solid black; border-radius:100%; padding:2px;margin:0 2px;">';
+                                        $html .= '<img src="'.$ing_icon.'" width="80px" height="80px" style="border: 1px solid black; border-radius:100%; padding:2px;margin:0 2px;">';
                                     }
                                 }
                             $html .= '</div>';

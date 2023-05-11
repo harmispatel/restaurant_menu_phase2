@@ -81,7 +81,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group mt-2">
-                                            <code>Valid Dimensions of Icon is up to (60*60)</code>
+                                            <code>Valid Dimensions of Icon is up to (80*80)</code>
                                         </div>
                                         <div class="form-group mt-2">
                                             @if(!empty($ingredient->icon) && file_exists('public/admin_uploads/ingredients/'.$ingredient->icon))
