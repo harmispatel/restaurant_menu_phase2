@@ -1100,8 +1100,8 @@ class ShopController extends Controller
                     if(!empty($item_image))
                     {
                         $html .= '<div class="col-md-12 mb-2 text-center">';
-                            // $html .= '<img src="'.$item_image.'" class="w-100" style="max-height:400px">';
-                            $html .= '<img src="'.$item_image.'">';
+                            // $html .= '<img src="'.$item_image.'" class="w-100 item-dt-img" style="max-height:400px">';
+                            $html .= '<img src="'.$item_image.'" class="item-dt-img">';
                         $html .= '</div>';
                     }
 

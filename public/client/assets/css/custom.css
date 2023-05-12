@@ -1573,6 +1573,10 @@
           grid-gap: 10px;
       }
 
+      .item-dt-img{
+        width: 100%!important;
+      }
+
       .order .order-btn{
         flex-wrap: wrap;
         justify-content: center!important;
