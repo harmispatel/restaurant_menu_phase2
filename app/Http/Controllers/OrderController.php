@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryAreas;
 use App\Models\Order;
 use App\Models\OrderSetting;
 use Illuminate\Http\Request;
@@ -33,9 +34,11 @@ class OrderController extends Controller
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $data['order_settings'] = getOrderSettings($shop_id);
+        $data['deliveryAreas'] = DeliveryAreas::where('shop_id',$shop_id)->get();
 
         return view('client.orders.order_settings',$data);
     }
+
 
     // Function for Update Order Settings
     public function UpdateOrderSettings(Request $request)
@@ -78,6 +81,22 @@ class OrderController extends Controller
                 }
             }
 
+            // Insert Delivery Zones Area
+            $delivery_zones = (isset($request->new_coordinates) && !empty($request->new_coordinates)) ? json_decode($request->new_coordinates,true) : [];
+
+            if(count($delivery_zones) > 0)
+            {
+                foreach($delivery_zones as $delivery_zone)
+                {
+                    $polygon = serialize($delivery_zone);
+
+                    $delivery_area = new DeliveryAreas();
+                    $delivery_area->shop_id = $shop_id;
+                    $delivery_area->coordinates = $polygon;
+                    $delivery_area->save();
+                }
+            }
+
             return response()->json([
                 'success' => 1,
                 'message' => 'Setting has been Updated SuccessFully...',
@@ -90,7 +109,17 @@ class OrderController extends Controller
                 'message' => 'Internal Server Error!',
             ]);
         }
+    }
 
+
+    // Function for Clear Delivery Range Settings
+    public function clearDeliveryRangeSettings()
+    {
+        $shop_id = (isset(Auth::user()->hasOneShop->shop['id'])) ? Auth::user()->hasOneShop->shop['id'] : '';
+
+        DeliveryAreas::where('shop_id',$shop_id)->delete();
+
+        return redirect()->route('order.settings')->with('success',"Setting has been Updated SuccessFully..");
 
     }
 
@@ -165,5 +194,35 @@ class OrderController extends Controller
         {
             return redirect()->route('client.orders')->with('error',"Internal Server Error!");
         }
+    }
+
+
+    // Function for Set Delivery Address in Session
+    public function setDeliveryAddress(Request $request)
+    {
+        $lat = $request->latitude;
+        $lng = $request->longitude;
+        $address = $request->address;
+
+        try
+        {
+            session()->put('cust_lat',$lat);
+            session()->put('cust_long',$lng);
+            session()->put('cust_address',$address);
+            session()->save();
+
+            return response()->json([
+                'success' => 1,
+                'message' => 'Address has been set successfully...',
+            ]);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
+
     }
 }

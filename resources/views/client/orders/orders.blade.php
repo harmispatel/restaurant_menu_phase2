@@ -61,11 +61,20 @@
                                             @if(!empty($order->delivery_time ))
                                                 <li><strong>Delivery Time : </strong> {{ $order->delivery_time }}</li>
                                             @endif
+                                        @elseif($order->checkout_type == 'delivery')
+                                            <li><strong>Customer : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
+                                            <li><strong>Telephone : </strong> {{ $order->phone }}</li>
+                                            <li><strong>Email : </strong> {{ $order->email }}</li>
+                                            <li><strong>Address : </strong> {{ $order->address }}</li>
+                                            <li><strong>Floor : </strong> {{ $order->floor }}</li>
+                                            <li><strong>Door Bell : </strong> {{ $order->door_bell }}</li>
+                                            <li><strong>Google Map : </strong> <a href="https://maps.google.com?q={{ $order->address }}" target="_blank">Address Link</a></li>
+                                            <li><strong>Comments : </strong> {{ $order->instructions }}</li>
                                         @endif
-                                        {{-- <li><strong>Total Amount : </strong> {{ $order->order_total_text }}</li> --}}
                                     </ul>
                                 </div>
-                                <div class="order-info">
+                                <hr>
+                                <div class="order-info mt-2">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <table class="table">

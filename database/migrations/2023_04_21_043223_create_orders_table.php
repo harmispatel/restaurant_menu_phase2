@@ -24,6 +24,11 @@ class CreateOrdersTable extends Migration
             $table->string('checkout_type',20);
             $table->string('payment_method',30);
             $table->longText('address')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('floor')->nullable();
+            $table->string('door_bell')->nullable();
+            $table->text('instructions')->nullable();
             $table->string('delivery_time')->nullable();
             $table->string('table',50)->nullable();
             $table->string('room',50)->nullable();

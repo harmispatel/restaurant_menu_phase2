@@ -40,6 +40,11 @@
 
     $discount_per = session()->get('discount_per');
 
+    // Cust Lat,Long & Address
+    $cust_lat = session()->get('cust_lat');
+    $cust_lng = session()->get('cust_long');
+    $cust_address = session()->get('cust_address');
+
 @endphp
 
 @extends('shop.shop-layout')
@@ -52,7 +57,7 @@
 
     <section class="mt-5 mb-5">
         <div class="container px-3 my-5 clearfix">
-            <form action="{{ route('shop.cart.processing',$shop_slug) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('shop.cart.processing',$shop_slug) }}" id="checkoutForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="checkout_type" id="checkout_type" value="{{ $checkout_type }}">
                 <div class="card">
@@ -168,6 +173,83 @@
                                     <label for="delivery_time" class="form-label">Delivery Time</label>
                                     <input type="text" name="delivery_time" id="delivery_time" class="form-control" value="{{ old('delivery_time') }}">
                                     <code>Ex:- 9:30-10:00</code>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="payment_method" class="form-label">Payment Method</label>
+                                    <select name="payment_method" id="payment_method" class="form-select">
+                                        <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
+                                            <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
+                                        @endif
+                                        @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>EveryPay Credit Card</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        @elseif ($checkout_type == 'delivery')
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label for="firstname" class="form-label">First Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="firstname" id="firstname" class="form-control {{ ($errors->has('firstname')) ? 'is-invalid' : '' }}" value="{{ old('firstname') }}">
+                                    @if($errors->has('firstname'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('firstname') }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="lastname" id="lastname" class="form-control {{ ($errors->has('lastname')) ? 'is-invalid' : '' }}" value="{{ old('lastname') }}">
+                                    @if($errors->has('lastname'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('lastname') }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="text" name="email" id="email" class="form-control {{ ($errors->has('email')) ? 'is-invalid' : '' }}" value="{{ old('email') }}">
+                                    @if($errors->has('email'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('email') }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="phone" class="form-label">Phone No. <span class="text-danger">*</span></label>
+                                    <input type="number" name="phone" id="phone" class="form-control {{ ($errors->has('phone')) ? 'is-invalid' : '' }}" value="{{ old('phone') }}">
+                                    @if($errors->has('phone'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('phone') }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
+                                    <input type="hidden" name="latitude" id="latitude" value="{{ $cust_lat }}">
+                                    <input type="hidden" name="longitude" id="longitude" value="{{ $cust_lng }}">
+                                    <input type="text" name="address" id="address" class="form-control {{ ($errors->has('address')) ? 'is-invalid' : '' }}" value="{{ $cust_address }}">
+                                    @if($errors->has('address'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('address') }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="col-md-12 mb-4">
+                                    <div id="map" style="height: 500px;"></div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="floor" class="form-label">Floor</label>
+                                    <input type="text" name="floor" id="floor" class="form-control" value="{{ old('floor') }}">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="door_bell" class="form-label">Door Bell</label>
+                                    <input type="text" name="door_bell" id="door_bell" class="form-control" value="{{ old('door_bell') }}">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="instructions" class="form-label">Instructions</label>
+                                    <textarea name="instructions" id="instructions" rows="3" class="form-control">{{ old('instructions') }}</textarea>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="payment_method" class="form-label">Payment Method</label>
@@ -396,16 +478,115 @@
         </div>
     </footer>
 
-    <a class="back_bt" href="{{ route('restaurant', $shop_details['shop_slug']) }}"><i
-            class="fa-solid fa-chevron-left"></i></a>
+    <a class="back_bt" href="{{ route('restaurant', $shop_details['shop_slug']) }}"><i class="fa-solid fa-chevron-left"></i></a>
 
 @endsection
 
 {{-- Page JS Function --}}
 @section('page-js')
 
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyBsf7LHMQFIeuA_7-bR7u7EXz5CUaD6I2A&libraries=places"></script>
+
     <script type="text/javascript">
 
+        // Map Functionality
+        var lat = "{{ $cust_lat }}";
+        var lng = "{{ $cust_lng }}";
+        var check_type = "{{ $checkout_type }}";
+
+        navigator.geolocation.getCurrentPosition(
+            function (position)
+            {
+                if(lat == '' || lng == '')
+                {
+                    lat = position.coords.latitude;
+                    lng = position.coords.longitude;
+                }
+
+                if(check_type == 'delivery')
+                {
+                    initMap(lat,lng);
+                }
+
+            },
+            function errorCallback(error)
+            {
+                console.log(error)
+            }
+        );
+
+        function initMap(lat,long)
+        {
+            const myLatLng = { lat: parseFloat(lat), lng: parseFloat(long) };
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 16,
+                center: myLatLng,
+            });
+
+            new google.maps.Marker({
+                position: myLatLng,
+                map,
+            });
+        }
+
+        if(check_type == 'delivery')
+        {
+            google.maps.event.addDomListener(window, 'load', initialize);
+
+            function initialize()
+            {
+                var input = document.getElementById('address');
+                var autocomplete = new google.maps.places.Autocomplete(input);
+
+                $('#address').keydown(function (e)
+                {
+                    if (e.keyCode == 13)
+                    {
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+
+                autocomplete.addListener('place_changed', function ()
+                {
+                    var place = autocomplete.getPlace();
+                    if(place != '')
+                    {
+                        initMap(place.geometry['location'].lat(),place.geometry['location'].lng());
+                        $('#latitude').val(place.geometry['location'].lat());
+                        $('#longitude').val(place.geometry['location'].lng());
+
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('set.delivery.address') }}",
+                            data: {
+                                "_token" : "{{ csrf_token() }}",
+                                "latitude" : place.geometry['location'].lat(),
+                                "longitude" : place.geometry['location'].lng(),
+                                "address" : $('#address').val(),
+                            },
+                            dataType: "JSON",
+                            success: function (response)
+                            {
+                                if(response.success == 1)
+                                {
+                                    console.log(response.message);
+                                }
+                                else
+                                {
+                                    console.error(response.message);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        // End Map Functionality
+
+
+        // Toastr
         toastr.options = {
             "closeButton": true,
             "progressBar": true,

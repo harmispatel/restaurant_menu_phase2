@@ -111,10 +111,6 @@ Route::group(['prefix' => 'admin'], function ()
         Route::get('/edit-tutorial/{id}',[TutorialController::class,'edit'])->name('tutorial.edit');
         Route::post('/update-tutorial',[TutorialController::class,'update'])->name('tutorial.update');
 
-
-
-
-
         // Ingredients
         Route::get('/ingredients',[IngredientController::class,'index'])->name('ingredients');
         Route::get('/new-ingredients',[IngredientController::class,'insert'])->name('ingredients.add');
@@ -287,6 +283,8 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/orders-change-estimate',[OrderController::class,'changeOrderEstimate'])->name('change.order.estimate');
         Route::post('/accept-order',[OrderController::class,'acceptOrder'])->name('accept.order');
         Route::get('/order-view/{id}',[OrderController::class,'viewOrder'])->name('view.order');
+        Route::get('/clear-delivey-range',[OrderController::class,'clearDeliveryRangeSettings'])->name('remove.delivery.range');
+        Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
 
         // Payment
         Route::get('/payment-settings',[PaymentController::class,'paymentSettings'])->name('payment.settings');

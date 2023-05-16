@@ -33,6 +33,10 @@
     // Order Settings
     $order_settings = getOrderSettings($shop_details['id']);
 
+    $min_amount_for_delivery = (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '';
+
+    $remain_amount = 0;
+
     $is_checkout = ((isset($order_settings['delivery']) && $order_settings['delivery'] == 1) || (isset($order_settings['takeaway']) && $order_settings['takeaway'] == 1) || (isset($order_settings['room_delivery']) && $order_settings['room_delivery'] == 1) || (isset($order_settings['table_service']) && $order_settings['table_service'] == 1)) ? 1 : 0;
 
     if(isset($order_settings['only_cart']) && $order_settings['only_cart'] == 1)
@@ -41,6 +45,10 @@
     }
 
     $discount_per = session()->get('discount_per');
+
+    $delivery_schedule = checkDeliverySchedule($shop_details['id']);
+
+    $current_check_type = session()->get('checkout_type');
 
 @endphp
 
@@ -51,6 +59,7 @@
 @section('content')
 
     <input type="hidden" name="def_currency" id="def_currency" value="{{ $currency }}">
+    <input type="hidden" name="min_amount_for_delivery" id="min_amount_for_delivery" value="{{ $min_amount_for_delivery }}">
 
     <section class="mt-5 mb-5">
         <div class="container px-3 my-5 clearfix">
@@ -63,17 +72,17 @@
                         @if($is_checkout == 1)
                             <div class="col-md-4">
                                 <select name="checkout_type" id="checkout_type" class="form-control">
-                                    {{-- @if(isset($order_settings['delivery']) && $order_settings['delivery'] == 1)
-                                        <option value="delivery">Delivery</option>
-                                    @endif --}}
+                                    @if(isset($order_settings['delivery']) && $order_settings['delivery'] == 1)
+                                        <option value="delivery" {{ ($current_check_type == 'delivery') ? 'selected' : '' }}>Delivery</option>
+                                    @endif
                                     @if(isset($order_settings['takeaway']) && $order_settings['takeaway'] == 1)
-                                        <option value="takeaway">Takeaway</option>
+                                        <option value="takeaway" {{ ($current_check_type == 'takeaway') ? 'selected' : '' }}>Takeaway</option>
                                     @endif
                                     @if(isset($order_settings['room_delivery']) && $order_settings['room_delivery'] == 1)
-                                        <option value="room_delivery">Room Delivery</option>
+                                        <option value="room_delivery" {{ ($current_check_type == 'room_delivery') ? 'selected' : '' }}>Room Delivery</option>
                                     @endif
                                     @if(isset($order_settings['table_service']) && $order_settings['table_service'] == 1)
-                                        <option value="table_service">Table Service</option>
+                                        <option value="table_service" {{ ($current_check_type == 'table_service') ? 'selected' : '' }}>Table Service</option>
                                     @endif
                                 </select>
                             </div>
@@ -177,6 +186,7 @@
                                 <tr>
                                     <td><b>Total Amount</b></td>
                                     <td class="text-end">{{ Currency::currency($currency)->format($total_amount) }}</td>
+                                    <input type="hidden" name="total_cart_amount" id="total_cart_amount" value="{{ $total_amount }}">
                                 </tr>
                                 @if($discount_per > 0)
                                     <tr>
@@ -193,20 +203,18 @@
                                 @endif
                             </table>
                         </div>
-                        {{-- <div class="col-md-12">
-                            <label class="text-muted font-weight-normal m-0">Total Amount</label>
-                            <div class="text-large"><strong>{{ Currency::currency($currency)->format($total_amount) }}</strong></div>
-                        </div>
-                        @if($discount_per > 0)
-                            <div class="col-md-12">
-                                <label class="text-muted font-weight-normal m-0">Discount</label>
-                                <div class="text-large"><strong> - {{ $discount_per }}</strong></div>
-                            </div>
-                        @endif --}}
                     </div>
 
-                    @if($is_checkout == 1)
+                    @php
+                        if(!empty($min_amount_for_delivery))
+                        {
+                            $remain_amount = Currency::currency($currency)->format($min_amount_for_delivery - $total_amount);
+                        }
+                    @endphp
+
+                    @if($is_checkout == 1 && $delivery_schedule == 1)
                         <div class="row">
+                            <div class="col-md-12 mb-2" style="display: none;" id="min-amount-msg"></div>
                             <div class="col-md-12">
                                 <button type="button" id="check-btn" class="btn btn-lg btn-primary mt-2">Checkout</button>
                             </div>
@@ -436,6 +444,53 @@
                     }
                 }
             });
+        });
+
+
+        $('#checkout_type').on('change',function(){
+            var check_type = $(this).val();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('set.checkout.type') }}",
+                data: {
+                    '_token' : "{{ csrf_token() }}",
+                    'check_type' : check_type,
+                },
+                dataType: "JSON",
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        location.reload();
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                        return false;
+                    }
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+            var check_type = $('#checkout_type :selected').val();
+            if(check_type == 'delivery')
+            {
+                var total_amount = parseFloat($('#total_cart_amount').val());
+                var min_amount_for_delivery = parseFloat($('#min_amount_for_delivery').val());
+                var remain_amount = "{{ $remain_amount }}";
+
+                if((total_amount < min_amount_for_delivery))
+                {
+                    $('#check-btn').attr('disabled',true);
+                    $('#min-amount-msg').html('');
+                    $('#min-amount-msg').append('<code class="fs-4">'+remain_amount+' Left for the minimum order.</code>');
+                    $('#min-amount-msg').show();
+                }
+
+            }
         });
 
     </script>

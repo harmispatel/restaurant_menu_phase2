@@ -1,6 +1,6 @@
 <?php
 
-    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings,Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop};
+    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings, DeliveryAreas, Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop};
     use Carbon\Carbon;
     use Illuminate\Support\Facades\Auth;
 
@@ -414,6 +414,117 @@
     }
 
 
+    // Check Delivery Schedule
+    function checkDeliverySchedule($shop_id)
+    {
+        date_default_timezone_set('Asia/Kolkata');
+
+        $current_date = Carbon::now();
+        $today = strtolower($current_date->format('l'));
+        $current_time = strtotime($current_date->format('G:i'));
+
+        // Order Settings
+        $sch_enable_setting = OrderSetting::where('shop_id',$shop_id)->where('key','scheduler_active')->first();
+        $sch_array_setting = OrderSetting::where('shop_id',$shop_id)->where('key','schedule_array')->first();
+
+        $schedule = (isset($sch_enable_setting['value']) && $sch_enable_setting['value'] == 1) ? 1 : 0;
+        $schedule_arr = (isset($sch_array_setting['value']) && !empty($sch_array_setting['value'])) ? json_decode($sch_array_setting['value'],true) : '';
+
+        if($schedule == 0)
+        {
+            return 1;
+        }
+        else
+        {
+            if(count($schedule_arr) > 0)
+            {
+                $current_day = (isset($schedule_arr[$today])) ? $schedule_arr[$today] : '';
+                if(isset($current_day['enabled']) && $current_day['enabled'] == 1)
+                {
+                    $time_schedule_arr = isset($current_day['timesSchedules']) ? $current_day['timesSchedules'] : [];
+
+                    if(count($time_schedule_arr) > 0)
+                    {
+                        $count = 1;
+                        $total_count = count($time_schedule_arr);
+                        foreach($time_schedule_arr as $tsarr)
+                        {
+                            $start_time = strtotime($tsarr['startTime']);
+                            $end_time = strtotime($tsarr['endTime']);
+
+                            if($current_time > $start_time && $current_time < $end_time)
+                            {
+                                return 1;
+                            }
+                            else
+                            {
+                                if($count == $total_count)
+                                {
+                                    return 0;
+                                }
+                            }
+                            $count ++;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+    }
+
+
+    // Function for Check Delivery Available in Customer Zone
+    function checkDeliveryAvilability($shop_id,$latitude,$longitude)
+    {
+        $delivery_areas = DeliveryAreas::where('shop_id',$shop_id)->get();
+        $inside = 0;
+
+        if(count($delivery_areas) > 0)
+        {
+            foreach($delivery_areas as $delivery_area)
+            {
+                $coordinates = (isset($delivery_area['coordinates']) && !empty($delivery_area['coordinates'])) ? unserialize($delivery_area['coordinates']) : '';
+
+                $vertices = $coordinates;
+                $vertexCount = count($vertices);
+
+                for ($i = 0, $j = $vertexCount - 1; $i < $vertexCount; $j = $i++)
+                {
+                    $xi = $vertices[$i]['lat'];
+                    $yi = $vertices[$i]['lng'];
+                    $xj = $vertices[$j]['lat'];
+                    $yj = $vertices[$j]['lng'];
+
+                    $intersect = (($yi > $longitude) != ($yj > $longitude)) && ($latitude < ($xj - $xi) * ($longitude - $yi) / ($yj - $yi) + $xi);
+
+                    if ($intersect)
+                    {
+                        $inside = 1;
+                    }
+                }
+
+            }
+        }
+        else
+        {
+            $inside = 0;
+        }
+        return $inside;
+    }
+
+
     // Get total Quantity of Cart
     function getCartQuantity()
     {
@@ -427,6 +538,22 @@
             }
         }
         return $total_quantity;
+    }
+
+
+    // Get Total of Cart
+    function getCartTotal()
+    {
+        $cart = session()->get('cart', []);
+        $total = 0;
+        if(count($cart) > 0)
+        {
+            foreach($cart as $val)
+            {
+                $total += (isset($val['total_amount'])) ? $val['total_amount'] : 0;
+            }
+        }
+        return $total;
     }
 
 

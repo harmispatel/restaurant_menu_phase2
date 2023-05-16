@@ -177,6 +177,28 @@ class EveryPayController extends Controller
                     $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                     $order->save();
                 }
+                elseif($checkout_type == 'delivery')
+                {
+                    // New Order
+                    $order = new Order();
+                    $order->shop_id = $shop_id;
+                    $order->ip_address = $user_ip;
+                    $order->firstname = $order_details['firstname'];
+                    $order->lastname = $order_details['lastname'];
+                    $order->email = $order_details['email'];
+                    $order->phone = $order_details['phone'];
+                    $order->address = $order_details['address'];
+                    $order->latitude = $order_details['latitude'];
+                    $order->longitude = $order_details['longitude'];
+                    $order->floor = $order_details['floor'];
+                    $order->door_bell = $order_details['door_bell'];
+                    $order->instructions = $order_details['instructions'];
+                    $order->checkout_type = $checkout_type;
+                    $order->payment_method = $payment_method;
+                    $order->order_status = 'pending';
+                    $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
+                    $order->save();
+                }
 
                 // Insert Order Items
                 if($order->id)
@@ -266,6 +288,9 @@ class EveryPayController extends Controller
                 session()->forget('checkout_type');
                 session()->forget('order_details');
                 session()->forget('discount_per');
+                session()->forget('cust_lat');
+                session()->forget('cust_long');
+                session()->forget('cust_address');
                 session()->save();
 
                 return redirect()->route('shop.checkout.success',[$shop_slug,encrypt($order->id)]);

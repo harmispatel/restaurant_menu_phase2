@@ -284,6 +284,21 @@
                             @endif
                             <hr>
                             <div class="row">
+                                <div class="col-md-6">
+                                    <h3>Delivery Range Settings</h3>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <a href="{{ route('remove.delivery.range') }}" class="btn btn-danger" data-bs-toggle="tooltip" title="Clear Delivery Range Settings"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <input type="hidden" name="new_coordinates" id="new_coordinates">
+                                <div class="col-md-12">
+                                    <div id="map" style="height: 500px;"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
                                 <div class="col-md-12">
                                     <button id="update-btn" class="btn btn-success" disabled><i class="bi bi-save"></i> Update</button>
                                 </div>
@@ -301,7 +316,30 @@
 
 {{-- Custom Script --}}
 @section('page-js')
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsf7LHMQFIeuA_7-bR7u7EXz5CUaD6I2A&callback=initMap&libraries=drawing"></script>
+
+
     <script type="text/javascript">
+
+        var map;
+        var drawingManager;
+        var selectedShape;
+        const deliveryAreas = @json($deliveryAreas);
+
+        $(document).ready(function ()
+        {
+            navigator.geolocation.getCurrentPosition(
+            function (position)
+                {
+                    initMap(position.coords.latitude, position.coords.longitude)
+                },
+                function errorCallback(error)
+                {
+                    console.log(error)
+                }
+            );
+        });
 
         // Function for Add Schedule Section
         function addNewSchedule(divID)
@@ -324,6 +362,10 @@
 
         // Enabled Update Btn
         $('input').on('change',function(){
+            $('#update-btn').removeAttr('disabled',true);
+        });
+
+        $('#map').on('click',function(){
             $('#update-btn').removeAttr('disabled',true);
         });
 
@@ -395,6 +437,111 @@
             });
 
         });
+
+
+        // Function for Map
+        function initMap(lat=39.0742,long=21.8243)
+        {
+            // Set the center point of the map
+            var center = {lat: lat, lng: long};
+
+            // Create the map object
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: center
+            });
+
+            // console.log(deliveryAreas);
+            @foreach ($deliveryAreas as $deliveryArea)
+                const polygon{{ $deliveryArea->id }} = new google.maps.Polygon({
+                    paths:@json(unserialize($deliveryArea->coordinates)),
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                });
+                polygon{{ $deliveryArea->id }}.setMap(map);
+            @endforeach
+
+            // Create a drawing manager
+            drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.POLYGON,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYGON
+                    ]
+                },
+                polygonOptions: {
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35
+                }
+            });
+
+            // Set the drawing manager on the map
+            drawingManager.setMap(map);
+
+            // Add an event listener for when a polygon is completed
+            google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+                selectedShape = polygon;
+                $('#new_coordinates').val(getPolygonCoords());
+            });
+
+        }
+
+        // Function to get the polygon coordinates
+        function getPolygonCoords()
+        {
+            // Get the path of the selected shape
+            var path = selectedShape.getPaths().getAt(0);
+
+            var getCoordinates = $('#new_coordinates').val();
+            var newCoordinate = [];
+
+            if(getCoordinates == '')
+            {
+                var polygonCoords = [];
+            }
+            else
+            {
+                var polygonCoords = JSON.parse(getCoordinates);
+            }
+
+            // Loop through the path and get the coordinates
+            for (var i = 0; i < path.getLength(); i++)
+            {
+                var latlngstr = path.getAt(i).toUrlValue(6);
+                var latlngArr = latlngstr.split(',');
+                var latLng = {};
+
+                $.each(latlngArr, function (key, val)
+                {
+                    if(key == 0)
+                    {
+                        latLng['lat'] = parseFloat(val);
+                    }
+                    else
+                    {
+                        latLng['lng'] = parseFloat(val);
+                    }
+                });
+                newCoordinate.push(latLng);
+            }
+
+            polygonCoords.push(newCoordinate);
+
+            // Return the polygon coordinates
+            return JSON.stringify(polygonCoords);
+        }
+
+        @if (Session::has('success'))
+            toastr.success('{{ Session::get('success') }}')
+        @endif
 
     </script>
 @endsection

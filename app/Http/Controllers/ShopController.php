@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Magarrent\LaravelCurrencyFormatter\Facades\Currency;
 use Mail;
 use App\Mail\CheckInMail;
+use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller
 {
@@ -1630,6 +1631,29 @@ class ShopController extends Controller
         // Shop ID
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
 
+        $order_settings = getOrderSettings($shop_id);
+        $min_amount_for_delivery = (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '';
+        $total_cart_amount = getCartTotal();
+
+        $data['cart'] = session()->get('cart', []);
+
+        $data['checkout_type'] = session()->get('checkout_type', '');
+
+        if($data['checkout_type'] == 'delivery')
+        {
+            if(!empty($min_amount_for_delivery) && ($total_cart_amount < $min_amount_for_delivery))
+            {
+                return redirect()->back();
+            }
+        }
+
+        $delivery_schedule = checkDeliverySchedule($shop_id);
+
+        if($delivery_schedule == 0)
+        {
+            return redirect()->route('restaurant',$shop_slug)->with('error','We are sorry the venue is no longer accepting orders.');
+        }
+
         // Primary Language Details
         $language_setting = clientLanguageSettings($shop_id);
         $primary_lang_id = isset($language_setting['primary_language']) ? $language_setting['primary_language'] : '';
@@ -1640,10 +1664,6 @@ class ShopController extends Controller
 
         // Current Languge Code
         $data['current_lang_code'] = (session()->has('locale')) ? session()->get('locale') : 'en';
-
-        $data['cart'] = session()->get('cart', []);
-
-        $data['checkout_type'] = session()->get('checkout_type', '');
 
         if($data['checkout_type'] == '')
         {
@@ -1692,6 +1712,16 @@ class ShopController extends Controller
                 'room' => 'required',
             ]);
         }
+        elseif($checkout_type == 'delivery')
+        {
+            $request->validate([
+                'firstname' => 'required',
+                'lastname' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required|max:10|min:10',
+                'address' => 'required',
+            ]);
+        }
 
         // Shop Details
         $data['shop_details'] = Shop::where('shop_slug',$shop_slug)->first();
@@ -1699,8 +1729,17 @@ class ShopController extends Controller
         // Shop ID
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
 
+        $delivery_schedule = checkDeliverySchedule($shop_id);
+
+        if($delivery_schedule == 0)
+        {
+            return redirect()->route('restaurant',$shop_slug)->with('error','We are sorry the venue is no longer accepting orders.');
+        }
+
         // Order Settings
         $order_settings = getOrderSettings($shop_id);
+        $min_amount_for_delivery = (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '';
+        $total_cart_amount = getCartTotal();
 
         if(isset($order_settings['auto_order_approval']) && $order_settings['auto_order_approval'] == 1)
         {
@@ -1791,6 +1830,52 @@ class ShopController extends Controller
                 $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                 $order->save();
             }
+            elseif($checkout_type == 'delivery')
+            {
+
+                if(!empty($min_amount_for_delivery) && ($total_cart_amount < $min_amount_for_delivery))
+                {
+                    return redirect()->route('shop.cart',$shop_slug);
+                }
+
+                $latitude = isset($request->latitude) ? $request->latitude : '';
+                $longitude = isset($request->longitude) ? $request->longitude : '';
+                $address = isset($request->address) ? $request->address : '';
+                $floor = isset($request->floor) ? $request->floor : '';
+                $door_bell = isset($request->door_bell) ? $request->door_bell : '';
+                $instructions = isset($request->instructions) ? $request->instructions : '';
+
+                $delivey_avaialbility = checkDeliveryAvilability($shop_id,$latitude,$longitude);
+
+                if($delivey_avaialbility == 1)
+                {
+                    // New Order
+                    $order = new Order();
+                    $order->shop_id = $shop_id;
+                    $order->ip_address = $user_ip;
+                    $order->firstname = $request->firstname;
+                    $order->lastname = $request->lastname;
+                    $order->email = $request->email;
+                    $order->phone = $request->phone;
+                    $order->address = $address;
+                    $order->latitude = $latitude;
+                    $order->longitude = $longitude;
+                    $order->floor = $floor;
+                    $order->door_bell = $door_bell;
+                    $order->instructions = $instructions;
+                    $order->checkout_type = $checkout_type;
+                    $order->payment_method = $payment_method;
+                    $order->order_status = $order_status;
+                    $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
+                    $order->save();
+                }
+                else
+                {
+                    $validator = Validator::make([], []);
+                    $validator->getMessageBag()->add('address', 'Sorry your address is out of our delivery range.');
+                    return redirect()->back()->withErrors($validator)->withInput();
+                }
+            }
 
             // Insert Order Items
             if($order->id)
@@ -1879,23 +1964,66 @@ class ShopController extends Controller
             session()->forget('cart');
             session()->forget('checkout_type');
             session()->forget('discount_per');
+            session()->forget('cust_lat');
+            session()->forget('cust_long');
+            session()->forget('cust_address');
             session()->save();
 
             return redirect()->route('shop.checkout.success',[$shop_slug,encrypt($order->id)]);
         }
         elseif($payment_method == 'paypal')
         {
+            if($checkout_type == 'delivery')
+            {
+                if(!empty($min_amount_for_delivery) && ($total_cart_amount < $min_amount_for_delivery))
+                {
+                    return redirect()->route('shop.cart',$shop_slug);
+                }
+
+                $latitude = isset($request->latitude) ? $request->latitude : '';
+                $longitude = isset($request->longitude) ? $request->longitude : '';
+                $delivey_avaialbility = checkDeliveryAvilability($shop_id,$latitude,$longitude);
+
+                if($delivey_avaialbility == 0)
+                {
+                    $validator = Validator::make([], []);
+                    $validator->getMessageBag()->add('address', 'Sorry your address is out of our delivery range.');
+                    return redirect()->back()->withErrors($validator)->withInput();
+                }
+
+            }
+
             session()->put('order_details',$request->all());
             session()->save();
             return redirect()->route('paypal.payment',$shop_slug);
         }
         elseif($payment_method == 'every_pay')
         {
+            if($checkout_type == 'delivery')
+            {
+                if(!empty($min_amount_for_delivery) && ($total_cart_amount < $min_amount_for_delivery))
+                {
+                    return redirect()->route('shop.cart',$shop_slug);
+                }
+
+                $latitude = isset($request->latitude) ? $request->latitude : '';
+                $longitude = isset($request->longitude) ? $request->longitude : '';
+                $delivey_avaialbility = checkDeliveryAvilability($shop_id,$latitude,$longitude);
+
+                if($delivey_avaialbility == 0)
+                {
+                    $validator = Validator::make([], []);
+                    $validator->getMessageBag()->add('address', 'Sorry your address is out of our delivery range.');
+                    return redirect()->back()->withErrors($validator)->withInput();
+                }
+            }
+
             session()->put('order_details',$request->all());
             session()->save();
             return redirect()->route('everypay.checkout.view',$shop_slug);
         }
     }
+
 
     // Function for redirect Checkout Success
     public function checkoutSuccess($shop_slug, $orderID)

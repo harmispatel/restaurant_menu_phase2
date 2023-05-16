@@ -112,7 +112,7 @@
                                         <div class="card-body">
                                             <table class="table align-middle table-row-bordered mb-0 fs-6 gy-5 min-w-300px">
                                                 <tbody class="fw-semibold text-gray-600">
-                                                    @if($order->checkout_type == 'takeaway' || $order->checkout_type == 'room_delivery')
+                                                    @if($order->checkout_type == 'takeaway' || $order->checkout_type == 'room_delivery' || $order->checkout_type == 'delivery')
                                                         <tr>
                                                             <td class="text-muted">
                                                                 <div class="client-order-info">
@@ -126,7 +126,7 @@
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    @if($order->checkout_type == 'takeaway')
+                                                    @if($order->checkout_type == 'takeaway' || $order->checkout_type == 'delivery')
                                                         <tr>
                                                             <td class="text-muted">
                                                                 <div class="client-order-info">
@@ -178,6 +178,66 @@
                                                             </td>
                                                         </tr>
                                                     @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            @if($order->checkout_type == 'delivery')
+                                <div class="col-md-12 mt-2 mb-2">
+                                    <div class="card mb-0">
+                                        <div class="card-body">
+                                            <table class="table align-middle table-row-bordered mb-0 fs-6 gy-5 min-w-300px">
+                                                <tbody class="fw-semibold text-gray-600">
+                                                    <tr>
+                                                        <td class="text-muted">
+                                                            <div class="client-order-info">
+                                                                <div class="">
+                                                                    <i class="bi bi-map"></i>&nbsp;Address
+                                                                </div>
+                                                                <div class="fw-bold">
+                                                                    {{ $order->address }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted">
+                                                            <div class="client-order-info">
+                                                                <div class="">
+                                                                    <i class="bi bi-building"></i>&nbsp;Floor
+                                                                </div>
+                                                                <div class="fw-bold">
+                                                                    {{ $order->floor }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted">
+                                                            <div class="client-order-info">
+                                                                <div class="">
+                                                                    <i class="bi bi-building"></i>&nbsp;Door Bell
+                                                                </div>
+                                                                <div class="fw-bold">
+                                                                    {{ $order->door_bell }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted">
+                                                            <div class="client-order-info">
+                                                                <div class="">
+                                                                    <i class="bi bi-card-text"></i>&nbsp;Comment
+                                                                </div>
+                                                                <div class="fw-bold">
+                                                                    {{ $order->instructions }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
