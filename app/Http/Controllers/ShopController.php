@@ -87,7 +87,7 @@ class ShopController extends Controller
             $data['current_lang_code'] = (session()->has('locale')) ? session()->get('locale') : 'en';
 
             // Get all Categories of Shop
-            $data['categories'] = Category::with(['categoryImages'])->where('shop_id',$shop_id)->where('parent_id',$cat_id)->orderBy('order_key')->get();
+            $data['categories'] = Category::with(['categoryImages'])->where('published',1)->where('shop_id',$shop_id)->where('parent_id',$cat_id)->orderBy('order_key')->get();
 
             // Get all Additional Language of Shop
             $data['additional_languages'] = AdditionalLanguage::with(['language'])->where('shop_id',$shop_id)->where('published',1)->get();
@@ -132,7 +132,7 @@ class ShopController extends Controller
         $data['cat_tags'] = CategoryProductTags::join('tags','tags.id','category_product_tags.tag_id')->orderBy('tags.order')->where('category_id',$cat_id)->where('tags.shop_id',$shop_id)->get()->unique('tag_id');
 
         // Get all Categories
-        $data['categories'] = Category::orderBy('order_key')->where('shop_id',$shop_id)->where('parent_id',$cat_parent_id)->where('parent_category',0)->get();
+        $data['categories'] = Category::orderBy('order_key')->where('published',1)->where('shop_id',$shop_id)->where('parent_id',$cat_parent_id)->where('parent_category',0)->get();
 
         // Primary Language Details
         $language_setting = clientLanguageSettings($shop_id);
@@ -275,7 +275,7 @@ class ShopController extends Controller
 
         try
         {
-            $categories = Category::with(['categoryImages'])->where("$name_key",'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->where('parent_id',$current_cat_id)->orderBy('order_key')->get();
+            $categories = Category::with(['categoryImages'])->where("$name_key",'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->where('parent_id',$current_cat_id)->where('published',1)->orderBy('order_key')->get();
 
             $html = '';
 
