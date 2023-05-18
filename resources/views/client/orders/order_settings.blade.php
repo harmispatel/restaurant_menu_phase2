@@ -1,3 +1,8 @@
+@php
+
+
+@endphp
+
 @extends('client.layouts.client-layout')
 
 @section('title', __('Order Settings'))
@@ -28,6 +33,8 @@
                     <div class="card-body">
                         <form method="POST" enctype="multipart/form-data" id="orderSettingsForm">
                             @csrf
+
+                            {{-- Settings --}}
                             <div class="row">
                                 <h3>Settings</h3>
                                 <code>If none of the settings bellow is enabled add-to-cart button will no be visible.</code>
@@ -85,6 +92,8 @@
                                 </div>
                             </div>
                             <hr>
+
+                            {{-- Other Settings --}}
                             <div class="row">
                                 <h3>Other Settings</h3>
                             </div>
@@ -119,6 +128,22 @@
                                 </div>
                             </div>
                             <hr>
+
+                            {{-- Printer Settings --}}
+                            <div class="row">
+                                <h3>Print Settings</h3>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label for="default_printer" class="form-label">Default Printer</label>
+                                    <select name="default_printer" id="default_printer" class="form-select">
+                                        <option value="">not found</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+
+                            {{-- Delivery Settings --}}
                             <div class="row">
                                 <h3>Delivery / Takeaway Scheduler</h3>
                                 <div class="col-md-12 text-end">
@@ -317,8 +342,10 @@
 {{-- Custom Script --}}
 @section('page-js')
 
+    <script src="{{ asset('public/admin/assets/js/jsprintmanager.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsf7LHMQFIeuA_7-bR7u7EXz5CUaD6I2A&callback=initMap&libraries=drawing"></script>
-
 
     <script type="text/javascript">
 
@@ -329,6 +356,7 @@
 
         $(document).ready(function ()
         {
+            // Get Curren Address
             navigator.geolocation.getCurrentPosition(
             function (position)
                 {
@@ -340,6 +368,77 @@
                 }
             );
         });
+
+        //WebSocket settings
+        JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
+        JSPM.JSPrintManager.auto_reconnect = true;
+        JSPM.JSPrintManager.start();
+        JSPM.JSPrintManager.WS.onStatusChanged = function () {
+            if (jspmWSStatus()) {
+                //get client installed printers
+                JSPM.JSPrintManager.getPrinters().then(function (myPrinters) {
+                    var options = '';
+                    for (var i = 0; i < myPrinters.length; i++) {
+                        options += '<option value="'+myPrinters[i]+'">' + myPrinters[i] + '</option>';
+                    }
+                    $('#default_printer').html(options);
+
+                    // Set Default Printer
+                    var def_printer = "{{ (isset($order_settings['default_printer'])) ? $order_settings['default_printer'] : '' }}";
+                    $("#default_printer option[value='"+def_printer+"']").attr("selected", "selected");
+                });
+            }
+        };
+
+        //Check JSPM WebSocket status
+        function jspmWSStatus()
+        {
+            if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Open)
+                return true;
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Closed) {
+                alert('JSPrintManager (JSPM) is not installed or not running! Download JSPM Client App from https://neodynamic.com/downloads/jspm');
+                return false;
+            }
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Blocked) {
+                alert('JSPM has blocked this website!');
+                return false;
+            }
+        }
+
+        // //Do printing...
+        // function print(o)
+        // {
+        //     if (jspmWSStatus())
+        //     {
+        //         html2canvas(document.getElementById('candata'), { scale: 5 }).then(function (canvas)
+        //         {
+        //             //Create a ClientPrintJob
+        //             var cpj = new JSPM.ClientPrintJob();
+
+        //             //Set Printer type (Refer to the help, there many of them!)
+        //             if ($('#useDefaultPrinter').prop('checked')) {
+        //                 cpj.clientPrinter = new JSPM.DefaultPrinter();
+        //             } else {
+        //                 cpj.clientPrinter = new JSPM.InstalledPrinter($('#default_printer').val());
+        //             }
+
+        //             //Set content to print...
+        //             var b64Prefix = "data:image/png;base64,";
+        //             var imgBase64DataUri = canvas.toDataURL("image/png");
+        //             var imgBase64Content = imgBase64DataUri.substring(b64Prefix.length, imgBase64DataUri.length);
+
+        //             var myImageFile = new JSPM.PrintFile(imgBase64Content, JSPM.FileSourceType.Base64, 'invoice.png', 1);
+
+        //             //add file to print job
+        //             cpj.files.push(myImageFile);
+
+        //             //Send print job to printer!
+        //             cpj.sendToClient();
+
+        //         });
+
+        //     }
+        // }
 
         // Function for Add Schedule Section
         function addNewSchedule(divID)
@@ -361,7 +460,7 @@
         }
 
         // Enabled Update Btn
-        $('input').on('change',function(){
+        $('input, #default_printer').on('change',function(){
             $('#update-btn').removeAttr('disabled',true);
         });
 

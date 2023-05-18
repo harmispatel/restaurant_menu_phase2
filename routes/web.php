@@ -285,6 +285,8 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/order-view/{id}',[OrderController::class,'viewOrder'])->name('view.order');
         Route::get('/clear-delivey-range',[OrderController::class,'clearDeliveryRangeSettings'])->name('remove.delivery.range');
         Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
+        Route::post('/get-order-receipt',[OrderController::class,'getOrderReceipt'])->name('order.receipt');
+        Route::get('/jspm',[OrderController::class,'setPrinterLicense'])->name('jspm');
 
         // Payment
         Route::get('/payment-settings',[PaymentController::class,'paymentSettings'])->name('payment.settings');
@@ -292,6 +294,8 @@ Route::group(['prefix' => 'client'], function()
 
     });
 });
+
+Route::get('/jspm',[OrderController::class,'setPrinterLicense'])->name('jspm');
 
 // Get Total with currency
 Route::post('total-with-currency',function(Request $request)

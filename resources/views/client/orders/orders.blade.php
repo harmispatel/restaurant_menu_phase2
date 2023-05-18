@@ -4,6 +4,9 @@
 
     $shop_settings = getClientSettings($shop_id);
 
+    $order_setting = getOrderSettings($shop_id);
+    $default_printer = (isset($order_setting['default_printer']) && !empty($order_setting['default_printer'])) ? $order_setting['default_printer'] : 'Microsoft Print to PDF';
+
     // Shop Currency
     $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 @endphp
@@ -13,6 +16,8 @@
 @section('title', __('Orders'))
 
 @section('content')
+
+    <input type="hidden" name="default_printer" id="default_printer" value="{{ $default_printer }}">
 
     {{-- Page Title --}}
     <div class="pagetitle">
@@ -33,6 +38,8 @@
     <section class="section dashboard">
         <div class="row">
 
+            <div class="col-md-12 mb-3" id="print-data" style="display: none;"></div>
+
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
@@ -41,6 +48,7 @@
                                 <div class="order-btn d-flex align-items-center justify-content-end">
                                     <div class="d-flex align-items-center flex-wrap">Estimated time of arrival <input type="number" name="estimated_time" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}"> Minutes.
                                     </div>
+                                    <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
                                     <a class="btn btn-sm btn-success ms-3" onclick="acceptOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i></a>
                                 </div>
                                 <div class="order-info">
@@ -151,7 +159,92 @@
 
 {{-- Custom Script --}}
 @section('page-js')
+    <script src="{{ asset('public/admin/assets/js/jsprintmanager.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <script type="text/javascript">
+
+        JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
+        JSPM.JSPrintManager.auto_reconnect = true;
+        JSPM.JSPrintManager.start();
+
+        function printReceipt(ordID)
+        {
+            if(jspmWSStatus())
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('order.receipt') }}",
+                    data: {
+                        "_token":"{{ csrf_token() }}",
+                        "order_id" : ordID,
+                    },
+                    dataType: "JSON",
+                    success: function (response)
+                    {
+                        if(response.success == 1)
+                        {
+                            if (jspmWSStatus())
+                            {
+                                $('#print-data').html('');
+                                $('#print-data').append(response.data);
+                                $('#print-data').show();
+
+                                html2canvas(document.getElementById('print-data'), { scale: 5 }).then(function (canvas)
+                                {
+                                    //Create a ClientPrintJob
+                                    var cpj = new JSPM.ClientPrintJob();
+
+                                    //Set Printer type (Refer to the help, there many of them!)
+                                    // if ($('#useDefaultPrinter').prop('checked')) {
+                                    //     cpj.clientPrinter = new JSPM.DefaultPrinter();
+                                    // }
+                                    // else
+                                    // {
+                                        cpj.clientPrinter = new JSPM.InstalledPrinter($('#default_printer').val());
+                                    // }
+
+                                    //Set content to print...
+                                    var b64Prefix = "data:image/png;base64,";
+                                    var imgBase64DataUri = canvas.toDataURL("image/png");
+                                    var imgBase64Content = imgBase64DataUri.substring(b64Prefix.length, imgBase64DataUri.length);
+
+                                    var myImageFile = new JSPM.PrintFile(imgBase64Content, JSPM.FileSourceType.Base64, 'invoice.png', 1);
+
+                                    //add file to print job
+                                    cpj.files.push(myImageFile);
+
+                                    // Send print job to printer!
+                                    cpj.sendToClient();
+                                });
+                                $('#print-data').hide();
+                            }
+                        }
+                        else
+                        {
+                            toastr.error(response.message);
+                        }
+                    }
+                });
+            }
+        }
+
+        //Check JSPM WebSocket status
+        function jspmWSStatus()
+        {
+            if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Open)
+                return true;
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Closed) {
+                alert('JSPrintManager (JSPM) is not installed or not running! Download JSPM Client App from https://neodynamic.com/downloads/jspm');
+                return false;
+            }
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Blocked) {
+                alert('JSPM has blocked this website!');
+                return false;
+            }
+        }
+
 
         toastr.options = {
             "closeButton": true,

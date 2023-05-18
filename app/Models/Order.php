@@ -15,4 +15,11 @@ class Order extends Model
     {
         return $this->hasMany(OrderItems::class,'order_id','id');
     }
+
+
+    // Relation with Shop
+    public function shop()
+    {
+        return $this->hasOne(Shop::class,'id','shop_id');
+    }
 }

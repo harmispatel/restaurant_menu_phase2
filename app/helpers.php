@@ -96,6 +96,7 @@
             'discount_percentage',
             'order_arrival_minutes',
             'schedule_array',
+            'default_printer',
         ]);
 
         $settings = [];
