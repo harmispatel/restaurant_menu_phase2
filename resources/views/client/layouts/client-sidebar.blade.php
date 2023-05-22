@@ -169,7 +169,7 @@
             <ul id="orders-nav" class="nav-content sidebar-ul collapse {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="{{ route('client.orders') }}" class="{{ (($routeName == 'client.orders')) ? 'active-link' : '' }}">
-                        <span>{{ __('Orders') }}</span>
+                        <span>{{ __('Pending Orders') }}</span>
                     </a>
                 </li>
                 <li>

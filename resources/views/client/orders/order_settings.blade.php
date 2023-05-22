@@ -1,8 +1,3 @@
-@php
-
-
-@endphp
-
 @extends('client.layouts.client-layout')
 
 @section('title', __('Order Settings'))
@@ -134,11 +129,37 @@
                                 <h3>Print Settings</h3>
                             </div>
                             <div class="row mt-2">
+                                <div class="col-md-6 mb-3">
+                                    <label for="printer_tray" class="form-label">Printer Trays</label>
+                                    <select name="printer_tray" id="printer_tray" class="form-select">
+                                        <option value="">not found</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="printer_paper" class="form-label">Printer Papers</label>
+                                    <select name="printer_paper" id="printer_paper" class="form-select">
+                                        <option value="">not found</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-6">
                                     <label for="default_printer" class="form-label">Default Printer</label>
                                     <select name="default_printer" id="default_printer" class="form-select">
                                         <option value="">not found</option>
                                     </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="receipt_intro" class="form-label">Receipt Intro</label>
+                                    <input type="text" name="receipt_intro" id="receipt_intro" class="form-control" value="{{ (isset($order_settings['receipt_intro'])) ? $order_settings['receipt_intro'] : '' }}">
+                                </div>
+                                <div class="col-md-12 mt-4">
+                                    <label class="switch me-2">
+                                        <input type="checkbox" value="1" name="auto_print" id="auto_print" class="ord-setting" {{ (isset($order_settings['auto_print']) && $order_settings['auto_print'] == 1) ? 'checked' : '' }}>
+                                        <span class="slider round">
+                                            <i class="fa-solid fa-circle-check check_icon"></i>
+                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                        </span>
+                                    </label>
+                                    <label for="auto_print" class="form-label">Auto Print</label>
                                 </div>
                             </div>
                             <hr>
@@ -353,6 +374,8 @@
         var drawingManager;
         var selectedShape;
         const deliveryAreas = @json($deliveryAreas);
+        var clientPrinters = null;
+        var _this = this;
 
         $(document).ready(function ()
         {
@@ -376,19 +399,52 @@
         JSPM.JSPrintManager.WS.onStatusChanged = function () {
             if (jspmWSStatus()) {
                 //get client installed printers
-                JSPM.JSPrintManager.getPrinters().then(function (myPrinters) {
+                JSPM.JSPrintManager.getPrintersInfo().then(function (myPrinters) {
+                    clientPrinters = myPrinters;
                     var options = '';
-                    for (var i = 0; i < myPrinters.length; i++) {
-                        options += '<option value="'+myPrinters[i]+'">' + myPrinters[i] + '</option>';
+                    for (var i = 0; i < clientPrinters.length; i++) {
+                        options += '<option value="'+clientPrinters[i].name+'">' + clientPrinters[i].name + '</option>';
                     }
                     $('#default_printer').html(options);
 
                     // Set Default Printer
                     var def_printer = "{{ (isset($order_settings['default_printer'])) ? $order_settings['default_printer'] : '' }}";
                     $("#default_printer option[value='"+def_printer+"']").attr("selected", "selected");
+
+                    _this.showSelectedPrinterInfo();
                 });
             }
         };
+
+
+        function showSelectedPrinterInfo()
+        {
+            // get selected printer index
+            var idx = $("#default_printer")[0].selectedIndex;
+
+            // get supported trays
+            var options = '';
+            for (var i = 0; i < clientPrinters[idx].trays.length; i++) {
+                options += '<option value="'+clientPrinters[idx].trays[i]+'">' + clientPrinters[idx].trays[i] + '</option>';
+            }
+            $('#printer_tray').html(options);
+
+            // get supported papers
+            options = '';
+            for (var i = 0; i < clientPrinters[idx].papers.length; i++) {
+                options += '<option value="'+clientPrinters[idx].papers[i]+'">' + clientPrinters[idx].papers[i] + '</option>';
+            }
+            $('#printer_paper').html(options);
+
+            // Set Default Paper
+            var def_paper = "{{ (isset($order_settings['printer_paper'])) ? $order_settings['printer_paper'] : '' }}";
+            $("#printer_paper option[value='"+def_paper+"']").attr("selected", "selected");
+
+            // Set Default Tray
+            var def_tray = "{{ (isset($order_settings['printer_tray'])) ? $order_settings['printer_tray'] : '' }}";
+            $("#printer_tray option[value='"+def_tray+"']").attr("selected", "selected");
+        }
+
 
         //Check JSPM WebSocket status
         function jspmWSStatus()
@@ -405,40 +461,6 @@
             }
         }
 
-        // //Do printing...
-        // function print(o)
-        // {
-        //     if (jspmWSStatus())
-        //     {
-        //         html2canvas(document.getElementById('candata'), { scale: 5 }).then(function (canvas)
-        //         {
-        //             //Create a ClientPrintJob
-        //             var cpj = new JSPM.ClientPrintJob();
-
-        //             //Set Printer type (Refer to the help, there many of them!)
-        //             if ($('#useDefaultPrinter').prop('checked')) {
-        //                 cpj.clientPrinter = new JSPM.DefaultPrinter();
-        //             } else {
-        //                 cpj.clientPrinter = new JSPM.InstalledPrinter($('#default_printer').val());
-        //             }
-
-        //             //Set content to print...
-        //             var b64Prefix = "data:image/png;base64,";
-        //             var imgBase64DataUri = canvas.toDataURL("image/png");
-        //             var imgBase64Content = imgBase64DataUri.substring(b64Prefix.length, imgBase64DataUri.length);
-
-        //             var myImageFile = new JSPM.PrintFile(imgBase64Content, JSPM.FileSourceType.Base64, 'invoice.png', 1);
-
-        //             //add file to print job
-        //             cpj.files.push(myImageFile);
-
-        //             //Send print job to printer!
-        //             cpj.sendToClient();
-
-        //         });
-
-        //     }
-        // }
 
         // Function for Add Schedule Section
         function addNewSchedule(divID)
@@ -460,7 +482,7 @@
         }
 
         // Enabled Update Btn
-        $('input, #default_printer').on('change',function(){
+        $('input, #default_printer, #printer_paper, #printer_tray').on('change',function(){
             $('#update-btn').removeAttr('disabled',true);
         });
 
@@ -546,8 +568,13 @@
 
             // Create the map object
             map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 13,
+                zoom: 15,
                 center: center
+            });
+
+            new google.maps.Marker({
+                position: center,
+                map,
             });
 
             // console.log(deliveryAreas);

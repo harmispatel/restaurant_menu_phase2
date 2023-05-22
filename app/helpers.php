@@ -97,6 +97,10 @@
             'order_arrival_minutes',
             'schedule_array',
             'default_printer',
+            'receipt_intro',
+            'auto_print',
+            'printer_paper',
+            'printer_tray',
         ]);
 
         $settings = [];

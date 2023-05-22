@@ -9,6 +9,18 @@
 
     $shop_settings = getClientSettings($shop_id);
 
+    // Order Settings
+    $order_setting = getOrderSettings($shop_id);
+
+    // Default Printer
+    $default_printer = (isset($order_setting['default_printer']) && !empty($order_setting['default_printer'])) ? $order_setting['default_printer'] : 'Microsoft Print to PDF';
+    // Printer Paper
+    $printer_paper = (isset($order_setting['printer_paper']) && !empty($order_setting['printer_paper'])) ? $order_setting['printer_paper'] : 'A4';
+    // Printer Tray
+    $printer_tray = (isset($order_setting['printer_tray']) && !empty($order_setting['printer_tray'])) ? $order_setting['printer_tray'] : '';
+    // Auto Print
+    $auto_print = (isset($order_setting['auto_print']) && !empty($order_setting['auto_print'])) ? $order_setting['auto_print'] : 0;
+
     // Shop Currency
     $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 @endphp
@@ -18,6 +30,10 @@
 @section('title', __('Order Details'))
 
 @section('content')
+
+    <input type="hidden" name="default_printer" id="default_printer" value="{{ $default_printer }}">
+    <input type="hidden" name="printer_paper" id="printer_paper" value="{{ $printer_paper }}">
+    <input type="hidden" name="printer_tray" id="printer_tray" value="{{ $printer_tray }}">
 
     {{-- Page Title --}}
     <div class="pagetitle">
@@ -39,12 +55,15 @@
     <section class="section dashboard">
         <div class="row">
 
+            <div class="col-md-12 mb-3" id="print-data" style="display: none;"></div>
+
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-12 mb-2">
                                 <h3>Order : #{{ $order->id }}</h3>
+                                <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="card mb-0">
@@ -325,6 +344,10 @@
 
 {{-- Custom Script --}}
 @section('page-js')
+    <script src="{{ asset('public/admin/assets/js/jsprintmanager.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <script type="text/javascript">
 
         toastr.options = {
@@ -341,6 +364,83 @@
         @if (Session::has('error'))
             toastr.error('{{ Session::get('error') }}')
         @endif
+
+        JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
+        JSPM.JSPrintManager.auto_reconnect = true;
+        JSPM.JSPrintManager.start();
+
+        function printReceipt(ordID)
+        {
+            if(jspmWSStatus())
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('order.receipt') }}",
+                    data: {
+                        "_token":"{{ csrf_token() }}",
+                        "order_id" : ordID,
+                    },
+                    dataType: "JSON",
+                    success: function (response)
+                    {
+                        if(response.success == 1)
+                        {
+                            if (jspmWSStatus())
+                            {
+                                $('#print-data').html('');
+                                $('#print-data').append(response.data);
+                                $('#print-data').show();
+
+                                html2canvas(document.getElementById('print-data'), { scale: 5 }).then(function (canvas)
+                                {
+                                    //Create a ClientPrintJob
+                                    var cpj = new JSPM.ClientPrintJob();
+
+                                    //Set Printer info
+                                    var myPrinter = new JSPM.InstalledPrinter($('#default_printer').val());
+                                    myPrinter.paperName = $('#printer_paper').val();
+                                    myPrinter.trayName = $('#printer_tray').val();
+                                    cpj.clientPrinter = myPrinter;
+
+                                    //Set content to print...
+                                    var b64Prefix = "data:image/png;base64,";
+                                    var imgBase64DataUri = canvas.toDataURL("image/png");
+                                    var imgBase64Content = imgBase64DataUri.substring(b64Prefix.length, imgBase64DataUri.length);
+
+                                    var myImageFile = new JSPM.PrintFile(imgBase64Content, JSPM.FileSourceType.Base64, 'invoice.png', 1);
+
+                                    //add file to print job
+                                    cpj.files.push(myImageFile);
+
+                                    // Send print job to printer!
+                                    cpj.sendToClient();
+                                });
+                                $('#print-data').hide();
+                            }
+                        }
+                        else
+                        {
+                            toastr.error(response.message);
+                        }
+                    }
+                });
+            }
+        }
+
+        //Check JSPM WebSocket status
+        function jspmWSStatus()
+        {
+            if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Open)
+                return true;
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Closed) {
+                alert('JSPrintManager (JSPM) is not installed or not running! Download JSPM Client App from https://neodynamic.com/downloads/jspm');
+                return false;
+            }
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Blocked) {
+                alert('JSPM has blocked this website!');
+                return false;
+            }
+        }
 
     </script>
 @endsection

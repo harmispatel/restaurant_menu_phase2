@@ -56,7 +56,11 @@ class OrderController extends Controller
         $all_data['discount_percentage'] = (isset($request->discount_percentage)) ? $request->discount_percentage : '';
         $all_data['order_arrival_minutes'] = (isset($request->order_arrival_minutes)) ? $request->order_arrival_minutes : 30;
         $all_data['schedule_array'] = $request->schedule_array;
-        $all_data['default_printer'] = $request->default_printer;
+        $all_data['default_printer'] = (isset($request->default_printer)) ? $request->default_printer : '';
+        $all_data['receipt_intro'] = $request->receipt_intro;
+        $all_data['auto_print'] = (isset($request->auto_print)) ? $request->auto_print : 0;
+        $all_data['printer_paper'] = (isset($request->printer_paper)) ? $request->printer_paper : '';
+        $all_data['printer_tray'] = (isset($request->printer_tray)) ? $request->printer_tray : '';
 
         try
         {
@@ -256,6 +260,9 @@ class OrderController extends Controller
 
             $shop_settings = getClientSettings($shop_id);
 
+            $order_setting = getOrderSettings($shop_id);
+            $receipt_intro = (isset($order_setting['receipt_intro']) && !empty($order_setting['receipt_intro'])) ? $order_setting['receipt_intro'] : 'INVOICE';
+
             // Shop Currency
             $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 
@@ -280,7 +287,7 @@ class OrderController extends Controller
                         $html .= '<div class="card-body">';
                             $html .= '<div class="row mb-3">';
                                 $html .= '<div class="col-md-12 text-center">';
-                                    $html .= '<h3>INVOICE - #'.$order_id.'</h3>';
+                                    $html .= '<h3>'.$receipt_intro.' - #'.$order_id.'</h3>';
                                 $html .= '</div>';
                                 $html .= '<div class="col-md-5">';
                                     $html .= '<ul class="p-0 m-0 list-unstyled">';
