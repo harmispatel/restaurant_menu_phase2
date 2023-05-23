@@ -101,6 +101,8 @@
             'auto_print',
             'printer_paper',
             'printer_tray',
+            'play_sound',
+            'notification_sound',
         ]);
 
         $settings = [];

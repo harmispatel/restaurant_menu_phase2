@@ -56,6 +56,8 @@
                                                     <span class="badge bg-success">Completed</span>
                                                 @elseif ($order->order_status == 'pending')
                                                     <span class="badge bg-warning">Pending</span>
+                                                @elseif ($order->order_status == 'accepted')
+                                                    <span class="badge bg-primary">Accepted</span>
                                                 @endif
                                             </td>
                                             <td>

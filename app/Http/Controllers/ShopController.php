@@ -1459,7 +1459,7 @@ class ShopController extends Controller
     {
         $item_id = $request->item_id;
         $quantity = $request->quantity;
-        $old_quantity = $request->old_quantity;
+        // $old_quantity = $request->old_quantity;
         $currency = $request->currency;
 
         try
@@ -1488,6 +1488,7 @@ class ShopController extends Controller
 
                         if(isset($cart[$item_id]))
                         {
+                            $old_quantity = $cart[$item_id]['quantity'];
                             $amount = $cart[$item_id]['total_amount'] / $old_quantity;
                             $total_amount = $amount * $quantity;
                             $total_amount_text = Currency::currency($currency)->format($total_amount);
@@ -1743,11 +1744,13 @@ class ShopController extends Controller
 
         if(isset($order_settings['auto_order_approval']) && $order_settings['auto_order_approval'] == 1)
         {
-            $order_status = 'completed';
+            $order_status = 'accepted';
+            $is_new = 0;
         }
         else
         {
             $order_status = 'pending';
+            $is_new = 1;
         }
 
         $shop_settings = getClientSettings($shop_id);
@@ -1798,6 +1801,7 @@ class ShopController extends Controller
                 $order->checkout_type = $checkout_type;
                 $order->payment_method = $payment_method;
                 $order->order_status = $order_status;
+                $order->is_new = $is_new;
                 $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                 $order->save();
             }
@@ -1811,6 +1815,7 @@ class ShopController extends Controller
                 $order->payment_method = $payment_method;
                 $order->order_status = $order_status;
                 $order->table = $request->table;
+                $order->is_new = $is_new;
                 $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                 $order->save();
             }
@@ -1825,6 +1830,7 @@ class ShopController extends Controller
                 $order->checkout_type = $checkout_type;
                 $order->payment_method = $payment_method;
                 $order->order_status = $order_status;
+                $order->is_new = $is_new;
                 $order->room = $request->room;
                 $order->delivery_time = (isset($request->delivery_time)) ? $request->delivery_time : '';
                 $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
@@ -1866,6 +1872,7 @@ class ShopController extends Controller
                     $order->checkout_type = $checkout_type;
                     $order->payment_method = $payment_method;
                     $order->order_status = $order_status;
+                    $order->is_new = $is_new;
                     $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                     $order->save();
                 }

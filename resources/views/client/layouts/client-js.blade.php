@@ -37,7 +37,88 @@
 {{-- Ckeditor --}}
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/super-build/ckeditor.js"></script>
 
+<script src="https://howlerjs.com/assets/howler.js/dist/howler.min.js"></script>
+
 <script type="text/javascript">
+
+    $(document).ready(function ()
+    {
+        OrderNotification();
+    });
+
+    setInterval(() => {
+        OrderNotification();
+    }, 10000);
+
+    function OrderNotification()
+    {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('order.notification') }}",
+            data: {
+                "_token" : "{{ csrf_token() }}",
+            },
+            dataType: "JSON",
+            success: function (response)
+            {
+                if(response.success == 1)
+                {
+                    if(response.count > 0)
+                    {
+                        $('.noti-message').html('');
+                        $('.noti-message').append(response.data);
+                        $('.noti-count').html('');
+                        $('.noti-count').append(response.count);
+
+                        var play_sound = $('#play_sound').val();
+                        var notification_sound = $('#notification_sound').val();
+
+                        if(play_sound == 1)
+                        {
+                            var sound = new Howl({
+                                src: [notification_sound],
+                                autoplay : true,
+                            });
+                            $('#myHiddenButton').trigger("click");
+                        }
+                    }
+                    else
+                    {
+                        $('.noti-message').html('');
+                        $('.noti-message').append(response.data);
+                        $('.noti-count').html('');
+                        $('.noti-count').append(response.count);
+                    }
+                }
+            }
+        });
+    }
+
+    // sound.play();
+
+    // var audioContext;
+
+    // // Function to create and start the AudioContext
+    // function createAudioContext() {
+    // // Check if the AudioContext is already created
+    // if (!audioContext) {
+    //     // Create the AudioContext
+    //     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // }
+
+    // // Start the AudioContext
+    // audioContext.resume().then(() => {
+    //     console.log('AudioContext is now active');
+    //     // You can now use the AudioContext for audio playback
+    // });
+    // }
+
+    // $(document).ready(function () {
+    //     // document.addEventListener('click', function() {
+    //         // Call the function to create and start the AudioContext
+    //         createAudioContext();
+    //     // });
+    // });
 
     function previewMyShop(shopSlug)
     {

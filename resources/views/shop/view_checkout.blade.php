@@ -111,7 +111,7 @@
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
                                         @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>EveryPay Credit Card</option>
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit Card - Debit Card</option>
                                         @endif
                                     </select>
                                 </div>
@@ -135,7 +135,7 @@
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
                                         @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>EveryPay Credit Card</option>
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit Card - Debit Card</option>
                                         @endif
                                     </select>
                                 </div>
@@ -182,7 +182,7 @@
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
                                         @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>EveryPay Credit Card</option>
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit Card - Debit Card</option>
                                         @endif
                                     </select>
                                 </div>
@@ -259,7 +259,7 @@
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
                                         @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>EveryPay Credit Card</option>
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit Card - Debit Card</option>
                                         @endif
                                     </select>
                                 </div>

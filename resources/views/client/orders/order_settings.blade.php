@@ -43,7 +43,7 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="delivery" class="form-label">Enabled Delivery</label>
+                                    <label for="delivery" class="form-label">Delivery</label>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label class="switch me-2">
@@ -53,7 +53,7 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="takeaway" class="form-label">Enabled Takeaway</label>
+                                    <label for="takeaway" class="form-label">Takeaway</label>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label class="switch me-2">
@@ -63,7 +63,7 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="room_delivery" class="form-label">Enabled Room Delivery</label>
+                                    <label for="room_delivery" class="form-label">Room Delivery</label>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label class="switch me-2">
@@ -73,7 +73,7 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="table_service" class="form-label">Enabled Table Service</label>
+                                    <label for="table_service" class="form-label">Table Service</label>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label class="switch me-2">
@@ -120,6 +120,36 @@
                                 <div class="col-md-6 mt-3">
                                     <label for="order_arrival_minutes" class="form-label">Default estimated minutes until order arrival</label>
                                     <input type="number" name="order_arrival_minutes" id="order_arrival_minutes" class="form-control ord-setting" value="{{ (isset($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '' }}">
+                                </div>
+                            </div>
+                            <hr>
+
+                            {{-- Notifaction Settings --}}
+                            <div class="row">
+                                <h3>Notification Settings</h3>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="switch me-2">
+                                        <input type="checkbox" value="1" name="play_sound" id="play_sound" class="ord-setting" {{ (isset($order_settings['play_sound']) && $order_settings['play_sound'] == 1) ? 'checked' : '' }}>
+                                        <span class="slider round">
+                                            <i class="fa-solid fa-circle-check check_icon"></i>
+                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                        </span>
+                                    </label>
+                                    <label for="play_sound" class="form-label">Play Sound</label>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-6 mt-2">
+                                    <label for="notification_sound" class="form-label">Notification Sound</label>
+                                    <select name="notification_sound" id="notification_sound" class="form-select">
+                                        <option value="buzzer-01.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-01.mp3') ? 'selected' : '' }}>Buzzer 1</option>
+                                        <option value="buzzer-02.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-02.mp3') ? 'selected' : '' }}>Buzzer 2</option>
+                                        <option value="buzzer-03.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-03.mp3') ? 'selected' : '' }}>Buzzer 3</option>
+                                        <option value="buzzer-04.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-04.mp3') ? 'selected' : '' }}>Buzzer 4</option>
+                                        <option value="buzzer-05.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-05.mp3') ? 'selected' : '' }}>Buzzer 5</option>
+                                    </select>
                                 </div>
                             </div>
                             <hr>
@@ -329,6 +359,8 @@
                                 </div>
                             @endif
                             <hr>
+
+                            {{-- Delivery Range Settings --}}
                             <div class="row">
                                 <div class="col-md-6">
                                     <h3>Delivery Range Settings</h3>
@@ -482,7 +514,7 @@
         }
 
         // Enabled Update Btn
-        $('input, #default_printer, #printer_paper, #printer_tray').on('change',function(){
+        $('input, #default_printer, #printer_paper, #printer_tray, #notification_sound').on('change',function(){
             $('#update-btn').removeAttr('disabled',true);
         });
 

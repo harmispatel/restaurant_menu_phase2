@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->integer('shop_id');
             $table->string('ip_address',50);
+            $table->tinyInteger('is_new')->default(0);
             $table->string('firstname',30)->nullable();
             $table->string('lastname',30)->nullable();
             $table->string('email')->nullable();

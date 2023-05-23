@@ -282,10 +282,13 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/orders-history',[OrderController::class,'ordersHistory'])->name('client.orders.history');
         Route::post('/orders-change-estimate',[OrderController::class,'changeOrderEstimate'])->name('change.order.estimate');
         Route::post('/accept-order',[OrderController::class,'acceptOrder'])->name('accept.order');
+        Route::post('/finalized-order',[OrderController::class,'finalizedOrder'])->name('finalized.order');
         Route::get('/order-view/{id}',[OrderController::class,'viewOrder'])->name('view.order');
         Route::get('/clear-delivey-range',[OrderController::class,'clearDeliveryRangeSettings'])->name('remove.delivery.range');
         Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
         Route::post('/get-order-receipt',[OrderController::class,'getOrderReceipt'])->name('order.receipt');
+        Route::post('/order-notification',[OrderController::class,'orderNotification'])->name('order.notification');
+        Route::get('/new-orders',[OrderController::class,'getNewOrders'])->name('new.orders');
         Route::get('/jspm',[OrderController::class,'setPrinterLicense'])->name('jspm');
 
         // Payment

@@ -29,6 +29,7 @@
     <input type="hidden" name="default_printer" id="default_printer" value="{{ $default_printer }}">
     <input type="hidden" name="printer_paper" id="printer_paper" value="{{ $printer_paper }}">
     <input type="hidden" name="printer_tray" id="printer_tray" value="{{ $printer_tray }}">
+    <input type="hidden" name="auto_print" id="auto_print" value="{{ $auto_print }}">
 
     {{-- Page Title --}}
     <div class="pagetitle">
@@ -53,16 +54,21 @@
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body" id="order">
                         @forelse ($orders as $order)
                             <div class="order">
                                 <div class="order-btn d-flex align-items-center justify-content-end">
-                                    <div class="d-flex align-items-center flex-wrap">Estimated time of arrival <input type="number" name="estimated_time" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}"> Minutes.
+                                    <div class="d-flex align-items-center flex-wrap">Estimated time of arrival <input type="number" name="estimated_time" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}" {{ ($order->order_status == 'accepted') ? 'disabled' : '' }}> Minutes.
                                     </div>
                                     @if($auto_print == 0)
                                         <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
                                     @endif
-                                    <a class="btn btn-sm btn-success ms-3" onclick="acceptOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i></a>
+
+                                    @if($order->order_status == 'pending')
+                                        <a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> Accept</a>
+                                    @elseif($order->order_status == 'accepted')
+                                        <a class="btn btn-sm btn-success ms-3" onclick="finalizedOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Complete"></i> Finalize</a>
+                                    @endif
                                 </div>
                                 <div class="order-info">
                                     <ul>
@@ -317,11 +323,24 @@
                 {
                     if(response.success == 1)
                     {
-                        printReceipt(ordID);
+                        var auto_print = $('#auto_print').val();
+
                         toastr.success(response.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 2500);
+
+                        if(auto_print == 1)
+                        {
+                            printReceipt(ordID);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2500);
+                        }
+                        else
+                        {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        }
+
                     }
                     else
                     {
@@ -329,6 +348,62 @@
                         setTimeout(() => {
                             location.reload();
                         }, 1300);
+                    }
+                }
+            });
+        }
+
+
+        // Function for Finalized Order
+        function finalizedOrder(ordID)
+        {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('finalized.order') }}",
+                data: {
+                    "_token":"{{ csrf_token() }}",
+                    "order_id":ordID,
+                },
+                dataType: "JSON",
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+                    }
+                }
+            });
+        }
+
+
+        setInterval(() =>
+        {
+            getNewOrders();
+        }, 5000);
+
+
+        function getNewOrders(){
+            $.ajax({
+                type: "GET",
+                url: "{{ route('new.orders') }}",
+                dataType: "JSON",
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#order').html('');
+                        $('#order').append(response.data);
                     }
                 }
             });

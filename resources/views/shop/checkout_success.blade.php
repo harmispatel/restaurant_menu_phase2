@@ -85,7 +85,7 @@
             var order_id = $('#order_id').val();
             var estimated_time = $('#estimated_time').val();
 
-            if(order_status == 'completed')
+            if(order_status == 'accepted')
             {
                 $('.pending-div').hide();
                 $('.success-div p').html('Your order has been accepted and will be at your location in '+estimated_time+' minutes.');
@@ -118,7 +118,7 @@
                         success: function (response) {
                             if(response.success == 1)
                             {
-                                if(response.status == 'completed')
+                                if(response.status == 'accepted')
                                 {
                                     location.reload();
                                 }

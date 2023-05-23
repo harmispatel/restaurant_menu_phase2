@@ -240,11 +240,13 @@ class PaypalController extends Controller
 
         if(isset($order_settings['auto_order_approval']) && $order_settings['auto_order_approval'] == 1)
         {
-            $order_status = 'completed';
+            $order_status = 'accepted';
+            $is_new = 0;
         }
         else
         {
             $order_status = 'pending';
+            $is_new = 1;
         }
 
         // Keys
@@ -304,6 +306,7 @@ class PaypalController extends Controller
                 $order->checkout_type = $checkout_type;
                 $order->payment_method = $payment_method;
                 $order->order_status = $order_status;
+                $order->is_new = $is_new;
                 $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                 $order->save();
             }
@@ -316,6 +319,7 @@ class PaypalController extends Controller
                 $order->checkout_type = $checkout_type;
                 $order->payment_method = $payment_method;
                 $order->order_status = $order_status;
+                $order->is_new = $is_new;
                 $order->table = $order_details['table'];
                 $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                 $order->save();
@@ -331,6 +335,7 @@ class PaypalController extends Controller
                 $order->checkout_type = $checkout_type;
                 $order->payment_method = $payment_method;
                 $order->order_status = $order_status;
+                $order->is_new = $is_new;
                 $order->room = $order_details['room'];
                 $order->delivery_time = (isset($order_details['delivery_time'])) ? $order_details['delivery_time'] : '';
                 $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
@@ -353,6 +358,7 @@ class PaypalController extends Controller
                 $order->door_bell = $order_details['door_bell'];
                 $order->instructions = $order_details['instructions'];
                 $order->checkout_type = $checkout_type;
+                $order->is_new = $is_new;
                 $order->payment_method = $payment_method;
                 $order->order_status = $order_status;
                 $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';

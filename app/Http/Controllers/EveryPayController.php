@@ -60,6 +60,11 @@ class EveryPayController extends Controller
     // Function for Pay in EveryPay
     public function payWithEveryPay($shop_slug,Request $request)
     {
+        // Shop Details
+        $shop_details = Shop::where('shop_slug',$shop_slug)->first();
+        // Shop ID
+        $shop_id = isset($shop_details->id) ? $shop_details->id : '';
+
         $discount_per = session()->get('discount_per');
         $card_number = str_replace(' ','',$request->card_number);
         $card_holder = $request->card_holder;
@@ -74,6 +79,20 @@ class EveryPayController extends Controller
 
         $evrypay = Everypay::setApiKey($secret_key);
         $evrypay = Everypay::$isTest = $test_mode;
+
+        // Order Settings
+        $order_settings = getOrderSettings($shop_id);
+
+        if(isset($order_settings['auto_order_approval']) && $order_settings['auto_order_approval'] == 1)
+        {
+            $order_status = 'accepted';
+            $is_new = 0;
+        }
+        else
+        {
+            $order_status = 'pending';
+            $is_new = 1;
+        }
 
         $params = array(
             'card_number'       => $card_number,
@@ -144,7 +163,8 @@ class EveryPayController extends Controller
                     $order->phone =  $order_details['phone'];
                     $order->checkout_type = $checkout_type;
                     $order->payment_method = $payment_method;
-                    $order->order_status = 'pending';
+                    $order->order_status = $order_status;
+                    $order->is_new = $is_new;
                     $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                     $order->save();
                 }
@@ -156,7 +176,8 @@ class EveryPayController extends Controller
                     $order->ip_address = $user_ip;
                     $order->checkout_type = $checkout_type;
                     $order->payment_method = $payment_method;
-                    $order->order_status = 'pending';
+                    $order->order_status = $order_status;
+                    $order->is_new = $is_new;
                     $order->table = $order_details['table'];
                     $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                     $order->save();
@@ -171,7 +192,8 @@ class EveryPayController extends Controller
                     $order->lastname = $order_details['lastname'];
                     $order->checkout_type = $checkout_type;
                     $order->payment_method = $payment_method;
-                    $order->order_status = 'pending';
+                    $order->order_status = $order_status;
+                    $order->is_new = $is_new;
                     $order->room = $order_details['room'];
                     $order->delivery_time = (isset($order_details['delivery_time'])) ? $order_details['delivery_time'] : '';
                     $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
@@ -194,8 +216,9 @@ class EveryPayController extends Controller
                     $order->door_bell = $order_details['door_bell'];
                     $order->instructions = $order_details['instructions'];
                     $order->checkout_type = $checkout_type;
+                    $order->is_new = $is_new;
                     $order->payment_method = $payment_method;
-                    $order->order_status = 'pending';
+                    $order->order_status = $order_status;
                     $order->estimated_time = (isset($order_settings['order_arrival_minutes']) && !empty($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '30';
                     $order->save();
                 }
