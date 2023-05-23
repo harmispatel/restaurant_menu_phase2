@@ -21,6 +21,9 @@
     // Shop Currency
     $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 
+    // Delivery Message
+    $delivery_message = (isset($shop_settings['delivery_message']) && !empty($shop_settings['delivery_message'])) ? $shop_settings['delivery_message'] : 'Sorry your address is out of our delivery range.';
+
     // Name Key
     $name_key = $current_lang_code."_name";
 
@@ -52,6 +55,19 @@
 @section('title', 'Checkout')
 
 @section('content')
+
+    <div class="modal fade" id="deliveyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deliveyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {!! $delivery_message !!}
+                </div>
+            </div>
+        </div>
+    </div>
 
     <input type="hidden" name="def_currency" id="def_currency" value="{{ $currency }}">
 
@@ -564,12 +580,18 @@
                                 "latitude" : place.geometry['location'].lat(),
                                 "longitude" : place.geometry['location'].lng(),
                                 "address" : $('#address').val(),
+                                "shop_id" : "{{ $shop_details['id'] }}",
                             },
                             dataType: "JSON",
                             success: function (response)
                             {
                                 if(response.success == 1)
                                 {
+                                    if(response.available == 0)
+                                    {
+                                        $('#deliveyModal').modal('show');
+                                    }
+
                                     console.log(response.message);
                                 }
                                 else
@@ -578,6 +600,7 @@
                                 }
                             }
                         });
+
                     }
                 });
             }

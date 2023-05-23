@@ -66,6 +66,7 @@
             'map_url',
             'website_url',
             'shop_active_theme',
+            'delivery_message',
         ]);
 
         $settings = [];

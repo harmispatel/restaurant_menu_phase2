@@ -433,6 +433,7 @@ class OrderController extends Controller
         $lat = $request->latitude;
         $lng = $request->longitude;
         $address = $request->address;
+        $shop_id = $request->shop_id;
 
         try
         {
@@ -441,9 +442,12 @@ class OrderController extends Controller
             session()->put('cust_address',$address);
             session()->save();
 
+            $delivey_avaialbility = checkDeliveryAvilability($shop_id,$lat,$lng);
+
             return response()->json([
                 'success' => 1,
                 'message' => 'Address has been set successfully...',
+                'available' => $delivey_avaialbility,
             ]);
         }
         catch (\Throwable $th)
