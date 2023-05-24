@@ -311,8 +311,8 @@
                                     @endif
                                 </div>
                             </div>
-                              {{-- CopyRight Text --}}
-                              <div class="row mb-3">
+                            {{-- CopyRight Text --}}
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <b>{{ __('Contact us subject')}}</b>
                                 </div>
@@ -323,6 +323,14 @@
                                             {{ $errors->first('contact_us_subject') }}
                                         </div>
                                     @endif
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Google Map API Key') }}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" name="google_map_api" id="google_map_api" class="form-control" value="{{ isset($settings['google_map_api']) ? $settings['google_map_api'] : '' }}">
                                 </div>
                             </div>
                         </div>

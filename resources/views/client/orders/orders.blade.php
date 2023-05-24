@@ -15,6 +15,8 @@
     $printer_tray = (isset($order_setting['printer_tray']) && !empty($order_setting['printer_tray'])) ? $order_setting['printer_tray'] : '';
     // Auto Print
     $auto_print = (isset($order_setting['auto_print']) && !empty($order_setting['auto_print'])) ? $order_setting['auto_print'] : 0;
+    // Enable Print
+    $enable_print = (isset($order_setting['enable_print']) && !empty($order_setting['enable_print'])) ? $order_setting['enable_print'] : 0;
 
     // Shop Currency
     $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
@@ -38,7 +40,7 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard') }}</a></li>
                         <li class="breadcrumb-item active">{{ __('Orders') }}</li>
                     </ol>
                 </nav>
@@ -58,45 +60,45 @@
                         @forelse ($orders as $order)
                             <div class="order">
                                 <div class="order-btn d-flex align-items-center justify-content-end">
-                                    <div class="d-flex align-items-center flex-wrap">Estimated time of arrival <input type="number" name="estimated_time" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}" {{ ($order->order_status == 'accepted') ? 'disabled' : '' }}> Minutes.
+                                    <div class="d-flex align-items-center flex-wrap">{{ __('Estimated time of arrival') }} <input type="number" name="estimated_time" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}" {{ ($order->order_status == 'accepted') ? 'disabled' : '' }}> {{ __('Minutes') }}.
                                     </div>
-                                    @if($auto_print == 0)
+                                    @if($auto_print == 0 && $enable_print == 1)
                                         <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
                                     @endif
 
                                     @if($order->order_status == 'pending')
-                                        <a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> Accept</a>
+                                        <a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> {{ __('Accept') }}</a>
                                     @elseif($order->order_status == 'accepted')
-                                        <a class="btn btn-sm btn-success ms-3" onclick="finalizedOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Complete"></i> Finalize</a>
+                                        <a class="btn btn-sm btn-success ms-3" onclick="finalizedOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Complete"></i> {{ __('Finalize') }}</a>
                                     @endif
                                 </div>
                                 <div class="order-info">
                                     <ul>
                                         <li><strong>#{{ $order->id }}</strong></li>
-                                        <li><strong>Order Date : </strong>{{ date('d-m-Y h:i:s',strtotime($order->created_at)) }}</li>
-                                        <li><strong>Order Type : </strong>{{ $order->checkout_type }}</li>
-                                        <li><strong>Payment Method : </strong>{{ $order->payment_method }}</li>
+                                        <li><strong>{{ __('Order Date') }} : </strong>{{ date('d-m-Y h:i:s',strtotime($order->created_at)) }}</li>
+                                        <li><strong>{{ __('Order Type') }} : </strong>{{ $order->checkout_type }}</li>
+                                        <li><strong>{{ __('Payment Method') }} : </strong>{{ $order->payment_method }}</li>
                                         @if($order->checkout_type == 'takeaway')
-                                            <li><strong>Customer : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
-                                            <li><strong>Telephone : </strong> {{ $order->phone }}</li>
-                                            <li><strong>Email : </strong> {{ $order->email }}</li>
+                                            <li><strong>{{ __('Customer') }} : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
+                                            <li><strong>{{ __('Telephone') }} : </strong> {{ $order->phone }}</li>
+                                            <li><strong>{{ __('Email') }} : </strong> {{ $order->email }}</li>
                                         @elseif($order->checkout_type == 'table_service')
-                                            <li><strong>Table No. : </strong> {{ $order->table }}</li>
+                                            <li><strong>{{ __('Table No.') }} : </strong> {{ $order->table }}</li>
                                         @elseif($order->checkout_type == 'room_delivery')
-                                            <li><strong>Customer : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
-                                            <li><strong>Room No. : </strong> {{ $order->room }}</li>
+                                            <li><strong>{{ __('Customer') }} : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
+                                            <li><strong>{{ __('Room No.') }} : </strong> {{ $order->room }}</li>
                                             @if(!empty($order->delivery_time ))
-                                                <li><strong>Delivery Time : </strong> {{ $order->delivery_time }}</li>
+                                                <li><strong>{{ __('Delivery Time') }} : </strong> {{ $order->delivery_time }}</li>
                                             @endif
                                         @elseif($order->checkout_type == 'delivery')
-                                            <li><strong>Customer : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
-                                            <li><strong>Telephone : </strong> {{ $order->phone }}</li>
-                                            <li><strong>Email : </strong> {{ $order->email }}</li>
-                                            <li><strong>Address : </strong> {{ $order->address }}</li>
-                                            <li><strong>Floor : </strong> {{ $order->floor }}</li>
-                                            <li><strong>Door Bell : </strong> {{ $order->door_bell }}</li>
-                                            <li><strong>Google Map : </strong> <a href="https://maps.google.com?q={{ $order->address }}" target="_blank">Address Link</a></li>
-                                            <li><strong>Comments : </strong> {{ $order->instructions }}</li>
+                                            <li><strong>{{ __('Customer') }} : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
+                                            <li><strong>{{ __('Telephone') }} : </strong> {{ $order->phone }}</li>
+                                            <li><strong>{{ __('Email') }} : </strong> {{ $order->email }}</li>
+                                            <li><strong>{{ __('Address') }} : </strong> {{ $order->address }}</li>
+                                            <li><strong>{{ __('Floor') }} : </strong> {{ $order->floor }}</li>
+                                            <li><strong>{{ __('Door Bell') }} : </strong> {{ $order->door_bell }}</li>
+                                            <li><strong>{{ __('Google Map') }} : </strong> <a href="https://maps.google.com?q={{ $order->address }}" target="_blank">Address Link</a></li>
+                                            <li><strong>{{ __('Comments') }} : </strong> {{ $order->instructions }}</li>
                                         @endif
                                     </ul>
                                 </div>
@@ -107,11 +109,11 @@
                                             <table class="table">
                                                 @if($order->discount_per > 0)
                                                     <tr>
-                                                        <td><b>Sub Total</b></td>
+                                                        <td><b>{{ __('Sub Total') }}</b></td>
                                                         <td class="text-end">{{ $order->order_total_text }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><b>Discount</b></td>
+                                                        <td><b>{{ __('Discount') }}</b></td>
                                                         <td class="text-end">- {{ $order->discount_per }}%</td>
                                                     </tr>
                                                     <tr class="text-end">
@@ -123,7 +125,7 @@
                                                     </tr>
                                                 @else
                                                     <tr>
-                                                        <td><b>Total</b></td>
+                                                        <td><b>{{ __('Total') }}</b></td>
                                                         <td class="text-end">{{ $order->order_total_text }}</td>
                                                     </tr>
                                                 @endif
@@ -184,9 +186,15 @@
 
     <script type="text/javascript">
 
-        JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
-        JSPM.JSPrintManager.auto_reconnect = true;
-        JSPM.JSPrintManager.start();
+        var enablePrint = "{{ $enable_print }}";
+
+        if(enablePrint == 1)
+        {
+            JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
+            JSPM.JSPrintManager.auto_reconnect = true;
+            JSPM.JSPrintManager.start();
+        }
+
 
         function printReceipt(ordID)
         {
@@ -327,7 +335,7 @@
 
                         toastr.success(response.message);
 
-                        if(auto_print == 1)
+                        if(auto_print == 1 && enablePrint == 1)
                         {
                             printReceipt(ordID);
                             setTimeout(() => {
@@ -386,7 +394,7 @@
             });
         }
 
-
+        // Function for get New Orders
         setInterval(() =>
         {
             getNewOrders();

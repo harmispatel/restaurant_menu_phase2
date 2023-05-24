@@ -60,7 +60,7 @@
                                         <th>{{ __('email')}}</th>
                                         <th>{{ __('Status')}}</th>
                                         <th>{{ __('Favorite')}}</th>
-                                        <th>{{ __('Actions')}}</th>
+                                        <th class="text-center">{{ __('Actions')}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,15 +89,15 @@
                                                     <input class="form-check-input" type="checkbox" role="switch" onchange="addToisFav({{ $fav_checkVal }},{{ $client->id }})" id="statusBtn" {{ $fav_checked }}>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <a href="{{ route('clients.access',$client->id) }}" class="btn btn-sm btn-primary">
+                                            <td class="text-center">
+                                                <a href="{{ route('clients.access',$client->id) }}" class=" m-1 btn btn-sm btn-primary">
                                                     <i class="bi bi-eye"></i>
                                                     {{ __('Client Access')}}
                                                 </a>
-                                                <a href="{{ route('clients.edit',$client->id) }}" class="btn btn-sm btn-primary">
+                                                <a href="{{ route('clients.edit',$client->id) }}" class=" m-1 btn btn-sm btn-primary">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
-                                                <a href="{{ route('clients.destroy',$client->id) }}" class="btn btn-sm btn-danger">
+                                                <a onclick="deleteClient({{ $client->id }})" class=" m-1 btn btn-sm btn-danger">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                             </td>
@@ -176,6 +176,53 @@
                         toastr.error("Internal Serve Errors");
                         location.reload();
                     }
+                }
+            });
+        }
+
+
+        // Function for Delete Client
+        function deleteClient(clientID)
+        {
+            swal({
+                title: "Are you sure You want to Delete It ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelClient) =>
+            {
+                if (willDelClient)
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ route("clients.destroy") }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'id': clientID,
+                        },
+                        dataType: 'JSON',
+                        success: function(response)
+                        {
+                            if (response.success == 1)
+                            {
+                                swal(response.message, {
+                                    icon: "success",
+                                });
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1200);
+                            }
+                            else
+                            {
+                                toastr.error(response.message);
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Cancelled", "", "error");
                 }
             });
         }

@@ -89,7 +89,7 @@ Route::group(['prefix' => 'admin'], function ()
         Route::post('/store-clients',[UserController::class,'store'])->name('clients.store');
         Route::post('/status-clients',[UserController::class,'changeStatus'])->name('clients.status');
         Route::post('/status-fav-clients',[UserController::class,'addToFavClients'])->name('clients.addtofav');
-        Route::get('/delete-clients/{id}',[UserController::class,'destroy'])->name('clients.destroy');
+        Route::post('/delete-clients',[UserController::class,'destroy'])->name('clients.destroy');
         Route::get('/edit-clients/{id}',[UserController::class,'edit'])->name('clients.edit');
         Route::get('/access-clients/{id}',[UserController::class,'clientAccess'])->name('clients.access');
         Route::post('/update-clients',[UserController::class,'update'])->name('clients.update');
@@ -99,7 +99,7 @@ Route::group(['prefix' => 'admin'], function ()
         Route::get('/subscriptions',[SubscriptionsController::class,'index'])->name('subscriptions');
         Route::get('/new-subscription',[SubscriptionsController::class,'insert'])->name('subscriptions.add');
         Route::post('/store-subscription',[SubscriptionsController::class,'store'])->name('subscriptions.store');
-        Route::get('/delete-subscription/{id}',[SubscriptionsController::class,'destroy'])->name('subscriptions.destroy');
+        Route::post('/delete-subscription',[SubscriptionsController::class,'destroy'])->name('subscriptions.destroy');
         Route::get('/edit-subscription/{id}',[SubscriptionsController::class,'edit'])->name('subscriptions.edit');
         Route::post('/update-subscription',[SubscriptionsController::class,'update'])->name('subscriptions.update');
 

@@ -20,7 +20,7 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard') }}</a></li>
                         <li class="breadcrumb-item active">{{ __('Orders History') }}</li>
                     </ol>
                 </nav>

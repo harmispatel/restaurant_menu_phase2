@@ -135,7 +135,7 @@
                 </li>
                 <li>
                     <a href="{{ route('categories','check_in_page') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'check_in_page')) ? 'active-link' : '' }}">
-                        <span>{{ __('Check-In Page') }}</span>
+                        <span>{{ __('Check In Pages') }}</span>
                     </a>
                 </li>
                 <li>

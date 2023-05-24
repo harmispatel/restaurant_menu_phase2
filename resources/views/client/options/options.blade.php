@@ -87,7 +87,7 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard') }}</a></li>
                         <li class="breadcrumb-item active">{{ __('Order Attributes') }}</li>
                     </ol>
                 </nav>
@@ -123,7 +123,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title mb-3 p-0">
-                            <button data-bs-toggle="modal" id="addOptBtn" data-bs-target="#addOptionModal" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create</button>
+                            <button data-bs-toggle="modal" id="addOptBtn" data-bs-target="#addOptionModal" class="btn btn-primary"><i class="bi bi-plus-circle"></i> {{ __('Create') }}</button>
                         </div>
                         <div class="option_main">
                             <ul>

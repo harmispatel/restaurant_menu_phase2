@@ -88,7 +88,7 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard') }}</a></li>
                         <li class="breadcrumb-item active">{{ __('Banners') }}</li>
                     </ol>
                 </nav>
@@ -111,9 +111,9 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th style="width: 12%">Banner</th>
-                                            <th style="width: 75%">Description</th>
-                                            <th>Actions</th>
+                                            <th style="width: 12%">{{ __('Banner') }}</th>
+                                            <th style="width: 75%">{{ __('Description') }}</th>
+                                            <th>{{ __('Actions') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -145,9 +145,11 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <h4 class="text-center">
-                                                Records Not Found !
-                                            </h4>
+                                            <tr class="text-center">
+                                                <td colspan="3">
+                                                    <h4>{{ __('Records Not Found !') }}</h4>
+                                                </td>
+                                            </tr>
                                         @endforelse
                                     </tbody>
                                 </table>

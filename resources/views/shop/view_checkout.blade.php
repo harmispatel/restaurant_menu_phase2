@@ -1,5 +1,8 @@
 @php
 
+    $admin_settings = getAdminSettings();
+    $google_map_api = (isset($admin_settings['google_map_api'])) ? $admin_settings['google_map_api'] : '';
+
     // Shop Settings
     $shop_settings = getClientSettings($shop_details['id']);
     $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
@@ -78,13 +81,13 @@
                 <input type="hidden" name="checkout_type" id="checkout_type" value="{{ $checkout_type }}">
                 <div class="card">
                     <div class="card-header">
-                        <h3>Checkout</h3>
+                        <h3>{{ __('Checkout') }}</h3>
                     </div>
                     <div class="card-body">
                         @if($checkout_type == 'takeaway')
                             <div class="row">
                                 <div class="col-md-6 mb-2">
-                                    <label for="firstname" class="form-label">First Name <span class="text-danger">*</span></label>
+                                    <label for="firstname" class="form-label">{{ __('First Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="firstname" id="firstname" class="form-control {{ ($errors->has('firstname')) ? 'is-invalid' : '' }}" value="{{ old('firstname') }}">
                                     @if($errors->has('firstname'))
                                         <div class="invalid-feedback">
@@ -93,7 +96,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                    <label for="lastname" class="form-label">{{ __('Last Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="lastname" id="lastname" class="form-control {{ ($errors->has('lastname')) ? 'is-invalid' : '' }}" value="{{ old('lastname') }}">
                                     @if($errors->has('lastname'))
                                         <div class="invalid-feedback">
@@ -102,7 +105,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                    <label for="email" class="form-label">{{ __('Email') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="email" id="email" class="form-control {{ ($errors->has('email')) ? 'is-invalid' : '' }}" value="{{ old('email') }}">
                                     @if($errors->has('email'))
                                         <div class="invalid-feedback">
@@ -111,7 +114,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="phone" class="form-label">Phone No. <span class="text-danger">*</span></label>
+                                    <label for="phone" class="form-label">{{ __('Mobile No.') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="phone" id="phone" class="form-control {{ ($errors->has('phone')) ? 'is-invalid' : '' }}" value="{{ old('phone') }}">
                                     @if($errors->has('phone'))
                                         <div class="invalid-feedback">
@@ -120,14 +123,14 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="payment_method" class="form-label">Payment Method</label>
+                                    <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
                                     <select name="payment_method" id="payment_method" class="form-select">
                                         <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
                                         @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
                                         @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit Card - Debit Card</option>
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
                                         @endif
                                     </select>
                                 </div>
@@ -135,7 +138,7 @@
                         @elseif($checkout_type == 'table_service')
                             <div class="row">
                                 <div class="col-md-6 mb-2">
-                                    <label for="table" class="form-label">Table <span class="text-danger">*</span></label>
+                                    <label for="table" class="form-label">{{ __('Table No.') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="table" id="table" class="form-control {{ ($errors->has('table')) ? 'is-invalid' : '' }}">
                                     @if($errors->has('table'))
                                         <div class="invalid-feedback">
@@ -144,14 +147,14 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="payment_method" class="form-label">Payment Method</label>
+                                    <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
                                     <select name="payment_method" id="payment_method" class="form-select">
                                         <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
                                         @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
                                         @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit Card - Debit Card</option>
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
                                         @endif
                                     </select>
                                 </div>
@@ -159,7 +162,7 @@
                         @elseif($checkout_type == 'room_delivery')
                             <div class="row">
                                 <div class="col-md-6 mb-2">
-                                    <label for="firstname" class="form-label">First Name <span class="text-danger">*</span></label>
+                                    <label for="firstname" class="form-label">{{ __('First Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="firstname" id="firstname" class="form-control {{ ($errors->has('firstname')) ? 'is-invalid' : '' }}" value="{{ old('firstname') }}">
                                     @if($errors->has('firstname'))
                                         <div class="invalid-feedback">
@@ -168,7 +171,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                    <label for="lastname" class="form-label">{{ __('Last Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="lastname" id="lastname" class="form-control {{ ($errors->has('lastname')) ? 'is-invalid' : '' }}" value="{{ old('lastname') }}">
                                     @if($errors->has('lastname'))
                                         <div class="invalid-feedback">
@@ -177,7 +180,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="room" class="form-label">Room <span class="text-danger">*</span></label>
+                                    <label for="room" class="form-label">{{ __('Room No.') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="room" id="room" class="form-control {{ ($errors->has('room')) ? 'is-invalid' : '' }}" value="{{ old('room') }}">
                                     @if($errors->has('room'))
                                         <div class="invalid-feedback">
@@ -186,19 +189,19 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="delivery_time" class="form-label">Delivery Time</label>
+                                    <label for="delivery_time" class="form-label">{{ __('Delivery Time') }}</label>
                                     <input type="text" name="delivery_time" id="delivery_time" class="form-control" value="{{ old('delivery_time') }}">
                                     <code>Ex:- 9:30-10:00</code>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="payment_method" class="form-label">Payment Method</label>
+                                    <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
                                     <select name="payment_method" id="payment_method" class="form-select">
                                         <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
                                         @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
                                         @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit Card - Debit Card</option>
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
                                         @endif
                                     </select>
                                 </div>
@@ -206,7 +209,7 @@
                         @elseif ($checkout_type == 'delivery')
                             <div class="row">
                                 <div class="col-md-6 mb-2">
-                                    <label for="firstname" class="form-label">First Name <span class="text-danger">*</span></label>
+                                    <label for="firstname" class="form-label">{{ __('First Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="firstname" id="firstname" class="form-control {{ ($errors->has('firstname')) ? 'is-invalid' : '' }}" value="{{ old('firstname') }}">
                                     @if($errors->has('firstname'))
                                         <div class="invalid-feedback">
@@ -215,7 +218,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                    <label for="lastname" class="form-label">{{ __('Last Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="lastname" id="lastname" class="form-control {{ ($errors->has('lastname')) ? 'is-invalid' : '' }}" value="{{ old('lastname') }}">
                                     @if($errors->has('lastname'))
                                         <div class="invalid-feedback">
@@ -224,7 +227,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                    <label for="email" class="form-label">{{ __('Email') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="email" id="email" class="form-control {{ ($errors->has('email')) ? 'is-invalid' : '' }}" value="{{ old('email') }}">
                                     @if($errors->has('email'))
                                         <div class="invalid-feedback">
@@ -233,7 +236,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="phone" class="form-label">Phone No. <span class="text-danger">*</span></label>
+                                    <label for="phone" class="form-label">{{ __('Mobile No.') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="phone" id="phone" class="form-control {{ ($errors->has('phone')) ? 'is-invalid' : '' }}" value="{{ old('phone') }}">
                                     @if($errors->has('phone'))
                                         <div class="invalid-feedback">
@@ -242,7 +245,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-12 mb-2">
-                                    <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
+                                    <label for="address" class="form-label">{{ __('Address') }} <span class="text-danger">*</span></label>
                                     <input type="hidden" name="latitude" id="latitude" value="{{ $cust_lat }}">
                                     <input type="hidden" name="longitude" id="longitude" value="{{ $cust_lng }}">
                                     <input type="text" name="address" id="address" class="form-control {{ ($errors->has('address')) ? 'is-invalid' : '' }}" value="{{ $cust_address }}">
@@ -256,26 +259,26 @@
                                     <div id="map" style="height: 500px;"></div>
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="floor" class="form-label">Floor</label>
+                                    <label for="floor" class="form-label">{{ __('Floor') }}</label>
                                     <input type="text" name="floor" id="floor" class="form-control" value="{{ old('floor') }}">
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="door_bell" class="form-label">Door Bell</label>
+                                    <label for="door_bell" class="form-label">{{ __('Door Bell') }}</label>
                                     <input type="text" name="door_bell" id="door_bell" class="form-control" value="{{ old('door_bell') }}">
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="instructions" class="form-label">Instructions</label>
+                                    <label for="instructions" class="form-label">{{ __('Instructions') }}</label>
                                     <textarea name="instructions" id="instructions" rows="3" class="form-control">{{ old('instructions') }}</textarea>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="payment_method" class="form-label">Payment Method</label>
+                                    <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
                                     <select name="payment_method" id="payment_method" class="form-select">
                                         <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
                                         @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
                                         @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit Card - Debit Card</option>
+                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
                                         @endif
                                     </select>
                                 </div>
@@ -355,7 +358,7 @@
 
                                             </div>
                                             <div class="col-md-3 text-center">
-                                                <b>Sub Total : </b>{{ $cart_val['total_amount_text'] }}
+                                                <b>{{ __('Sub Total') }} : </b>{{ $cart_val['total_amount_text'] }}
                                             </div>
                                         </div>
                                     @endforeach
@@ -366,12 +369,12 @@
                             <div class="col-md-4 bg-light p-3">
                                 <table class="table">
                                     <tr>
-                                        <td><b>Total Amount</b></td>
+                                        <td><b>{{ __('Total Amount') }}</b></td>
                                         <td class="text-end">{{ Currency::currency($currency)->format($total_amount) }}</td>
                                     </tr>
                                     @if($discount_per > 0)
                                         <tr>
-                                            <td><b>Discount</b></td>
+                                            <td><b>{{ __('Discount') }}</b></td>
                                             <td class="text-end">- {{ $discount_per }}%</td>
                                         </tr>
                                         <tr class="text-end">
@@ -387,7 +390,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <button class="btn btn-success">Continue</button>
+                                <button class="btn btn-success">{{ __('Continue') }}</button>
                             </div>
                         </div>
                     </div>
@@ -501,7 +504,7 @@
 {{-- Page JS Function --}}
 @section('page-js')
 
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyBsf7LHMQFIeuA_7-bR7u7EXz5CUaD6I2A&libraries=places"></script>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?key={{ $google_map_api }}&libraries=places"></script>
 
     <script type="text/javascript">
 

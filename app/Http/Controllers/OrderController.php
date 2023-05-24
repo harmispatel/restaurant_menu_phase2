@@ -16,19 +16,6 @@ class OrderController extends Controller
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
 
-        $new_order = Order::where('shop_id',$shop_id)->where('is_new',1)->where('order_status','pending')->get();
-
-        if(count($new_order) > 0)
-        {
-            foreach ($new_order as $neword)
-            {
-                $new_order_id = (isset($neword['id'])) ? $neword['id'] : '';
-                $ord = Order::find($new_order_id);
-                $ord->is_new = 0;
-                $ord->update();
-            }
-        }
-
         $data['orders'] = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->orderBy('id','DESC')->get();
         return view('client.orders.orders',$data);
     }
@@ -46,14 +33,8 @@ class OrderController extends Controller
 
         // Order Settings
         $order_setting = getOrderSettings($shop_id);
-        // Default Printer
-        $default_printer = (isset($order_setting['default_printer']) && !empty($order_setting['default_printer'])) ? $order_setting['default_printer'] : 'Microsoft Print to PDF';
-        // Printer Paper
-        $printer_paper = (isset($order_setting['printer_paper']) && !empty($order_setting['printer_paper'])) ? $order_setting['printer_paper'] : 'A4';
-        // Printer Tray
-        $printer_tray = (isset($order_setting['printer_tray']) && !empty($order_setting['printer_tray'])) ? $order_setting['printer_tray'] : '';
-        // Auto Print
         $auto_print = (isset($order_setting['auto_print']) && !empty($order_setting['auto_print'])) ? $order_setting['auto_print'] : 0;
+        $enable_print = (isset($order_setting['enable_print']) && !empty($order_setting['enable_print'])) ? $order_setting['enable_print'] : 0;
 
         // Orders
         $orders = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->orderBy('id','DESC')->get();
@@ -64,7 +45,7 @@ class OrderController extends Controller
             {
                 $html .= '<div class="order">';
                     $html .= '<div class="order-btn d-flex align-items-center justify-content-end">';
-                        $html .= '<div class="d-flex align-items-center flex-wrap">Estimated time of arrival <input type="number" name="estimated_time" id="estimated_time" value="'.$order->estimated_time.'" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="'.$order->id.'"';
+                        $html .= '<div class="d-flex align-items-center flex-wrap">'.__('Estimated time of arrival').' <input type="number" name="estimated_time" id="estimated_time" value="'.$order->estimated_time.'" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="'.$order->id.'"';
                         if($order->order_status == 'accepted')
                         {
                             $html .= 'disabled';
@@ -73,59 +54,59 @@ class OrderController extends Controller
                         {
                             $html .= '';
                         }
-                        $html .= '> Minutes.</div>';
+                        $html .= '> '.__('Minutes').'.</div>';
 
-                        if($auto_print == 0)
+                        if($auto_print == 0 && $enable_print == 1)
                         {
                             $html .= '<a class="btn btn-sm btn-primary ms-3" onclick="printReceipt('.$order->id .')"><i class="bi bi-printer"></i></a>';
                         }
 
                         if($order->order_status == 'pending')
                         {
-                            $html .= '<a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder('.$order->id.')"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> Accept</a>';
+                            $html .= '<a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder('.$order->id.')"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> '.__('Accept').'</a>';
                         }
                         elseif($order->order_status == 'accepted')
                         {
-                            $html .= '<a class="btn btn-sm btn-success ms-3" onclick="finalizedOrder('.$order->id.')"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Complete"></i> Finalize</a>';
+                            $html .= '<a class="btn btn-sm btn-success ms-3" onclick="finalizedOrder('.$order->id.')"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Complete"></i> '.__('Finalize').'</a>';
                         }
                     $html .= '</div>';
 
                     $html .= '<div class="order-info">';
                         $html .= '<ul>';
                             $html .= '<li><strong>#'.$order->id.'</strong></li>';
-                            $html .= '<li><strong>Order Date : </strong>'.date('d-m-Y h:i:s',strtotime($order->created_at)).'</li>';
-                            $html .= '<li><strong>Order Type : </strong>'.$order->checkout_type.'</li>';
-                            $html .= '<li><strong>Payment Method : </strong>'.$order->payment_method.'</li>';
+                            $html .= '<li><strong>'.__('Order Date').' : </strong>'.date('d-m-Y h:i:s',strtotime($order->created_at)).'</li>';
+                            $html .= '<li><strong>'.__('Order Type').' : </strong>'.$order->checkout_type.'</li>';
+                            $html .= '<li><strong>'.__('Payment Method').' : </strong>'.$order->payment_method.'</li>';
 
                             if($order->checkout_type == 'takeaway')
                             {
-                                $html .= '<li><strong>Customer : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
-                                $html .= '<li><strong>Telephone : </strong> '.$order->phone.'</li>';
-                                $html .= '<li><strong>Email : </strong> '.$order->email.'</li>';
+                                $html .= '<li><strong>'.__('Customer').' : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
+                                $html .= '<li><strong>'.__('Telephone').' : </strong> '.$order->phone.'</li>';
+                                $html .= '<li><strong>'.__('Email').' : </strong> '.$order->email.'</li>';
                             }
                             elseif($order->checkout_type == 'table_service')
                             {
-                                $html .= '<li><strong>Table No. : </strong> '.$order->table.'</li>';
+                                $html .= '<li><strong>'.__('Table No.').' : </strong> '.$order->table.'</li>';
                             }
                             elseif($order->checkout_type == 'room_delivery')
                             {
-                                $html .= '<li><strong>Customer : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
-                                $html .= '<li><strong>Room No. : </strong> '.$order->room.'</li>';
+                                $html .= '<li><strong>'.__('Customer').' : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
+                                $html .= '<li><strong>'.__('Room No.').' : </strong> '.$order->room.'</li>';
                                 if(!empty($order->delivery_time ))
                                 {
-                                    $html .= '<li><strong>Delivery Time : </strong> '.$order->delivery_time.'</li>';
+                                    $html .= '<li><strong>'.__('Delivery Time').' : </strong> '.$order->delivery_time.'</li>';
                                 }
                             }
                             elseif($order->checkout_type == 'delivery')
                             {
-                                $html .= '<li><strong>Customer : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
-                                $html .= '<li><strong>Telephone : </strong> '.$order->phone.'</li>';
-                                $html .= '<li><strong>Email : </strong> '.$order->email.'</li>';
-                                $html .= '<li><strong>Address : </strong> '.$order->address.'</li>';
-                                $html .= '<li><strong>Floor : </strong> '.$order->floor.'</li>';
-                                $html .= '<li><strong>Door Bell : </strong> '.$order->door_bell.'</li>';
-                                $html .= '<li><strong>Google Map : </strong> <a href="https://maps.google.com?q='.$order->address.'" target="_blank">Address Link</a></li>';
-                                $html .= '<li><strong>Comments : </strong> '.$order->instructions.'</li>';
+                                $html .= '<li><strong>'.__('Customer').' : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
+                                $html .= '<li><strong>'.__('Telephone').' : </strong> '.$order->phone.'</li>';
+                                $html .= '<li><strong>'.__('Email').' : </strong> '.$order->email.'</li>';
+                                $html .= '<li><strong>'.__('Address').' : </strong> '.$order->address.'</li>';
+                                $html .= '<li><strong>'.__('Floor').' : </strong> '.$order->floor.'</li>';
+                                $html .= '<li><strong>'.__('Door Bell').' : </strong> '.$order->door_bell.'</li>';
+                                $html .= '<li><strong>'.__('Google Map').' : </strong> <a href="https://maps.google.com?q='.$order->address.'" target="_blank">Address Link</a></li>';
+                                $html .= '<li><strong>'.__('Comments').' : </strong> '.$order->instructions.'</li>';
                             }
 
                         $html .= '</ul>';
@@ -140,12 +121,12 @@ class OrderController extends Controller
                                     if($order->discount_per > 0)
                                     {
                                         $html .= '<tr>';
-                                            $html .= '<td><b>Sub Total</b></td>';
+                                            $html .= '<td><b>'.__('Sub Total').'</b></td>';
                                             $html .= '<td class="text-end">'.$order->order_total_text.'</td>';
                                         $html .= '</tr>';
 
                                         $html .= '<tr>';
-                                            $html .= '<td><b>Discount</b></td>';
+                                            $html .= '<td><b>'.__('Discount').'</b></td>';
                                             $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
                                         $html .= '</tr>';
 
@@ -159,7 +140,7 @@ class OrderController extends Controller
                                     else
                                     {
                                         $html .= '<tr>';
-                                            $html .= '<td><b>Total</b></td>';
+                                            $html .= '<td><b>'.__('Total').'</b></td>';
                                             $html .= '<td class="text-end">'.$order->order_total_text.'</td>';
                                         $html .= '</tr>';
                                     }
@@ -258,6 +239,7 @@ class OrderController extends Controller
         $all_data['receipt_intro'] = $request->receipt_intro;
         $all_data['auto_print'] = (isset($request->auto_print)) ? $request->auto_print : 0;
         $all_data['play_sound'] = (isset($request->play_sound)) ? $request->play_sound : 0;
+        $all_data['enable_print'] = (isset($request->enable_print)) ? $request->enable_print : 0;
         $all_data['printer_paper'] = (isset($request->printer_paper)) ? $request->printer_paper : '';
         $all_data['printer_tray'] = (isset($request->printer_tray)) ? $request->printer_tray : '';
         $all_data['notification_sound'] = (isset($request->notification_sound)) ? $request->notification_sound : 'buzzer-01.mp3';
@@ -369,6 +351,7 @@ class OrderController extends Controller
         {
             $order = Order::find($order_id);
             $order->order_status = 'accepted';
+            $order->is_new = 0;
             $order->update();
 
             return response()->json([

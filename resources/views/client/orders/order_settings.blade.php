@@ -1,3 +1,10 @@
+@php
+    $enable_print = (isset($order_settings['enable_print']) && !empty($order_settings['enable_print'])) ? $order_settings['enable_print'] : 0;
+
+    $admin_settings = getAdminSettings();
+    $google_map_api = (isset($admin_settings['google_map_api'])) ? $admin_settings['google_map_api'] : '';
+@endphp
+
 @extends('client.layouts.client-layout')
 
 @section('title', __('Order Settings'))
@@ -11,7 +18,7 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard') }}</a></li>
                         <li class="breadcrumb-item active">{{ __('Order Settings') }}</li>
                     </ol>
                 </nav>
@@ -31,8 +38,8 @@
 
                             {{-- Settings --}}
                             <div class="row">
-                                <h3>Settings</h3>
-                                <code>If none of the settings bellow is enabled add-to-cart button will no be visible.</code>
+                                <h3>{{ __('Settings') }}</h3>
+                                <code>{{ __('If none of the settings bellow is enabled add-to-cart button will no be visible.') }}</code>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-4 mt-3">
@@ -43,7 +50,7 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="delivery" class="form-label">Delivery</label>
+                                    <label for="delivery" class="form-label">{{ __('Delivery') }}</label>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label class="switch me-2">
@@ -53,7 +60,7 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="takeaway" class="form-label">Takeaway</label>
+                                    <label for="takeaway" class="form-label">{{ __('Takeaway') }}</label>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label class="switch me-2">
@@ -63,7 +70,7 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="room_delivery" class="form-label">Room Delivery</label>
+                                    <label for="room_delivery" class="form-label">{{ __('Room Delivery') }}</label>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label class="switch me-2">
@@ -73,7 +80,7 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="table_service" class="form-label">Table Service</label>
+                                    <label for="table_service" class="form-label">{{ __('Table Service') }}</label>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label class="switch me-2">
@@ -83,14 +90,14 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="only_cart" class="form-label">Only Cart</label>
+                                    <label for="only_cart" class="form-label">{{ __('Only Cart') }}</label>
                                 </div>
                             </div>
                             <hr>
 
                             {{-- Other Settings --}}
                             <div class="row">
-                                <h3>Other Settings</h3>
+                                <h3>{{ __('Other Settings') }}</h3>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-6">
@@ -101,24 +108,24 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="auto_order_approval" class="form-label">Auto Order Approval</label>
+                                    <label for="auto_order_approval" class="form-label">{{ __('Auto Order Approval') }}</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mt-3">
-                                    <label for="min_amount_for_delivery" class="form-label">Minimum amount needed for delivery, if left null any amount is acceptable.</label>
+                                    <label for="min_amount_for_delivery" class="form-label">{{ __('Minimum amount needed for delivery, if left null any amount is acceptable.') }}</label>
                                     <input type="number" name="min_amount_for_delivery" id="min_amount_for_delivery" class="form-control ord-setting" value="{{ (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '' }}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mt-3">
-                                    <label for="discount_percentage" class="form-label">Discount percentage (discount percentage applied to the total amount), if left null no discount is applied.</label>
+                                    <label for="discount_percentage" class="form-label">{{ __('Discount percentage (discount percentage applied to the total amount), if left null no discount is applied.') }}</label>
                                     <input type="number" name="discount_percentage" id="discount_percentage" class="form-control ord-setting" value="{{ (isset($order_settings['discount_percentage'])) ? $order_settings['discount_percentage'] : '' }}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mt-3">
-                                    <label for="order_arrival_minutes" class="form-label">Default estimated minutes until order arrival</label>
+                                    <label for="order_arrival_minutes" class="form-label">{{ __('Default estimated minutes until order arrival') }}</label>
                                     <input type="number" name="order_arrival_minutes" id="order_arrival_minutes" class="form-control ord-setting" value="{{ (isset($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '' }}">
                                 </div>
                             </div>
@@ -126,7 +133,7 @@
 
                             {{-- Notifaction Settings --}}
                             <div class="row">
-                                <h3>Notification Settings</h3>
+                                <h3>{{ __('Notification Settings') }}</h3>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-6">
@@ -137,12 +144,12 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="play_sound" class="form-label">Play Sound</label>
+                                    <label for="play_sound" class="form-label">{{ __('Play Sound') }}</label>
                                 </div>
                             </div>
                             <div class="row mt-1">
                                 <div class="col-md-6 mt-2">
-                                    <label for="notification_sound" class="form-label">Notification Sound</label>
+                                    <label for="notification_sound" class="form-label">{{ __('Notification Sound') }}</label>
                                     <select name="notification_sound" id="notification_sound" class="form-select">
                                         <option value="buzzer-01.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-01.mp3') ? 'selected' : '' }}>Buzzer 1</option>
                                         <option value="buzzer-02.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-02.mp3') ? 'selected' : '' }}>Buzzer 2</option>
@@ -156,32 +163,20 @@
 
                             {{-- Printer Settings --}}
                             <div class="row">
-                                <h3>Print Settings</h3>
+                                <h3>{{ __('Print Settings') }}</h3>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-md-6 mb-3">
-                                    <label for="printer_tray" class="form-label">Printer Trays</label>
-                                    <select name="printer_tray" id="printer_tray" class="form-select">
-                                        <option value="">not found</option>
-                                    </select>
+                                <div class="col-md-6 mb-2">
+                                    <label class="switch me-2">
+                                        <input type="checkbox" value="1" name="enable_print" id="enable_print" class="ord-setting" {{ (isset($order_settings['enable_print']) && $order_settings['enable_print'] == 1) ? 'checked' : '' }}>
+                                        <span class="slider round">
+                                            <i class="fa-solid fa-circle-check check_icon"></i>
+                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                        </span>
+                                    </label>
+                                    <label for="enable_print" class="form-label">{{ __('Enable/Disable Print') }}</label>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="printer_paper" class="form-label">Printer Papers</label>
-                                    <select name="printer_paper" id="printer_paper" class="form-select">
-                                        <option value="">not found</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="default_printer" class="form-label">Default Printer</label>
-                                    <select name="default_printer" id="default_printer" class="form-select">
-                                        <option value="">not found</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="receipt_intro" class="form-label">Receipt Intro</label>
-                                    <input type="text" name="receipt_intro" id="receipt_intro" class="form-control" value="{{ (isset($order_settings['receipt_intro'])) ? $order_settings['receipt_intro'] : '' }}">
-                                </div>
-                                <div class="col-md-12 mt-4">
                                     <label class="switch me-2">
                                         <input type="checkbox" value="1" name="auto_print" id="auto_print" class="ord-setting" {{ (isset($order_settings['auto_print']) && $order_settings['auto_print'] == 1) ? 'checked' : '' }}>
                                         <span class="slider round">
@@ -189,14 +184,36 @@
                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                         </span>
                                     </label>
-                                    <label for="auto_print" class="form-label">Auto Print</label>
+                                    <label for="auto_print" class="form-label">{{ __('Auto Print') }}</label>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="printer_tray" class="form-label">{{ __('Printer Trays') }}</label>
+                                    <select name="printer_tray" id="printer_tray" class="form-select">
+                                        <option value="">not found</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="printer_paper" class="form-label">{{ __('Printer Papers') }}</label>
+                                    <select name="printer_paper" id="printer_paper" class="form-select">
+                                        <option value="">not found</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="default_printer" class="form-label">{{ __('Default Printer') }}</label>
+                                    <select name="default_printer" id="default_printer" class="form-select">
+                                        <option value="">not found</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="receipt_intro" class="form-label">{{ __('Receipt Intro') }}</label>
+                                    <input type="text" name="receipt_intro" id="receipt_intro" class="form-control" value="{{ (isset($order_settings['receipt_intro'])) ? $order_settings['receipt_intro'] : '' }}">
                                 </div>
                             </div>
                             <hr>
 
                             {{-- Delivery Settings --}}
                             <div class="row">
-                                <h3>Delivery / Takeaway Scheduler</h3>
+                                <h3>{{ __('Delivery / Takeaway Scheduler') }}</h3>
                                 <div class="col-md-12 text-end">
                                     <label class="switch me-2">
                                         <input type="checkbox" value="1" name="scheduler_active" id="scheduler_active" class="ord-setting" {{ (isset($order_settings['scheduler_active']) && $order_settings['scheduler_active'] == 1) ? 'checked' : '' }}>
@@ -363,7 +380,7 @@
                             {{-- Delivery Range Settings --}}
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h3>Delivery Range Settings</h3>
+                                    <h3>{{ __('Delivery Range Settings') }}</h3>
                                 </div>
                                 <div class="col-md-6 text-end">
                                     <a href="{{ route('remove.delivery.range') }}" class="btn btn-danger" data-bs-toggle="tooltip" title="Clear Delivery Range Settings"><i class="bi bi-trash"></i></a>
@@ -398,7 +415,7 @@
     <script src="{{ asset('public/admin/assets/js/jsprintmanager.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsf7LHMQFIeuA_7-bR7u7EXz5CUaD6I2A&callback=initMap&libraries=drawing"></script>
+    <script async defer src='https://maps.googleapis.com/maps/api/js?key={{ $google_map_api }}&callback=initMap&libraries=drawing'></script>
 
     <script type="text/javascript">
 
@@ -408,6 +425,7 @@
         const deliveryAreas = @json($deliveryAreas);
         var clientPrinters = null;
         var _this = this;
+        var enablePrint = "{{ $enable_print }}";
 
         $(document).ready(function ()
         {
@@ -424,29 +442,33 @@
             );
         });
 
-        //WebSocket settings
-        JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
-        JSPM.JSPrintManager.auto_reconnect = true;
-        JSPM.JSPrintManager.start();
-        JSPM.JSPrintManager.WS.onStatusChanged = function () {
-            if (jspmWSStatus()) {
-                //get client installed printers
-                JSPM.JSPrintManager.getPrintersInfo().then(function (myPrinters) {
-                    clientPrinters = myPrinters;
-                    var options = '';
-                    for (var i = 0; i < clientPrinters.length; i++) {
-                        options += '<option value="'+clientPrinters[i].name+'">' + clientPrinters[i].name + '</option>';
-                    }
-                    $('#default_printer').html(options);
 
-                    // Set Default Printer
-                    var def_printer = "{{ (isset($order_settings['default_printer'])) ? $order_settings['default_printer'] : '' }}";
-                    $("#default_printer option[value='"+def_printer+"']").attr("selected", "selected");
+        if(enablePrint == 1)
+        {
+            //WebSocket settings
+            JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
+            JSPM.JSPrintManager.auto_reconnect = true;
+            JSPM.JSPrintManager.start();
+            JSPM.JSPrintManager.WS.onStatusChanged = function () {
+                if (jspmWSStatus()) {
+                    //get client installed printers
+                    JSPM.JSPrintManager.getPrintersInfo().then(function (myPrinters) {
+                        clientPrinters = myPrinters;
+                        var options = '';
+                        for (var i = 0; i < clientPrinters.length; i++) {
+                            options += '<option value="'+clientPrinters[i].name+'">' + clientPrinters[i].name + '</option>';
+                        }
+                        $('#default_printer').html(options);
 
-                    _this.showSelectedPrinterInfo();
-                });
-            }
-        };
+                        // Set Default Printer
+                        var def_printer = "{{ (isset($order_settings['default_printer'])) ? $order_settings['default_printer'] : '' }}";
+                        $("#default_printer option[value='"+def_printer+"']").attr("selected", "selected");
+
+                        _this.showSelectedPrinterInfo();
+                    });
+                }
+            };
+        }
 
 
         function showSelectedPrinterInfo()

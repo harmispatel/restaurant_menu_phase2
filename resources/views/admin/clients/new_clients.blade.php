@@ -18,7 +18,7 @@
                 </nav>
             </div>
             <div class="col-md-4" style="text-align: right;">
-                <a href="{{ route('clients') }}" class="btn btn-sm new-amenity btn-primary">
+                <a href="{{ route('clients.list') }}" class="btn btn-sm new-amenity btn-primary">
                     <i class="bi bi-arrow-left"></i>
                 </a>
             </div>
@@ -120,7 +120,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-3">
-                                        <label for="favourite" class="form-label">{{ __('Favourite')}}</label>
+                                        <label for="favourite" class="form-label">{{ __('Favorite')}}</label>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" name="favourite" role="switch" id="favourite" value="1">
                                         </div>

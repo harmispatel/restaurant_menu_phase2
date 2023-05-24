@@ -67,7 +67,7 @@
                 <div class="card-header">
                     <div class="row justify-content-between">
                         <div class="col-md-4">
-                            <h2>Shopping Cart</h2>
+                            <h2>{{ __('Shopping Cart') }}</h2>
                         </div>
                         @if($is_checkout == 1)
                             <div class="col-md-4">
@@ -163,7 +163,7 @@
                                         {{ $item_price }}
                                     </div>
                                     <div class="col-md-2 text-center">
-                                        <b>Sub Total : </b>{{ $cart_val['total_amount_text'] }}
+                                        <b>{{ __('Sub Total') }} : </b>{{ $cart_val['total_amount_text'] }}
                                     </div>
                                     <div class="col-md-2">
                                         <div class="d-flex align-items-center qty-m-view">
@@ -184,13 +184,13 @@
                         <div class="col-md-4">
                             <table class="table">
                                 <tr>
-                                    <td><b>Total Amount</b></td>
+                                    <td><b>{{ __('Total Amount') }}</b></td>
                                     <td class="text-end">{{ Currency::currency($currency)->format($total_amount) }}</td>
                                     <input type="hidden" name="total_cart_amount" id="total_cart_amount" value="{{ $total_amount }}">
                                 </tr>
                                 @if($discount_per > 0)
                                     <tr>
-                                        <td><b>Discount</b></td>
+                                        <td><b>{{ __('Discount') }}</b></td>
                                         <td class="text-end">- {{ $discount_per }}%</td>
                                     </tr>
                                     <tr class="text-end">
@@ -216,7 +216,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-2" style="display: none;" id="min-amount-msg"></div>
                             <div class="col-md-12">
-                                <button type="button" id="check-btn" class="btn btn-lg btn-primary mt-2">Checkout</button>
+                                <button type="button" id="check-btn" class="btn btn-lg btn-primary mt-2">{{ __('Checkout') }}</button>
                             </div>
                         </div>
                     @endif
@@ -486,7 +486,7 @@
                 {
                     $('#check-btn').attr('disabled',true);
                     $('#min-amount-msg').html('');
-                    $('#min-amount-msg').append('<code class="fs-4">'+remain_amount+' Left for the minimum order.</code>');
+                    $('#min-amount-msg').append('<code class="fs-4">'+remain_amount+' {{ __("Left for the minimum order") }}.</code>');
                     $('#min-amount-msg').show();
                 }
 

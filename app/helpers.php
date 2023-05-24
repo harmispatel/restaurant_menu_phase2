@@ -20,6 +20,7 @@
             'default_special_item_image',
             'contact_us_email',
             'contact_us_subject',
+            'google_map_api',
         ]);
 
         $settings = [];
@@ -104,6 +105,7 @@
             'printer_tray',
             'play_sound',
             'notification_sound',
+            'enable_print',
         ]);
 
         $settings = [];

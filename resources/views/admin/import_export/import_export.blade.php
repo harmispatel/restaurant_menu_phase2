@@ -37,7 +37,7 @@
                                         <form id="exportForm" action="{{ route('admin.export.data') }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="shop_id" id="shop_id">
-                                            <a onclick="exportData()" class="btn btn-secondary"><i class="fa-solid fa-file-export"></i> Export CSV</a>
+                                            <a onclick="exportData()" class="btn btn-secondary"><i class="fa-solid fa-file-export"></i> {{ __('Export CSV') }}</a>
                                         </form>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <button class="btn btn-sm btn-success">{{ __('Import') }}</button>
-                                        <a class="btn btn-danger btn-sm" onclick="deleteShopData()">Delete Category & Items</a>
+                                        <a class="btn btn-danger btn-sm" onclick="deleteShopData()">{{ __('Delete Category & Items') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -123,24 +123,47 @@
             }
             else
             {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('client.delete.data') }}",
-                    data: {
-                        "_token" : "{{ csrf_token() }}",
-                        "shop_id" : shopID,
-                    },
-                    dataType: "JSON",
-                    success: function (response)
+
+                swal({
+                    title: "Are you sure You want to Delete It ?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelData) =>
+                {
+                    if (willDelData)
                     {
-                        if(response.success == 1)
-                        {
-                            toastr.success(response.message);
-                        }
-                        else
-                        {
-                            toastr.error(response.message);
-                        }
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('client.delete.data') }}",
+                            data: {
+                                "_token" : "{{ csrf_token() }}",
+                                "shop_id" : shopID,
+                            },
+                            dataType: "JSON",
+                            success: function (response)
+                            {
+                                if(response.success == 1)
+                                {
+                                    swal(response.message, {
+                                        icon: "success",
+                                    });
+
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1200);
+                                }
+                                else
+                                {
+                                    toastr.error(response.message);
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        swal("Cancelled", "", "error");
                     }
                 });
             }

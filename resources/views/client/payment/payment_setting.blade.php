@@ -11,7 +11,7 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard') }}</a></li>
                         <li class="breadcrumb-item active">{{ __('Payment Settings') }}</li>
                     </ol>
                 </nav>
@@ -31,7 +31,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="card-title d-flex justify-content-between align-items-center">
-                                        <h3>EveryPay</h3>
+                                        <h3>{{ __('EveryPay') }}</h3>
                                         <label class="switch me-2">
                                             <input type="checkbox" value="1" name="every_pay" id="every_pay" {{ (isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1) ? 'checked' : '' }}>
                                             <span class="slider round" data-bs-toggle="tooltip" title="Active / InActive EveryPay">
@@ -42,14 +42,14 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="everypay_mode" class="form-label">EveryPay Mode</label>
+                                    <label for="everypay_mode" class="form-label">{{ __('EveryPay Mode') }}</label>
                                     <select name="everypay_mode" id="everypay_mode" class="form-select">
                                         <option value="1" {{ (isset($payment_settings['everypay_mode']) && $payment_settings['everypay_mode'] == 1) ? 'selected' : '' }}>Sandbox</option>
                                         <option value="0" {{ (isset($payment_settings['everypay_mode']) && $payment_settings['everypay_mode'] == 0) ? 'selected' : '' }}>Live</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="every_pay_public_key" class="form-label">Public Key</label>
+                                    <label for="every_pay_public_key" class="form-label">{{ __('Public Key') }}</label>
                                     <input type="text" name="every_pay_public_key" id="every_pay_public_key" class="form-control {{ ($errors->has('every_pay_public_key')) ? 'is-invalid' : '' }}" value="{{ (isset($payment_settings['every_pay_public_key'])) ? $payment_settings['every_pay_public_key'] : '' }}">
                                     @if($errors->has('every_pay_public_key'))
                                         <div class="invalid-feedback">
@@ -58,7 +58,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="every_pay_private_key" class="form-label">Private Key</label>
+                                    <label for="every_pay_private_key" class="form-label">{{ __('Private Key') }}</label>
                                     <input type="text" name="every_pay_private_key" id="every_pay_private_key" class="form-control {{ ($errors->has('every_pay_private_key')) ? 'is-invalid' : '' }}" value="{{ (isset($payment_settings['every_pay_private_key'])) ? $payment_settings['every_pay_private_key'] : '' }}">
                                     @if($errors->has('every_pay_private_key'))
                                         <div class="invalid-feedback">
@@ -89,7 +89,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label for="paypal_public_key" class="form-label">Public Key</label>
+                                    <label for="paypal_public_key" class="form-label">{{ __('Public Key') }}</label>
                                     <input type="text" name="paypal_public_key" id="paypal_public_key" class="form-control {{ ($errors->has('paypal_public_key')) ? 'is-invalid' : '' }}" value="{{ (isset($payment_settings['paypal_public_key'])) ? $payment_settings['paypal_public_key'] : '' }}">
                                     @if($errors->has('paypal_public_key'))
                                         <div class="invalid-feedback">
@@ -98,7 +98,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="paypal_private_key" class="form-label">Private Key</label>
+                                    <label for="paypal_private_key" class="form-label">{{ __('Private Key') }}</label>
                                     <input type="text" name="paypal_private_key" id="paypal_private_key" class="form-control {{ ($errors->has('paypal_private_key')) ? 'is-invalid' : '' }}" value="{{ (isset($payment_settings['paypal_private_key'])) ? $payment_settings['paypal_private_key'] : '' }}">
                                     @if($errors->has('paypal_private_key'))
                                         <div class="invalid-feedback">
@@ -110,7 +110,7 @@
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button class="btn btn-success">Update</button>
+                                    <button class="btn btn-success">{{ __('Update') }}</button>
                                 </div>
                             </div>
                         </form>

@@ -11,7 +11,6 @@
 
     // Order Settings
     $order_setting = getOrderSettings($shop_id);
-
     // Default Printer
     $default_printer = (isset($order_setting['default_printer']) && !empty($order_setting['default_printer'])) ? $order_setting['default_printer'] : 'Microsoft Print to PDF';
     // Printer Paper
@@ -20,6 +19,8 @@
     $printer_tray = (isset($order_setting['printer_tray']) && !empty($order_setting['printer_tray'])) ? $order_setting['printer_tray'] : '';
     // Auto Print
     $auto_print = (isset($order_setting['auto_print']) && !empty($order_setting['auto_print'])) ? $order_setting['auto_print'] : 0;
+    $enable_print = (isset($order_setting['enable_print']) && !empty($order_setting['enable_print'])) ? $order_setting['enable_print'] : 0;
+
 
     // Shop Currency
     $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
@@ -62,8 +63,10 @@
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-12 mb-2">
-                                <h3>Order : #{{ $order->id }}</h3>
-                                <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
+                                <h3>{{ __('Order') }} : #{{ $order->id }}</h3>
+                                @if($enable_print == 1)
+                                    <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
+                                @endif
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="card mb-0">
@@ -74,7 +77,7 @@
                                                     <td class="text-muted">
                                                         <div class="client-order-info">
                                                             <div class="">
-                                                                <i class="bi bi-calendar-date"></i>&nbsp;Order Date
+                                                                <i class="bi bi-calendar-date"></i>&nbsp;{{ __('Order Date') }}
                                                             </div>
                                                             <div class="fw-bold">
                                                                 {{ date('d-m-Y h:i:s',strtotime($order->created_at)) }}
@@ -86,7 +89,7 @@
                                                     <td class="text-muted">
                                                         <div class="client-order-info">
                                                             <div class="">
-                                                                <i class="bi bi-credit-card"></i>&nbsp;Payment Method
+                                                                <i class="bi bi-credit-card"></i>&nbsp;{{ __('Payment Method') }}
                                                             </div>
                                                             <div class="fw-bold">
                                                                 {{ $order->payment_method }}
@@ -98,7 +101,7 @@
                                                     <td class="text-muted">
                                                         <div class="client-order-info">
                                                             <div class="">
-                                                                <i class="bi bi-truck"></i>&nbsp;Shipping Method
+                                                                <i class="bi bi-truck"></i>&nbsp;{{ __('Shipping Method') }}
                                                             </div>
                                                             <div class="fw-bold">
                                                                 {{ $order->checkout_type }}
@@ -111,7 +114,7 @@
                                                         <td class="text-muted">
                                                             <div class="client-order-info">
                                                                 <div class="">
-                                                                    <i class="bi bi-table"></i>&nbsp;Table No.
+                                                                    <i class="bi bi-table"></i>&nbsp;{{ __('Table No.') }}
                                                                 </div>
                                                                 <div class="fw-bold">
                                                                     {{ $order->table }}
@@ -136,7 +139,7 @@
                                                             <td class="text-muted">
                                                                 <div class="client-order-info">
                                                                     <div class="">
-                                                                        <i class="bi bi-person-circle"></i>&nbsp;Customer
+                                                                        <i class="bi bi-person-circle"></i>&nbsp;{{ __('Customer') }}
                                                                     </div>
                                                                     <div class="fw-bold">
                                                                         {{ $order->firstname }} {{ $order->lastname }}
@@ -150,7 +153,7 @@
                                                             <td class="text-muted">
                                                                 <div class="client-order-info">
                                                                     <div class="">
-                                                                        <i class="bi bi-envelope"></i>&nbsp;Email
+                                                                        <i class="bi bi-envelope"></i>&nbsp;{{ __('Email') }}
                                                                     </div>
                                                                     <div class="fw-bold text-break">
                                                                         {{ $order->email }}
@@ -162,7 +165,7 @@
                                                             <td class="text-muted">
                                                                 <div class="client-order-info">
                                                                     <div class="">
-                                                                        <i class="bi bi-telephone"></i>&nbsp;Phone No.
+                                                                        <i class="bi bi-telephone"></i>&nbsp;{{ __('Mobile No.') }}
                                                                     </div>
                                                                     <div class="fw-bold">
                                                                         {{ $order->phone }}
@@ -176,7 +179,7 @@
                                                             <td class="text-muted">
                                                                 <div class="client-order-info">
                                                                     <div class="">
-                                                                        <i class="bi bi-house"></i>&nbsp;Room No.
+                                                                        <i class="bi bi-house"></i>&nbsp;{{ __('Room No.') }}
                                                                     </div>
                                                                     <div class="fw-bold text-break">
                                                                         {{ $order->room }}
@@ -188,7 +191,7 @@
                                                             <td class="text-muted">
                                                                 <div class="client-order-info">
                                                                     <div class="">
-                                                                        <i class="bi bi-bicycle"></i>&nbsp;Delivery Time
+                                                                        <i class="bi bi-bicycle"></i>&nbsp;{{ __('Delivery Time') }}
                                                                     </div>
                                                                     <div class="fw-bold text-break">
                                                                         {{ $order->delivery_time }}
@@ -213,7 +216,7 @@
                                                         <td class="text-muted">
                                                             <div class="client-order-info">
                                                                 <div class="">
-                                                                    <i class="bi bi-map"></i>&nbsp;Address
+                                                                    <i class="bi bi-map"></i>&nbsp;{{ __('Address') }}
                                                                 </div>
                                                                 <div class="fw-bold">
                                                                     {{ $order->address }}
@@ -225,7 +228,7 @@
                                                         <td class="text-muted">
                                                             <div class="client-order-info">
                                                                 <div class="">
-                                                                    <i class="bi bi-building"></i>&nbsp;Floor
+                                                                    <i class="bi bi-building"></i>&nbsp;{{ __('Floor') }}
                                                                 </div>
                                                                 <div class="fw-bold">
                                                                     {{ $order->floor }}
@@ -237,7 +240,7 @@
                                                         <td class="text-muted">
                                                             <div class="client-order-info">
                                                                 <div class="">
-                                                                    <i class="bi bi-building"></i>&nbsp;Door Bell
+                                                                    <i class="bi bi-building"></i>&nbsp;{{ __('Door Bell') }}
                                                                 </div>
                                                                 <div class="fw-bold">
                                                                     {{ $order->door_bell }}
@@ -249,9 +252,9 @@
                                                         <td class="text-muted">
                                                             <div class="client-order-info">
                                                                 <div class="">
-                                                                    <i class="bi bi-card-text"></i>&nbsp;Comment
+                                                                    <i class="bi bi-card-text"></i>&nbsp;{{ __('Comments') }}
                                                                 </div>
-                                                                <div class="fw-bold">
+                                                                <div class="fw-bold ps-5">
                                                                     {{ $order->instructions }}
                                                                 </div>
                                                             </div>
@@ -268,9 +271,9 @@
                                     <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0">
                                         <thead>
                                             <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                                                <th class="text-start" style="width:60%">Item</th>
-                                                <th class="text-center">Qty.</th>
-                                                <th class="text-end">Item Total</th>
+                                                <th class="text-start" style="width:60%">{{ __('Item') }}</th>
+                                                <th class="text-center">{{ __('Qty.') }}</th>
+                                                <th class="text-end">{{ __('Item Total') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody class="fw-semibold text-gray-600">
@@ -310,14 +313,14 @@
                                             @endif
                                             <tr>
                                                 <td colspan="2" class="text-dark fs-5 text-end">
-                                                    Sub Total
+                                                    {{ __('Sub Total') }}
                                                 </td>
                                                 <td class="text-dark fs-5 text-end">{{ $order->order_total_text }}</td>
                                             </tr>
                                             @if($order->discount_per > 0)
                                                 <tr>
                                                     <td colspan="2" class="text-dark fs-5 text-end">
-                                                        Discount
+                                                        {{ __('Discount') }}
                                                     </td>
                                                     <td class="text-dark fs-5 text-end">- {{ $order->discount_per }}%</td>
                                                 </tr>
@@ -350,6 +353,8 @@
 
     <script type="text/javascript">
 
+        var enablePrint = "{{ $enable_print }}";
+
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
@@ -365,9 +370,12 @@
             toastr.error('{{ Session::get('error') }}')
         @endif
 
-        JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
-        JSPM.JSPrintManager.auto_reconnect = true;
-        JSPM.JSPrintManager.start();
+        if(enablePrint == 1)
+        {
+            JSPM.JSPrintManager.license_url = "{{ route('jspm') }}";
+            JSPM.JSPrintManager.auto_reconnect = true;
+            JSPM.JSPrintManager.start();
+        }
 
         function printReceipt(ordID)
         {

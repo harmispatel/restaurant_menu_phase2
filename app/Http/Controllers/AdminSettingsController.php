@@ -23,6 +23,7 @@ class AdminSettingsController extends Controller
             'default_special_item_image',
             'contact_us_email',
             'contact_us_subject',
+            'google_map_api',
         ]);
 
         $settings = [];
@@ -64,6 +65,7 @@ class AdminSettingsController extends Controller
         $all_data['copyright_text'] = $request->copyright_text;
         $all_data['contact_us_email'] = serialize($explode);
         $all_data['contact_us_subject'] = $request->contact_us_subject;
+        $all_data['google_map_api'] = $request->google_map_api;
 
         if($request->hasFile('logo'))
         {

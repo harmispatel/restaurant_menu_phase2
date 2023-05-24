@@ -468,136 +468,150 @@ class UserController extends Controller
 
 
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        // Get User Details
-        $user = User::with(['hasOneShop'])->where('id',$id)->first();
-        $shop_id = isset($user->hasOneShop->shop['id']) ? $user->hasOneShop->shop['id'] : '';
+        $id = $request->id;
 
-        if(!empty($shop_id))
+        try
         {
-            $shop = Shop::where('id',$shop_id)->first();
-            $shop_slug = $shop->shop_slug;
-            $shop_directory = public_path('client_uploads/shops/'.$shop_slug);
-            if(!empty($shop_directory))
+            // Get User Details
+            $user = User::with(['hasOneShop'])->where('id',$id)->first();
+            $shop_id = isset($user->hasOneShop->shop['id']) ? $user->hasOneShop->shop['id'] : '';
+
+            if(!empty($shop_id))
             {
-                File::deleteDirectory($shop_directory);
-            }
-
-            // Delete Shop Additional Languages
-            AdditionalLanguage::where('shop_id',$shop_id)->delete();
-
-            // Categories Array
-            $categories = Category::select('id')->where('shop_id',$shop_id)->get();
-            $cat_arr = [];
-
-            if(count($categories) > 0)
-            {
-                foreach($categories as $cat)
+                $shop = Shop::where('id',$shop_id)->first();
+                $shop_slug = $shop->shop_slug;
+                $shop_directory = public_path('client_uploads/shops/'.$shop_slug);
+                if(!empty($shop_directory))
                 {
-                    $cat_arr[] = $cat->id;
+                    File::deleteDirectory($shop_directory);
                 }
-            }
 
-            $cat_arr = (count($cat_arr) > 0) ? array_unique($cat_arr) : [];
+                // Delete Shop Additional Languages
+                AdditionalLanguage::where('shop_id',$shop_id)->delete();
 
+                // Categories Array
+                $categories = Category::select('id')->where('shop_id',$shop_id)->get();
+                $cat_arr = [];
 
-            // Theme Array
-            $themes = Theme::select('id')->where('shop_id',$shop_id)->get();
-            $theme_arr = [];
-
-            if(count($themes) > 0)
-            {
-                foreach($themes as $theme)
+                if(count($categories) > 0)
                 {
-                    $theme_arr[] = $theme->id;
+                    foreach($categories as $cat)
+                    {
+                        $cat_arr[] = $cat->id;
+                    }
                 }
+
+                $cat_arr = (count($cat_arr) > 0) ? array_unique($cat_arr) : [];
+
+
+                // Theme Array
+                $themes = Theme::select('id')->where('shop_id',$shop_id)->get();
+                $theme_arr = [];
+
+                if(count($themes) > 0)
+                {
+                    foreach($themes as $theme)
+                    {
+                        $theme_arr[] = $theme->id;
+                    }
+                }
+
+                $theme_arr = (count($theme_arr) > 0) ? array_unique($theme_arr) : [];
+
+                // Delete Shop Category Tags
+                CategoryProductTags::whereIn('category_id',$cat_arr)->delete();
+
+                // Delete Shop Theme Settings
+                ThemeSettings::whereIn('theme_id',$theme_arr)->delete();
+
+                // Delete Shop Categories
+                Category::where('shop_id',$shop_id)->delete();
+
+                // Delete Category Visits
+                CategoryVisit::where('shop_id',$shop_id)->delete();
+
+                // Delete Shop Items
+                Items::where('shop_id',$shop_id)->delete();
+
+                // Delete Item Prices
+                ItemPrice::where('shop_id',$shop_id)->delete();
+
+                // Delete Item Visits
+                ItemsVisit::where('shop_id',$shop_id)->delete();
+
+                // Delete Language Settings
+                LanguageSettings::where('shop_id',$shop_id)->delete();
+
+                // Delete Order Settings
+                OrderSetting::where('shop_id',$shop_id)->delete();
+
+                // Delete Payment Settings
+                PaymentSettings::where('shop_id',$shop_id)->delete();
+
+                // Delete Orders
+                Order::where('shop_id',$shop_id)->delete();
+
+                // Delete Order Items
+                OrderItems::where('shop_id',$shop_id)->delete();
+
+                // Delete QR Settings
+                QrSettings::where('shop_id',$shop_id)->delete();
+
+                // Delete Shop Banners
+                ShopBanner::where('shop_id',$shop_id)->delete();
+
+                // Delete Shop Settings
+                ClientSettings::where('shop_id',$shop_id)->delete();
+
+                // Delete Shop Themes
+                Theme::where('shop_id',$shop_id)->delete();
+
+                // Delete Shop
+                Shop::where('id',$shop_id)->delete();
+
+                // Tags Delete
+                Tags::where('shop_id',$shop_id)->delete();
+
+                // Delete Users Visits
+                UserVisits::where('shop_id',$shop_id)->delete();
+
+                // Delete Options
+                Option::where('shop_id',$shop_id)->delete();
+
+                // Delete Option Prices
+                OptionPrice::where('shop_id',$shop_id)->delete();
+
+                // Delete Clicks
+                Clicks::where('shop_id',$shop_id)->delete();
+
+                // Delete CheckIns History
+                CheckIn::where('shop_id',$shop_id)->delete();
+
             }
 
-            $theme_arr = (count($theme_arr) > 0) ? array_unique($theme_arr) : [];
+            // Delete UserShop
+            UserShop::where('user_id',$id)->delete();
 
-            // Delete Shop Category Tags
-            CategoryProductTags::whereIn('category_id',$cat_arr)->delete();
+            // Delete User
+            User::where('id',$id)->delete();
 
-            // Delete Shop Theme Settings
-            ThemeSettings::whereIn('theme_id',$theme_arr)->delete();
+            // Delete Users Subscription
+            UsersSubscriptions::where('user_id',$id)->delete();
 
-            // Delete Shop Categories
-            Category::where('shop_id',$shop_id)->delete();
-
-            // Delete Category Visits
-            CategoryVisit::where('shop_id',$shop_id)->delete();
-
-            // Delete Shop Items
-            Items::where('shop_id',$shop_id)->delete();
-
-            // Delete Item Prices
-            ItemPrice::where('shop_id',$shop_id)->delete();
-
-            // Delete Item Visits
-            ItemsVisit::where('shop_id',$shop_id)->delete();
-
-            // Delete Language Settings
-            LanguageSettings::where('shop_id',$shop_id)->delete();
-
-            // Delete Order Settings
-            OrderSetting::where('shop_id',$shop_id)->delete();
-
-            // Delete Payment Settings
-            PaymentSettings::where('shop_id',$shop_id)->delete();
-
-            // Delete Orders
-            Order::where('shop_id',$shop_id)->delete();
-
-            // Delete Order Items
-            OrderItems::where('shop_id',$shop_id)->delete();
-
-            // Delete QR Settings
-            QrSettings::where('shop_id',$shop_id)->delete();
-
-            // Delete Shop Banners
-            ShopBanner::where('shop_id',$shop_id)->delete();
-
-            // Delete Shop Settings
-            ClientSettings::where('shop_id',$shop_id)->delete();
-
-            // Delete Shop Themes
-            Theme::where('shop_id',$shop_id)->delete();
-
-            // Delete Shop
-            Shop::where('id',$shop_id)->delete();
-
-            // Tags Delete
-            Tags::where('shop_id',$shop_id)->delete();
-
-            // Delete Users Visits
-            UserVisits::where('shop_id',$shop_id)->delete();
-
-            // Delete Options
-            Option::where('shop_id',$shop_id)->delete();
-
-            // Delete Option Prices
-            OptionPrice::where('shop_id',$shop_id)->delete();
-
-            // Delete Clicks
-            Clicks::where('shop_id',$shop_id)->delete();
-
-            // Delete CheckIns History
-            CheckIn::where('shop_id',$shop_id)->delete();
-
+            return response()->json([
+                'success' => 1,
+                'message' => "Client has been Removed SuccessFully..",
+            ]);
         }
-
-
-        // Delete UserShop
-        UserShop::where('user_id',$id)->delete();
-
-        // Delete User
-        User::where('id',$id)->delete();
-
-        // Delete Users Subscription
-        UsersSubscriptions::where('user_id',$id)->delete();
-
-        return redirect()->route('clients')->with('success','Client has been Removed SuccessFully..');
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => "Internal Server Error!",
+            ]);
+        }
     }
 
 

@@ -51,7 +51,7 @@
                                                 <td>{{ $user->email }}</td>
                                             </tr>
                                             <tr>
-                                                <th>{{ __('Mobile No') }}</th>
+                                                <th>{{ __('Mobile No.') }}</th>
                                                 <td>:</td>
                                                 <td>{{ $user->mobile }}</td>
                                             </tr>

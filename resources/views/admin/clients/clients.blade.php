@@ -66,32 +66,12 @@
                                             <a href="{{ route('clients.edit',$client->id) }}" class="btn btn-sm btn-primary me-2">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="{{ route('clients.destroy',$client->id) }}" class="btn btn-sm btn-danger">
+                                            <a onclick="deleteClient({{ $client->id }})" class="btn btn-sm btn-danger">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <tr>
-                                    <td>{{ $client->id }}</td>
-                                    <td>{{ $client->name }}</td>
-                                    <td>{{ $client->email }}</td>
-                                    <td>
-                                        @if($client->status == 1)
-                                            <span class="badge bg-success">Active</span>
-                                        @else
-                                            <span class="badge bg-danger">InActive</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('clients.edit',$client->id) }}" class="btn btn-sm btn-primary">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="{{ route('clients.destroy',$client->id) }}" class="btn btn-sm btn-danger">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr> --}}
                             @empty
                                 <div class="col-md-12 text-center">
                                     {{ __('Clients Not Found!')}}
@@ -109,6 +89,52 @@
 {{-- Custom JS --}}
 @section('page-js')
     <script type="text/javascript">
+
+        // Function for Delete Client
+        function deleteClient(clientID)
+        {
+            swal({
+                title: "Are you sure You want to Delete It ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelClient) =>
+            {
+                if (willDelClient)
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ route("clients.destroy") }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'id': clientID,
+                        },
+                        dataType: 'JSON',
+                        success: function(response)
+                        {
+                            if (response.success == 1)
+                            {
+                                swal(response.message, {
+                                    icon: "success",
+                                });
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1200);
+                            }
+                            else
+                            {
+                                toastr.error(response.message);
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Cancelled", "", "error");
+                }
+            });
+        }
 
     </script>
 @endsection

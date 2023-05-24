@@ -50,12 +50,27 @@ class SubscriptionsController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        // Delete Subscription
-        Subscriptions::where('id',$id)->delete();
+        try
+        {
+            $id = $request->id;
 
-        return redirect()->route('subscriptions')->with('success','Subscription has been Removed SuccessFully..');
+            // Delete Subscription
+            Subscriptions::where('id',$id)->delete();
+
+            return response()->json([
+                'success' => 1,
+                'message' => 'Subscription has been Removed SuccessFully..',
+            ]);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
     }
 
 

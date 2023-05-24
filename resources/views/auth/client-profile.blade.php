@@ -6,12 +6,12 @@
 
 {{-- Page Title --}}
 <div class="pagetitle">
-    <h1>Profile</h1>
+    <h1>{{ __('Profile') }}</h1>
     <div class="row">
         <div class="col-md-8">
             <nav>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active">Profile</li>
+                    <li class="breadcrumb-item active">{{ __('Profile') }}</li>
                 </ol>
             </nav>
         </div>
@@ -59,29 +59,29 @@
                 <div class="card position-relative">
                     <a href="{{ route('client.profile.edit',encrypt($user->id)) }}" class="btn btn-sm btn-primary edit-profile-btn"><i class="bi bi-pencil"></i></a>
                     <div class="card-body pt-3">
-                        <h5 class="card-title">Profile Details</h5>
+                        <h5 class="card-title">{{ __('Profile Details') }}</h5>
                         <div class="row mb-2">
-                            <div class="col-lg-3 col-md-4 label"><b>Role</b></div>
+                            <div class="col-lg-3 col-md-4 label"><b>{{ __('Role') }}</b></div>
                             <div class="col-lg-9 col-md-8">{{ ($user->user_type == 1) ? 'Admin' : 'Client' }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-lg-3 col-md-4 label"><b>FirstName</b></div>
+                            <div class="col-lg-3 col-md-4 label"><b>{{ __('FirstName') }}</b></div>
                             <div class="col-lg-9 col-md-8">{{ $user->firstname }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-lg-3 col-md-4 label"><b>LastName</b></div>
+                            <div class="col-lg-3 col-md-4 label"><b>{{ __('LastName') }}</b></div>
                             <div class="col-lg-9 col-md-8">{{ $user->lastname }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-lg-3 col-md-4 label"><b>Shop Name</b></div>
+                            <div class="col-lg-3 col-md-4 label"><b>{{ __('Shop Name') }}</b></div>
                             <div class="col-lg-9 col-md-8">{{ $user->hasOneShop->shop['name'] }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-lg-3 col-md-4 label"><b>Email</b></div>
+                            <div class="col-lg-3 col-md-4 label"><b>{{ __('Email') }}</b></div>
                             <div class="col-lg-9 col-md-8">{{ $user->email }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-lg-3 col-md-4 label"><b>Joined At</b></div>
+                            <div class="col-lg-3 col-md-4 label"><b>{{ __('Joined At') }}</b></div>
                             <div class="col-lg-9 col-md-8">{{ date('d-M-Y',strtotime($user->created_at)) }}</div>
                         </div>
                     </div>

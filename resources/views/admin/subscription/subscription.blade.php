@@ -83,7 +83,7 @@
                                                 <a href="{{ route('subscriptions.edit',$subscription->id) }}" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
-                                                <a href="{{ route('subscriptions.destroy',$subscription->id) }}" class="btn btn-sm btn-danger">
+                                                <a onclick="deleteSubscription({{ $subscription->id }})" class="btn btn-sm btn-danger">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                             </td>
@@ -107,6 +107,52 @@
 {{-- Custom JS --}}
 @section('page-js')
     <script type="text/javascript">
+
+        // Function for Delete Subscription
+        function deleteSubscription(subscriptionID)
+        {
+            swal({
+                title: "Are you sure You want to Delete It ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelSubscription) =>
+            {
+                if (willDelSubscription)
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ route("subscriptions.destroy") }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'id': subscriptionID,
+                        },
+                        dataType: 'JSON',
+                        success: function(response)
+                        {
+                            if (response.success == 1)
+                            {
+                                swal(response.message, {
+                                    icon: "success",
+                                });
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1200);
+                            }
+                            else
+                            {
+                                toastr.error(response.message);
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Cancelled", "", "error");
+                }
+            });
+        }
 
     </script>
 @endsection
