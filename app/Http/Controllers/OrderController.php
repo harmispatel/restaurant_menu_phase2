@@ -45,7 +45,7 @@ class OrderController extends Controller
             {
                 $html .= '<div class="order">';
                     $html .= '<div class="order-btn d-flex align-items-center justify-content-end">';
-                        $html .= '<div class="d-flex align-items-center flex-wrap">'.__('Estimated time of arrival').' <input type="number" name="estimated_time" id="estimated_time" value="'.$order->estimated_time.'" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="'.$order->id.'"';
+                        $html .= '<div class="d-flex align-items-center flex-wrap">'.__('Estimated time of arrival').' <input type="number" onchange="changeEstimatedTime(this)" name="estimated_time" id="estimated_time" value="'.$order->estimated_time.'" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="'.$order->id.'"';
                         if($order->order_status == 'accepted')
                         {
                             $html .= 'disabled';
@@ -496,7 +496,7 @@ class OrderController extends Controller
             $html .= '<div class="row">';
                 $html .= '<div class="col-md-12">';
                     $html .= '<div class="card">';
-                        $html .= '<div class="card-body">';
+                        $html .= '<div class="card-body" style="font-size:26px;">';
                             $html .= '<div class="row mb-3">';
                                 $html .= '<div class="col-md-12 text-center">';
                                     $html .= '<h3>'.$receipt_intro.' - #'.$order_id.'</h3>';
@@ -570,7 +570,7 @@ class OrderController extends Controller
                                 $html .= '</div>';
                                 $html .= '<div class="col-md-9 mt-2">';
                                 $html .= '</div>';
-                                $html .= '<div class="col-md-3 mt-2">';
+                                $html .= '<div class="col-md-3 mt-2" style="font-size:22px;">';
                                     $html .= '<table class="table">';
                                         if($order->discount_per > 0)
                                         {

@@ -60,7 +60,7 @@
                         @forelse ($orders as $order)
                             <div class="order">
                                 <div class="order-btn d-flex align-items-center justify-content-end">
-                                    <div class="d-flex align-items-center flex-wrap">{{ __('Estimated time of arrival') }} <input type="number" name="estimated_time" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}" {{ ($order->order_status == 'accepted') ? 'disabled' : '' }}> {{ __('Minutes') }}.
+                                    <div class="d-flex align-items-center flex-wrap">{{ __('Estimated time of arrival') }} <input type="number" name="estimated_time" onchange="changeEstimatedTime(this)" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}" {{ ($order->order_status == 'accepted') ? 'disabled' : '' }}> {{ __('Minutes') }}.
                                     </div>
                                     @if($auto_print == 0 && $enable_print == 1)
                                         <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
@@ -234,7 +234,7 @@
                                     var imgBase64DataUri = canvas.toDataURL("image/png");
                                     var imgBase64Content = imgBase64DataUri.substring(b64Prefix.length, imgBase64DataUri.length);
 
-                                    var myImageFile = new JSPM.PrintFile(imgBase64Content, JSPM.FileSourceType.Base64, 'invoice.png', 1);
+                                    var myImageFile = new JSPM.PrintFile(imgBase64Content, JSPM.FileSourceType.Base64, 'ORD-INVOICE.PNG', 1);
 
                                     //add file to print job
                                     cpj.files.push(myImageFile);
@@ -287,10 +287,10 @@
 
 
         // Change Estimated Time
-        $('.estimated_time').on('change',function()
+        function changeEstimatedTime(ele)
         {
-            var time = $(this).val();
-            var ord_id = $(this).attr('ord-id');
+            var time = $(ele).val();
+            var ord_id = $(ele).attr('ord-id');
 
             $.ajax({
                 type: "POST",
@@ -312,8 +312,7 @@
                     }
                 }
             });
-
-        });
+        }
 
 
         // Function for Accept Order

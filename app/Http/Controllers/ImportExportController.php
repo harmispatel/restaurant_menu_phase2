@@ -26,6 +26,15 @@ class ImportExportController extends Controller
             'import' => 'required|mimes:xls,csv,xlsx',
         ]);
 
+        $count_records = 0;
+        $count_records += Category::where('shop_id',$request->shop)->count();
+        $count_records += Items::where('shop_id',$request->shop)->count();
+
+        if($count_records > 0)
+        {
+            return redirect()->route('admin.import.export')->with('error','Please Delete Old Records to Insert New Record');
+        }
+
         Excel::import(new CategoryandItemsImport($request->shop),$request->file('import'));
 
         return redirect()->back();

@@ -47,7 +47,7 @@
                       <li><a class="dropdown-item" onclick="changeBackendLang('en')"><x-dynamic-component width="35px" component="flag-language-en" /> English</a></li>
                       <li><a class="dropdown-item" onclick="changeBackendLang('el')"><x-dynamic-component width="35px" component="flag-language-el" /> Greek</a></li>
                     </ul>
-                  </div>
+                </div>
             </li>
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">

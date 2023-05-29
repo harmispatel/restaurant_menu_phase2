@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Category;
 use App\Models\CategoryProductTags;
 use App\Models\ItemPrice;
 use App\Models\Items;
@@ -31,6 +32,19 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
         $cat_dt = $this->category;
         $data = [];
         $all_excel_data = [];
+        $lang_arr = [];
+
+        // Insert Category Language Heading
+        if(count($this->client_langs) > 0 && count($all_lang) > 0)
+        {
+            foreach($this->client_langs as $langkey => $lang)
+            {
+                $lang_code = $lang;
+                $lang_id = $langkey;
+                $lang_arr[] = $lang_code;
+            }
+            $all_excel_data[] = $lang_arr;
+        }
 
         // Category Name By Language
         if(count($this->client_langs) > 0 && count($all_lang) > 0)
@@ -210,18 +224,47 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
     // Sheet Heading
     public function headings(): array
     {
-        $all_lang = $this->languages;
-        $lang_arr = [];
-        if(count($this->client_langs) > 0 && count($all_lang) > 0)
+        $parent_cat_name = '';
+        $link_url = "";
+        $heading_arr = [];
+
+        $cat_type = (isset($this->category['category_type']) && !empty($this->category['category_type'])) ? $this->category['category_type'] : "";
+        $is_parent = (isset($this->category['parent_category']) && !empty($this->category['parent_category'])) ? $this->category['parent_category'] : 0;
+        $link = (isset($this->category['link_url']) && !empty($this->category['link_url'])) ? $this->category['link_url'] : "";
+        $parent_id = (isset($this->category['parent_id']) && !empty($this->category['parent_id'])) ? $this->category['parent_id'] : NULL;
+
+        $heading_arr[] = 'category_type="'.$cat_type.'"';
+        $heading_arr[] = 'is_parent_category="'.$is_parent.'"';
+
+        if(!is_null($parent_id))
         {
-            foreach($this->client_langs as $langkey => $lang)
+            $parent_cat_details = Category::where('id',$parent_id)->first();
+            $parent_cat_name = (isset($parent_cat_details['en_name'])) ? $parent_cat_details['en_name'] : '';
+            if(empty($parent_cat_name))
             {
-                $lang_code = $lang;
-                $lang_id = $langkey;
-                $lang_arr[] = $lang_code;
+                $parent_cat_name = (isset($parent_cat_details['name'])) ? $parent_cat_details['name'] : '';
             }
         }
-        return $lang_arr;
+        $heading_arr[] = 'parent_cat_name="'.$parent_cat_name.'"';
+
+        if($cat_type == 'link')
+        {
+            $link_url = $link;
+        }
+        $heading_arr[] = 'link_url="'.$link_url.'"';
+
+        // $all_lang = $this->languages;
+        // $lang_arr = [];
+        // if(count($this->client_langs) > 0 && count($all_lang) > 0)
+        // {
+        //     foreach($this->client_langs as $langkey => $lang)
+        //     {
+        //         $lang_code = $lang;
+        //         $lang_id = $langkey;
+        //         $lang_arr[] = $lang_code;
+        //     }
+        // }
+        return $heading_arr;
     }
 
 
@@ -240,8 +283,10 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
             AfterSheet::class    => function(AfterSheet $event)
             {
                 // Set Cell width
-                $event->sheet->getDelegate()->getColumnDimension('C')->setWidth(25);
-                $event->sheet->getDelegate()->getColumnDimension('D')->setWidth(35);
+                $event->sheet->getDelegate()->getColumnDimension('A')->setWidth(35);
+                $event->sheet->getDelegate()->getColumnDimension('B')->setWidth(35);
+                $event->sheet->getDelegate()->getColumnDimension('C')->setWidth(35);
+                $event->sheet->getDelegate()->getColumnDimension('D')->setWidth(38);
                 $event->sheet->getDelegate()->getColumnDimension('E')->setWidth(15);
                 $event->sheet->getDelegate()->getColumnDimension('G')->setWidth(15);
                 $event->sheet->getDelegate()->getColumnDimension('I')->setWidth(15);
@@ -258,7 +303,8 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
                 // $event->sheet->getDelegate()->getStyle('A3:AC3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('ECF0F1');
 
                 // Set Bold font of Header
-                $event->sheet->getDelegate()->getStyle('A3:AC3')->getFont()->setBold(true);
+                $event->sheet->getDelegate()->getStyle('A4:AC4')->getFont()->setBold(true);
+                $event->sheet->getDelegate()->getStyle('A1:D1')->getFont()->setBold(true);
             },
         ];
     }

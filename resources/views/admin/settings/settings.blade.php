@@ -272,7 +272,7 @@
                                     <select name="languages[]" id="languages" class="form-control {{ ($errors->has('languages')) ? 'is-invalid' : '' }}" multiple>
                                         @if(count($languages) > 0)
                                             @foreach ($languages as $language)
-                                                <option value="{{ $language->id }}" {{ (in_array($language->id,$languages_array)) ? 'selected' : '' }}>{{ $language->name }}</option>
+                                                <option value="{{ $language->id }}" {{ (in_array($language->id,$languages_array)) ? 'selected' : '' }}>{{ $language->name }} ({{ $language->code }})</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -353,7 +353,8 @@
         $("#languages").select2();
 
         // Add New Language
-        function addNewLanguage(){
+        function addNewLanguage()
+        {
             var lang_name = $('#lang_name').val();
             var lang_code = $('#lang_code').val();
 
@@ -373,10 +374,18 @@
                         "code" : lang_code,
                     },
                     dataType: "JSON",
-                    success: function (response) {
+                    success: function (response)
+                    {
                         if(response.success == 1)
                         {
-                            toastr.success("Language has been Inseted SuccessFully...");
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        }
+                        else
+                        {
+                            toastr.error(response.message);
                             setTimeout(() => {
                                 location.reload();
                             }, 1000);
