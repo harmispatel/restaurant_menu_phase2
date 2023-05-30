@@ -130,7 +130,7 @@
                 <div class="row mb-4">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label class="form-label" for="delivery_message">{{ __('Delivery Message') }}</label>
+                            <label class="form-label" for="delivery_message">{{ __('Delivery out of range Message') }}</label>
                             <textarea name="delivery_message" id="delivery_message" class="form-control">{{ (isset($client_settings['delivery_message']) && !empty($client_settings['delivery_message'])) ? $client_settings['delivery_message'] : '' }}</textarea>
                         </div>
                     </div>

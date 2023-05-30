@@ -1,4 +1,8 @@
-@extends('admin.layouts.admin-layout')
+@php
+    $shop_slug = (isset(Auth::user()->hasOneShop->shop['shop_slug'])) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+@endphp
+
+@extends('client.layouts.client-layout')
 
 @section('title', __('Special Icons'))
 
@@ -11,20 +15,20 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard')}}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard')}}</a></li>
                         <li class="breadcrumb-item active">{{ __('Special Icons')}}</li>
                     </ol>
                 </nav>
             </div>
             <div class="col-md-4" style="text-align: right;">
-                <a href="{{ route('ingredients.add') }}" class="btn btn-sm new-amenity btn-primary">
+                <a href="{{ route('special.icons.add') }}" class="btn btn-sm new-amenity btn-primary">
                     <i class="bi bi-plus-lg"></i>
                 </a>
             </div>
         </div>
     </div>
 
-    {{-- Ingredients Section --}}
+    {{-- Special Icons Section --}}
     <section class="section dashboard">
         <div class="row">
             {{-- Error Message Section --}}
@@ -63,32 +67,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($ingredients as $ingredient)
+                                    @forelse ($special_icons as $specialIcon)
                                         <tr>
-                                            <td>{{ $ingredient->id }}</td>
-                                            <td>{{ $ingredient->name }}</td>
+                                            <td>{{ $specialIcon->id }}</td>
+                                            <td>{{ $specialIcon->name }}</td>
                                             <td>
-                                                @if(!empty($ingredient->icon) && file_exists('public/admin_uploads/ingredients/'.$ingredient->icon))
-                                                    <img src="{{ asset('public/admin_uploads/ingredients/'.$ingredient->icon) }}">
+                                                @if(!empty($specialIcon->icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$specialIcon->icon))
+                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$specialIcon->icon) }}" width="40" height="40">
                                                 @else
                                                     <img src="{{ asset('public/admin_images/not-found/not-found4.png') }}" width="40">
                                                 @endif
                                             </td>
                                             <td>
                                                 @php
-                                                    $status = $ingredient->status;
+                                                    $status = $specialIcon->status;
                                                     $checked = ($status == 1) ? 'checked' : '';
                                                     $checkVal = ($status == 1) ? 0 : 1;
                                                 @endphp
                                                 <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" role="switch" onchange="changeStatus({{ $checkVal }},{{ $ingredient->id }})" id="statusBtn" {{ $checked }}>
+                                                    <input class="form-check-input" type="checkbox" role="switch" onchange="changeStatus({{ $checkVal }},{{ $specialIcon->id }})" id="statusBtn" {{ $checked }}>
                                                 </div>
                                             </td>
                                             <td>
-                                                <a href="{{ route('ingredients.edit',$ingredient->id) }}" class="btn btn-sm btn-primary">
+                                                <a href="{{ route('special.icons.edit',$specialIcon->id) }}" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
-                                                <a href="{{ route('ingredients.destroy',$ingredient->id) }}" class="btn btn-sm btn-danger">
+                                                <a href="{{ route('special.icons.destroy',$specialIcon->id) }}" class="btn btn-sm btn-danger">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                             </td>
@@ -118,7 +122,7 @@
         {
             $.ajax({
                 type: "POST",
-                url: "{{ route('ingredients.status') }}",
+                url: "{{ route('special.icons.status') }}",
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'status': status,

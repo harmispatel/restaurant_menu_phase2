@@ -208,6 +208,10 @@
                                     <label for="receipt_intro" class="form-label">{{ __('Receipt Intro') }}</label>
                                     <input type="text" name="receipt_intro" id="receipt_intro" class="form-control" value="{{ (isset($order_settings['receipt_intro'])) ? $order_settings['receipt_intro'] : '' }}">
                                 </div>
+                                <div class="col-md-6 mt-2">
+                                    <label for="print_font_size" class="form-label">{{ __('Print Font Size') }}</label>
+                                    <input type="number" name="print_font_size" id="print_font_size" value="{{ (isset($order_settings['print_font_size'])) ? $order_settings['print_font_size'] : '' }}" class="form-control">
+                                </div>
                             </div>
                             <hr>
 

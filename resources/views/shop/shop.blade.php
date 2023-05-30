@@ -29,6 +29,8 @@
 
     // Theme Settings
     $theme_settings = themeSettings($shop_theme_id);
+    $slider_buttons = (isset($theme_settings['banner_slide_button']) && !empty($theme_settings['banner_slide_button'])) ? $theme_settings['banner_slide_button'] : 0;
+    $slider_delay_time = (isset($theme_settings['banner_delay_time']) && !empty($theme_settings['banner_delay_time'])) ? $theme_settings['banner_delay_time'] : 3000;
 
     // Get Subscription ID
     $subscription_id = getClientSubscriptionID($shop_details['id']);
@@ -71,8 +73,10 @@
                                 </div>
                             @endforeach
                         </div>
-                        <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
-                        <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
+                        @if($slider_buttons == 1)
+                            <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
+                            <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
+                        @endif
                     </div>
                 </section>
             @endif
@@ -154,8 +158,10 @@
                                 </div>
                             @endforeach
                         </div>
-                        <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
-                        <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
+                        @if($slider_buttons == 1)
+                            <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
+                            <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
+                        @endif
                     </div>
                 </section>
             @endif
@@ -285,6 +291,8 @@
 
     <script type="text/javascript">
 
+        var BannerSpeed = {{ $slider_delay_time }};
+
         // Document Ready Function
         $(document).ready(function()
         {
@@ -298,6 +306,22 @@
             setTimeout(() => {
                 $('.cover-img').hide();
             }, introSec);
+
+            new Swiper('.home_main_slider .swiper-container', {
+                loop: true,
+                speed:1000,
+                effect: 'fade',
+                slidesPerView: 1,
+                autoplay: {
+                    delay: BannerSpeed,
+                    disableOnInteraction: false
+                },
+                paginationClickable: true,
+                navigation: {
+                    nextEl: ".home_main_slider .swiper-slider-button-next",
+                    prevEl: ".home_main_slider .swiper-slider-button-prev"
+                },
+            });
         });
 
 

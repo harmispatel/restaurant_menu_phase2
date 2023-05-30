@@ -106,6 +106,7 @@
             'play_sound',
             'notification_sound',
             'enable_print',
+            'print_font_size',
         ]);
 
         $settings = [];
@@ -199,6 +200,8 @@
             'search_box_position',
             'banner_position',
             'banner_type',
+            'banner_slide_button',
+            'banner_delay_time',
             'background_color',
             'font_color',
             'label_color',

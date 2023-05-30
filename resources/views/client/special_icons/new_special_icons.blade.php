@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin-layout')
+@extends('client.layouts.client-layout')
 
 @section('title',__('New Special Icons'))
 
@@ -11,21 +11,21 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard')}}</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('ingredients') }}">{{ __('Special Icons')}}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard')}}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('special.icons') }}">{{ __('Special Icons')}}</a></li>
                         <li class="breadcrumb-item active">{{ __('New Special Icons')}}</li>
                     </ol>
                 </nav>
             </div>
             <div class="col-md-4" style="text-align: right;">
-                <a href="{{ route('ingredients') }}" class="btn btn-sm new-amenity btn-primary">
+                <a href="{{ route('special.icons') }}" class="btn btn-sm new-amenity btn-primary">
                     <i class="bi bi-arrow-left"></i>
                 </a>
             </div>
         </div>
     </div>
 
-    {{-- New Ingredient add Section --}}
+    {{-- New Special Icon add Section --}}
     <section class="section dashboard">
         <div class="row">
             {{-- Error Message Section --}}
@@ -48,10 +48,10 @@
                 </div>
             @endif
 
-            {{-- Ingredients Card --}}
+            {{-- Special Icons Card --}}
             <div class="col-md-12">
                 <div class="card">
-                    <form class="form" action="{{ route('ingredients.store') }}" method="POST" enctype="multipart/form-data">
+                    <form class="form" action="{{ route('special.icons.store') }}" method="POST" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="card-title">
                             </div>

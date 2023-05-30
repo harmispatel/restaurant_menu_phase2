@@ -291,6 +291,15 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/new-orders',[OrderController::class,'getNewOrders'])->name('new.orders');
         Route::get('/jspm',[OrderController::class,'setPrinterLicense'])->name('jspm');
 
+        // Special Icons
+        Route::get('/special-icons',[IngredientController::class,'specialIcons'])->name('special.icons');
+        Route::get('/new-special-icons',[IngredientController::class,'insertSpecialIcons'])->name('special.icons.add');
+        Route::post('/store-special-icons',[IngredientController::class,'storeSpecialIcons'])->name('special.icons.store');
+        Route::get('/delete-special-icons/{id}',[IngredientController::class,'destroySpecialIcons'])->name('special.icons.destroy');
+        Route::get('/edit-special-icons/{id}',[IngredientController::class,'editSpecialIcons'])->name('special.icons.edit');
+        Route::post('/update-special-icons',[IngredientController::class,'updateSpecialIcons'])->name('special.icons.update');
+        Route::post('/status-special-icons',[IngredientController::class,'changeStatus'])->name('special.icons.status');
+
         // Payment
         Route::get('/payment-settings',[PaymentController::class,'paymentSettings'])->name('payment.settings');
         Route::post('/payment-settings-update',[PaymentController::class,'UpdatePaymentSettings'])->name('update.payment.settings');

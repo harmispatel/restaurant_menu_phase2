@@ -1,6 +1,10 @@
-@extends('admin.layouts.admin-layout')
+@php
+    $shop_slug = (isset(Auth::user()->hasOneShop->shop['shop_slug'])) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+@endphp
 
-@section('title',__('New Special Icons'))
+@extends('client.layouts.client-layout')
+
+@section('title', __('Edit Special Icons'))
 
 @section('content')
 
@@ -11,21 +15,21 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard')}}</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('ingredients') }}">{{ __('Special Icons')}}</a></li>
-                        <li class="breadcrumb-item active">{{ __('New Special Icons')}}</li>
+                        <li class="breadcrumb-item"><a href="{{ route('client.dashboard') }}">{{ __('Dashboard')}}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('special.icons') }}">{{ __('Special Icons')}}</a></li>
+                        <li class="breadcrumb-item active">{{ __('Edit Special Icons')}}</li>
                     </ol>
                 </nav>
             </div>
             <div class="col-md-4" style="text-align: right;">
-                <a href="{{ route('ingredients') }}" class="btn btn-sm new-amenity btn-primary">
+                <a href="{{ route('special.icons') }}" class="btn btn-sm new-amenity btn-primary">
                     <i class="bi bi-arrow-left"></i>
                 </a>
             </div>
         </div>
     </div>
 
-    {{-- New Ingredient add Section --}}
+    {{-- Edit Special Icon Section --}}
     <section class="section dashboard">
         <div class="row">
             {{-- Error Message Section --}}
@@ -48,20 +52,21 @@
                 </div>
             @endif
 
-            {{-- Ingredients Card --}}
+            {{-- Special Icon Card --}}
             <div class="col-md-12">
                 <div class="card">
-                    <form class="form" action="{{ route('ingredients.store') }}" method="POST" enctype="multipart/form-data">
+                    <form class="form" action="{{ route('special.icons.update') }}" method="POST" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="card-title">
                             </div>
                             @csrf
                             <div class="container">
                                 <div class="row">
+                                    <input type="hidden" name="ingredient_id" id="ingredient_id" value="{{ $special_icon->id }}">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="name" class="form-label">{{ __('Name')}}</label>
-                                            <input type="text" name="name" id="name" class="form-control {{ ($errors->has('name')) ? 'is-invalid' : '' }}" placeholder="Enter Special Icon Name" value="{{ old('name') }}">
+                                            <input type="text" name="name" id="name" class="form-control {{ ($errors->has('name')) ? 'is-invalid' : '' }}" placeholder="Enter Special Icon Name" value="{{ $special_icon->name }}">
                                             @if($errors->has('name'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('name') }}
@@ -82,12 +87,19 @@
                                         <div class="form-group mt-2">
                                             <code>Valid Dimensions of Icon is up to (80*80)</code>
                                         </div>
+                                        <div class="form-group mt-2">
+                                            @if(!empty($special_icon->icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$special_icon->icon))
+                                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$special_icon->icon) }}">
+                                            @else
+                                                <img src="{{ asset('public/admin_images/not-found/not-found4.png') }}" width="40">
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="status" class="form-label">{{ __('Status')}}</label>
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" value="1" checked>
+                                                <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" value="1" {{ ($special_icon->status == 1) ? 'checked' : '' }}>
                                             </div>
                                         </div>
                                     </div>
@@ -95,7 +107,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-success">{{ __('Save')}}</button>
+                            <button class="btn btn-success">{{ __('Update')}}</button>
                         </div>
                     </form>
                 </div>

@@ -19,7 +19,7 @@ class ItemsController extends Controller
     public function index($id="")
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
-        $data['ingredients'] = Ingredient::get();
+        $data['ingredients'] = Ingredient::where('shop_id',$shop_id)->get();
         $data['tags'] = Tags::where('shop_id',$shop_id)->get();
         $data['options'] = Option::where('shop_id',$shop_id)->get();
         $data['categories'] = Category::where('shop_id',$shop_id)->where('category_type','product_category')->get();
@@ -396,7 +396,7 @@ class ItemsController extends Controller
             $categories = Category::where('shop_id',$shop_id)->get();
 
             // Ingredients
-            $ingredients = Ingredient::get();
+            $ingredients = Ingredient::where('shop_id',$shop_id)->get();
 
             // Ingredients
             $options = Option::where('shop_id',$shop_id)->get();

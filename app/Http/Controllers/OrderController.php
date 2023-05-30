@@ -242,6 +242,7 @@ class OrderController extends Controller
         $all_data['enable_print'] = (isset($request->enable_print)) ? $request->enable_print : 0;
         $all_data['printer_paper'] = (isset($request->printer_paper)) ? $request->printer_paper : '';
         $all_data['printer_tray'] = (isset($request->printer_tray)) ? $request->printer_tray : '';
+        $all_data['print_font_size'] = (isset($request->print_font_size)) ? $request->print_font_size : '';
         $all_data['notification_sound'] = (isset($request->notification_sound)) ? $request->notification_sound : 'buzzer-01.mp3';
 
         try
@@ -496,7 +497,7 @@ class OrderController extends Controller
             $html .= '<div class="row">';
                 $html .= '<div class="col-md-12">';
                     $html .= '<div class="card">';
-                        $html .= '<div class="card-body" style="font-size:26px;">';
+                        $html .= '<div class="card-body ord-rec-body">';
                             $html .= '<div class="row mb-3">';
                                 $html .= '<div class="col-md-12 text-center">';
                                     $html .= '<h3>'.$receipt_intro.' - #'.$order_id.'</h3>';
@@ -570,7 +571,7 @@ class OrderController extends Controller
                                 $html .= '</div>';
                                 $html .= '<div class="col-md-9 mt-2">';
                                 $html .= '</div>';
-                                $html .= '<div class="col-md-3 mt-2" style="font-size:22px;">';
+                                $html .= '<div class="col-md-3 mt-2 ord-rec-body">';
                                     $html .= '<table class="table">';
                                         if($order->discount_per > 0)
                                         {

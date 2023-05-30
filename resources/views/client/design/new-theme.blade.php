@@ -129,7 +129,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="row align-items-center mb-4">
+                                                        {{-- <div class="row align-items-center mb-4">
                                                             <div class="col-md-7">
                                                                 <span>{{ __('Banner Type')}}</span>
                                                             </div>
@@ -138,6 +138,31 @@
                                                                     <option value="text">Text</option>
                                                                     <option value="image">Image</option>
                                                                 </select>
+                                                            </div>
+                                                        </div> --}}
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-7">
+                                                                <span>{{ __('Banner Slide Button')}}</span>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" name="banner_slide_button" id="banner_slide_button" value="1">
+                                                                    <span class="slider round">
+                                                                        <i class="fa-solid fa-circle-check check_icon"></i>
+                                                                        <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-7">
+                                                                <span>{{ __('Banner Delay Time')}}</span>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="form-group">
+                                                                    <input type="number" name="banner_delay_time" id="banner_delay_time" class="form-control">
+                                                                    <code>Enter Time in Miliseconds</code>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="row align-items-center mb-4">

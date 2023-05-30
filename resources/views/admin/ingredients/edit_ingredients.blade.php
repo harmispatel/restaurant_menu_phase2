@@ -1,19 +1,19 @@
 @extends('admin.layouts.admin-layout')
 
-@section('title', __('Edit Indicative Icons'))
+@section('title', __('Edit Special Icons'))
 
 @section('content')
 
     {{-- Page Title --}}
     <div class="pagetitle">
-        <h1>{{ __('Indicative Icons')}}</h1>
+        <h1>{{ __('Special Icons')}}</h1>
         <div class="row">
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard')}}</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('ingredients') }}">{{ __('Indicative Icons')}}</a></li>
-                        <li class="breadcrumb-item active">{{ __('Edit Indicative Icons')}}</li>
+                        <li class="breadcrumb-item"><a href="{{ route('ingredients') }}">{{ __('Special Icons')}}</a></li>
+                        <li class="breadcrumb-item active">{{ __('Edit Special Icons')}}</li>
                     </ol>
                 </nav>
             </div>
@@ -62,7 +62,7 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="name" class="form-label">{{ __('Name')}}</label>
-                                            <input type="text" name="name" id="name" class="form-control {{ ($errors->has('name')) ? 'is-invalid' : '' }}" placeholder="Enter Ingredient Name" value="{{ $ingredient->name }}">
+                                            <input type="text" name="name" id="name" class="form-control {{ ($errors->has('name')) ? 'is-invalid' : '' }}" placeholder="Enter Special Icon Name" value="{{ $ingredient->name }}">
                                             @if($errors->has('name'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('name') }}

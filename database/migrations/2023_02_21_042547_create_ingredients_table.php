@@ -15,6 +15,8 @@ class CreateIngredientsTable extends Migration
     {
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
+            $table->integer('shop_id')->nullable();
+            $table->integer('parent_id')->nullable();
             $table->string('name',50);
             $table->string('icon')->nullable();
             $table->tinyInteger('status')->default(0);

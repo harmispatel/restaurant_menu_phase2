@@ -10,6 +10,7 @@ use App\Models\CategoryVisit;
 use App\Models\CheckIn;
 use App\Models\Clicks;
 use App\Models\ClientSettings;
+use App\Models\Ingredient;
 use App\Models\ItemPrice;
 use App\Models\Items;
 use App\Models\ItemsVisit;
@@ -125,6 +126,7 @@ class UserController extends Controller
             // Make Shop Directory
             mkdir(public_path('client_uploads/shops/'.$shop_slug));
             mkdir(public_path('client_uploads/shops/'.$shop_slug."/banners"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/ingredients"));
             mkdir(public_path('client_uploads/shops/'.$shop_slug."/categories"));
             mkdir(public_path('client_uploads/shops/'.$shop_slug."/intro_icons"));
             mkdir(public_path('client_uploads/shops/'.$shop_slug."/items"));
@@ -218,6 +220,8 @@ class UserController extends Controller
                         'search_box_position' => 'right',
                         'banner_position' => 'top',
                         'banner_type' => 'image',
+                        'banner_slide_button' => 1,
+                        'banner_delay_time' => 3000,
                         'background_color' => '#ffffff',
                         'font_color' => '#4d572b',
                         'label_color' => '#ffffff',
@@ -270,6 +274,8 @@ class UserController extends Controller
                         'search_box_position' => 'right',
                         'banner_position' => 'top',
                         'banner_type' => 'image',
+                        'banner_slide_button' => 1,
+                        'banner_delay_time' => 3000,
                         'background_color' => '#000000',
                         'font_color' => '#ffffff',
                         'label_color' => '#000000',
@@ -360,6 +366,34 @@ class UserController extends Controller
             $primary_lang->key = "primary_language";
             $primary_lang->value = $primary_language;
             $primary_lang->save();
+
+
+            // Add Special Icon From Admin To Client
+            $admin_special_icons = Ingredient::where('shop_id',NULL)->get();
+
+            if(count($admin_special_icons) > 0)
+            {
+                foreach($admin_special_icons as $sp_icon)
+                {
+                    $sp_icon_id = (isset($sp_icon['id'])) ? $sp_icon['id'] : '';
+                    $sp_icon_name = (isset($sp_icon['name'])) ? $sp_icon['name'] : '';
+                    $sp_icon_status = (isset($sp_icon['status'])) ? $sp_icon['status'] : 0;
+                    $sp_icon_image = (isset($sp_icon['icon'])) ? $sp_icon['icon'] : '';
+
+                    $new_special_icon = new Ingredient();
+                    $new_special_icon->shop_id = $shop->id;
+                    $new_special_icon->parent_id = $sp_icon_id;
+                    $new_special_icon->name = $sp_icon_name;
+                    $new_special_icon->status = $sp_icon_status;
+                    $new_special_icon->icon = $sp_icon_image;
+                    $new_special_icon->save();
+
+                    if(!empty($sp_icon_image) && file_exists('public/admin_uploads/ingredients/'.$sp_icon_image))
+                    {
+                        File::copy(public_path('admin_uploads/ingredients/'.$sp_icon_image), public_path('client_uploads/shops/'.$shop->shop_slug.'/ingredients/'.$sp_icon_image));
+                    }
+                }
+            }
 
             // Insert User Subscriptions
             if($subscription_id)

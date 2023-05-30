@@ -20,7 +20,7 @@ class Language
         if (session()->has('lang_code')) {
             App::setLocale(session()->get('lang_code'));
         }
-        if (session()->has('locale')) {
+        elseif (session()->has('locale')) {
             App::setLocale(session()->get('locale'));
         }
         return $next($request);

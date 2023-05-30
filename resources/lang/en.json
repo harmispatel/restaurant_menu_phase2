@@ -10,7 +10,7 @@
     "Clients":"Clients",
     "All Clients":"All Clients",
     "Subscriptions":"Subscriptions",
-    "Indicative Icons":"Indicative Icons",
+    "Special Icons":"Special Icons",
     "System":"System",
     "Profile":"Profile",
     "Admins":"Admins",
@@ -165,7 +165,7 @@
     "Footer Text HTML":"Footer Text HTML",
     "Map":"Map",
     "Website":"Website",
-    "Delivery Message":"Delivery Message",
+    "Delivery out of range Message":"Delivery out of range Message",
 
     "Logo will appear on the top of your menu":"Logo will appear on the top of your menu",
 
@@ -386,6 +386,7 @@
     "Printer Trays" : "Printer Trays",
     "Printer Papers" : "Printer Papers",
     "Default Printer" : "Default Printer",
+    "Print Font Size" : "Print Font Size",
     "Receipt Intro" : "Receipt Intro",
     "Delivery / Takeaway Scheduler" : "Delivery / Takeaway Scheduler",
     "Delivery Range Settings" : "Delivery Range Settings",

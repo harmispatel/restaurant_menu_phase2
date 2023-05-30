@@ -10,7 +10,7 @@
     "Clients":"Συνδρομητές",
     "All Clients":"Όλοι οι Συνδρομητές",
     "Subscriptions":"Συνδρομές",
-    "Indicative Icons":"Ενδεικτικά Εικονίδια",
+    "Special Icons":"Ειδικά εικονίδια",
     "System":"Σύστημα",
     "Profile":"Προφίλ",
     "Admins":"Διαχειριστές",
@@ -157,7 +157,7 @@
     "Footer Text HTML":"Κείμενο Υποσέλιδου",
     "Map":"Χάρτης",
     "Website":"Ιστοσελίδα",
-    "Delivery Message":"Μήνυμα παράδοσης",
+    "Delivery out of range Message":"Μήνυμα παράδοσης εκτός εύρους",
 
     "Logo will appear on the top of your menu":"Το λογότυπο θα εμφανίζεται στην κορυφή",
 
@@ -377,6 +377,7 @@
     "Printer Trays" : "Triacy εκτυπωτή",
     "Printer Papers" : "Χαρτί για εκτυπωτές",
     "Default Printer" : "Ο προεπιλεγμένος εκτυπωτής",
+    "Print Font Size" : "Μέγεθος γραμματοσειράς εκτύπωσης",
     "Receipt Intro" : "Εισαγωγή συνταγής",
     "Delivery / Takeaway Scheduler" : "ΠΑΡΑΔΟΣΗ / TAKEAWAY SACHEDULERA",
     "Delivery Range Settings" : "Ρυθμίσεις χρώματος παράδοσης",
