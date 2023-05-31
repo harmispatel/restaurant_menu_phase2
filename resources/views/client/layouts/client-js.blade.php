@@ -94,31 +94,6 @@
         });
     }
 
-    // sound.play();
-
-    // var audioContext;
-
-    // // Function to create and start the AudioContext
-    // function createAudioContext() {
-    // // Check if the AudioContext is already created
-    // if (!audioContext) {
-    //     // Create the AudioContext
-    //     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    // }
-
-    // // Start the AudioContext
-    // audioContext.resume().then(() => {
-    //     console.log('AudioContext is now active');
-    //     // You can now use the AudioContext for audio playback
-    // });
-    // }
-
-    // $(document).ready(function () {
-    //     // document.addEventListener('click', function() {
-    //         // Call the function to create and start the AudioContext
-    //         createAudioContext();
-    //     // });
-    // });
 
     function previewMyShop(shopSlug)
     {
@@ -126,6 +101,7 @@
         $('#previewModal iframe').attr('src',preUrl);
         $('#previewModal').modal('show');
     }
+
 
     // Change Admin Language
     function changeBackendLang(langCode)

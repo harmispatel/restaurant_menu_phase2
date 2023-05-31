@@ -991,6 +991,12 @@ class ShopController extends Controller
         // Admin Settings
         $admin_settings = getAdminSettings();
 
+        // Get Subscription ID
+        $subscription_id = getClientSubscriptionID($request->shop_id);
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
         // Shop Details
         $shop_details = Shop::where('id',$request->shop_id)->first();
 
@@ -1241,29 +1247,33 @@ class ShopController extends Controller
                             $html .= '</div>';
                         }
 
-                        $html .= '<div class="row">';
-                            $html .= '<div class="col-md-4">';
-                                $html .= '<div class="input-group" style="width:130px">';
-                                    $html .= '<span class="input-group-btn">';
-                                        $html .= '<button type="button" class="btn btn-danger btn-number" disabled="disabled" data-type="minus" onclick="QuntityIncDec(this)" data-field="quant[1]" style="border-radius:5px 0 0 5px">';
-                                            $html .= '<span class="fa fa-minus"></span>';
-                                        $html .= '</button>';
-                                    $html .= '</span>';
-                                    $html .= '<input type="text" name="quant[1]" id="quantity" onchange="QuntityIncDecOnChange(this)" class="form-control input-number" value="1" min="1" max="1000">';
-                                    $html .= '<span class="input-group-btn">';
-                                        $html .= '<button type="button" onclick="QuntityIncDec(this)" class="btn btn-success btn-number" data-type="plus" data-field="quant[1]" style="border-radius:0 5px 5px 0">';
-                                            $html .= '<span class="fa fa-plus"></span>';
-                                        $html .= '</button>';
-                                    $html .= '</span>';
+                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                        {
+                            $html .= '<div class="row">';
+                                $html .= '<div class="col-md-4">';
+                                    $html .= '<div class="input-group" style="width:130px">';
+                                        $html .= '<span class="input-group-btn">';
+                                            $html .= '<button type="button" class="btn btn-danger btn-number" disabled="disabled" data-type="minus" onclick="QuntityIncDec(this)" data-field="quant[1]" style="border-radius:5px 0 0 5px">';
+                                                $html .= '<span class="fa fa-minus"></span>';
+                                            $html .= '</button>';
+                                        $html .= '</span>';
+                                        $html .= '<input type="text" name="quant[1]" id="quantity" onchange="QuntityIncDecOnChange(this)" class="form-control input-number" value="1" min="1" max="1000">';
+                                        $html .= '<span class="input-group-btn">';
+                                            $html .= '<button type="button" onclick="QuntityIncDec(this)" class="btn btn-success btn-number" data-type="plus" data-field="quant[1]" style="border-radius:0 5px 5px 0">';
+                                                $html .= '<span class="fa fa-plus"></span>';
+                                            $html .= '</button>';
+                                        $html .= '</span>';
+                                    $html .= '</div>';
                                 $html .= '</div>';
                             $html .= '</div>';
-                        $html .= '</div>';
 
-                        $html .= '<div class="row">';
-                            $html .= '<div class="col-md-12 text-center mt-3">';
-                                $html .= '<a class="btn btn-sm btn-primary" onclick="addToCart('.$item['id'].')">'.__('Add to Cart').'</a>';
+                            $html .= '<div class="row">';
+                                $html .= '<div class="col-md-12 text-center mt-3">';
+                                    $html .= '<a class="btn btn-sm btn-primary" onclick="addToCart('.$item['id'].')">'.__('Add to Cart').'</a>';
+                                $html .= '</div>';
                             $html .= '</div>';
-                        $html .= '</div>';
+                        }
+
                     }
 
 
@@ -1570,6 +1580,20 @@ class ShopController extends Controller
         // Order Settings
         $order_settings = getOrderSettings($shop_id);
 
+        // Get Subscription ID
+        $subscription_id = getClientSubscriptionID($shop_id);
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
+
+        if(!isset($package_permissions['ordering']) || empty($package_permissions['ordering']) || $package_permissions['ordering'] != 1)
+        {
+            session()->remove('cart');
+            session()->save();
+            return redirect()->route('restaurant',$shop_slug);
+        }
+
         $discount_per = (isset($order_settings['discount_percentage']) && ($order_settings['discount_percentage'] > 0)) ? $order_settings['discount_percentage'] : 0;
         session()->put('discount_per',$discount_per);
         session()->save();
@@ -1631,6 +1655,20 @@ class ShopController extends Controller
 
         // Shop ID
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
+
+        // Get Subscription ID
+        $subscription_id = getClientSubscriptionID($shop_id);
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
+
+        if(!isset($package_permissions['ordering']) || empty($package_permissions['ordering']) || $package_permissions['ordering'] != 1)
+        {
+            session()->remove('cart');
+            session()->save();
+            return redirect()->route('restaurant',$shop_slug);
+        }
 
         $order_settings = getOrderSettings($shop_id);
         $min_amount_for_delivery = (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '';

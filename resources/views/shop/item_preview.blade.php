@@ -83,38 +83,41 @@
                         @foreach ($categories as $cat)
                             @php
                                 $active_cat = checkCategorySchedule($cat->id,$cat->shop_id);
+                                $check_cat_type_permission = checkCatTypePermission($cat->category_type,$shop_details['id']);
                             @endphp
 
                             @if($active_cat == 1)
-                                <li class="nav-item" role="presentation">
-                                    @if($cat->category_type == 'link')
-                                        <a href="{{ $cat->link_url }}" target="_blank" class="nav-link cat-btn">
-                                    @else
-                                        <a href="{{ route('items.preview',[$shop_details['shop_slug'],$cat->id]) }}" class="nav-link cat-btn {{ ($cat->id == $current_cat_id) ? 'active' : '' }}">
-                                    @endif
-                                        <div class="img_box">
-                                            {{-- Img Section --}}
-                                            @if($cat->category_type == 'page' || $cat->category_type == 'image_gallary' || $cat->category_type == 'link' || $cat->category_type == 'check_in_page' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_category')
-                                                @if(!empty($cat->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover))
-                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover) }}" class="w-100">
+                                @if($check_cat_type_permission == 1)
+                                    <li class="nav-item" role="presentation">
+                                        @if($cat->category_type == 'link')
+                                            <a href="{{ $cat->link_url }}" target="_blank" class="nav-link cat-btn">
+                                        @else
+                                            <a href="{{ route('items.preview',[$shop_details['shop_slug'],$cat->id]) }}" class="nav-link cat-btn {{ ($cat->id == $current_cat_id) ? 'active' : '' }}">
+                                        @endif
+                                            <div class="img_box">
+                                                {{-- Img Section --}}
+                                                @if($cat->category_type == 'page' || $cat->category_type == 'image_gallary' || $cat->category_type == 'link' || $cat->category_type == 'check_in_page' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_category')
+                                                    @if(!empty($cat->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover))
+                                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover) }}" class="w-100">
+                                                    @else
+                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                    @endif
                                                 @else
-                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                @endif
-                                            @else
-                                                @php
-                                                    $cat_image = isset($cat->categoryImages[0]['image']) ? $cat->categoryImages[0]['image'] : '';
-                                                @endphp
+                                                    @php
+                                                        $cat_image = isset($cat->categoryImages[0]['image']) ? $cat->categoryImages[0]['image'] : '';
+                                                    @endphp
 
-                                                @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
-                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" class="w-100">
-                                                @else
-                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                    @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
+                                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" class="w-100">
+                                                    @else
+                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                    @endif
                                                 @endif
-                                            @endif
-                                            <span>{{ isset($cat->$name_key) ? $cat->$name_key : "" }}</span>
-                                        </div>
-                                    </a>
-                                </li>
+                                                <span>{{ isset($cat->$name_key) ? $cat->$name_key : "" }}</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                @endif
                             @endif
                         @endforeach
                     @endif

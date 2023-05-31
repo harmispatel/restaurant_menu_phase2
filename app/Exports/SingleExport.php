@@ -33,6 +33,41 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
         $data = [];
         $all_excel_data = [];
         $lang_arr = [];
+        $cat_arr = [];
+        $parent_cat_name = '';
+
+
+        // Insert Category Details
+        $cat_type = (isset($this->category['category_type']) && !empty($this->category['category_type'])) ? $this->category['category_type'] : "";
+        $is_parent = (isset($this->category['parent_category']) && !empty($this->category['parent_category'])) ? $this->category['parent_category'] : 0;
+        $link = (isset($this->category['link_url']) && !empty($this->category['link_url'])) ? $this->category['link_url'] : "";
+        $parent_id = (isset($this->category['parent_id']) && !empty($this->category['parent_id'])) ? $this->category['parent_id'] : NULL;
+
+        $cat_arr[] = $cat_type;
+        $cat_arr[] = $is_parent;
+
+        if(!is_null($parent_id))
+        {
+            $parent_cat_details = Category::where('id',$parent_id)->first();
+            $parent_cat_name = (isset($parent_cat_details['en_name'])) ? $parent_cat_details['en_name'] : '';
+            if(empty($parent_cat_name))
+            {
+                $parent_cat_name = (isset($parent_cat_details['name'])) ? $parent_cat_details['name'] : '';
+            }
+        }
+        $cat_arr[] = $parent_cat_name;
+
+        if($cat_type == 'link')
+        {
+            $link_url = $link;
+        }
+        else
+        {
+            $link_url = "";
+        }
+        $cat_arr[] = $link_url;
+
+        $all_excel_data[] = $cat_arr;
 
         // Insert Category Language Heading
         if(count($this->client_langs) > 0 && count($all_lang) > 0)
@@ -224,46 +259,11 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
     // Sheet Heading
     public function headings(): array
     {
-        $parent_cat_name = '';
-        $link_url = "";
         $heading_arr = [];
-
-        $cat_type = (isset($this->category['category_type']) && !empty($this->category['category_type'])) ? $this->category['category_type'] : "";
-        $is_parent = (isset($this->category['parent_category']) && !empty($this->category['parent_category'])) ? $this->category['parent_category'] : 0;
-        $link = (isset($this->category['link_url']) && !empty($this->category['link_url'])) ? $this->category['link_url'] : "";
-        $parent_id = (isset($this->category['parent_id']) && !empty($this->category['parent_id'])) ? $this->category['parent_id'] : NULL;
-
-        $heading_arr[] = 'category_type="'.$cat_type.'"';
-        $heading_arr[] = 'is_parent_category="'.$is_parent.'"';
-
-        if(!is_null($parent_id))
-        {
-            $parent_cat_details = Category::where('id',$parent_id)->first();
-            $parent_cat_name = (isset($parent_cat_details['en_name'])) ? $parent_cat_details['en_name'] : '';
-            if(empty($parent_cat_name))
-            {
-                $parent_cat_name = (isset($parent_cat_details['name'])) ? $parent_cat_details['name'] : '';
-            }
-        }
-        $heading_arr[] = 'parent_cat_name="'.$parent_cat_name.'"';
-
-        if($cat_type == 'link')
-        {
-            $link_url = $link;
-        }
-        $heading_arr[] = 'link_url="'.$link_url.'"';
-
-        // $all_lang = $this->languages;
-        // $lang_arr = [];
-        // if(count($this->client_langs) > 0 && count($all_lang) > 0)
-        // {
-        //     foreach($this->client_langs as $langkey => $lang)
-        //     {
-        //         $lang_code = $lang;
-        //         $lang_id = $langkey;
-        //         $lang_arr[] = $lang_code;
-        //     }
-        // }
+        $heading_arr[] = 'Type';
+        $heading_arr[] = 'Parent';
+        $heading_arr[] = 'Parent Name';
+        $heading_arr[] = 'Link';
         return $heading_arr;
     }
 

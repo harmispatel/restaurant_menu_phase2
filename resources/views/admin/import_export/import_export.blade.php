@@ -99,11 +99,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <ul style="list-style: none;padding: 0; margin: 0;" class="text-muted">
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> It is mandatory to write the category type in the category.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> The is_parent_category field is also mandatory and can only have a value of 1 or 0.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a parent category then write 1 in is_parent_category and if there is no parent category then write 0.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> In category type, there will be only 7 types of category type.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Category Types which are as follows :
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> It is mandatory to write the Type field in the category to write category type.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> The Parent field is also mandatory and can only have a value of 1 or 0.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a parent category then write 1 in Parent and if there is no parent category then write 0.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> In Type field, there will be only 7 Types of category type.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Types which are as follows :
                                         <ol class="ms-3">
                                             <li>parent_category</li>
                                             <li>product_category</li>
@@ -114,15 +114,15 @@
                                             <li>pdf_category</li>
                                         </ol>
                                     </li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a parent category, type the parent_category in the category_type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a child category or category, type the product_category in the category_type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if your category is a child category then it is mandatory to write parent category name in parent_cat_name.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if category is parent and not-child(root) then don't write anything in parent_cat_name leave it blank.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add page, type the page in the category_type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add pdf, type the pdf_category in the category_type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add Image Gallery, type the image_gallary in the category_type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add CheckIn Page, type the check_in_page in the category_type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add Link, type the link in the category_type field.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a parent category, type the parent_category in the Type field.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a child category or category, type the product_category in the Type field.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if your category is a child category then it is mandatory to write parent category name in Parent Name.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if category is parent and not-child(root) then don't write anything in Parent Name leave it blank.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add page, type the page in the Type field.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add pdf, type the pdf_category in the Type field.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add Image Gallery, type the image_gallary in the Type field.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add CheckIn Page, type the check_in_page in the Type field.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add Link, type the link in the Type field.</li>
                                     <li><i class="bi bi-arrow-right-circle text-success"></i> And if your category_type is page then write your link in link_url field and if not leave it blank.</li>
                                     <li class="fw-bold"><i class="bi bi-arrow-right-circle text-success"></i> Items will be inserted only if your category is a category or a child category.</li>
                                     <li class="fw-bold"><i class="bi bi-arrow-right-circle text-success"></i> The data in your Excel file should be in the same format as the demo Excel file, so check the demo file first and then after import your excel file.</li>

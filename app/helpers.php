@@ -619,4 +619,61 @@
         return $every_pay_config;
     }
 
+
+    // Function for Check Category Type Permission
+    function checkCatTypePermission($catType,$shop_id)
+    {
+        $permission = 0;
+        // Get Subscription ID
+        $subscription_id = getClientSubscriptionID($shop_id);
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
+        if($catType == 'parent_category' || $catType == 'product_category')
+        {
+            $permission = 1;
+        }
+        else
+        {
+            if($catType == 'page')
+            {
+                if(isset($package_permissions['page']) && !empty($package_permissions['page']) && $package_permissions['page'] == 1)
+                {
+                    $permission = 1;
+                }
+            }
+            elseif($catType == 'link')
+            {
+                if(isset($package_permissions['link']) && !empty($package_permissions['link']) && $package_permissions['link'] == 1)
+                {
+                    $permission = 1;
+                }
+            }
+            elseif($catType == 'pdf_category')
+            {
+                if(isset($package_permissions['pdf_file']) && !empty($package_permissions['pdf_file']) && $package_permissions['pdf_file'] == 1)
+                {
+                    $permission = 1;
+                }
+            }
+            elseif($catType == 'image_gallary')
+            {
+                if(isset($package_permissions['gallery']) && !empty($package_permissions['gallery']) && $package_permissions['gallery'] == 1)
+                {
+                    $permission = 1;
+                }
+            }
+            elseif($catType == 'check_in_page')
+            {
+                if(isset($package_permissions['check_in']) && !empty($package_permissions['check_in']) && $package_permissions['check_in'] == 1)
+                {
+                    $permission = 1;
+                }
+            }
+        }
+
+        return $permission;
+    }
+
 ?>

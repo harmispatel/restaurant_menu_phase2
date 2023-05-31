@@ -97,36 +97,40 @@
                             $thumb_image = isset($category->cover) ? $category->cover : '';
 
                             $active_cat = checkCategorySchedule($category->id,$category->shop_id);
+
+                            $check_cat_type_permission = checkCatTypePermission($category->category_type,$shop_details['id']);
                         @endphp
                             @if($active_cat == 1)
-                                <div class="menu_list_item">
-                                    @if($category->category_type == 'link')
-                                        <a href="{{ (isset($category->link_url) && !empty($category->link_url)) ? $category->link_url : '#' }}" target="_blank">
-                                    @elseif($category->category_type == 'parent_category')
-                                        <a href="{{ route('restaurant',[$shop_slug,$category->id]) }}">
-                                    @else
-                                        <a href="{{ route('items.preview',[$shop_details['shop_slug'],$category->id]) }}">
-                                    @endif
-
-                                        {{-- Image Section --}}
-                                        @if($category->category_type == 'product_category')
-                                            @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
-                                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" class="w-100">
-                                            @else
-                                                <img src="{{ $default_cat_img }}" class="w-100">
-                                            @endif
+                                @if($check_cat_type_permission == 1)
+                                    <div class="menu_list_item">
+                                        @if($category->category_type == 'link')
+                                            <a href="{{ (isset($category->link_url) && !empty($category->link_url)) ? $category->link_url : '#' }}" target="_blank">
+                                        @elseif($category->category_type == 'parent_category')
+                                            <a href="{{ route('restaurant',[$shop_slug,$category->id]) }}">
                                         @else
-                                            @if(!empty($thumb_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$thumb_image))
-                                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$thumb_image) }}" class="w-100">
-                                            @else
-                                                <img src="{{ $default_cat_img }}" class="w-100">
-                                            @endif
+                                            <a href="{{ route('items.preview',[$shop_details['shop_slug'],$category->id]) }}">
                                         @endif
 
-                                        {{-- Name Section --}}
-                                        <h3 class="item_name">{{ isset($category->$name_code) ? $category->$name_code : '' }}</h3>
-                                    </a>
-                                </div>
+                                            {{-- Image Section --}}
+                                            @if($category->category_type == 'product_category')
+                                                @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
+                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" class="w-100">
+                                                @else
+                                                    <img src="{{ $default_cat_img }}" class="w-100">
+                                                @endif
+                                            @else
+                                                @if(!empty($thumb_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$thumb_image))
+                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$thumb_image) }}" class="w-100">
+                                                @else
+                                                    <img src="{{ $default_cat_img }}" class="w-100">
+                                                @endif
+                                            @endif
+
+                                            {{-- Name Section --}}
+                                            <h3 class="item_name">{{ isset($category->$name_code) ? $category->$name_code : '' }}</h3>
+                                        </a>
+                                    </div>
+                                @endif
                             @endif
                     @endforeach
                 </div>

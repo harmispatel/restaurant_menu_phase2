@@ -24,7 +24,7 @@ class CategoryandItemsImport implements ToCollection
     {
         if(count($rows) > 0)
         {
-            $cat_setting_arr = isset($rows[0]) ? $rows[0]->toArray() : [];
+            $cat_setting_arr = isset($rows[1]) ? $rows[1]->toArray() : [];
 
             // Schedule_type & Array
             $schedule_type = 'time';
@@ -32,18 +32,12 @@ class CategoryandItemsImport implements ToCollection
 
             // Category Type
             $category_type = (isset($cat_setting_arr[0])) ? $cat_setting_arr[0] : '';
-            $category_type = (!empty($category_type)) ? str_replace("category_type=","",$category_type) : '';
-            $category_type = (!empty($category_type)) ? str_replace('"', '', $category_type) : '';
 
             // Is Parent Category
-            $is_parent_category = (isset($cat_setting_arr[1])) ? $cat_setting_arr[1] : '';
-            $is_parent_category = (!empty($is_parent_category)) ? str_replace("is_parent_category=","",$is_parent_category) : '';
-            $is_parent_category = (!empty($is_parent_category)) ? str_replace('"', '', $is_parent_category) : 0;
+            $is_parent_category = (isset($cat_setting_arr[1])) ? $cat_setting_arr[1] : 0;
 
             // Parent Category Name
             $parent_cat_name = (isset($cat_setting_arr[2])) ? $cat_setting_arr[2] : '';
-            $parent_cat_name = (!empty($parent_cat_name)) ? str_replace("parent_cat_name=","",$parent_cat_name) : '';
-            $parent_cat_name = (!empty($parent_cat_name)) ? str_replace('"', '', $parent_cat_name) : '';
 
             // Parent Cat Details
             $parent_cat_details = Category::where('name',$parent_cat_name)->orWhere('en_name',$parent_cat_name)->where('shop_id',$this->shop_id)->first();
@@ -51,10 +45,8 @@ class CategoryandItemsImport implements ToCollection
 
             // Link URL
             $link_url = (isset($cat_setting_arr[3])) ? $cat_setting_arr[3] : '';
-            $link_url = (!empty($link_url)) ? str_replace("link_url=","",$link_url) : '';
-            $link_url = (!empty($link_url)) ? str_replace('"', '', $link_url) : '';
 
-            $lang_array = isset($rows[1]) ? $rows[1]->toArray() : [];
+            $lang_array = isset($rows[2]) ? $rows[2]->toArray() : [];
             $langs = (isset($lang_array) && count($lang_array) > 0) ? array_filter($lang_array) : [];
 
             if(count($langs) > 0)
@@ -86,7 +78,7 @@ class CategoryandItemsImport implements ToCollection
                     foreach($langs as $key => $lang)
                     {
                         $name_key = $lang."_name";
-                        $lang_category_name = isset($rows[2][$key]) ? $rows[2][$key] : '';
+                        $lang_category_name = isset($rows[3][$key]) ? $rows[3][$key] : '';
                         $category->$name_key = $lang_category_name;
                     }
                     $category->published = 1;
@@ -95,7 +87,7 @@ class CategoryandItemsImport implements ToCollection
 
 
                     // Insert Items
-                    unset($rows[0],$rows[1],$rows[2],$rows[3]);
+                    unset($rows[0],$rows[1],$rows[2],$rows[3],$rows[4]);
 
                     if($category_type == 'product_category')
                     {
@@ -433,14 +425,11 @@ class CategoryandItemsImport implements ToCollection
                 {
                     return redirect()->route('admin.import.data')->with('error','Oops Something Went Wrong!');
                 }
-
-
             }
             else
             {
                 return redirect()->route('admin.import.data')->with('error','Oops Something Went Wrong!');
             }
-
         }
         else
         {

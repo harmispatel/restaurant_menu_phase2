@@ -118,31 +118,47 @@
                         <span>{{ __('Items') }}</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('categories','page') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'page')) ? 'active-link' : '' }}">
-                        <span>{{ __('Pages') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('categories','link') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'link')) ? 'active-link' : '' }}">
-                        <span>{{ __('Links') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('categories','image_gallary') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'image_gallary')) ? 'active-link' : '' }}">
-                        <span>{{ __('Galleries') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('categories','check_in_page') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'check_in_page')) ? 'active-link' : '' }}">
-                        <span>{{ __('Check In Pages') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('categories','pdf_category') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'pdf_category')) ? 'active-link' : '' }}">
-                        <span>{{ __('PDF') }}</span>
-                    </a>
-                </li>
+
+                @if(isset($package_permissions['page']) && !empty($package_permissions['page']) && $package_permissions['page'] == 1)
+                    <li>
+                        <a href="{{ route('categories','page') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'page')) ? 'active-link' : '' }}">
+                            <span>{{ __('Pages') }}</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if(isset($package_permissions['link']) && !empty($package_permissions['link']) && $package_permissions['link'] == 1)
+                    <li>
+                        <a href="{{ route('categories','link') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'link')) ? 'active-link' : '' }}">
+                            <span>{{ __('Links') }}</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if(isset($package_permissions['gallery']) && !empty($package_permissions['gallery']) && $package_permissions['gallery'] == 1)
+                    <li>
+                        <a href="{{ route('categories','image_gallary') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'image_gallary')) ? 'active-link' : '' }}">
+                            <span>{{ __('Galleries') }}</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if(isset($package_permissions['check_in']) && !empty($package_permissions['check_in']) && $package_permissions['check_in'] == 1)
+                    <li>
+                        <a href="{{ route('categories','check_in_page') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'check_in_page')) ? 'active-link' : '' }}">
+                            <span>{{ __('Check In Pages') }}</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if(isset($package_permissions['pdf_file']) && !empty($package_permissions['pdf_file']) && $package_permissions['pdf_file'] == 1)
+                    <li>
+                        <a href="{{ route('categories','pdf_category') }}" class="{{ (($routeName == 'categories') && (isset($routeParams['cat_id']) && $routeParams['cat_id'] == 'pdf_category')) ? 'active-link' : '' }}">
+                            <span>{{ __('PDF') }}</span>
+                        </a>
+                    </li>
+                @endif
+
                 <li>
                     <a href="{{ route('tags') }}" class="{{ ($routeName == 'tags') ? 'active-link' : '' }}">
                         <span>{{ __('Tags') }}</span>

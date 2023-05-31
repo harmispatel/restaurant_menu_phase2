@@ -30,8 +30,15 @@ class SubscriptionsController extends Controller
         $description = $request->description;
 
         // Permissions
-        $permission['banner'] = (isset($request->banner)) ? $request->banner : 0;
         $permission['add_edit_clone_theme'] = (isset($request->add_edit_clone_theme)) ? $request->add_edit_clone_theme : 0;
+        $permission['page'] = (isset($request->page)) ? $request->page : 0;
+        $permission['banner'] = (isset($request->banner)) ? $request->banner : 0;
+        $permission['pdf_file'] = (isset($request->pdf_file)) ? $request->pdf_file : 0;
+        $permission['link'] = (isset($request->link)) ? $request->link : 0;
+        $permission['gallery'] = (isset($request->gallery)) ? $request->gallery : 0;
+        $permission['check_in'] = (isset($request->check_in)) ? $request->check_in : 0;
+        $permission['ordering'] = (isset($request->ordering)) ? $request->ordering : 0;
+        $permission['special_icons'] = (isset($request->special_icons)) ? $request->special_icons : 0;
 
         $permission = serialize($permission);
 
@@ -104,8 +111,15 @@ class SubscriptionsController extends Controller
         $description = $request->description;
 
         // Permissions
-        $permission['banner'] = (isset($request->banner)) ? $request->banner : 0;
         $permission['add_edit_clone_theme'] = (isset($request->add_edit_clone_theme)) ? $request->add_edit_clone_theme : 0;
+        $permission['page'] = (isset($request->page)) ? $request->page : 0;
+        $permission['banner'] = (isset($request->banner)) ? $request->banner : 0;
+        $permission['pdf_file'] = (isset($request->pdf_file)) ? $request->pdf_file : 0;
+        $permission['link'] = (isset($request->link)) ? $request->link : 0;
+        $permission['gallery'] = (isset($request->gallery)) ? $request->gallery : 0;
+        $permission['check_in'] = (isset($request->check_in)) ? $request->check_in : 0;
+        $permission['ordering'] = (isset($request->ordering)) ? $request->ordering : 0;
+        $permission['special_icons'] = (isset($request->special_icons)) ? $request->special_icons : 0;
 
         $permission = serialize($permission);
 

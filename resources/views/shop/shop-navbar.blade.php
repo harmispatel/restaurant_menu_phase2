@@ -5,6 +5,13 @@
     $search_box_position = isset($theme_settings['search_box_position']) ? $theme_settings['search_box_position'] : '';
 
     $shop_slug = isset($shop_details['shop_slug']) ? $shop_details['shop_slug'] : '';
+    $shop_id = isset($shop_details['id']) ? $shop_details['id'] : '';
+
+    // Get Subscription ID
+    $subscription_id = getClientSubscriptionID($shop_id);
+
+    // Get Package Permissions
+    $package_permissions = getPackagePermission($subscription_id);
 
     // Cart Quantity
     $total_quantity = getCartQuantity();
@@ -56,8 +63,10 @@
                     </a>
                 @elseif ($search_box_position == 'left')
                     <div>
-                        @if($total_quantity > 0)
-                            <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                        @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                            @if($total_quantity > 0)
+                                <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                            @endif
                         @endif
                         <button class="btn search_bt" id="openSearchBox">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -79,8 +88,10 @@
                     </a>
                 @elseif ($search_box_position == 'center')
                     <div>
-                        @if($total_quantity > 0)
-                            <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                        @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                            @if($total_quantity > 0)
+                                <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                            @endif
                         @endif
                         <button class="btn search_bt" id="openSearchBox">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -131,8 +142,10 @@
                     </a>
                 @elseif ($search_box_position == 'right')
                     <div>
-                        @if($total_quantity > 0)
-                            <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                        @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                            @if($total_quantity > 0)
+                                <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                            @endif
                         @endif
                         <button class="btn search_bt" id="openSearchBox">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -184,8 +197,10 @@
                     @endif
                 </a>
                 <div>
-                    @if($total_quantity > 0)
-                        <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                    @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                        @if($total_quantity > 0)
+                            <a href="{{ route('shop.cart',$shop_slug) }}" class="cart-btn me-1 mt-2 fs-4 text-white position-relative text-decoration-none"><i class="bi bi-cart4"></i> <span class="qty-number">{{ $total_quantity }}</span></a>
+                        @endif
                     @endif
                     <button class="btn search_bt" id="openSearchBox">
                         <i class="fa-solid fa-magnifying-glass"></i>
