@@ -389,6 +389,11 @@ class ItemsController extends Controller
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
         $formType = "'edit'";
+        // Subscrption ID
+        $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
 
         try
         {
@@ -400,6 +405,8 @@ class ItemsController extends Controller
 
             // Ingredients
             $options = Option::where('shop_id',$shop_id)->get();
+
+
 
             // Tags
             $tags = Tags::where('shop_id',$shop_id)->get();
@@ -635,12 +642,17 @@ class ItemsController extends Controller
                                             {
                                                 foreach($ingredients as $ing)
                                                 {
-                                                    $html .= '<option value="'.$ing["id"].'"';
-                                                        if(in_array($ing["id"],$item_ingredients))
-                                                        {
-                                                            $html .= 'selected';
-                                                        }
-                                                    $html .='>'.$ing["name"].'</option>';
+                                                    $parent_id = (isset($ing->parent_id)) ? $ing->parent_id : NULL;
+
+                                                    if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_id != NULL)
+                                                    {
+                                                        $html .= '<option value="'.$ing["id"].'"';
+                                                            if(in_array($ing["id"],$item_ingredients))
+                                                            {
+                                                                $html .= 'selected';
+                                                            }
+                                                        $html .='>'.$ing["name"].'</option>';
+                                                    }
                                                 }
                                             }
                                         $html .= '</select>';
@@ -929,12 +941,17 @@ class ItemsController extends Controller
                                                 {
                                                     foreach($ingredients as $ing)
                                                     {
-                                                        $html .= '<option value="'.$ing["id"].'"';
-                                                            if(in_array($ing["id"],$item_ingredients))
-                                                            {
-                                                                $html .= 'selected';
-                                                            }
-                                                        $html .='>'.$ing["name"].'</option>';
+                                                        $parent_id = (isset($ing->parent_id)) ? $ing->parent_id : NULL;
+
+                                                        if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_id != NULL)
+                                                        {
+                                                            $html .= '<option value="'.$ing["id"].'"';
+                                                                if(in_array($ing["id"],$item_ingredients))
+                                                                {
+                                                                    $html .= 'selected';
+                                                                }
+                                                            $html .='>'.$ing["name"].'</option>';
+                                                        }
                                                     }
                                                 }
                                             $html .= '</select>';
@@ -1202,12 +1219,17 @@ class ItemsController extends Controller
                                 {
                                     foreach($ingredients as $ing)
                                     {
-                                        $html .= '<option value="'.$ing["id"].'"';
-                                            if(in_array($ing["id"],$item_ingredients))
-                                            {
-                                                $html .= 'selected';
-                                            }
-                                        $html .='>'.$ing["name"].'</option>';
+                                        $parent_id = (isset($ing->parent_id)) ? $ing->parent_id : NULL;
+
+                                        if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_id != NULL)
+                                        {
+                                            $html .= '<option value="'.$ing["id"].'"';
+                                                if(in_array($ing["id"],$item_ingredients))
+                                                {
+                                                    $html .= 'selected';
+                                                }
+                                            $html .='>'.$ing["name"].'</option>';
+                                        }
                                     }
                                 }
                             $html .= '</select>';

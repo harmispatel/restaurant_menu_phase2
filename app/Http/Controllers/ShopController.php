@@ -265,6 +265,12 @@ class ShopController extends Controller
         $shop_settings = getClientSettings($shop_id);
         $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
 
+        // Get Subscription ID
+        $subscription_id = getClientSubscriptionID($shop_id);
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
         // Theme Settings
         $theme_settings = themeSettings($shop_theme_id);
 
@@ -386,11 +392,15 @@ class ShopController extends Controller
                                                         {
                                                             $ingredient = getIngredientDetail($val);
                                                             $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                            $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
 
-                                                            if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
+                                                            if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
                                                             {
-                                                                $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                                $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                                if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                                {
+                                                                    $ing_icon = asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon);
+                                                                    $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                                }
                                                             }
                                                         }
                                                     $html .= '</div>';
@@ -456,11 +466,15 @@ class ShopController extends Controller
                                                     {
                                                         $ingredient = getIngredientDetail($val);
                                                         $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                        $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
 
-                                                        if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
+                                                        if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
                                                         {
-                                                            $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                            $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                            if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                            {
+                                                                $ing_icon = asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon);
+                                                                $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                            }
                                                         }
                                                     }
                                                 $html .= '</div>';
@@ -566,6 +580,12 @@ class ShopController extends Controller
         $admin_settings = getAdminSettings();
         $default_special_image = (isset($admin_settings['default_special_item_image'])) ? $admin_settings['default_special_item_image'] : '';
 
+        // Get Subscription ID
+        $subscription_id = getClientSubscriptionID($shop_id);
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
         try
         {
             if($tab_id == 'all' || $tab_id == 'no_tab')
@@ -619,11 +639,15 @@ class ShopController extends Controller
                                                         {
                                                             $ingredient = getIngredientDetail($val);
                                                             $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                            $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
 
-                                                            if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
+                                                            if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
                                                             {
-                                                                $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                                $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                                if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                                {
+                                                                    $ing_icon = asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon);
+                                                                    $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                                }
                                                             }
                                                         }
                                                     $html .= '</div>';
@@ -689,11 +713,15 @@ class ShopController extends Controller
                                                     {
                                                         $ingredient = getIngredientDetail($val);
                                                         $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                        $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
 
-                                                        if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
+                                                        if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
                                                         {
-                                                            $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                            $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                            if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                            {
+                                                                $ing_icon = asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon);
+                                                                $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                            }
                                                         }
                                                     }
                                                 $html .= '</div>';
@@ -794,11 +822,15 @@ class ShopController extends Controller
                                                     {
                                                         $ingredient = getIngredientDetail($val);
                                                         $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                        $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
 
-                                                        if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
+                                                        if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
                                                         {
-                                                            $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                            $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                            if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                            {
+                                                                $ing_icon = asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon);
+                                                                $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                            }
                                                         }
                                                     }
                                                 $html .= '</div>';
@@ -865,11 +897,15 @@ class ShopController extends Controller
                                                 {
                                                     $ingredient = getIngredientDetail($val);
                                                     $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                    $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
 
-                                                    if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
+                                                    if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
                                                     {
-                                                        $ing_icon = asset('public/admin_uploads/ingredients/'.$ing_icon);
-                                                        $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                        if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                        {
+                                                            $ing_icon = asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon);
+                                                            $html .= '<img src="'.$ing_icon.'" width="60px" height="60px">';
+                                                        }
                                                     }
                                                 }
                                             $html .= '</div>';
@@ -1143,9 +1179,9 @@ class ShopController extends Controller
                                 {
                                     $ingredient = getIngredientDetail($val);
 
-                                    if(isset($ingredient['icon']) && !empty($ingredient['icon']) && file_exists('public/admin_uploads/ingredients/'.$ingredient['icon']))
+                                    if(isset($ingredient['icon']) && !empty($ingredient['icon']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ingredient['icon']))
                                     {
-                                        $ing_icon = asset('public/admin_uploads/ingredients/'.$ingredient['icon']);
+                                        $ing_icon = asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ingredient['icon']);
                                         $html .= '<img src="'.$ing_icon.'" width="80px" height="80px" style="border: 1px solid black; border-radius:100%; padding:2px;margin:0 2px;">';
                                     }
                                 }

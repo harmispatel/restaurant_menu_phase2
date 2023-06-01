@@ -1,34 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminSettingsController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BillingInfoController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\DesignController;
-use App\Http\Controllers\EveryPayController;
-use App\Http\Controllers\ImportExportController;
-use App\Http\Controllers\IngredientController;
-use App\Http\Controllers\ItemsController;
-use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\LanguagesController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\OptionController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\PaypalController;
-use App\Http\Controllers\PreviewController;
-use App\Http\Controllers\ShopBannerController;
-use App\Http\Controllers\ShopController;
-use App\Http\Controllers\ShopQrController;
-use App\Http\Controllers\StatisticsController;
-use App\Http\Controllers\SubscriptionsController;
-use App\Http\Controllers\TagsController;
-use App\Http\Controllers\ThemeController;
-use App\Http\Controllers\TutorialController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\UsersSubscriptionsController;
+use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController,LanguageController,LanguagesController,OptionController,OrderController,PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -331,8 +303,8 @@ Route::post('total-with-currency',function(Request $request)
 })->name('total.with.currency');
 
 // Shops
-Route::get('/{shop_slug}/{catID?}',[ShopController::class,'index'])->name('restaurant');
-Route::get('{shop_slug}/items/{catID}',[ShopController::class,'itemPreview'])->name('items.preview');
+Route::get('/{shop_slug}/{catID?}',[ShopController::class,'index'])->name('restaurant')->where('shop_slug','[a-z]+');
+Route::get('{shop_slug}/items/{catID}',[ShopController::class,'itemPreview'])->name('items.preview')->where('shop_slug','[a-z]+');
 Route::post('shop-locale-change',[ShopController::class,'changeShopLocale'])->name('shop.locale.change');
 Route::post('search-shop-categories',[ShopController::class,'searchCategories'])->name('shop.categories.search');
 Route::post('search-shop-items',[ShopController::class,'searchItems'])->name('shop.items.search');

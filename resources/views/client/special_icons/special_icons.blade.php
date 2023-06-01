@@ -1,5 +1,12 @@
 @php
     $shop_slug = (isset(Auth::user()->hasOneShop->shop['shop_slug'])) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
+    // Subscrption ID
+    $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
+
+    // Get Package Permissions
+    $package_permissions = getPackagePermission($subscription_id);
+
 @endphp
 
 @extends('client.layouts.client-layout')
@@ -21,9 +28,11 @@
                 </nav>
             </div>
             <div class="col-md-4" style="text-align: right;">
-                <a href="{{ route('special.icons.add') }}" class="btn btn-sm new-amenity btn-primary">
-                    <i class="bi bi-plus-lg"></i>
-                </a>
+                @if(isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1)
+                    <a href="{{ route('special.icons.add') }}" class="btn btn-sm new-amenity btn-primary">
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -63,40 +72,49 @@
                                         <th>{{ __('Name')}}</th>
                                         <th>{{ __('Icon')}}</th>
                                         <th>{{ __('Status')}}</th>
-                                        <th>{{ __('Actions')}}</th>
+                                        @if(isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1)
+                                            <th>{{ __('Actions')}}</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($special_icons as $specialIcon)
-                                        <tr>
-                                            <td>{{ $specialIcon->id }}</td>
-                                            <td>{{ $specialIcon->name }}</td>
-                                            <td>
-                                                @if(!empty($specialIcon->icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$specialIcon->icon))
-                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$specialIcon->icon) }}" width="40" height="40">
-                                                @else
-                                                    <img src="{{ asset('public/admin_images/not-found/not-found4.png') }}" width="40">
+                                        @php
+                                            $parent_id = (isset($specialIcon->parent_id)) ? $specialIcon->parent_id : NULL;
+                                        @endphp
+                                        @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_id != NULL)
+                                            <tr>
+                                                <td>{{ $specialIcon->id }}</td>
+                                                <td>{{ $specialIcon->name }}</td>
+                                                <td>
+                                                    @if(!empty($specialIcon->icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$specialIcon->icon))
+                                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$specialIcon->icon) }}" width="40" height="40">
+                                                    @else
+                                                        <img src="{{ asset('public/admin_images/not-found/not-found4.png') }}" width="40">
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @php
+                                                        $status = $specialIcon->status;
+                                                        $checked = ($status == 1) ? 'checked' : '';
+                                                        $checkVal = ($status == 1) ? 0 : 1;
+                                                    @endphp
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" role="switch" onchange="changeStatus({{ $checkVal }},{{ $specialIcon->id }})" id="statusBtn" {{ $checked }}>
+                                                    </div>
+                                                </td>
+                                                @if(isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1)
+                                                    <td>
+                                                        <a href="{{ route('special.icons.edit',$specialIcon->id) }}" class="btn btn-sm btn-primary">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </a>
+                                                        <a href="{{ route('special.icons.destroy',$specialIcon->id) }}" class="btn btn-sm btn-danger">
+                                                            <i class="bi bi-trash"></i>
+                                                        </a>
+                                                    </td>
                                                 @endif
-                                            </td>
-                                            <td>
-                                                @php
-                                                    $status = $specialIcon->status;
-                                                    $checked = ($status == 1) ? 'checked' : '';
-                                                    $checkVal = ($status == 1) ? 0 : 1;
-                                                @endphp
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" role="switch" onchange="changeStatus({{ $checkVal }},{{ $specialIcon->id }})" id="statusBtn" {{ $checked }}>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('special.icons.edit',$specialIcon->id) }}" class="btn btn-sm btn-primary">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                                <a href="{{ route('special.icons.destroy',$specialIcon->id) }}" class="btn btn-sm btn-danger">
-                                                    <i class="bi bi-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                            </tr>
+                                        @endif
                                     @empty
                                         <tr class="text-center">
                                             <td colspan="6">{{ __('Special Icons Not Found!')}}</td>

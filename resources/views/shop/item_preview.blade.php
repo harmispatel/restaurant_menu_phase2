@@ -56,6 +56,12 @@
     $cat_name = isset($cat_details[$name_key]) ? $cat_details[$name_key] : '';
     $shop_title = "$shop_name | $cat_name";
 
+    // Get Subscription ID
+    $subscription_id = getClientSubscriptionID($shop_details['id']);
+
+    // Get Package Permissions
+    $package_permissions = getPackagePermission($subscription_id);
+
 @endphp
 
 
@@ -188,10 +194,13 @@
                                                                                 @php
                                                                                     $ingredient = getIngredientDetail($val);
                                                                                     $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                                    $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
                                                                                 @endphp
 
-                                                                                @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                    <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
+                                                                                    @if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                    @endif
                                                                                 @endif
                                                                             @endforeach
                                                                         </div>
@@ -268,10 +277,13 @@
                                                                                     @php
                                                                                         $ingredient = getIngredientDetail($val);
                                                                                         $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                                        $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
                                                                                     @endphp
 
-                                                                                    @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                        <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                    @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
+                                                                                        @if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                        @endif
                                                                                     @endif
                                                                                 @endforeach
                                                                             </div>
@@ -341,10 +353,13 @@
                                                                                     @php
                                                                                         $ingredient = getIngredientDetail($val);
                                                                                         $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                                        $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
                                                                                     @endphp
 
-                                                                                    @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                        <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                    @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
+                                                                                        @if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                        @endif
                                                                                     @endif
                                                                                 @endforeach
                                                                             </div>
@@ -420,10 +435,13 @@
                                                                                         @php
                                                                                             $ingredient = getIngredientDetail($val);
                                                                                             $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                                            $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
                                                                                         @endphp
 
-                                                                                        @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                            <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                        @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
+                                                                                            @if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                                                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                            @endif
                                                                                         @endif
                                                                                     @endforeach
                                                                                 </div>
@@ -488,10 +506,13 @@
                                                                         @php
                                                                             $ingredient = getIngredientDetail($val);
                                                                             $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                            $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
                                                                         @endphp
 
-                                                                        @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                            <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                        @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
+                                                                            @if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                            @endif
                                                                         @endif
                                                                     @endforeach
                                                                 </div>
@@ -567,10 +588,13 @@
                                                                             @php
                                                                                 $ingredient = getIngredientDetail($val);
                                                                                 $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                                $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
                                                                             @endphp
 
-                                                                            @if(!empty($ing_icon) && file_exists('public/admin_uploads/ingredients/'.$ing_icon))
-                                                                                <img src="{{ asset('public/admin_uploads/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                            @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL)
+                                                                                @if(!empty($ing_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon))
+                                                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$ing_icon) }}" width="60px" height="60px">
+                                                                                @endif
                                                                             @endif
                                                                         @endforeach
                                                                     </div>

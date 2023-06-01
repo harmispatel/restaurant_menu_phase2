@@ -12,6 +12,12 @@
     // Name Language Key
     $name_key = $language_code."_name";
 
+    // Subscrption ID
+    $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
+
+    // Get Package Permissions
+    $package_permissions = getPackagePermission($subscription_id);
+
 @endphp
 
 @extends('client.layouts.client-layout')
@@ -149,7 +155,13 @@
                                     <select name="ingredients[]" id="ingredients" class="form-control" multiple>
                                         @if(count($ingredients) > 0)
                                             @foreach ($ingredients as $ingredient)
-                                                <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                                                @php
+                                                    $parent_id = (isset($ingredient->parent_id)) ? $ingredient->parent_id : NULL;
+                                                @endphp
+
+                                                @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_id != NULL)
+                                                    <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                                                @endif
                                             @endforeach
                                         @endif
                                     </select>
