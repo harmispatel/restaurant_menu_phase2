@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController,LanguageController,LanguagesController,OptionController,OrderController,PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController};
+use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController, ItemsReviewsController, LanguageController,LanguagesController,OptionController,OrderController,PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -276,6 +276,9 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/payment-settings',[PaymentController::class,'paymentSettings'])->name('payment.settings');
         Route::post('/payment-settings-update',[PaymentController::class,'UpdatePaymentSettings'])->name('update.payment.settings');
 
+        // Item Reviews
+        Route::get('/items-reviews',[ItemsReviewsController::class,'index'])->name('items.reviews');
+
     });
 });
 
@@ -319,6 +322,7 @@ Route::post('{my_shop_slug}/my/cart/checkout/processing/',[ShopController::class
 Route::get('{my_shop_slug}/checkout/success/{id}',[ShopController::class,'checkoutSuccess'])->name('shop.checkout.success');
 Route::post('set-checkout-type',[ShopController::class,'setCheckoutType'])->name('set.checkout.type');
 Route::post('check-order-status',[ShopController::class,'checkOrderStatus'])->name('check.order.status');
+Route::post('send-item-review',[ShopController::class,'sendItemReview'])->name('send.item.review');
 
 // Paypal Payment
 Route::get('{my_shop_slug}/paypal/payment/',[PaypalController::class,'payWithpaypal'])->name('paypal.payment');

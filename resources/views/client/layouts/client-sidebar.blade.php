@@ -245,6 +245,14 @@
             </a>
         </li>
 
+        {{-- Reviews Nav --}}
+        <li class="nav-item">
+            <a class="nav-link {{ ($routeName == 'items.reviews') ? 'active-tab' : '' }}" href="{{ route('items.reviews') }}">
+                <i class="fa-solid fa-comments {{ ($routeName == 'items.reviews') ? 'icon-tab' : '' }}"></i>
+            <span>{{ __('Item Reviews') }}</span>
+            </a>
+        </li>
+
         {{-- Tutorial Nav --}}
         <li class="nav-item">
             <a class="nav-link {{ ($routeName == 'tutorial.show') ? 'active-tab' : '' }}" href="{{ route('tutorial.show')}}">

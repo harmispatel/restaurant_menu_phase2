@@ -79,6 +79,7 @@ class ItemsController extends Controller
         $is_new = isset($request->is_new) ? $request->is_new : 0;
         $as_sign = isset($request->is_sign) ? $request->is_sign : 0;
         $published = isset($request->published) ? $request->published : 0;
+        $review_rating = isset($request->review_rating) ? $request->review_rating : 0;
         $day_special = isset($request->day_special) ? $request->day_special : 0;
         $ingredients = (isset($request->ingredients) && count($request->ingredients) > 0) ? serialize($request->ingredients) : '';
         $options = (isset($request->options) && count($request->options) > 0) ? serialize($request->options) : '';
@@ -119,6 +120,7 @@ class ItemsController extends Controller
             $item->options = $options;
             $item->is_new = $is_new;
             $item->as_sign = $as_sign;
+            $item->review = $review_rating;
             $item->day_special = $day_special;
 
             // Insert Item Image if is Exists
@@ -416,6 +418,7 @@ class ItemsController extends Controller
             $default_image = asset('public/client_images/not-found/no_image_1.jpg');
             $item_image = (isset($item['image']) && !empty($item['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item['image']) : "";
             $item_published = (isset($item['published']) && $item['published'] == 1) ? 'checked' : '';
+            $review_rating = (isset($item['review']) && $item['review'] == 1) ? 'checked' : '';
             $item_is_new = (isset($item['is_new']) && $item['is_new'] == 1) ? 'checked' : '';
             $item_as_sign = (isset($item['as_sign']) && $item['as_sign'] == 1) ? 'checked' : '';
             $item_day_special = (isset($item['day_special']) && $item['day_special'] == 1) ? 'checked' : '';
@@ -746,6 +749,16 @@ class ItemsController extends Controller
                                                 $html .= '</label>';
                                                 $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
                                             $html .= '</div>';
+                                            $html .= '<div class="col-md-6 mb-2">';
+                                                $html .= '<label class="switch me-2">';
+                                                    $html .= '<input type="checkbox" id="review_rating" name="review_rating" value="1" '.$review_rating.'>';
+                                                    $html .= '<span class="slider round">';
+                                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                    $html .= '</span>';
+                                                $html .= '</label>';
+                                                $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
+                                            $html .= '</div>';
                                         $html .= '</div>';
                                     $html .= '</div>';
                                 $html .= '</div>';
@@ -1045,6 +1058,16 @@ class ItemsController extends Controller
                                                     $html .= '</label>';
                                                     $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
                                                 $html .= '</div>';
+                                                $html .= '<div class="col-md-6 mb-2">';
+                                                    $html .= '<label class="switch me-2">';
+                                                        $html .= '<input type="checkbox" id="review_rating" name="review_rating" value="1" '.$review_rating.'>';
+                                                        $html .= '<span class="slider round">';
+                                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                        $html .= '</span>';
+                                                    $html .= '</label>';
+                                                $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
+                                            $html .= '</div>';
                                             $html .= '</div>';
                                         $html .= '</div>';
                                     $html .= '</div>';
@@ -1321,7 +1344,17 @@ class ItemsController extends Controller
                                             $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
                                         $html .= '</span>';
                                     $html .= '</label>';
-                                    $html .= '<label for="publish" class="form-label">Published</label>';
+                                    $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-6 mb-2">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="review_rating" name="review_rating" value="1" '.$review_rating.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
                                 $html .= '</div>';
                             $html .= '</div>';
                         $html .= '</div>';
@@ -1381,6 +1414,7 @@ class ItemsController extends Controller
         $is_sign = isset($request->is_sign) ? $request->is_sign : 0;
         $day_special = isset($request->day_special) ? $request->day_special : 0;
         $published = isset($request->published) ? $request->published : 0;
+        $review_rating = isset($request->review_rating) ? $request->review_rating : 0;
 
         $price_array['price'] = isset($request->price['price']) ? array_filter($request->price['price']) : [];
         $price_array['label'] = isset($request->price['label']) ? $request->price['label'] : [];
@@ -1416,6 +1450,7 @@ class ItemsController extends Controller
                 $item->is_new = $is_new;
                 $item->as_sign = $is_sign;
                 $item->day_special = $day_special;
+                $item->review = $review_rating;
                 $item->ingredients = $ingredients;
                 $item->options = $options;
                 $item->type = $item_type;

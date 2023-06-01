@@ -254,6 +254,18 @@
                                         <label for="publish" class="form-label">{{ __('Published')}}</label>
                                     </div>
                                 </div>
+                                <div class="col-md-6 mt-2">
+                                    <div class="form-group">
+                                        <label class="switch me-2">
+                                            <input type="checkbox" id="review_rating" name="review_rating" value="1">
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="review_rating" class="form-label">{{ __('Review & Rating')}}</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>

@@ -53,6 +53,7 @@
         pointer-events: auto;
     }
 
+
     @if(!empty($shop_theme_id))
 
         /* Header Color  */

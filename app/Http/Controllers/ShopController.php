@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Category,CategoryProductTags,CategoryVisit,CheckIn,AdditionalLanguage,Clicks, ItemPrice, Items,ItemsVisit,Shop,UserShop,UserVisits,Option, OptionPrice, Order, OrderItems};
+use App\Models\{Category,CategoryProductTags,CategoryVisit,CheckIn,AdditionalLanguage,Clicks, ItemPrice, ItemReview, Items,ItemsVisit,Shop,UserShop,UserVisits,Option, OptionPrice, Order, OrderItems};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -1191,7 +1191,7 @@ class ShopController extends Controller
 
                     if(!empty($item_desc))
                     {
-                        $html .= '<div class="col-md-12 text-center mt-2">';
+                        $html .= '<div class="col-md-12 text-center mt-2 mb-2">';
                             $html .= $item_desc;
                         $html .= '</div>';
                     }
@@ -1312,6 +1312,35 @@ class ShopController extends Controller
 
                     }
 
+                    // Review Section
+                    if($item['review'] == 1)
+                    {
+                        $html .= '<div class="col-md-12 mt-3">';
+                            $html .= '<div class="rate">';
+                                $html .= '<input type="radio" id="star5" class="rate" name="rating" value="5"/>';
+                                $html .= '<label for="star5" title="text">5 stars</label>';
+                                $html .= '<input type="radio" id="star4" class="rate" name="rating" value="4"/>';
+                                $html .= '<label for="star4" title="text">4 stars</label>';
+                                $html .= '<input type="radio" id="star3" class="rate" name="rating" value="3" checked />';
+                                $html .= '<label for="star3" title="text">3 stars</label>';
+                                $html .= '<input type="radio" id="star2" class="rate" name="rating" value="2">';
+                                $html .= '<label for="star2" title="text">2 stars</label>';
+                                $html .= '<input type="radio" id="star1" class="rate" name="rating" value="1"/>';
+                                $html .= '<label for="star1" title="text">1 star</label>';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="col-md-12 mt-2">';
+                            $html .= '<textarea class="form-control" name="item_review" id="item_review" rows="4" placeholder="Comment"></textarea>';
+                        $html .= '</div>';
+                        $html .= '<div class="col-md-12 mb-2 mt-2">';
+                            $html .= '<a class="btn btn-success" onclick="submitItemReview('.$item['id'].')" id="btn-review"><i class="bi bi-send"></i> Submit</a>';
+                            $html .= '<button class="btn btn-success" type="button" disabled style="display:none;" id="load-btn-review">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Please Wait...
+                          </button>';
+                        $html .= '</div>';
+                    }
 
                 $html .= '</div>';
             }
@@ -2156,5 +2185,57 @@ class ShopController extends Controller
             'success' => 1,
             'status' => $order_status,
         ]);
+    }
+
+
+    // Function for Send Item Review
+    public function sendItemReview(Request $request)
+    {
+        try
+        {
+            $item_id = (isset($request->item_id)) ? $request->item_id : '';
+            $comment = (isset($request->comment)) ? $request->comment : '';
+            $rating = (isset($request->rating)) ? $request->rating : '';
+
+            // Item Details
+            $item = Items::where('id',$item_id)->first();
+            $cat_id = (isset($item['category_id'])) ? $item['category_id'] : '';
+            $shop_id = (isset($item['shop_id'])) ? $item['shop_id'] : '';
+            $user_ip = $request->ip();
+
+            if($item->id)
+            {
+                $item_review = new ItemReview();
+                $item_review->shop_id = $shop_id;
+                $item_review->category_id = $cat_id;
+                $item_review->item_id = $item_id;
+                $item_review->rating = $rating;
+                $item_review->rating = $rating;
+                $item_review->ip_address = $user_ip;
+                $item_review->comment = $comment;
+                $item_review->save();
+
+                return response()->json([
+                    'success' => 1,
+                    'message' => 'Your Review has been Submitted SuccessFully...',
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'success' => 0,
+                    'message' => 'Internal Server Error!',
+                ]);
+            }
+
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
+
     }
 }
