@@ -190,7 +190,7 @@ class ShopController extends Controller
 
             $data['parent_id'] = $cat_parent_id;
 
-            if($data['cat_details']->category_type == 'page' || $data['cat_details']->category_type == 'image_gallary' || $data['cat_details']->category_type == 'pdf_category' || $data['cat_details']->category_type == 'check_in_page')
+            if($data['cat_details']->category_type == 'page' || $data['cat_details']->category_type == 'gallery' || $data['cat_details']->category_type == 'pdf_page' || $data['cat_details']->category_type == 'check_in')
             {
                 return view('shop.page_preview',$data);
             }

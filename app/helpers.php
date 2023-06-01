@@ -341,7 +341,8 @@
         $today = strtolower($current_date->format('l'));
         $current_time = strtotime($current_date->format('G:i'));
         $cat_details = Category::where('id',$catID)->where('shop_id',$shop_id)->first();
-        $schedule = $cat_details['schedule'];
+        $schedule = (isset($cat_details['schedule'])) ? $cat_details['schedule'] : 0;
+
         if($schedule == 0)
         {
             return 1;
@@ -650,21 +651,21 @@
                     $permission = 1;
                 }
             }
-            elseif($catType == 'pdf_category')
+            elseif($catType == 'pdf_page')
             {
                 if(isset($package_permissions['pdf_file']) && !empty($package_permissions['pdf_file']) && $package_permissions['pdf_file'] == 1)
                 {
                     $permission = 1;
                 }
             }
-            elseif($catType == 'image_gallary')
+            elseif($catType == 'gallery')
             {
                 if(isset($package_permissions['gallery']) && !empty($package_permissions['gallery']) && $package_permissions['gallery'] == 1)
                 {
                     $permission = 1;
                 }
             }
-            elseif($catType == 'check_in_page')
+            elseif($catType == 'check_in')
             {
                 if(isset($package_permissions['check_in']) && !empty($package_permissions['check_in']) && $package_permissions['check_in'] == 1)
                 {

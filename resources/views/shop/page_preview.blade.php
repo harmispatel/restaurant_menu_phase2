@@ -87,7 +87,7 @@
                                         @endif
                                             <div class="img_box">
                                                 {{-- Img Section --}}
-                                                @if($cat->category_type == 'page' || $cat->category_type == 'image_gallary' || $cat->category_type == 'link' || $cat->category_type == 'check_in_page' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_category')
+                                                @if($cat->category_type == 'page' || $cat->category_type == 'gallery' || $cat->category_type == 'link' || $cat->category_type == 'check_in' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_page')
                                                     @if(!empty($cat->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover))
                                                         <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover) }}" class="w-100">
                                                     @else
@@ -135,7 +135,7 @@
                                 </div>
                             </div>
                         </div>
-                    @elseif($cat_details->category_type == 'image_gallary')
+                    @elseif($cat_details->category_type == 'gallery')
                         @php
                             $gallery_images = isset($cat_details->categoryImages) ? $cat_details->categoryImages : [];
                         @endphp
@@ -163,7 +163,7 @@
                                 @endif
                             </div>
                         </div>
-                    @elseif($cat_details->category_type == 'pdf_category')
+                    @elseif($cat_details->category_type == 'pdf_page')
                         @php
                             $pdf_file = (!empty($cat_details->file) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_details->file)) ? asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_details->file) : '';
                         @endphp
@@ -177,7 +177,7 @@
                                 </div>
                             </div>
                         </div>
-                    @elseif($cat_details->category_type == 'check_in_page')
+                    @elseif($cat_details->category_type == 'check_in')
                         <div class="check-in-page">
                             <div class="row justify-content-center">
                                 <div class="col-md-12 mb-3 text-center">

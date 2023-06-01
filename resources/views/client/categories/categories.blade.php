@@ -1,7 +1,7 @@
 @php
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
     $head_title = (!is_numeric($parent_cat_id) && $parent_cat_id != '') ? ucfirst($parent_cat_id).'s' : 'Categories';
-    $head_title = ($head_title == 'Image_gallarys') ? 'Galleries' : $head_title;
+    $head_title = ($head_title == 'Gallerys') ? 'Galleries' : $head_title;
 
     $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
 
@@ -81,11 +81,11 @@
                                         @endif
 
                                         @if(isset($package_permissions['gallery']) && !empty($package_permissions['gallery']) && $package_permissions['gallery'] == 1)
-                                            <option value="image_gallary">Image Gallery</option>
+                                            <option value="gallery">Image Gallery</option>
                                         @endif
 
                                         @if(isset($package_permissions['check_in']) && !empty($package_permissions['check_in']) && $package_permissions['check_in'] == 1)
-                                            <option value="check_in_page">Check-In Page</option>
+                                            <option value="check_in">Check-In Page</option>
                                         @endif
 
                                         @if(empty($parent_cat_id))
@@ -93,7 +93,7 @@
                                         @endif
 
                                         @if(isset($package_permissions['pdf_file']) && !empty($package_permissions['pdf_file']) && $package_permissions['pdf_file'] == 1)
-                                            <option value="pdf_category">PDF Category</option>
+                                            <option value="pdf_page">PDF Category</option>
                                         @endif
                                     </select>
                                 </div>
@@ -489,7 +489,7 @@
                                         <div class="item_box">
                                             <div class="item_img">
                                                 <a>
-                                                    @if($category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'link' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category')
+                                                    @if($category->category_type == 'page' || $category->category_type == 'gallery' || $category->category_type == 'link' || $category->category_type == 'check_in' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_page')
                                                         @if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
                                                             <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover) }}" class="w-100">
                                                         @else
@@ -549,13 +549,13 @@
                                                         Page
                                                     @elseif ($category->category_type == 'link')
                                                         Link
-                                                    @elseif ($category->category_type == 'image_gallary')
+                                                    @elseif ($category->category_type == 'gallery')
                                                         Image Gallery
-                                                    @elseif ($category->category_type == 'check_in_page')
+                                                    @elseif ($category->category_type == 'check_in')
                                                         Check-In Page
                                                     @elseif ($category->category_type == 'parent_category')
                                                         Parent Category
-                                                    @elseif ($category->category_type == 'pdf_category')
+                                                    @elseif ($category->category_type == 'pdf_page')
                                                         PDF
                                                     @endif
                                                 </h2>
@@ -1052,7 +1052,7 @@
                             $('#editCategoryModal .chk_page_styles').hide();
                             $('#editCategoryModal .cat_div').hide();
                         }
-                        else if(response.category_type == 'image_gallary')
+                        else if(response.category_type == 'gallery')
                         {
                             $('#editCategoryModal .cover').show();
                             $('#editCategoryModal .url').hide();
@@ -1063,7 +1063,7 @@
                             $('#editCategoryModal .cat_div').hide();
                             $('#editCategoryModal .img-upload-label').html('Upload Image in (500*500) Dimensions');
                         }
-                        else if(response.category_type == 'check_in_page')
+                        else if(response.category_type == 'check_in')
                         {
                             $('#editCategoryModal .cover').show();
                             $('#editCategoryModal .url').hide();
@@ -1084,7 +1084,7 @@
                             $('#editCategoryModal .cat_div').show();
                             $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                         }
-                        else if(response.category_type == 'pdf_category')
+                        else if(response.category_type == 'pdf_page')
                         {
                             $('#editCategoryModal .cover').show();
                             $('#editCategoryModal .url').hide();
@@ -1296,7 +1296,7 @@
                             $('#editCategoryModal .chk_page_styles').hide();
                             $('#editCategoryModal .cat_div').hide();
                         }
-                        else if(response.category_type == 'image_gallary')
+                        else if(response.category_type == 'gallery')
                         {
                             $('#editCategoryModal .cover').show();
                             $('#editCategoryModal .url').hide();
@@ -1307,7 +1307,7 @@
                             $('#editCategoryModal .cat_div').hide();
                             $('#editCategoryModal .img-upload-label').html('Upload Image in (500*500) Dimensions');
                         }
-                        else if(response.category_type == 'check_in_page')
+                        else if(response.category_type == 'check_in')
                         {
                             $('#editCategoryModal .cover').show();
                             $('#editCategoryModal .url').hide();
@@ -1328,7 +1328,7 @@
                             $('#editCategoryModal .cat_div').show();
                             $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                         }
-                        else if(response.category_type == 'pdf_category')
+                        else if(response.category_type == 'pdf_page')
                         {
                             $('#editCategoryModal .cover').show();
                             $('#editCategoryModal .url').hide();
@@ -1667,7 +1667,7 @@
                 addKey++;
                 var html = '';
 
-                if(catType != 'image_gallary')
+                if(catType != 'gallery')
                 {
                     $('#'+formID+' #images_div').html('');
                     $('#'+formID+' #img-val').html('');
@@ -1934,7 +1934,7 @@
                     $('#'+formID+' .chk_page_styles').hide();
                     $('#'+formID+' .cat_div').hide();
                 }
-                else if(cat_type == 'image_gallary')
+                else if(cat_type == 'gallery')
                 {
                     $('#'+formID+' .cover').show();
                     $('#'+formID+' .url').hide();
@@ -1945,7 +1945,7 @@
                     $('#'+formID+' .cat_div').hide();
                     $('#'+formID+' .img-upload-label').html('Upload Image in (500*500) Dimensions');
                 }
-                else if(cat_type == 'check_in_page')
+                else if(cat_type == 'check_in')
                 {
                     $('#'+formID+' .cover').show();
                     $('#'+formID+' .url').hide();
@@ -1966,7 +1966,7 @@
                     $('#'+formID+' .cat_div').show();
                     $('#'+formID+' .img-upload-label').html('Upload Image in (400*400) Dimensions');
                 }
-                else if(cat_type == 'pdf_category')
+                else if(cat_type == 'pdf_page')
                 {
                     $('#'+formID+' .cover').show();
                     $('#'+formID+' .url').hide();
@@ -2014,7 +2014,7 @@
                     $('#editCategoryModal .chk_page_styles').hide();
                     $('#editCategoryModal .cat_div').hide();
                 }
-                else if(cat_type == 'image_gallary')
+                else if(cat_type == 'gallery')
                 {
                     $('#editCategoryModal .cover').show();
                     $('#editCategoryModal .url').hide();
@@ -2025,7 +2025,7 @@
                     $('#editCategoryModal .cat_div').hide();
                     $('#editCategoryModal .img-upload-label').html('Upload Image in (500*500) Dimensions');
                 }
-                else if(cat_type == 'check_in_page')
+                else if(cat_type == 'check_in')
                 {
                     $('#editCategoryModal .cover').show();
                     $('#editCategoryModal .url').hide();
@@ -2046,7 +2046,7 @@
                     $('#editCategoryModal .cat_div').show();
                     $('#editCategoryModal .img-upload-label').html('Upload Image in (400*400) Dimensions');
                 }
-                else if(cat_type == 'pdf_category')
+                else if(cat_type == 'pdf_page')
                 {
                     $('#editCategoryModal .cover').show();
                     $('#editCategoryModal .url').hide();
@@ -2144,7 +2144,7 @@
                 crp_width = 700;
                 crp_height = 400;
             }
-            else if(catType == 'image_gallary')
+            else if(catType == 'gallery')
             {
                 crp_width = 500;
                 crp_height = 500;

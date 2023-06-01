@@ -19,7 +19,7 @@ class CategoryController extends Controller
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $categories = Category::query();
 
-        $cat_type_arr = ['page','link','image_gallary','check_in_page','pdf_category'];
+        $cat_type_arr = ['page','link','gallery','check_in','pdf_page'];
 
         if(!empty($uri) && is_numeric($uri))
         {
@@ -55,7 +55,7 @@ class CategoryController extends Controller
         $data['cat_details'] = $cat;
         $data['parent_categories'] = Category::where('shop_id',$shop_id)->where('parent_category',1)->get();
 
-        if($uri == 'page' || $uri == 'link' || $uri == 'pdf_category' || $uri == 'check_in_page')
+        if($uri == 'page' || $uri == 'link' || $uri == 'pdf_page' || $uri == 'check_in')
         {
             return view('client.categories.categories_list',$data);
         }
@@ -143,14 +143,14 @@ class CategoryController extends Controller
 
 
                 // Description
-                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in_page')
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in')
                 {
                     $category->description = $description;
                     $category->$category_description_key = $description;
                 }
 
                 // Cover
-                if($category_type == 'page' || $category_type == 'link' || $category_type == 'image_gallary' || $category_type == 'check_in_page' || $category_type == 'parent_category' || $category_type == 'pdf_category')
+                if($category_type == 'page' || $category_type == 'link' || $category_type == 'gallery' || $category_type == 'check_in' || $category_type == 'parent_category' || $category_type == 'pdf_page')
                 {
                     if($request->hasFile('cover'))
                     {
@@ -167,7 +167,7 @@ class CategoryController extends Controller
                 }
 
                 // Bg Color
-                if($category_type == 'check_in_page')
+                if($category_type == 'check_in')
                 {
                     $category->styles = isset($request->checkin_styles) ? serialize($request->checkin_styles) : '';
                 }
@@ -191,7 +191,7 @@ class CategoryController extends Controller
                 }
 
                 // Pdf File
-                if($category_type == 'pdf_category')
+                if($category_type == 'pdf_page')
                 {
                     if($request->hasFile('pdf'))
                     {
@@ -212,7 +212,7 @@ class CategoryController extends Controller
                 $category->save();
 
                 // Multiple Images
-                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'image_gallary' || $category_type == 'parent_category')
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'gallery' || $category_type == 'parent_category')
                 {
                     // Insert Category Image if is Exists
                     $all_images = (isset($request->og_image)) ? $request->og_image : [];
@@ -357,9 +357,9 @@ class CategoryController extends Controller
                 'product_category' => 'Category',
                 'page' => 'Page',
                 'link' => 'Link',
-                'image_gallary' => 'Image Gallery',
-                'check_in_page' => 'Check-In Page',
-                'pdf_category' => 'PDF Category',
+                'gallery' => 'Image Gallery',
+                'check_in' => 'Check-In Page',
+                'pdf_page' => 'PDF Category',
             ];
 
             if($category->parent_id == null)
@@ -496,7 +496,7 @@ class CategoryController extends Controller
                                 $html .= '</div>';
                             $html .= '</div>';
 
-                            $check_page_style_active = ($category->category_type == 'check_in_page') ? 'block' : 'none';
+                            $check_page_style_active = ($category->category_type == 'check_in') ? 'block' : 'none';
 
                             // Background Color
                             $html .= '<div class="row mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
@@ -541,7 +541,7 @@ class CategoryController extends Controller
                             // Images
                             $html .= '<div class="row mb-3">';
                                 $html .= '<div class="col-md-12 d-flex flex-wrap" id="edit_images_div">';
-                                    if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'parent_category')
+                                    if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'gallery' || $category->category_type == 'parent_category')
                                     {
                                         if(count($category_images) > 0)
                                         {
@@ -597,7 +597,7 @@ class CategoryController extends Controller
                             $html .= '</div>';
 
                             // Cover Image
-                            $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'image_gallary' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category') ? '' : 'none';
+                            $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'gallery' || $category->category_type == 'check_in' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_page') ? '' : 'none';
                             if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
                             {
                                 $cover_image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover);
@@ -619,7 +619,7 @@ class CategoryController extends Controller
                             $html .= '</div>';
 
                             // PDF File
-                            $pdf_active = ($category->category_type == 'pdf_category') ? '' : 'none';
+                            $pdf_active = ($category->category_type == 'pdf_page') ? '' : 'none';
                             $html .= '<div class="row mb-3 pdf" style="display: '.$pdf_active.'" id="pdf_label">';
                                 $html .= '<div class="col-md-12">';
                                     $html .= '<label class="form-label">'. __('PDF File').'</label>';
@@ -839,7 +839,7 @@ class CategoryController extends Controller
                                 $html .= '</div>';
                             $html .= '</div>';
 
-                            $check_page_style_active = ($category->category_type == 'check_in_page') ? 'block' : 'none';
+                            $check_page_style_active = ($category->category_type == 'check_in') ? 'block' : 'none';
 
                             // Background Color
                             $html .= '<div class="row mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
@@ -884,7 +884,7 @@ class CategoryController extends Controller
                             // Images
                             $html .= '<div class="row mb-3">';
                                 $html .= '<div class="col-md-12 d-flex flex-wrap" id="edit_images_div">';
-                                    if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'parent_category')
+                                    if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'gallery' || $category->category_type == 'parent_category')
                                     {
                                         if(count($category_images) > 0)
                                         {
@@ -940,7 +940,7 @@ class CategoryController extends Controller
                             $html .= '</div>';
 
                             // Cover Image
-                            $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'image_gallary' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category') ? '' : 'none';
+                            $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'gallery' || $category->category_type == 'check_in' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_page') ? '' : 'none';
                             if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
                             {
                                 $cover_image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover);
@@ -962,7 +962,7 @@ class CategoryController extends Controller
                             $html .= '</div>';
 
                             // PDF File
-                            $pdf_active = ($category->category_type == 'pdf_category') ? '' : 'none';
+                            $pdf_active = ($category->category_type == 'pdf_page') ? '' : 'none';
                             $html .= '<div class="row mb-3 pdf" style="display: '.$pdf_active.'" id="pdf_label">';
                                 $html .= '<div class="col-md-12">';
                                     $html .= '<label class="form-label">'. __('PDF File').'</label>';
@@ -1281,14 +1281,14 @@ class CategoryController extends Controller
                 $category->order_key = $request->sort_order;
 
                 // Description
-                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in_page')
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in')
                 {
                     $category->description = $category_description;
                     $category->$description_key = $category_description;
                 }
 
                 // Cover
-                if($category_type == 'page' || $category_type == 'link' || $category_type == 'image_gallary' || $category_type == 'check_in_page' || $category_type == 'parent_category' || $category_type == 'pdf_category')
+                if($category_type == 'page' || $category_type == 'link' || $category_type == 'gallery' || $category_type == 'check_in' || $category_type == 'parent_category' || $category_type == 'pdf_page')
                 {
                     if($request->hasFile('cover'))
                     {
@@ -1312,7 +1312,7 @@ class CategoryController extends Controller
                 }
 
                 // Bg Color
-                if($category_type == 'check_in_page')
+                if($category_type == 'check_in')
                 {
                     $category->styles = isset($request->checkin_styles) ? serialize($request->checkin_styles) : '';
                 }
@@ -1336,7 +1336,7 @@ class CategoryController extends Controller
                 }
 
                 // Pdf File
-                if($category_type == 'pdf_category')
+                if($category_type == 'pdf_page')
                 {
                     if($request->hasFile('pdf'))
                     {
@@ -1373,14 +1373,14 @@ class CategoryController extends Controller
                 }
 
                 // Multiple Images
-                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'image_gallary' || $category_type == 'parent_category')
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'gallery' || $category_type == 'parent_category')
                 {
                     // Insert Category Image if is Exists
                     $all_images = (isset($request->og_image)) ? $request->og_image : [];
                     if(count($all_images) > 0)
                     {
                         // Delete Old Images
-                        if($category_type != 'image_gallary')
+                        if($category_type != 'gallery')
                         {
                             CategoryImages::where('category_id',$category_id)->delete();
                         }
@@ -1486,14 +1486,14 @@ class CategoryController extends Controller
                 $category->order_key = $sort_order;
 
                 // Description
-                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in_page')
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in')
                 {
                     $category->description = $category_description;
                     $category->$act_lang_description_key = $category_description;
                 }
 
                 // Cover
-                if($category_type == 'page' || $category_type == 'link' || $category_type == 'image_gallary' || $category_type == 'check_in_page' || $category_type == 'parent_category' || $category_type == 'pdf_category')
+                if($category_type == 'page' || $category_type == 'link' || $category_type == 'gallery' || $category_type == 'check_in' || $category_type == 'parent_category' || $category_type == 'pdf_page')
                 {
                     if($request->hasFile('cover'))
                     {
@@ -1517,7 +1517,7 @@ class CategoryController extends Controller
                 }
 
                 // Bg Color
-                if($category_type == 'check_in_page')
+                if($category_type == 'check_in')
                 {
                     $category->styles = isset($request->checkin_styles) ? serialize($request->checkin_styles) : '';
                 }
@@ -1541,7 +1541,7 @@ class CategoryController extends Controller
                 }
 
                 // Pdf File
-                if($category_type == 'pdf_category')
+                if($category_type == 'pdf_page')
                 {
                     if($request->hasFile('pdf'))
                     {
@@ -1578,14 +1578,14 @@ class CategoryController extends Controller
                 }
 
                 // Multiple Images
-                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'image_gallary' || $category_type == 'parent_category')
+                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'gallery' || $category_type == 'parent_category')
                 {
                     // Insert Category Image if is Exists
                     $all_images = (isset($request->og_image)) ? $request->og_image : [];
                     if(count($all_images) > 0)
                     {
                         // Delete Old Images
-                        if($category_type != 'image_gallary')
+                        if($category_type != 'gallery')
                         {
                             CategoryImages::where('category_id',$category_id)->delete();
                         }
@@ -1692,9 +1692,9 @@ class CategoryController extends Controller
             'product_category' => 'Category',
             'page' => 'Page',
             'link' => 'Link',
-            'image_gallary' => 'Image Gallery',
-            'check_in_page' => 'Check-In Page',
-            'pdf_category' => 'PDF Category',
+            'gallery' => 'Image Gallery',
+            'check_in' => 'Check-In Page',
+            'pdf_page' => 'PDF Category',
         ];
 
         if($category->parent_id == null)
@@ -1802,7 +1802,7 @@ class CategoryController extends Controller
                             $html .= '</div>';
                         $html .= '</div>';
 
-                        $check_page_style_active = ($category->category_type == 'check_in_page') ? 'block' : 'none';
+                        $check_page_style_active = ($category->category_type == 'check_in') ? 'block' : 'none';
 
                         // Background Color
                         $html .= '<div class="row mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
@@ -1847,7 +1847,7 @@ class CategoryController extends Controller
                         // Images
                         $html .= '<div class="row mb-3">';
                             $html .= '<div class="col-md-12 d-flex flex-wrap" id="edit_images_div">';
-                                if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'parent_category')
+                                if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'gallery' || $category->category_type == 'parent_category')
                                 {
                                     if(count($category_images) > 0)
                                     {
@@ -1903,7 +1903,7 @@ class CategoryController extends Controller
                         $html .= '</div>';
 
                         // Cover Image
-                        $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'image_gallary' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category') ? '' : 'none';
+                        $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'gallery' || $category->category_type == 'check_in' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_page') ? '' : 'none';
                         if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
                         {
                             $cover_image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover);
@@ -1925,7 +1925,7 @@ class CategoryController extends Controller
                         $html .= '</div>';
 
                         // PDF File
-                        $pdf_active = ($category->category_type == 'pdf_category') ? '' : 'none';
+                        $pdf_active = ($category->category_type == 'pdf_page') ? '' : 'none';
                         $html .= '<div class="row mb-3 pdf" style="display: '.$pdf_active.'" id="pdf_label">';
                             $html .= '<div class="col-md-12">';
                                 $html .= '<label class="form-label">'. __('PDF File').'</label>';
@@ -2144,7 +2144,7 @@ class CategoryController extends Controller
                             $html .= '</div>';
                         $html .= '</div>';
 
-                        $check_page_style_active = ($category->category_type == 'check_in_page') ? 'block' : 'none';
+                        $check_page_style_active = ($category->category_type == 'check_in') ? 'block' : 'none';
 
                         // Background Color
                         $html .= '<div class="row mb-3 chk_page_styles" style="display: '.$check_page_style_active.'">';
@@ -2189,7 +2189,7 @@ class CategoryController extends Controller
                         // Images
                         $html .= '<div class="row mb-3">';
                             $html .= '<div class="col-md-12 d-flex flex-wrap" id="edit_images_div">';
-                                if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'parent_category')
+                                if($category->category_type == 'product_category' || $category->category_type == 'page' || $category->category_type == 'gallery' || $category->category_type == 'parent_category')
                                 {
                                     if(count($category_images) > 0)
                                     {
@@ -2245,7 +2245,7 @@ class CategoryController extends Controller
                         $html .= '</div>';
 
                         // Cover Image
-                        $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'image_gallary' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category') ? '' : 'none';
+                        $cover_active = ($category->category_type == 'page' || $category->category_type == 'link' || $category->category_type == 'gallery' || $category->category_type == 'check_in' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_page') ? '' : 'none';
                         if(!empty($category->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover))
                         {
                             $cover_image = asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$category->cover);
@@ -2267,7 +2267,7 @@ class CategoryController extends Controller
                         $html .= '</div>';
 
                         // PDF File
-                        $pdf_active = ($category->category_type == 'pdf_category') ? '' : 'none';
+                        $pdf_active = ($category->category_type == 'pdf_page') ? '' : 'none';
                         $html .= '<div class="row mb-3 pdf" style="display: '.$pdf_active.'" id="pdf_label">';
                             $html .= '<div class="col-md-12">';
                                 $html .= '<label class="form-label">'. __('PDF File').'</label>';
@@ -2493,11 +2493,11 @@ class CategoryController extends Controller
                     {
                         $category_type = 'Link';
                     }
-                    elseif ($category->category_type == 'image_gallary')
+                    elseif ($category->category_type == 'gallery')
                     {
                         $category_type = 'Image Gallery';
                     }
-                    elseif ($category->category_type == 'check_in_page')
+                    elseif ($category->category_type == 'check_in')
                     {
                         $category_type = 'Check-In Page';
                     }
@@ -2505,13 +2505,13 @@ class CategoryController extends Controller
                     {
                         $category_type = 'Child Category';
                     }
-                    elseif ($category->category_type == 'pdf_category')
+                    elseif ($category->category_type == 'pdf_page')
                     {
                         $category_type = 'PDF';
                     }
 
 
-                    if($category->category_type == 'page' || $category->category_type == 'image_gallary' || $category->category_type == 'link' || $category->category_type == 'check_in_page' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_category')
+                    if($category->category_type == 'page' || $category->category_type == 'gallery' || $category->category_type == 'link' || $category->category_type == 'check_in' || $category->category_type == 'parent_category' || $category->category_type == 'pdf_page')
                     {
                         $cat_image = isset($category->cover) ? $category->cover : '';
                     }

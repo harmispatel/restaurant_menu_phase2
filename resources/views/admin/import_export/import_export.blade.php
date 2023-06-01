@@ -33,7 +33,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center justify-content-end">
-                                        <a class="btn btn-primary me-2" href="{{ asset('public/csv_demo/category_item_demo.xlsx') }}" download><i class="fa fa-download"></i> {{ __('Download Demo CSV') }}</a>
+                                        <a class="btn btn-primary me-2" href="{{ asset('public/csv_demo/demo-type-1.xlsx') }}" download><i class="fa fa-download"></i> {{ __('Demo CSV With Parent') }}</a>
+                                        <a class="btn btn-primary me-2" href="{{ asset('public/csv_demo/demo-type-2.xlsx') }}" download><i class="fa fa-download"></i> {{ __('Demo CSV Without Parent') }}</a>
                                         <form id="exportForm" action="{{ route('admin.export.data') }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="shop_id" id="shop_id">
@@ -99,36 +100,56 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <ul style="list-style: none;padding: 0; margin: 0;" class="text-muted">
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> It is mandatory to write the Type field in the category to write category type.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> The Parent field is also mandatory and can only have a value of 1 or 0.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a parent category then write 1 in Parent and if there is no parent category then write 0.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> In Type field, there will be only 7 Types of category type.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Types which are as follows :
+                                    <li class="fw-bold">For Menu With Only Root Categories.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> In PARENT field (Cell B2) add 0 in PARENT NAME field (Cell C2) leave it blank.</li>
+                                    <br>
+
+                                    <li class="fw-bold">For Menu With Parent Categories for HOTELS or LARGE MENUS.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> It is mandatory to write bellow TYPE field (Cell A2) The Element Type.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Is also mandatory to write bellow PARENT (Cell B2) ONLY values of 1 or 0.
+                                        <ol class="ms-3" type="a">
+                                            <li>For parent category write 1 (Cell B2).</li>
+                                            <li>For NOT Parent write 0 (Cell B2).</li>
+                                        </ol>
+                                    </li>
+                                    <br>
+
+                                    <li class="fw-bold">For TYPE field, there are only 7 Types of Elements.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Available Element Types :
                                         <ol class="ms-3">
                                             <li>parent_category</li>
                                             <li>product_category</li>
                                             <li>page</li>
                                             <li>link</li>
-                                            <li>image_gallary</li>
-                                            <li>check_in_page</li>
-                                            <li>pdf_category</li>
+                                            <li>gallery</li>
+                                            <li>check_in</li>
+                                            <li>pdf_page</li>
                                         </ol>
                                     </li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a parent category, type the parent_category in the Type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If your category is a child category or category, type the product_category in the Type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if your category is a child category then it is mandatory to write parent category name in Parent Name.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if category is parent and not-child(root) then don't write anything in Parent Name leave it blank.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add page, type the page in the Type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add pdf, type the pdf_category in the Type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add Image Gallery, type the image_gallary in the Type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add CheckIn Page, type the check_in_page in the Type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> If you want to add Link, type the link in the Type field.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if your category_type is page then write your link in link_url field and if not leave it blank.</li>
-                                    <li class="fw-bold"><i class="bi bi-arrow-right-circle text-success"></i> Items will be inserted only if your category is a category or a child category.</li>
-                                    <li class="fw-bold"><i class="bi bi-arrow-right-circle text-success"></i> The data in your Excel file should be in the same format as the demo Excel file, so check the demo file first and then after import your excel file.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Before Import Your CSV Click on Download Demo CSV Button and Check Demo CSV.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Before Import Catalogue Select Client Shop & Delete Old Catalogue.</li>
+                                    <br>
+
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> For Child Category it is mandatory the Parent Category Name (from English Language) (Cell A4 0r B4) bellow PARENT NAME (Cell C2).</li>
+                                    <br>
+
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Items will be inserted ONLY if your category is a category or a child category.</li>
+                                    <br>
+
+                                    <li class="fw-bold">Other Pages</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add a page, type: page in TYPE field (Cell A2).</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add PDF page, type: pdf_page in TYPE field (Cell A2).</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add Image Gallery Page, type: gallery in TYPE field (Cell A2).</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add CheckIn Page, type: check_in in TYPE field (Cell A2).</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add Link Page, type: link in TYPE field (Cell A2). You can also add the link bellow LINK field (Cell D2).</li>
+                                    <br>
+
+                                    <li class="fw-bold">To Import</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Data in Excel file should be in the same format as the DEMO Excel file!</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Before Import Your CSV Click on Download Demo CSV Button and Check DEMO CSV.</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Before Import Catalogue Select Client Shop & Delete Old Catalogue if any.</li>
                                     <li><i class="bi bi-arrow-right-circle text-success"></i> After Delete Catalogue Select Client Shop Then Choose CSV File & Click on Import Button.</li>
+                                    <br>
+
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if category is parent and not-child(root) then don't write anything in Parent Name leave it blank.</li>
                                 </ul>
                             </div>
                         </div>

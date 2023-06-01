@@ -102,7 +102,7 @@
                                         @endif
                                             <div class="img_box">
                                                 {{-- Img Section --}}
-                                                @if($cat->category_type == 'page' || $cat->category_type == 'image_gallary' || $cat->category_type == 'link' || $cat->category_type == 'check_in_page' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_category')
+                                                @if($cat->category_type == 'page' || $cat->category_type == 'gallery' || $cat->category_type == 'link' || $cat->category_type == 'check_in' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_page')
                                                     @if(!empty($cat->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover))
                                                         <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover) }}" class="w-100">
                                                     @else

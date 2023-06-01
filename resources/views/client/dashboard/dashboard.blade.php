@@ -113,14 +113,14 @@
                         <div class="col-md-3">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title p-0"><a href="{{ route('categories','image_gallary') }}">{{ __('Image Galleries')}}</a></h5>
+                                    <h5 class="card-title p-0"><a href="{{ route('categories','gallery') }}">{{ __('Image Galleries')}}</a></h5>
                                     <div class="d-flex align-items-center">
                                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-images"></i>
                                         </div>
                                         <div class="ps-3">
                                             <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
-                                                - {{ isset($category['image_gallary']) ? $category['image_gallary'] : 0 }}</span>
+                                                - {{ isset($category['gallery']) ? $category['gallery'] : 0 }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -133,14 +133,14 @@
                         <div class="col-md-3">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title p-0"><a href="{{ route('categories','pdf_category') }}">{{ __('PDF')}}</a></h5>
+                                    <h5 class="card-title p-0"><a href="{{ route('categories','pdf_page') }}">{{ __('PDF')}}</a></h5>
                                     <div class="d-flex align-items-center">
                                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </div>
                                         <div class="ps-3">
                                             <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
-                                                - {{ isset($category['pdf_category']) ? $category['pdf_category'] : 0 }}</span>
+                                                - {{ isset($category['pdf_page']) ? $category['pdf_page'] : 0 }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -153,14 +153,14 @@
                         <div class="col-md-3">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title p-0"><a href="{{ route('categories','check_in_page') }}">{{ __('Check In Pages')}}</a></h5>
+                                    <h5 class="card-title p-0"><a href="{{ route('categories','check_in') }}">{{ __('Check In Pages')}}</a></h5>
                                     <div class="d-flex align-items-center">
                                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-person-check-fill"></i>
                                         </div>
                                         <div class="ps-3">
                                             <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
-                                                - {{ isset($category['check_in_page']) ? $category['check_in_page'] : 0 }}</span>
+                                                - {{ isset($category['check_in']) ? $category['check_in'] : 0 }}</span>
                                         </div>
                                     </div>
                                 </div>
