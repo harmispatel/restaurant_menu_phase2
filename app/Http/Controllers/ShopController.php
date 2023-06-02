@@ -142,7 +142,7 @@ class ShopController extends Controller
         // Current Languge Code
         $data['current_lang_code'] = (session()->has('locale')) ? session()->get('locale') : 'en';
 
-        $data['all_items'] = Items::where('category_id',$cat_id)->orderBy('order_key')->get();
+        $data['all_items'] = Items::where('category_id',$cat_id)->orderBy('order_key')->where('published',1)->get();
 
         if($data['cat_details'] && $data['shop_details'])
         {
@@ -356,7 +356,7 @@ class ShopController extends Controller
             }
             else
             {
-                $items = Items::where("$name_key",'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->whereIn('category_id',$categories_ids)->get();
+                $items = Items::where("$name_key",'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->whereIn('category_id',$categories_ids)->where('published',1)->get();
 
                 if(count($items) > 0)
                 {
@@ -594,14 +594,14 @@ class ShopController extends Controller
 
                 if($keyword == '')
                 {
-                    $items = Items::where("$name_key",'LIKE','%'.$keyword.'%')->where('category_id',$category_id)->get();
+                    $items = Items::where("$name_key",'LIKE','%'.$keyword.'%')->where('category_id',$category_id)->where('published',1)->get();
                 }
                 else
                 {
                     $items = Items::whereHas('category', function($q) use ($parent_id)
                     {
                         $q->where('parent_id',$parent_id);
-                    })->where("$name_key",'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->get();
+                    })->where("$name_key",'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->where('published',1)->get();
                 }
 
                 if(count($items) > 0)
