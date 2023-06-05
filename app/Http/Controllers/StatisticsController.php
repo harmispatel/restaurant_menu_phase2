@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoryVisit;
 use App\Models\Clicks;
+use App\Models\Items;
 use App\Models\ItemsVisit;
 use App\Models\Shop;
 use App\Models\UserVisits;
@@ -11,6 +12,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
@@ -23,15 +25,23 @@ class StatisticsController extends Controller
         $date_arr = [];
         $user_visits_arr = [];
         $total_clicks_arr = [];
-        $today = Carbon::now()->addDay();
+        $today = Carbon::now();
 
-        if($key == 'last_month')
+        if($key == 'last_week')
+        {
+            $month = Carbon::now()->subWeek();
+        }
+        elseif($key == 'last_month')
         {
             $month = Carbon::now()->subMonth();
         }
         elseif($key == 'last_six_month')
         {
             $month = Carbon::now()->subMonth(6);
+        }
+        elseif($key == 'last_year')
+        {
+            $month = Carbon::now()->subYear();
         }
         elseif($key == 'lifetime')
         {
@@ -40,7 +50,7 @@ class StatisticsController extends Controller
         }
         else
         {
-            $month = Carbon::now()->subMonth();
+            $month = Carbon::now()->subWeek();
         }
 
         $month_array = CarbonPeriod::create($month, $today);
@@ -62,6 +72,13 @@ class StatisticsController extends Controller
 
         // most visited Item
         $data['items_visit'] = ItemsVisit::with(['item'])->where('shop_id',$shop_id)->orderByRaw("CAST(total_clicks as UNSIGNED) DESC")->limit(5)->get();
+
+        // Max Rated Items
+        // $data['max_rated_items'] = Items::withCount('ratings')->withAvg('ratings', 'rating')->orderByDesc('ratings_count')->orderByDesc('ratings_avg_rating')->where('shop_id',$shop_id)->where('published',1)->limit(5)->get();
+        $data['max_rated_items'] = Items::withCount('ratings')->withAvg('ratings', 'rating')->orderByDesc('ratings_avg_rating')->where('shop_id',$shop_id)->where('published',1)->limit(5)->get();
+
+        // Low Rated Items
+        $data['low_rated_items'] = Items::withCount('ratings')->withAvg('ratings', 'rating')->orderBy('ratings_avg_rating')->where('shop_id',$shop_id)->where('published',1)->limit(5)->get();
 
         $data['current_key'] = $key;
         $data['date_array'] = $date_arr;

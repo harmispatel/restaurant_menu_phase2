@@ -7,7 +7,9 @@ use App\Models\Category;
 use App\Models\CategoryProductTags;
 use App\Models\Ingredient;
 use App\Models\ItemPrice;
+use App\Models\ItemReview;
 use App\Models\Items;
+use App\Models\ItemsVisit;
 use App\Models\Languages;
 use App\Models\Option;
 use App\Models\Tags;
@@ -229,12 +231,25 @@ class ItemsController extends Controller
 
             $item = Items::where('id',$id)->first();
             $item_image = isset($item->image) ? $item->image : '';
+            $cat_id = isset($item->category_id) ? $item->category_id : '';
 
             // Delete Item Image
             if(!empty($item_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_image))
             {
                 unlink('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_image);
             }
+
+            // Delete Item Category Tags
+            CategoryProductTags::where('item_id',$id)->where('category_id',$cat_id)->delete();
+
+            // Delete Item Visits
+            ItemsVisit::where('item_id',$id)->delete();
+
+            // Delete Item Prices
+            ItemPrice::where('item_id',$id)->delete();
+
+            // Delete Item Reviews
+            ItemReview::where('item_id',$id)->delete();
 
             // Delete Item
             Items::where('id',$id)->delete();

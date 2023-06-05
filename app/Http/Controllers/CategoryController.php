@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdditionalLanguage;
 use App\Models\Category;
 use App\Models\CategoryImages;
+use App\Models\CategoryVisit;
 use App\Models\Items;
 use App\Models\Languages;
 use Illuminate\Http\Request;
@@ -315,6 +316,9 @@ class CategoryController extends Controller
 
                 // Delete Category
                 Category::where('id',$id)->delete();
+
+                // Delete Category Visists
+                CategoryVisit::where('category_id',$id)->delete();
 
                 // Delete Category Images from DB
                 CategoryImages::where('category_id',$id)->delete();

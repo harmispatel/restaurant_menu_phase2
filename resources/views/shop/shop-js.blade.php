@@ -342,53 +342,58 @@
     }
 
     // Function for Submit Item Review & Rating
-    function submitItemReview(itemID)
+    function submitItemReview()
     {
-        var comment = $('#item_review').val();
-        var rating = $("input[name='rating']:checked").val();
+        // Clear all Toastr Messages
+        toastr.clear();
 
-        if(comment != '')
-        {
-            $.ajax({
-                type: "POST",
-                url: "{{ route('send.item.review') }}",
-                data: {
-                    '_token': "{{ csrf_token() }}",
-                    'item_id' : itemID,
-                    'comment' : comment,
-                    'rating' : rating,
-                },
-                dataType: "JSON",
-                beforeSend: function()
+        var myFormData = new FormData(document.getElementById('reviewForm'));
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('send.item.review') }}",
+            data: myFormData,
+            dataType: "JSON",
+            contentType: false,
+            cache: false,
+            processData: false,
+            beforeSend: function()
+            {
+                $('#btn-review').hide();
+                $('#load-btn-review').show();
+            },
+            success: function (response)
+            {
+                if(response.success == 1)
                 {
-                    $('#btn-review').hide();
-                    $('#load-btn-review').show();
-                },
-                success: function (response)
-                {
-                    if(response.success == 1)
-                    {
-                        $('#btn-review').show();
-                        $('#load-btn-review').hide();
-                        $('#item_review').val('');
-                        $("input[name='rating']").removeAttr('checked');
-                        $("#star3").prop('checked', true);
-                        toastr.success(response.message);
-                    }
-                    else
-                    {
-                        toastr.error(response.message);
-                        $('#itemDetailsModal').modal('hide');
-                    }
+                    $('#btn-review').show();
+                    $('#load-btn-review').hide();
+                    $('#reviewForm').trigger("reset");
+                    // $('#item_review').val('');
+                    // $("input[name='rating']").removeAttr('checked');
+                    // $("#star3").prop('checked', true);
+                    toastr.success(response.message);
                 }
-            });
-        }
-        else
-        {
-            toastr.error("Please Enter Comment to Submit Review!");
-            return false;
-        }
+                else
+                {
+                    toastr.error(response.message);
+                    $('#itemDetailsModal').modal('hide');
+                }
+            },
+            error: function(response)
+            {
+                if(response.responseJSON.errors)
+                {
+                    $('#btn-review').show();
+                    $('#load-btn-review').hide();
 
+                    $.each(response.responseJSON.errors, function (i, error)
+                    {
+                        toastr.error(error);
+                    });
+                }
+            }
+        });
     }
 
 </script>

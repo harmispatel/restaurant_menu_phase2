@@ -20,6 +20,7 @@ class CreateItemReviewsTable extends Migration
             $table->integer('item_id');
             $table->integer('rating');
             $table->string('ip_address');
+            $table->string('email')->nullable();
             $table->longText('comment');
             $table->timestamps();
         });

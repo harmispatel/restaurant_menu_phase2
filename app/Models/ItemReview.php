@@ -10,8 +10,13 @@ class ItemReview extends Model
 {
     use HasFactory;
 
+    // public function item()
+    // {
+    //     return $this->hasOne(Items::class,'id','item_id');
+    // }
+
     public function item()
     {
-        return $this->hasOne(Items::class,'id','item_id');
+        return $this->belongsTo(Items::class);
     }
 }

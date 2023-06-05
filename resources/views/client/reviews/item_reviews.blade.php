@@ -37,6 +37,7 @@
                                         <th style="width: 18%">{{ __('Rating')}}</th>
                                         <th style="width: 30%">{{ __('Comment')}}</th>
                                         <th style="width: 15%">{{ __('Time') }}</th>
+                                        <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,6 +55,9 @@
                                             </td>
                                             <td>{{ $review->comment }}</td>
                                             <td>{{ $review->created_at->diffForHumans(); }}</td>
+                                            <td>
+                                                <a onclick="delteItemReview({{ $review->id }})" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr class="text-center">
@@ -74,5 +78,109 @@
 {{-- Custom JS --}}
 @section('page-js')
     <script type="text/javascript">
+
+        // Function for Delete Review
+        function delteItemReview(reviewID)
+        {
+            swal({
+                title: "Enter Password to Delete It.",
+                icon: "info",
+                buttons: true,
+                dangerMode: true,
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Enter Your Password",
+                        type: "password",
+                    },
+                },
+                closeOnClickOutside: false,
+            })
+            .then((passResponse) =>
+            {
+                if (passResponse != '')
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('verify.client.password') }}",
+                        data: {
+                            "_token" : "{{ csrf_token() }}",
+                            "password" : passResponse,
+                        },
+                        dataType: "JSON",
+                        success: function (response)
+                        {
+                            if(response.success == 1)
+                            {
+                                if(response.matched == 1)
+                                {
+                                    swal({
+                                        title: "Are you sure You want to Delete It ?",
+                                        icon: "warning",
+                                        buttons: true,
+                                        dangerMode: true,
+                                    })
+                                    .then((willDelReview) =>
+                                    {
+                                        if (willDelReview)
+                                        {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: '{{ route("items.reviews.destroy") }}',
+                                                data: {
+                                                    "_token": "{{ csrf_token() }}",
+                                                    'id': reviewID,
+                                                },
+                                                dataType: 'JSON',
+                                                success: function(response)
+                                                {
+                                                    if (response.success == 1)
+                                                    {
+                                                        swal(response.message, {
+                                                            icon: "success",
+                                                        });
+                                                        setTimeout(() => {
+                                                            location.reload();
+                                                        }, 1200);
+                                                    }
+                                                    else
+                                                    {
+                                                        toastr.error(response.message);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            swal("Cancelled", "", "error");
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    swal(response.message, {
+                                        icon: "info",
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                swal(response.message, {
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                });
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Please Enter Password  to Delete Review!", {
+                        icon: "info",
+                    });
+                }
+            });
+        }
+
     </script>
 @endsection

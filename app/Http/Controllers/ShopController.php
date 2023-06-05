@@ -1305,7 +1305,7 @@ class ShopController extends Controller
 
                             $html .= '<div class="row">';
                                 $html .= '<div class="col-md-12 text-center mt-3">';
-                                    $html .= '<a class="btn btn-sm btn-primary" onclick="addToCart('.$item['id'].')">'.__('Add to Cart').'</a>';
+                                    $html .= '<a class="btn btn-primary" onclick="addToCart('.$item['id'].')"><i class="bi bi-cart4"></i> '.__('Add to Cart').'</a>';
                                 $html .= '</div>';
                             $html .= '</div>';
                         }
@@ -1316,29 +1316,39 @@ class ShopController extends Controller
                     if($item['review'] == 1)
                     {
                         $html .= '<div class="col-md-12 mt-3">';
-                            $html .= '<div class="rate">';
-                                $html .= '<input type="radio" id="star5" class="rate" name="rating" value="5"/>';
-                                $html .= '<label for="star5" title="text">5 stars</label>';
-                                $html .= '<input type="radio" id="star4" class="rate" name="rating" value="4"/>';
-                                $html .= '<label for="star4" title="text">4 stars</label>';
-                                $html .= '<input type="radio" id="star3" class="rate" name="rating" value="3" checked />';
-                                $html .= '<label for="star3" title="text">3 stars</label>';
-                                $html .= '<input type="radio" id="star2" class="rate" name="rating" value="2">';
-                                $html .= '<label for="star2" title="text">2 stars</label>';
-                                $html .= '<input type="radio" id="star1" class="rate" name="rating" value="1"/>';
-                                $html .= '<label for="star1" title="text">1 star</label>';
+                            $html .= '<div class="row">';
+                                $html .= '<form method="POST" id="reviewForm" enctype="multipart/form-data">';
+                                    $html .= csrf_field();
+                                    $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
+                                    $html .= '<div class="col-md-12">';
+                                        $html .= '<div class="rate">';
+                                            $html .= '<input type="radio" id="star5" class="rate" name="rating" value="5"/>';
+                                            $html .= '<label for="star5" title="text">5 stars</label>';
+                                            $html .= '<input type="radio" id="star4" class="rate" name="rating" value="4"/>';
+                                            $html .= '<label for="star4" title="text">4 stars</label>';
+                                            $html .= '<input type="radio" id="star3" class="rate" name="rating" value="3" checked />';
+                                            $html .= '<label for="star3" title="text">3 stars</label>';
+                                            $html .= '<input type="radio" id="star2" class="rate" name="rating" value="2">';
+                                            $html .= '<label for="star2" title="text">2 stars</label>';
+                                            $html .= '<input type="radio" id="star1" class="rate" name="rating" value="1"/>';
+                                            $html .= '<label for="star1" title="text">1 star</label>';
+                                        $html .= '</div>';
+                                    $html .= '</div>';
+                                    $html .= '<div class="col-md-12 mt-2">';
+                                        $html .= '<input type="text" name="email_id" id="email_id" class="form-control" placeholder="Enter Your Email">';
+                                    $html .= '</div>';
+                                    $html .= '<div class="col-md-12 mt-2">';
+                                        $html .= '<textarea class="form-control" name="item_review" id="item_review" rows="4" placeholder="Comment"></textarea>';
+                                    $html .= '</div>';
+                                    $html .= '<div class="col-md-12 mb-2 mt-2 text-center">';
+                                        $html .= '<a class="btn btn-success" onclick="submitItemReview()" id="btn-review"><i class="bi bi-send"></i> Submit</a>';
+                                        $html .= '<button class="btn btn-success" type="button" disabled style="display:none;" id="load-btn-review">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        Please Wait...
+                                    </button>';
+                                    $html .= '</div>';
+                                $html .= '</form>';
                             $html .= '</div>';
-                        $html .= '</div>';
-
-                        $html .= '<div class="col-md-12 mt-2">';
-                            $html .= '<textarea class="form-control" name="item_review" id="item_review" rows="4" placeholder="Comment"></textarea>';
-                        $html .= '</div>';
-                        $html .= '<div class="col-md-12 mb-2 mt-2">';
-                            $html .= '<a class="btn btn-success" onclick="submitItemReview('.$item['id'].')" id="btn-review"><i class="bi bi-send"></i> Submit</a>';
-                            $html .= '<button class="btn btn-success" type="button" disabled style="display:none;" id="load-btn-review">
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            Please Wait...
-                          </button>';
                         $html .= '</div>';
                     }
 
@@ -2191,11 +2201,27 @@ class ShopController extends Controller
     // Function for Send Item Review
     public function sendItemReview(Request $request)
     {
+
+        $rules = [
+            'item_review' => 'required',
+        ];
+
+        if(!empty($request->email_id))
+        {
+            $rules += [
+                'email_id' => 'email',
+            ];
+        }
+
+       $request->validate($rules);
+
         try
         {
+
             $item_id = (isset($request->item_id)) ? $request->item_id : '';
-            $comment = (isset($request->comment)) ? $request->comment : '';
+            $comment = (isset($request->item_review)) ? $request->item_review : '';
             $rating = (isset($request->rating)) ? $request->rating : '';
+            $email = (isset($request->email_id)) ? $request->email_id : '';
 
             // Item Details
             $item = Items::where('id',$item_id)->first();
@@ -2213,6 +2239,7 @@ class ShopController extends Controller
                 $item_review->rating = $rating;
                 $item_review->ip_address = $user_ip;
                 $item_review->comment = $comment;
+                $item_review->email = $email;
                 $item_review->save();
 
                 return response()->json([

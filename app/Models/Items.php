@@ -13,4 +13,9 @@ class Items extends Model
     {
         return $this->hasOne(Category::class,'id','category_id');
     }
+
+    public function ratings()
+    {
+        return $this->hasMany(ItemReview::class,'item_id','id');
+    }
 }

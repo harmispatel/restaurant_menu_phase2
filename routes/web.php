@@ -34,6 +34,7 @@ Route::get('/', function () {
 // Auth Routes
 Route::get('/login', [AuthController::class,'showLogin'])->name('login');
 Route::post('/login', [AuthController::class,'login'])->name('doLogin');
+
 // Logout
 Route::get('/logout', [AuthController::class,'logout'])->name('logout');
 
@@ -278,6 +279,9 @@ Route::group(['prefix' => 'client'], function()
 
         // Item Reviews
         Route::get('/items-reviews',[ItemsReviewsController::class,'index'])->name('items.reviews');
+        Route::post('/items-reviews-destroy',[ItemsReviewsController::class,'destroy'])->name('items.reviews.destroy');
+
+        Route::post('/verify/client/password',[UserController::class,'verifyClientPassword'])->name('verify.client.password');
 
     });
 });

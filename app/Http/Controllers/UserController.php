@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ClientRequest;
 use App\Models\AdditionalLanguage;
 use App\Models\Category;
+use App\Models\CategoryImages;
 use App\Models\CategoryProductTags;
 use App\Models\CategoryVisit;
 use App\Models\CheckIn;
 use App\Models\Clicks;
 use App\Models\ClientSettings;
+use App\Models\DeliveryAreas;
 use App\Models\Ingredient;
 use App\Models\ItemPrice;
+use App\Models\ItemReview;
 use App\Models\Items;
 use App\Models\ItemsVisit;
 use App\Models\Languages;
@@ -563,6 +566,9 @@ class UserController extends Controller
                 // Delete Shop Categories
                 Category::where('shop_id',$shop_id)->delete();
 
+                // Delete Category Images
+                CategoryImages::whereIn('category_id',$cat_arr)->delete();
+
                 // Delete Category Visits
                 CategoryVisit::where('shop_id',$shop_id)->delete();
 
@@ -574,6 +580,9 @@ class UserController extends Controller
 
                 // Delete Item Visits
                 ItemsVisit::where('shop_id',$shop_id)->delete();
+
+                // Delete Item Reviews
+                ItemReview::where('shop_id',$shop_id)->delete();
 
                 // Delete Language Settings
                 LanguageSettings::where('shop_id',$shop_id)->delete();
@@ -622,6 +631,12 @@ class UserController extends Controller
 
                 // Delete CheckIns History
                 CheckIn::where('shop_id',$shop_id)->delete();
+
+                // Delete Delivery Areas
+                DeliveryAreas::where('shop_id',$shop_id)->delete();
+
+                // Delete Client Ingredients
+                Ingredient::where('shop_id',$shop_id)->delete();
 
             }
 
@@ -1070,6 +1085,7 @@ class UserController extends Controller
     }
 
 
+
     // Delete Clients Data
     public function deleteClientsData(Request $request)
     {
@@ -1094,6 +1110,9 @@ class UserController extends Controller
             // Delete Shop Category Tags
             CategoryProductTags::whereIn('category_id',$cat_arr)->delete();
 
+            // Delete Category Images
+            CategoryImages::whereIn('category_id',$cat_arr)->delete();
+
             // Delete Shop Categories
             Category::where('shop_id',$shop_id)->delete();
 
@@ -1105,6 +1124,15 @@ class UserController extends Controller
 
             // Tags Delete
             Tags::where('shop_id',$shop_id)->delete();
+
+            // Category Visits
+            CategoryVisit::where('shop_id',$shop_id)->delete();
+
+            // Items Visits
+            ItemsVisit::where('shop_id',$shop_id)->delete();
+
+            // Review Delete
+            ItemReview::where('shop_id',$shop_id)->delete();
 
             return response()->json([
                 'success' => 1,
@@ -1119,6 +1147,42 @@ class UserController extends Controller
             ]);
         }
 
+    }
+
+
+    // Verify Client Password
+    function verifyClientPassword(Request $request)
+    {
+        try
+        {
+            $user_password = (isset(Auth::user()->password)) ? Auth::user()->password : '';
+            $current_password = $request->password;
+
+            if(Hash::check($current_password,$user_password))
+            {
+                return response()->json([
+                    'success' => 1,
+                    'matched' => 1,
+                    'message' => 'Matched SuccessFully....',
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'success' => 1,
+                    'matched' => 0,
+                    'message' => 'Password does not Match!',
+                ]);
+            }
+
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
     }
 
 }

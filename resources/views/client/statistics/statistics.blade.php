@@ -20,15 +20,17 @@
         <div class="row justify-content-end">
             <div class="col-md-3">
                 <select name="date_filter" id="date_filter" class="form-select">
+                    <option value="last_week" {{ ($current_key == 'last_week') ? 'selected' : '' }}>Last Week</option>
                     <option value="last_month" {{ ($current_key == 'last_month') ? 'selected' : '' }}>Last Month</option>
                     <option value="last_six_month" {{ ($current_key == 'last_six_month') ? 'selected' : '' }}>Last Six Month</option>
+                    <option value="last_year" {{ ($current_key == 'last_year') ? 'selected' : '' }}>Last Year</option>
                     <option value="lifetime" {{ ($current_key == 'lifetime') ? 'selected' : '' }}>LifeTime</option>
                 </select>
             </div>
         </div>
         <div class="chart mb-3">
 
-            <canvas id="lineChart" style="max-height: 400px; display: block; box-sizing: border-box; height: 221px; width: 442px;" width="442" height="221"></canvas>
+            <canvas id="lineChart"></canvas>
 
         </div>
 
@@ -77,13 +79,87 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="most_viewed_sec mt-4">
+            <div class="sec_title">
+                <h3><i class="bi bi-star me-2"></i> {{ __('Ratings')}}</h3>
+            </div>
+            <div class="row">
+                <div class="col-md-6 border-end">
+                    <div class="viewed_category">
+                        <h4>{{ __('High Rated Items')}}</h4>
+                        <ul class="viewed_ul">
+                            @if(count($max_rated_items) > 0)
+                                @php
+                                    $max_key = 1;
+                                @endphp
+                                @foreach ($max_rated_items as $item)
+                                    @if(!empty($item['ratings_avg_rating']))
+                                        @php
+                                            $rating = number_format($item['ratings_avg_rating'],0);
+                                        @endphp
+                                        <li>
+                                            <div>
+                                                <strong>{{ $max_key }})</strong> {{ isset($item[$name_key]) ? $item[$name_key] : '' }} ({{ $rating }})
+                                                <br>
+                                                <div class="rated">
+                                                    @for($i=1; $i <= $rating; $i++)
+                                                        <label class="star-rating-complete" title="text">{{$i}} stars</label>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @php
+                                            $max_key++;
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="viewed_Items">
+                        <h4>{{ __('Low Rated Items')}}</h4>
+                        <ul class="viewed_ul">
+                            @if(count($low_rated_items) > 0)
+                                @php
+                                    $low_key = 1;
+                                @endphp
+                                @foreach ($low_rated_items as $item)
+                                    @if(!empty($item['ratings_avg_rating']))
+                                        @php
+                                            $rating = number_format($item['ratings_avg_rating'],0);
+                                        @endphp
+                                        <li>
+                                            <div>
+                                                <strong>{{ $low_key }})</strong> {{ isset($item[$name_key]) ? $item[$name_key] : '' }} ({{ $rating }})
+                                                <br>
+                                                <div class="rated">
+                                                    @for($i=1; $i <= $rating; $i++)
+                                                        <label class="star-rating-complete" title="text">{{$i}} stars</label>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @php
+                                            $low_key++;
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
 @endsection
 
 {{-- Custom JS --}}
 @section('page-js')
-
     <script type="text/javascript">
 
         const date_arr = {{ Js::from($date_array) }};
@@ -115,10 +191,11 @@
                     ]
                 },
                 options: {
+                    responsive: true,
                     scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
             });
