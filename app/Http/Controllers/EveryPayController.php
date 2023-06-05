@@ -9,6 +9,7 @@ use App\Models\OptionPrice;
 use App\Models\Order;
 use App\Models\OrderItems;
 use App\Models\Shop;
+use App\Models\UserShop;
 use Illuminate\Http\Request;
 use Everypay\Everypay;
 use Everypay\Payment;
@@ -64,6 +65,7 @@ class EveryPayController extends Controller
         $shop_details = Shop::where('shop_slug',$shop_slug)->first();
         // Shop ID
         $shop_id = isset($shop_details->id) ? $shop_details->id : '';
+        $shop_name = isset($shop_details->name) ? $shop_details->name : '';
 
         $discount_per = session()->get('discount_per');
         $card_number = str_replace(' ','',$request->card_number);
@@ -118,6 +120,12 @@ class EveryPayController extends Controller
                 $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
 
                 $shop_settings = getClientSettings($shop_id);
+
+                // Order Mail Template
+                $order_mail_template = (isset($shop_settings['order_mail_template'])) ? $shop_settings['order_mail_template'] : '';
+
+                $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
+                $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
 
                 // Ip Address
                 $user_ip = $request->ip();
@@ -305,6 +313,35 @@ class EveryPayController extends Controller
                     $update_order->order_total_text = Currency::currency($currency)->format($final_amount);
                     $update_order->total_qty = $total_qty;
                     $update_order->update();
+
+                    $from_email = (isset($order_details['email'])) ? $order_details['email'] : 'no-reply@gmail.com';
+
+                    if(count($contact_emails) > 0)
+                    {
+                        foreach($contact_emails as $mail)
+                        {
+                            $to = $mail;
+                            $subject = "New Order";
+                            $fname = (isset($order_details['firstname'])) ? $order_details['firstname'] : '';
+                            $lname = (isset($order_details['lastname'])) ? $order_details['lastname'] : '';
+
+                            $message = $order_mail_template;
+                            $message = str_replace('{shop_name}',$shop_name,$message);
+                            $message = str_replace('{firstname}',$fname,$message);
+                            $message = str_replace('{lastname}',$lname,$message);
+                            $message = str_replace('{order_id}',$order->id,$message);
+                            $message = str_replace('{order_type}',$checkout_type,$message);
+
+                            $headers = "MIME-Version: 1.0" . "\r\n";
+                            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                            // More headers
+                            $headers .= 'From: <'.$from_email.'>' . "\r\n";
+
+                            mail($to,$subject,$message,$headers);
+
+                        }
+                    }
                 }
 
                 session()->forget('cart');

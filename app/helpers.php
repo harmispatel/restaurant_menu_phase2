@@ -69,6 +69,7 @@
             'website_url',
             'shop_active_theme',
             'delivery_message',
+            'order_mail_template',
         ]);
 
         $settings = [];

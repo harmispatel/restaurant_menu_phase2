@@ -1842,6 +1842,7 @@ class ShopController extends Controller
 
         // Shop ID
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
+        $shop_name = isset($data['shop_details']->name) ? $data['shop_details']->name : '';
 
         $delivery_schedule = checkDeliverySchedule($shop_id);
 
@@ -1898,6 +1899,12 @@ class ShopController extends Controller
 
         $final_amount = 0;
         $total_qty = 0;
+
+        // Order Mail Template
+        $order_mail_template = (isset($shop_settings['order_mail_template'])) ? $shop_settings['order_mail_template'] : '';
+
+        $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
+        $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
 
         if($payment_method == 'cash')
         {
@@ -1997,6 +2004,8 @@ class ShopController extends Controller
                 }
             }
 
+            $from_email = (isset($request->email)) ? $request->email : 'no-reply@gmail.com';
+
             // Insert Order Items
             if($order->id)
             {
@@ -2079,7 +2088,35 @@ class ShopController extends Controller
                 $update_order->order_total_text = Currency::currency($currency)->format($final_amount);
                 $update_order->total_qty = $total_qty;
                 $update_order->update();
+
+                if(count($contact_emails) > 0)
+                {
+                    foreach($contact_emails as $mail)
+                    {
+                        $to = $mail;
+                        $subject = "New Order";
+                        $fname = (isset($request->firstname)) ? $request->firstname : '';
+                        $lname = (isset($request->lastname)) ? $request->lastname : '';
+
+                        $message = $order_mail_template;
+                        $message = str_replace('{shop_name}',$shop_name,$message);
+                        $message = str_replace('{firstname}',$fname,$message);
+                        $message = str_replace('{lastname}',$lname,$message);
+                        $message = str_replace('{order_id}',$order->id,$message);
+                        $message = str_replace('{order_type}',$checkout_type,$message);
+
+                        $headers = "MIME-Version: 1.0" . "\r\n";
+                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                        // More headers
+                        $headers .= 'From: <'.$from_email.'>' . "\r\n";
+
+                        mail($to,$subject,$message,$headers);
+
+                    }
+                }
             }
+
 
             session()->forget('cart');
             session()->forget('checkout_type');
