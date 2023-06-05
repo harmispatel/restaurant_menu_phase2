@@ -43,4 +43,6 @@
         border: none;
     }
 
+    .ck-editor__editable {min-height: 350px;}
+
 </style>

@@ -21,6 +21,7 @@
             'contact_us_email',
             'contact_us_subject',
             'google_map_api',
+            'contact_us_mail_template',
         ]);
 
         $settings = [];

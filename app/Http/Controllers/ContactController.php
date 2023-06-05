@@ -25,44 +25,51 @@ class ContactController extends Controller
 
         // Get Client Details
         $user_details = Auth::user();
-
-        // Keys
-        $keys = ([
-            'contact_us_email',
-            'contact_us_subject',
-        ]);
+        $shop_name = (isset($user_details->hasOneShop->shop['name'])) ? $user_details->hasOneShop->shop['name'] : '';
+        $shop_url = (isset($user_details->hasOneShop->shop['shop_slug'])) ? $user_details->hasOneShop->shop['shop_slug'] : '';
+        $shop_url = asset($shop_url);
 
         // Get To Mails & Subject
-        $settings = [];
-        foreach($keys as $key)
-        {
-            $query = AdminSettings::select('value')->where('key',$key)->first();
-            $settings[$key] = isset($query->value) ? $query->value : '';
-        }
+        $admin_settings = getAdminSettings();
+        $contact_us_mail_template = (isset($admin_settings['contact_us_mail_template'])) ? $admin_settings['contact_us_mail_template'] : '';
 
         // Get Subject from Site
-        $subject_content = (isset($settings['contact_us_subject'])) ? $settings['contact_us_subject'] : 'Smart QR Support |';
+        $subject_content = (isset($admin_settings['contact_us_subject'])) ? $admin_settings['contact_us_subject'] : 'Smart QR Support |';
 
         // Client Message
         $contact_message = $request->message;
 
         // To Mails
-        $email_array =  (isset($settings['contact_us_email']) && !empty($settings['contact_us_email'])) ? unserialize($settings['contact_us_email']) : [];
+        $email_array =  (isset($admin_settings['contact_us_email']) && !empty($admin_settings['contact_us_email'])) ? unserialize($admin_settings['contact_us_email']) : [];
 
         // If found to Mails then sent Mail
         if(count($email_array) > 0)
         {
             foreach($email_array as $email)
             {
+                $to = $email;
                 $subject = $subject_content." ".$request->title;
 
-                $data = [
-                    'message' => $contact_message,
-                    'subject' => $subject,
-                    'client_details' => $user_details,
-                ];
+                $message = $contact_us_mail_template;
+                $message = str_replace('{message}',$contact_message,$message);
+                $message = str_replace('{shop_name}',$shop_name,$message);
+                $message = str_replace('{shop_url}',$shop_url,$message);
 
-                Mail::to($email)->send(new ClientSupport($data));
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                // More headers
+                $headers .= 'From: <'.$user_details['email'].'>' . "\r\n";
+
+                mail($to,$subject,$message,$headers);
+
+                // $data = [
+                //     'message' => $contact_message,
+                //     'subject' => $subject,
+                //     'client_details' => $user_details,
+                // ];
+
+                // Mail::to($email)->send(new ClientSupport($data));
 
                 // mail($mail,$data['subject'],$data['description']);
             }

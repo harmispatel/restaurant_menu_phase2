@@ -29,6 +29,9 @@
 <!-- Select 2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+{{-- Ckeditor --}}
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/super-build/ckeditor.js"></script>
+
 {{-- apexchart --}}
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
