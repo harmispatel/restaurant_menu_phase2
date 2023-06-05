@@ -56,11 +56,6 @@ class OrderController extends Controller
                         }
                         $html .= '> '.__('Minutes').'.</div>';
 
-                        if($auto_print == 0 && $enable_print == 1)
-                        {
-                            $html .= '<a class="btn btn-sm btn-primary ms-3" onclick="printReceipt('.$order->id .')"><i class="bi bi-printer"></i></a>';
-                        }
-
                         if($order->order_status == 'pending')
                         {
                             $html .= '<a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder('.$order->id.')"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> '.__('Accept').'</a>';
@@ -69,6 +64,12 @@ class OrderController extends Controller
                         {
                             $html .= '<a class="btn btn-sm btn-success ms-3" onclick="finalizedOrder('.$order->id.')"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Complete"></i> '.__('Finalize').'</a>';
                         }
+
+                        if($enable_print == 1)
+                        {
+                            $html .= '<a class="btn btn-sm btn-primary ms-3" onclick="printReceipt('.$order->id .')"><i class="bi bi-printer"></i> Print</a>';
+                        }
+
                     $html .= '</div>';
 
                     $html .= '<div class="order-info">';

@@ -61,7 +61,7 @@
                                         </tr>
                                     @empty
                                         <tr class="text-center">
-                                            <td colspan="6">{{ __('Reviews Not Found!')}}</td>
+                                            <td colspan="7">{{ __('Reviews Not Found!')}}</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

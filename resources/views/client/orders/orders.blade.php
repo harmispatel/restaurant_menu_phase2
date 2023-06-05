@@ -64,14 +64,14 @@
                                 <div class="order-btn d-flex align-items-center justify-content-end">
                                     <div class="d-flex align-items-center flex-wrap">{{ __('Estimated time of arrival') }} <input type="number" name="estimated_time" onchange="changeEstimatedTime(this)" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}" {{ ($order->order_status == 'accepted') ? 'disabled' : '' }}> {{ __('Minutes') }}.
                                     </div>
-                                    @if($auto_print == 0 && $enable_print == 1)
-                                        <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
-                                    @endif
-
                                     @if($order->order_status == 'pending')
                                         <a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> {{ __('Accept') }}</a>
                                     @elseif($order->order_status == 'accepted')
                                         <a class="btn btn-sm btn-success ms-3" onclick="finalizedOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Complete"></i> {{ __('Finalize') }}</a>
+                                    @endif
+
+                                    @if($enable_print == 1)
+                                        <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i> Print</a>
                                     @endif
                                 </div>
                                 <div class="order-info">

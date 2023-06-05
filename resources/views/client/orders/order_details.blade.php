@@ -298,7 +298,11 @@
                                                                     <a class="fw-bold" style="color: #7e8299">
                                                                         {{ ($ord_item->item_name) }}
                                                                     </a>
-                                                                    <div class="fs-7" style="color: #a19e9e;">{{ $options_array }}</div>
+                                                                    @if(!empty($options_array))
+                                                                        <div class="fs-7" style="color: #a19e9e;">{{ $options_array }}</div>
+                                                                    @else
+                                                                        <div class="fs-7" style="color: #a19e9e;"></div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </td>
