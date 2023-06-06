@@ -20,14 +20,14 @@
                         <div class="form-group">
                             <label class="form-label" for="orders_mail_form_client">{{ __('Orders Mail Form Client') }}</label>
                             <textarea name="orders_mail_form_client" id="orders_mail_form_client" class="form-control editor">{{ (isset($client_settings['orders_mail_form_client']) && !empty($client_settings['orders_mail_form_client'])) ? $client_settings['orders_mail_form_client'] : '' }}</textarea>
-                            <code>Required Fields ({firstname}, {lastname}, {order_id}, {order_type})</code>
+                            <code>Tags : ({shop_logo}, {shop_name}, {firstname}, {lastname}, {order_id}, {order_type}, {payment_method}, {items}, {total})</code>
                         </div>
                     </div>
                     <div class="col-md-12 mt-3">
                         <div class="form-group">
                             <label class="form-label" for="orders_mail_form_customer">{{ __('Orders Mail Form Customer') }}</label>
                             <textarea name="orders_mail_form_customer" id="orders_mail_form_customer" class="form-control editor">{{ (isset($client_settings['orders_mail_form_customer']) && !empty($client_settings['orders_mail_form_customer'])) ? $client_settings['orders_mail_form_customer'] : '' }}</textarea>
-                            <code>Required Fields ({firstname}, {lastname}, {order_id}, {order_type}, {order_status})</code>
+                            <code>Tags : ({shop_logo}, {shop_name}, {firstname}, {lastname}, {order_id}, {order_type}, {order_status}, {payment_method}, {items}, {total})</code>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                         <div class="form-group">
                             <label class="form-label" for="check_in_mail_form">{{ __('Check In Mail Form') }}</label>
                             <textarea name="check_in_mail_form" id="check_in_mail_form" class="form-control editor">{{ (isset($client_settings['check_in_mail_form']) && !empty($client_settings['check_in_mail_form'])) ? $client_settings['check_in_mail_form'] : '' }}</textarea>
-                            <code>Required Fields ({first_name}, {first_name}, {phone}, {passport_no}, {room_no}, {nationality}, {age}, {address}, {arrival_date}, {departure_date}, {message})</code>
+                            <code>Tags : ({shop_logo}, {shop_name}, {firstname}, {lastname}, {phone}, {passport_no}, {room_no}, {nationality}, {age}, {address}, {arrival_date}, {departure_date}, {message})</code>
                         </div>
                     </div>
                 </div>

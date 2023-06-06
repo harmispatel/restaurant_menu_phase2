@@ -317,7 +317,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <textarea name="contact_us_mail_template" id="contact_us_mail_template" class="form-control">{{ isset($settings['contact_us_mail_template']) ? $settings['contact_us_mail_template'] : '' }}</textarea>
-                                    <code>Required Fields ({shop_name}, {shop_logo}, {subject}, {message})</code>
+                                    <code>Tags : ({shop_name}, {shop_logo}, {subject}, {message})</code>
                                 </div>
                             </div>
                             <div class="row mb-3">
