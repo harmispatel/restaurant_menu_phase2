@@ -1402,7 +1402,7 @@ class ShopController extends Controller
         $shop_settings = getClientSettings($shop_id);
 
         // CheckIN Mail Template
-        $check_in_mail_template = (isset($shop_settings['check_in_mail_template'])) ? $shop_settings['check_in_mail_template'] : '';
+        $check_in_mail_form = (isset($shop_settings['check_in_mail_form'])) ? $shop_settings['check_in_mail_form'] : '';
 
         $age = Carbon::parse($request->date_of_birth)->age;
 
@@ -1438,14 +1438,14 @@ class ShopController extends Controller
 
         try
         {
-            if(count($contact_emails) > 0)
+            if(count($contact_emails) > 0 && !empty($check_in_mail_form))
             {
                 foreach($contact_emails as $mail)
                 {
                     $to = $mail;
                     $subject = $data['subject'];
 
-                    $message = $check_in_mail_template;
+                    $message = $check_in_mail_form;
                     $message = str_replace('{shop_name}',$shop_name,$message);
                     $message = str_replace('{first_name}',$data['firstname'],$message);
                     $message = str_replace('{last_name}',$data['lastname'],$message);
@@ -1455,9 +1455,9 @@ class ShopController extends Controller
                     $message = str_replace('{nationality}',$data['nationality'],$message);
                     $message = str_replace('{age}',$data['age'],$message);
                     $message = str_replace('{address}',$data['residence_address'],$message);
-                    $message = str_replace('{arrival_date}',$data['arrival_date'],$message);
-                    $message = str_replace('{departure_date}',$data['departure_date'],$message);
-                    $message = str_replace('{message}',$data['description'],$message);
+                    $message = str_replace('{arrival_date}',date('d-m-Y h:i:s',strtotime($data['arrival_date'])),$message);
+                    $message = str_replace('{departure_date}',date('d-m-Y h:i:s',strtotime($data['departure_date'])),$message);
+                    $message = str_replace('{message}',$data['message'],$message);
 
                     $headers = "MIME-Version: 1.0" . "\r\n";
                     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -1471,12 +1471,12 @@ class ShopController extends Controller
                     // mail($mail,$data['subject'],$data['description']);
                 }
             }
-            else
+            elseif(!empty($check_in_mail_form))
             {
                     $to = $client_email;
                     $subject = $data['subject'];
 
-                    $message = $check_in_mail_template;
+                    $message = $check_in_mail_form;
                     $message = str_replace('{shop_name}',$shop_name,$message);
                     $message = str_replace('{first_name}',$data['firstname'],$message);
                     $message = str_replace('{last_name}',$data['lastname'],$message);
@@ -1488,7 +1488,7 @@ class ShopController extends Controller
                     $message = str_replace('{address}',$data['residence_address'],$message);
                     $message = str_replace('{arrival_date}',$data['arrival_date'],$message);
                     $message = str_replace('{departure_date}',$data['departure_date'],$message);
-                    $message = str_replace('{message}',$data['description'],$message);
+                    $message = str_replace('{message}',$data['message'],$message);
 
                     $headers = "MIME-Version: 1.0" . "\r\n";
                     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -1960,7 +1960,8 @@ class ShopController extends Controller
         $total_qty = 0;
 
         // Order Mail Template
-        $order_mail_template = (isset($shop_settings['order_mail_template'])) ? $shop_settings['order_mail_template'] : '';
+        $orders_mail_form_client = (isset($shop_settings['orders_mail_form_client'])) ? $shop_settings['orders_mail_form_client'] : '';
+        $orders_mail_form_customer = (isset($shop_settings['orders_mail_form_customer'])) ? $shop_settings['orders_mail_form_customer'] : '';
 
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
         $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
@@ -2063,7 +2064,7 @@ class ShopController extends Controller
                 }
             }
 
-            $from_email = (isset($request->email)) ? $request->email : 'no-reply@gmail.com';
+            $from_email = (isset($request->email)) ? $request->email : '';
 
             // Insert Order Items
             if($order->id)
@@ -2148,34 +2149,64 @@ class ShopController extends Controller
                 $update_order->total_qty = $total_qty;
                 $update_order->update();
 
-                if(count($contact_emails) > 0)
+                if($checkout_type == 'takeaway' || $checkout_type == 'delivery')
                 {
-                    foreach($contact_emails as $mail)
+                    // Sent Mail to Client
+                    if(count($contact_emails) > 0 && !empty($orders_mail_form_client))
                     {
-                        $to = $mail;
-                        $subject = "New Order";
+                        foreach($contact_emails as $mail)
+                        {
+                            $to = $mail;
+                            $subject = "New Order";
+                            $fname = (isset($request->firstname)) ? $request->firstname : '';
+                            $lname = (isset($request->lastname)) ? $request->lastname : '';
+
+                            $message = $orders_mail_form_client;
+                            $message = str_replace('{shop_name}',$shop_name,$message);
+                            $message = str_replace('{firstname}',$fname,$message);
+                            $message = str_replace('{lastname}',$lname,$message);
+                            $message = str_replace('{order_id}',$order->id,$message);
+                            $message = str_replace('{order_type}',$checkout_type,$message);
+
+                            $headers = "MIME-Version: 1.0" . "\r\n";
+                            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                            // More headers
+                            $headers .= 'From: <'.$from_email.'>' . "\r\n";
+
+                            mail($to,$subject,$message,$headers);
+
+                        }
+                    }
+
+                    // Sent Mail to Customer
+                    if(!empty($from_email) && count($contact_emails) > 0 && !empty($orders_mail_form_customer))
+                    {
+                        $to = $from_email;
+                        $from = $contact_emails[0];
+                        $subject = "Order Placed";
                         $fname = (isset($request->firstname)) ? $request->firstname : '';
                         $lname = (isset($request->lastname)) ? $request->lastname : '';
 
-                        $message = $order_mail_template;
+                        $message = $orders_mail_form_customer;
                         $message = str_replace('{shop_name}',$shop_name,$message);
                         $message = str_replace('{firstname}',$fname,$message);
                         $message = str_replace('{lastname}',$lname,$message);
                         $message = str_replace('{order_id}',$order->id,$message);
                         $message = str_replace('{order_type}',$checkout_type,$message);
+                        $message = str_replace('{order_status}',$order_status,$message);
 
                         $headers = "MIME-Version: 1.0" . "\r\n";
                         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
                         // More headers
-                        $headers .= 'From: <'.$from_email.'>' . "\r\n";
+                        $headers .= 'From: <'.$from.'>' . "\r\n";
 
                         mail($to,$subject,$message,$headers);
-
                     }
                 }
-            }
 
+            }
 
             session()->forget('cart');
             session()->forget('checkout_type');

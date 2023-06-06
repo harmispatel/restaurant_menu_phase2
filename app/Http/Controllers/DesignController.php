@@ -361,6 +361,13 @@ class DesignController extends Controller
     }
 
 
+    // Mail Forms View
+    public function MailForms()
+    {
+        return view('client.design.mail_forms');
+    }
+
+
     // Update General General Info Settings
     public function generalInfoUpdate(Request $request)
     {
@@ -385,8 +392,6 @@ class DesignController extends Controller
         $all_data['website_url'] = $request->website_url;
         $all_data['pinterest_link'] = $request->pinterest_link;
         $all_data['delivery_message'] = $request->delivery_message;
-        $all_data['order_mail_template'] = $request->order_mail_template;
-        $all_data['check_in_mail_template'] = $request->check_in_mail_template;
 
         // Update Shop Name
         $shop = Shop::find($shop_id);
@@ -416,5 +421,41 @@ class DesignController extends Controller
             }
         }
         return redirect()->route('design.general-info')->with('success','General Information has been Updated SuccessFully..');
+    }
+
+
+    // Update Mail Form Settings
+    public function mailFormUpdate(Request $request)
+    {
+        $clientID = isset(Auth::user()->id) ? Auth::user()->id : '';
+        $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
+
+        $all_data['orders_mail_form_client'] = $request->orders_mail_form_client;
+        $all_data['orders_mail_form_customer'] = $request->orders_mail_form_customer;
+        $all_data['check_in_mail_form'] = $request->check_in_mail_form;
+
+        // Insert or Update Settings
+        foreach($all_data as $key => $value)
+        {
+            $query = ClientSettings::where('client_id',$clientID)->where('shop_id',$shop_id)->where('key',$key)->first();
+            $setting_id = isset($query->id) ? $query->id : '';
+
+            if (!empty($setting_id) || $setting_id != '')  // Update
+            {
+                $settings = ClientSettings::find($setting_id);
+                $settings->value = $value;
+                $settings->update();
+            }
+            else // Insert
+            {
+                $settings = new ClientSettings();
+                $settings->client_id = $clientID;
+                $settings->shop_id = $shop_id;
+                $settings->key = $key;
+                $settings->value = $value;
+                $settings->save();
+            }
+        }
+        return redirect()->route('design.mail.forms')->with('success','Mail Forms has been Updated SuccessFully..');
     }
 }

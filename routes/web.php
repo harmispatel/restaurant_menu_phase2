@@ -180,7 +180,9 @@ Route::group(['prefix' => 'client'], function()
         Route::post('update-banners-by-lang',[ShopBannerController::class,'updateByLangCode'])->name('banners.update-by-lang');
 
         Route::get('/design-general-info', [DesignController::class,'generalInfo'])->name('design.general-info');
+        Route::get('/design-mail-forms', [DesignController::class,'MailForms'])->name('design.mail.forms');
         Route::post('/design-generalInfoUpdate', [DesignController::class,'generalInfoUpdate'])->name('design.generalInfoUpdate');
+        Route::post('/design-mailFormUpdate', [DesignController::class,'mailFormUpdate'])->name('design.mailFormUpdate');
 
         // Billing Infor
         Route::get('billing-info',[BillingInfoController::class, 'billingInfo'])->name('billing.info');

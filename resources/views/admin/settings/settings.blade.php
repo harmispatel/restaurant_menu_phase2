@@ -297,7 +297,7 @@
                              {{-- Fav Clients Limit --}}
                              <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Contact us to email')}}</b>
+                                    <b>{{ __('Support mails')}}</b>
                                 </div>
                                 <div class="col-md-6">
                                 <input type="text" name="contact_us_email" class="form-control {{ ($errors->has('contact_us_email')) ? 'is-invalid' : '' }}" value="{{ $emails }}">
@@ -311,18 +311,13 @@
                                     @endif
                                 </div>
                             </div>
-                            {{-- CopyRight Text --}}
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Contact us subject')}}</b>
+                                    <b>{{ __('Support Mail Form') }}</b>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" name="contact_us_subject" id="contact_us_subject" class="form-control {{ ($errors->has('contact_us_subject')) ? 'is-invalid' : '' }}" value="{{ isset($settings['contact_us_subject']) ? $settings['contact_us_subject'] : '' }}">
-                                    @if($errors->has('contact_us_subject'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('contact_us_subject') }}
-                                        </div>
-                                    @endif
+                                    <textarea name="contact_us_mail_template" id="contact_us_mail_template" class="form-control">{{ isset($settings['contact_us_mail_template']) ? $settings['contact_us_mail_template'] : '' }}</textarea>
+                                    <code>Required Fields ({shop_name}, {shop_logo}, {subject}, {message})</code>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -331,14 +326,6 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" name="google_map_api" id="google_map_api" class="form-control" value="{{ isset($settings['google_map_api']) ? $settings['google_map_api'] : '' }}">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <b>{{ __('Contact US Mail Template') }}</b>
-                                </div>
-                                <div class="col-md-6">
-                                    <textarea name="contact_us_mail_template" id="contact_us_mail_template" class="form-control">{{ isset($settings['contact_us_mail_template']) ? $settings['contact_us_mail_template'] : '' }}</textarea>
                                 </div>
                             </div>
                         </div>

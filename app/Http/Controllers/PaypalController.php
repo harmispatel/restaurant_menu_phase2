@@ -220,7 +220,8 @@ class PaypalController extends Controller
         $shop_settings = getClientSettings($shop_id);
 
         // Order Mail Template
-        $order_mail_template = (isset($shop_settings['order_mail_template'])) ? $shop_settings['order_mail_template'] : '';
+        $orders_mail_form_client = (isset($shop_settings['orders_mail_form_client'])) ? $shop_settings['orders_mail_form_client'] : '';
+        $orders_mail_form_customer = (isset($shop_settings['orders_mail_form_customer'])) ? $shop_settings['orders_mail_form_customer'] : '';
 
         // Ip Address
         $user_ip = $request->ip();
@@ -455,33 +456,64 @@ class PaypalController extends Controller
                 $update_order->total_qty = $total_qty;
                 $update_order->update();
 
-                $from_email = (isset($order_details['email'])) ? $order_details['email'] : 'no-reply@gmail.com';
+                $from_email = (isset($order_details['email'])) ? $order_details['email'] : '';
 
-                if(count($contact_emails) > 0)
+                if($checkout_type == 'takeaway' || $checkout_type == 'delivery')
                 {
-                    foreach($contact_emails as $mail)
+                    // Sent Mail to Client
+                    if(count($contact_emails) > 0 && !empty($orders_mail_form_client))
                     {
-                        $to = $mail;
-                        $subject = "New Order";
+                        foreach($contact_emails as $mail)
+                        {
+                            $to = $mail;
+                            $subject = "New Order";
+                            $fname = (isset($order_details['firstname'])) ? $order_details['firstname'] : '';
+                            $lname = (isset($order_details['lastname'])) ? $order_details['lastname'] : '';
+
+                            $message = $orders_mail_form_client;
+                            $message = str_replace('{shop_name}',$shop_name,$message);
+                            $message = str_replace('{firstname}',$fname,$message);
+                            $message = str_replace('{lastname}',$lname,$message);
+                            $message = str_replace('{order_id}',$order->id,$message);
+                            $message = str_replace('{order_type}',$checkout_type,$message);
+
+                            $headers = "MIME-Version: 1.0" . "\r\n";
+                            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                            // More headers
+                            $headers .= 'From: <'.$from_email.'>' . "\r\n";
+
+                            mail($to,$subject,$message,$headers);
+
+                        }
+                    }
+
+                    // Sent Mail to Customer
+                    if(!empty($from_email) && count($contact_emails) > 0 && !empty($orders_mail_form_customer))
+                    {
+                        $to = $from_email;
+                        $from = $contact_emails[0];
+                        $subject = "Order Placed";
                         $fname = (isset($order_details['firstname'])) ? $order_details['firstname'] : '';
                         $lname = (isset($order_details['lastname'])) ? $order_details['lastname'] : '';
 
-                        $message = $order_mail_template;
+                        $message = $orders_mail_form_customer;
                         $message = str_replace('{shop_name}',$shop_name,$message);
                         $message = str_replace('{firstname}',$fname,$message);
                         $message = str_replace('{lastname}',$lname,$message);
                         $message = str_replace('{order_id}',$order->id,$message);
                         $message = str_replace('{order_type}',$checkout_type,$message);
+                        $message = str_replace('{order_status}',$order_status,$message);
 
                         $headers = "MIME-Version: 1.0" . "\r\n";
                         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
                         // More headers
-                        $headers .= 'From: <'.$from_email.'>' . "\r\n";
+                        $headers .= 'From: <'.$from.'>' . "\r\n";
 
                         mail($to,$subject,$message,$headers);
-
                     }
+
                 }
 
             }

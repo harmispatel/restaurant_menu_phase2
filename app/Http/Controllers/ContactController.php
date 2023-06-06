@@ -28,13 +28,13 @@ class ContactController extends Controller
         $shop_name = (isset($user_details->hasOneShop->shop['name'])) ? $user_details->hasOneShop->shop['name'] : '';
         $shop_url = (isset($user_details->hasOneShop->shop['shop_slug'])) ? $user_details->hasOneShop->shop['shop_slug'] : '';
         $shop_url = asset($shop_url);
+        $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
+        $shop_logo = (isset($user_details->hasOneShop->shop['logo'])) ? $user_details->hasOneShop->shop['logo'] : '';
+        $shop_logo = '<img src="'.$shop_logo.'" width="100">';
 
         // Get To Mails & Subject
         $admin_settings = getAdminSettings();
         $contact_us_mail_template = (isset($admin_settings['contact_us_mail_template'])) ? $admin_settings['contact_us_mail_template'] : '';
-
-        // Get Subject from Site
-        $subject_content = (isset($admin_settings['contact_us_subject'])) ? $admin_settings['contact_us_subject'] : 'Smart QR Support |';
 
         // Client Message
         $contact_message = $request->message;
@@ -43,17 +43,18 @@ class ContactController extends Controller
         $email_array =  (isset($admin_settings['contact_us_email']) && !empty($admin_settings['contact_us_email'])) ? unserialize($admin_settings['contact_us_email']) : [];
 
         // If found to Mails then sent Mail
-        if(count($email_array) > 0)
+        if(count($email_array) > 0 && !empty($contact_us_mail_template))
         {
             foreach($email_array as $email)
             {
                 $to = $email;
-                $subject = $subject_content." ".$request->title;
+                $subject = $request->title;
 
                 $message = $contact_us_mail_template;
+                $message = str_replace('{subject}',$subject,$message);
+                $message = str_replace('{shop_logo}',$shop_logo,$message);
                 $message = str_replace('{message}',$contact_message,$message);
                 $message = str_replace('{shop_name}',$shop_name,$message);
-                $message = str_replace('{shop_url}',$shop_url,$message);
 
                 $headers = "MIME-Version: 1.0" . "\r\n";
                 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";

@@ -19,7 +19,6 @@
             'theme_category_screen_demo',
             'default_special_item_image',
             'contact_us_email',
-            'contact_us_subject',
             'google_map_api',
             'contact_us_mail_template',
         ]);
@@ -69,8 +68,9 @@
             'website_url',
             'shop_active_theme',
             'delivery_message',
-            'order_mail_template',
-            'check_in_mail_template',
+            'orders_mail_form_client',
+            'orders_mail_form_customer',
+            'check_in_mail_form',
         ]);
 
         $settings = [];

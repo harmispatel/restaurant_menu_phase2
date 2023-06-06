@@ -22,7 +22,6 @@ class AdminSettingsController extends Controller
             'theme_category_screen_demo',
             'default_special_item_image',
             'contact_us_email',
-            'contact_us_subject',
             'google_map_api',
             'contact_us_mail_template',
         ]);
@@ -57,7 +56,6 @@ class AdminSettingsController extends Controller
             'theme_category_screen_demo'    =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'default_special_item_image'    =>          'mimes:png,jpg,svg,gif,jpeg,PNG,SVG,JPG,JPEG,GIF',
             'contact_us_email'              =>          'required',
-            'contact_us_subject'            =>          'required',
         ]);
 
         $explode = explode(',',str_replace(' ','',$request->contact_us_email));
@@ -65,7 +63,6 @@ class AdminSettingsController extends Controller
         $all_data['favourite_client_limit'] = $request->favourite_client_limit;
         $all_data['copyright_text'] = $request->copyright_text;
         $all_data['contact_us_email'] = serialize($explode);
-        $all_data['contact_us_subject'] = $request->contact_us_subject;
         $all_data['google_map_api'] = $request->google_map_api;
         $all_data['contact_us_mail_template'] = $request->contact_us_mail_template;
 
