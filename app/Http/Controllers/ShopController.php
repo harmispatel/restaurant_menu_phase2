@@ -1393,6 +1393,11 @@ class ShopController extends Controller
 
         $shop_details = Shop::where('id',$shop_id)->first();
         $shop_name = (isset($shop_details['name'])) ? $shop_details['name'] : '';
+        $shop_url = (isset($shop_details['shop_slug'])) ? $shop_details['shop_slug'] : '';
+        $shop_url = asset($shop_url);
+        $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
+        $shop_logo = (isset($shop_details['logo'])) ? $shop_details['logo'] : '';
+        $shop_logo = '<img src="'.$shop_logo.'" width="100">';
 
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
         $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
@@ -1446,9 +1451,10 @@ class ShopController extends Controller
                     $subject = $data['subject'];
 
                     $message = $check_in_mail_form;
+                    $message = str_replace('{shop_logo}',$shop_logo,$message);
                     $message = str_replace('{shop_name}',$shop_name,$message);
-                    $message = str_replace('{first_name}',$data['firstname'],$message);
-                    $message = str_replace('{last_name}',$data['lastname'],$message);
+                    $message = str_replace('{firstname}',$data['firstname'],$message);
+                    $message = str_replace('{lastname}',$data['lastname'],$message);
                     $message = str_replace('{phone}',$data['phone'],$message);
                     $message = str_replace('{passport_no}',$data['passport'],$message);
                     $message = str_replace('{room_no}',$data['room_number'],$message);
