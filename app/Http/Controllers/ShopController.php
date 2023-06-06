@@ -1258,8 +1258,9 @@ class ShopController extends Controller
                                                 $opt_price_label = (isset($option_price[$name_key])) ? $option_price[$name_key] : "";
                                                 if(isset($opt_dt['multiple_select']) && $opt_dt['multiple_select'] == 1)
                                                 {
+                                                    $is_checked = (isset($opt_dt['pre_select']) && $opt_dt['pre_select'] == 1) ? 'checked' : '';
                                                     $html .= '<div class="col-6">';
-                                                        $html .= '<input type="checkbox" value="'.$option_price['price'].'" name="option_price_checkbox_'.$outer_key.'" onchange="updatePrice()" id="option_price_checkbox_'.$outer_key.'_'.$key.'" class="me-2" opt_price_id="'.$option_price['id'].'">';
+                                                        $html .= '<input type="checkbox" value="'.$option_price['price'].'" name="option_price_checkbox_'.$outer_key.'" onchange="updatePrice()" id="option_price_checkbox_'.$outer_key.'_'.$key.'" class="me-2" opt_price_id="'.$option_price['id'].'" '.$is_checked.'>';
                                                         $html .= '<label class="form-label" for="option_price_checkbox_'.$outer_key.'_'.$key.'">'.$opt_price_label.'</label>';
                                                     $html .= '</div>';
                                                     $html .= '<div class="col-6 text-end">';

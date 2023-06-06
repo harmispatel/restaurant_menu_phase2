@@ -436,5 +436,19 @@
             });
         }
 
+
+        // Show Hide Pre Selection
+        function togglePreSelection(){
+            var isCheck = $('#editOptionForm #multiple_selection').is(":checked");
+            if(isCheck == false)
+            {
+                $('#editOptionForm .pre-select').hide();
+            }
+            else
+            {
+                $('#editOptionForm .pre-select').show();
+            }
+        }
+
     </script>
 @endsection

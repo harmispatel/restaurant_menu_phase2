@@ -99,6 +99,7 @@
                     $('#itemDetailsModal #item_dt_div').html('');
                     $('#itemDetailsModal #item_dt_div').append(response.data);
                     $('#itemDetailsModal').modal('show');
+                    updatePrice();
                 }
                 else
                 {

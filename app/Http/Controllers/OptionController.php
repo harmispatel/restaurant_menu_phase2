@@ -62,6 +62,12 @@ class OptionController extends Controller
                 $option->shop_id = $shop_id;
                 $option->title = $request->title;
                 $option->multiple_select = $multiple_selection;
+
+                if($multiple_selection == 1)
+                {
+                    $option->pre_select = 1;
+                }
+
                 $option->$title_key = $request->title;
                 $option->save();
 
@@ -129,6 +135,7 @@ class OptionController extends Controller
             // Option Details
             $option_details = Option::with(['optionPrices'])->where('id',$option_id)->first();
             $multiple_selection_active = (isset($option_details['multiple_select']) && $option_details['multiple_select'] == 1) ? 'checked' : '';
+            $pre_selection_active = (isset($option_details['pre_select']) && $option_details['pre_select'] == 1) ? 'checked' : '';
             $option_prices = (isset($option_details['optionPrices'])) ? $option_details['optionPrices'] : [];
 
             // Get Language Settings
@@ -188,7 +195,23 @@ class OptionController extends Controller
                                 $html .= '</div>';
                                 $html .= '<div class="col-md-8">';
                                     $html .= '<label class="switch ms-2">';
-                                        $html .= '<input value="1" type="checkbox" id="multiple_selection" name="multiple_selection" '.$multiple_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                        $html .= '<input value="1" type="checkbox" id="multiple_selection" name="multiple_selection" '.$multiple_selection_active.' onchange="togglePreSelection()"><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                    $html .= '</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+
+                            $html .= '<div class="row mb-3 pre-select" style="display:';
+                                if($multiple_selection_active == '')
+                                {
+                                    $html .= 'none';
+                                }
+                            $html .= '">';
+                                $html .= '<div class="col-md-4">';
+                                    $html .= '<label for="pre_select" class="form-label">'. __('Pre Selection').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-8">';
+                                    $html .= '<label class="switch ms-2">';
+                                        $html .= '<input value="1" type="checkbox" id="pre_select" name="pre_select" '.$pre_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
                                     $html .= '</label>';
                                 $html .= '</div>';
                             $html .= '</div>';
@@ -266,7 +289,23 @@ class OptionController extends Controller
                                 $html .= '</div>';
                                 $html .= '<div class="col-md-8">';
                                     $html .= '<label class="switch ms-2">';
-                                        $html .= '<input value="1" type="checkbox" id="multiple_selection" name="multiple_selection" '.$multiple_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                        $html .= '<input onchange="togglePreSelection()" value="1" type="checkbox" id="multiple_selection" name="multiple_selection" '.$multiple_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                    $html .= '</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+
+                            $html .= '<div class="row mb-3 pre-select" style="display:';
+                                if($multiple_selection_active == '')
+                                {
+                                    $html .= 'none';
+                                }
+                            $html .= '">';
+                                $html .= '<div class="col-md-4">';
+                                    $html .= '<label for="pre_select" class="form-label">'. __('Pre Selection').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-8">';
+                                    $html .= '<label class="switch ms-2">';
+                                        $html .= '<input value="1" type="checkbox" id="pre_select" name="pre_select" '.$pre_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
                                     $html .= '</label>';
                                 $html .= '</div>';
                             $html .= '</div>';
@@ -339,6 +378,7 @@ class OptionController extends Controller
         $option_id = $request->option_id;
         $options = isset($request->option) ? $request->option : [];
         $multiple_selection = isset($request->multiple_selection) ? $request->multiple_selection : 0;
+        $pre_select = isset($request->pre_select) ? $request->pre_select : 0;
         $active_lang_code = $request->active_lang_code;
         $next_lang_code = $request->next_lang_code;
 
@@ -358,6 +398,12 @@ class OptionController extends Controller
                 $option = Option::find($option_id);
                 $option->title = $request->title;
                 $option->multiple_select = $multiple_selection;
+
+                if($multiple_selection == 1)
+                {
+                    $option->pre_select = $pre_select;
+                }
+
                 $option->$update_title_key = $request->title;
                 $option->update();
 
@@ -430,6 +476,7 @@ class OptionController extends Controller
         // Option Details
         $option_details = Option::with(['optionPrices'])->where('id',$option_id)->first();
         $multiple_selection_active = (isset($option_details['multiple_select']) && $option_details['multiple_select'] == 1) ? 'checked' : '';
+        $pre_selection_active = (isset($option_details['pre_select']) && $option_details['pre_select'] == 1) ? 'checked' : '';
         $option_prices = (isset($option_details['optionPrices'])) ? $option_details['optionPrices'] : [];
 
         // Get Language Settings
@@ -495,10 +542,26 @@ class OptionController extends Controller
                             $html .= '</div>';
                             $html .= '<div class="col-md-8">';
                                 $html .= '<label class="switch ms-2">';
-                                    $html .= '<input type="checkbox" id="multiple_selection" name="multiple_selection" '.$multiple_selection_active.' value="1"><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                    $html .= '<input type="checkbox" onchange="togglePreSelection()" id="multiple_selection" name="multiple_selection" '.$multiple_selection_active.' value="1"><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
                                 $html .= '</label>';
                             $html .= '</div>';
                         $html .= '</div>';
+
+                        $html .= '<div class="row mb-3 pre-select" style="display:';
+                                if($multiple_selection_active == '')
+                                {
+                                    $html .= 'none';
+                                }
+                            $html .= '">';
+                                $html .= '<div class="col-md-4">';
+                                    $html .= '<label for="pre_select" class="form-label">'. __('Pre Selection').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-8">';
+                                    $html .= '<label class="switch ms-2">';
+                                        $html .= '<input value="1" type="checkbox" id="pre_select" name="pre_select" '.$pre_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                    $html .= '</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
 
                         $html .= '<div class="row mb-3">';
                             $html .= '<div class="col-md-4"><label class="form-label">'.__('Options').'</label></div>';
@@ -573,10 +636,26 @@ class OptionController extends Controller
                             $html .= '</div>';
                             $html .= '<div class="col-md-8">';
                                 $html .= '<label class="switch ms-2">';
-                                    $html .= '<input value="1" type="checkbox" id="multiple_selection" name="multiple_selection" '.$multiple_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                    $html .= '<input value="1" type="checkbox" onchange="togglePreSelection()" id="multiple_selection" name="multiple_selection" '.$multiple_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
                                 $html .= '</label>';
                             $html .= '</div>';
                         $html .= '</div>';
+
+                        $html .= '<div class="row mb-3 pre-select" style="display:';
+                                if($multiple_selection_active == '')
+                                {
+                                    $html .= 'none';
+                                }
+                            $html .= '">';
+                                $html .= '<div class="col-md-4">';
+                                    $html .= '<label for="pre_select" class="form-label">'. __('Pre Selection').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-8">';
+                                    $html .= '<label class="switch ms-2">';
+                                        $html .= '<input value="1" type="checkbox" id="pre_select" name="pre_select" '.$pre_selection_active.'><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                    $html .= '</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
 
                         $html .= '<div class="row mb-3">';
                             $html .= '<div class="col-md-4"><label class="form-label">'.__('Options').'</label></div>';
@@ -632,6 +711,7 @@ class OptionController extends Controller
         $option_id = $request->option_id;
         $options = isset($request->option) ? $request->option : [];
         $multiple_selection = isset($request->multiple_selection) ? $request->multiple_selection : 0;
+        $pre_select = isset($request->pre_select) ? $request->pre_select : 0;
         $active_lang_code = $request->active_lang_code;
 
         $request->validate([
@@ -650,6 +730,12 @@ class OptionController extends Controller
                 $option = Option::find($option_id);
                 $option->title = $request->title;
                 $option->multiple_select = $multiple_selection;
+
+                if($multiple_selection == 1)
+                {
+                    $option->pre_select = $pre_select;
+                }
+
                 $option->$update_title_key = $request->title;
                 $option->update();
 

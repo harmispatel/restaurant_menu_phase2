@@ -99,17 +99,19 @@
                                         @php
                                             $rating = number_format($item['ratings_avg_rating'],0);
                                         @endphp
-                                        <li>
-                                            <div>
-                                                <strong>{{ $max_key }})</strong> {{ isset($item[$name_key]) ? $item[$name_key] : '' }} ({{ $rating }})
-                                                <br>
-                                                <div class="rated">
-                                                    @for($i=1; $i <= $rating; $i++)
-                                                        <label class="star-rating-complete" title="text">{{$i}} stars</label>
-                                                    @endfor
+                                        @if($rating >= 4)
+                                            <li>
+                                                <div>
+                                                    <strong>{{ $max_key }})</strong> {{ isset($item[$name_key]) ? $item[$name_key] : '' }} ({{ $rating }})
+                                                    <br>
+                                                    <div class="rated">
+                                                        @for($i=1; $i <= $rating; $i++)
+                                                            <label class="star-rating-complete" title="text">{{$i}} stars</label>
+                                                        @endfor
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
+                                            </li>
+                                        @endif
                                         @php
                                             $max_key++;
                                         @endphp
@@ -132,17 +134,19 @@
                                         @php
                                             $rating = number_format($item['ratings_avg_rating'],0);
                                         @endphp
-                                        <li>
-                                            <div>
-                                                <strong>{{ $low_key }})</strong> {{ isset($item[$name_key]) ? $item[$name_key] : '' }} ({{ $rating }})
-                                                <br>
-                                                <div class="rated">
-                                                    @for($i=1; $i <= $rating; $i++)
-                                                        <label class="star-rating-complete" title="text">{{$i}} stars</label>
-                                                    @endfor
+                                        @if($rating <= 2)
+                                            <li>
+                                                <div>
+                                                    <strong>{{ $low_key }})</strong> {{ isset($item[$name_key]) ? $item[$name_key] : '' }} ({{ $rating }})
+                                                    <br>
+                                                    <div class="rated">
+                                                        @for($i=1; $i <= $rating; $i++)
+                                                            <label class="star-rating-complete" title="text">{{$i}} stars</label>
+                                                        @endfor
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
+                                            </li>
+                                        @endif
                                         @php
                                             $low_key++;
                                         @endphp

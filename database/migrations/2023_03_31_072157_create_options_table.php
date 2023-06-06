@@ -18,6 +18,7 @@ class CreateOptionsTable extends Migration
             $table->integer('shop_id');
             $table->string('title')->nullable();
             $table->tinyInteger('multiple_select')->default(0);
+            $table->tinyInteger('pre_select')->default(0);
 
             $table->string('en_title')->nullable();
             $table->string('fr_title')->nullable();
