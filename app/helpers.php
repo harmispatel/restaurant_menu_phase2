@@ -70,6 +70,7 @@
             'shop_active_theme',
             'delivery_message',
             'order_mail_template',
+            'check_in_mail_template',
         ]);
 
         $settings = [];

@@ -1390,9 +1390,19 @@ class ShopController extends Controller
         ]);
 
         $shop_id = $request->store_id;
+
+        $shop_details = Shop::where('id',$shop_id)->first();
+        $shop_name = (isset($shop_details['name'])) ? $shop_details['name'] : '';
+
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
         $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
         $client_email = (isset($shop_user->user['email']) && !empty($shop_user->user['email'])) ? $shop_user->user['email'] : '';
+
+
+        $shop_settings = getClientSettings($shop_id);
+
+        // CheckIN Mail Template
+        $check_in_mail_template = (isset($shop_settings['check_in_mail_template'])) ? $shop_settings['check_in_mail_template'] : '';
 
         $age = Carbon::parse($request->date_of_birth)->age;
 
@@ -1414,17 +1424,17 @@ class ShopController extends Controller
         $data['subject'] = "New Check In";
         $data['description'] = $data['firstname'].' '.$data['lastname'].' has been check in at : '.date('d-m-Y h:i:s',strtotime($data['arrival_date']));
 
-        $sendData = [
-            'message' => $data['description'],
-            'subject' => $data['subject'],
-            'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'age' => $data['age'],
-            'room_number' => $data['room_number'],
-            'from_mail' => $from_mail,
-        ];
+        // $sendData = [
+        //     'message' => $data['description'],
+        //     'subject' => $data['subject'],
+        //     'firstname' => $data['firstname'],
+        //     'lastname' => $data['lastname'],
+        //     'email' => $data['email'],
+        //     'phone' => $data['phone'],
+        //     'age' => $data['age'],
+        //     'room_number' => $data['room_number'],
+        //     'from_mail' => $from_mail,
+        // ];
 
         try
         {
@@ -1432,13 +1442,62 @@ class ShopController extends Controller
             {
                 foreach($contact_emails as $mail)
                 {
-                    Mail::to($mail)->send(new CheckInMail($sendData));
+                    $to = $mail;
+                    $subject = $data['subject'];
+
+                    $message = $check_in_mail_template;
+                    $message = str_replace('{shop_name}',$shop_name,$message);
+                    $message = str_replace('{first_name}',$data['firstname'],$message);
+                    $message = str_replace('{last_name}',$data['lastname'],$message);
+                    $message = str_replace('{phone}',$data['phone'],$message);
+                    $message = str_replace('{passport_no}',$data['passport'],$message);
+                    $message = str_replace('{room_no}',$data['room_number'],$message);
+                    $message = str_replace('{nationality}',$data['nationality'],$message);
+                    $message = str_replace('{age}',$data['age'],$message);
+                    $message = str_replace('{address}',$data['residence_address'],$message);
+                    $message = str_replace('{arrival_date}',$data['arrival_date'],$message);
+                    $message = str_replace('{departure_date}',$data['departure_date'],$message);
+                    $message = str_replace('{message}',$data['description'],$message);
+
+                    $headers = "MIME-Version: 1.0" . "\r\n";
+                    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                    // More headers
+                    $headers .= 'From: <'.$from_mail.'>' . "\r\n";
+
+                    mail($to,$subject,$message,$headers);
+
+                    // Mail::to($mail)->send(new CheckInMail($sendData));
                     // mail($mail,$data['subject'],$data['description']);
                 }
             }
             else
             {
-                Mail::to($client_email)->send(new CheckInMail($sendData));
+                    $to = $client_email;
+                    $subject = $data['subject'];
+
+                    $message = $check_in_mail_template;
+                    $message = str_replace('{shop_name}',$shop_name,$message);
+                    $message = str_replace('{first_name}',$data['firstname'],$message);
+                    $message = str_replace('{last_name}',$data['lastname'],$message);
+                    $message = str_replace('{phone}',$data['phone'],$message);
+                    $message = str_replace('{passport_no}',$data['passport'],$message);
+                    $message = str_replace('{room_no}',$data['room_number'],$message);
+                    $message = str_replace('{nationality}',$data['nationality'],$message);
+                    $message = str_replace('{age}',$data['age'],$message);
+                    $message = str_replace('{address}',$data['residence_address'],$message);
+                    $message = str_replace('{arrival_date}',$data['arrival_date'],$message);
+                    $message = str_replace('{departure_date}',$data['departure_date'],$message);
+                    $message = str_replace('{message}',$data['description'],$message);
+
+                    $headers = "MIME-Version: 1.0" . "\r\n";
+                    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                    // More headers
+                    $headers .= 'From: <'.$from_mail.'>' . "\r\n";
+
+                    mail($to,$subject,$message,$headers);
+                // Mail::to($client_email)->send(new CheckInMail($sendData));
                 // mail($mail,$data['subject'],$data['description']);
             }
 

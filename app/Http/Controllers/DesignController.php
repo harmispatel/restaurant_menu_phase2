@@ -386,6 +386,7 @@ class DesignController extends Controller
         $all_data['pinterest_link'] = $request->pinterest_link;
         $all_data['delivery_message'] = $request->delivery_message;
         $all_data['order_mail_template'] = $request->order_mail_template;
+        $all_data['check_in_mail_template'] = $request->check_in_mail_template;
 
         // Update Shop Name
         $shop = Shop::find($shop_id);
