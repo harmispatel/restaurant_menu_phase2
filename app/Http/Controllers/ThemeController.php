@@ -206,10 +206,23 @@ class ThemeController extends Controller
         $query = ClientSettings::where('shop_id',$shop_id)->where('client_id',$client_id)->where('key','shop_active_theme')->first();
         $setting_id = isset($query->id) ? $query->id : '';
 
-        // Client's Active Theme
-        $active_theme = ClientSettings::find($setting_id);
-        $active_theme->value = $theme_id;
-        $active_theme->update();
+        if(!empty($setting_id))
+        {
+            // Client's Active Theme
+            $active_theme = ClientSettings::find($setting_id);
+            $active_theme->value = $theme_id;
+            $active_theme->update();
+        }
+        else
+        {
+            $active_theme = new ClientSettings();
+            $active_theme->client_id = $client_id;
+            $active_theme->shop_id = $shop_id;
+            $active_theme->key = 'shop_active_theme';
+            $active_theme->value = $theme_id;
+            $active_theme->save();
+        }
+
 
         return response()->json([
             'success' => 1,
