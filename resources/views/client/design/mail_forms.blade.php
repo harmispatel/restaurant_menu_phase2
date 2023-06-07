@@ -27,7 +27,7 @@
                         <div class="form-group">
                             <label class="form-label" for="orders_mail_form_customer">{{ __('Orders Mail Form Customer') }}</label>
                             <textarea name="orders_mail_form_customer" id="orders_mail_form_customer" class="form-control editor">{{ (isset($client_settings['orders_mail_form_customer']) && !empty($client_settings['orders_mail_form_customer'])) ? $client_settings['orders_mail_form_customer'] : '' }}</textarea>
-                            <code>Tags : ({shop_logo}, {shop_name}, {firstname}, {lastname}, {order_id}, {order_type}, {order_status}, {payment_method}, {items}, {total})</code>
+                            <code>Tags : ({shop_logo}, {shop_name}, {firstname}, {lastname}, {order_id}, {order_type}, {order_status}, {payment_method}, {items}, {total}, {estimated_time})</code>
                         </div>
                     </div>
                 </div>

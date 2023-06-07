@@ -328,7 +328,7 @@ class EveryPayController extends Controller
                         $order_dt = Order::with(['order_items'])->where('id',$order->id)->first();
                         $order_items = (isset($order_dt->order_items) && count($order_dt->order_items) > 0) ? $order_dt->order_items : [];
 
-                        // Sent Mail to Client
+                        // Sent Mail to Shop Owner
                         if(count($contact_emails) > 0 && !empty($orders_mail_form_client))
                         {
                             foreach($contact_emails as $mail)
@@ -462,137 +462,137 @@ class EveryPayController extends Controller
                             }
                         }
 
-                        // Sent Mail to Customer
-                        if(!empty($from_email) && count($contact_emails) > 0 && !empty($orders_mail_form_customer))
-                        {
-                            $to = $from_email;
-                            $from = $contact_emails[0];
-                            $subject = "Order Placed";
-                            $fname = (isset($order_details['firstname'])) ? $order_details['firstname'] : '';
-                            $lname = (isset($order_details['lastname'])) ? $order_details['lastname'] : '';
+                        // // Sent Mail to Customer
+                        // if(!empty($from_email) && count($contact_emails) > 0 && !empty($orders_mail_form_customer))
+                        // {
+                        //     $to = $from_email;
+                        //     $from = $contact_emails[0];
+                        //     $subject = "Order Placed";
+                        //     $fname = (isset($order_details['firstname'])) ? $order_details['firstname'] : '';
+                        //     $lname = (isset($order_details['lastname'])) ? $order_details['lastname'] : '';
 
-                            $message = $orders_mail_form_customer;
-                            $message = str_replace('{shop_logo}',$shop_logo,$message);
-                            $message = str_replace('{shop_name}',$shop_name,$message);
-                            $message = str_replace('{firstname}',$fname,$message);
-                            $message = str_replace('{lastname}',$lname,$message);
-                            $message = str_replace('{order_id}',$order->id,$message);
-                            $message = str_replace('{order_type}',$checkout_type,$message);
-                            $message = str_replace('{payment_method}',$payment_method,$message);
-                            $message = str_replace('{order_status}',$order_status,$message);
+                        //     $message = $orders_mail_form_customer;
+                        //     $message = str_replace('{shop_logo}',$shop_logo,$message);
+                        //     $message = str_replace('{shop_name}',$shop_name,$message);
+                        //     $message = str_replace('{firstname}',$fname,$message);
+                        //     $message = str_replace('{lastname}',$lname,$message);
+                        //     $message = str_replace('{order_id}',$order->id,$message);
+                        //     $message = str_replace('{order_type}',$checkout_type,$message);
+                        //     $message = str_replace('{payment_method}',$payment_method,$message);
+                        //     $message = str_replace('{order_status}',$order_status,$message);
 
-                            // Order Items
-                            $order_html  = "";
-                            $order_html .= '<div>';
-                                $order_html .= '<table style="width:100%; border:1px solid gray;border-collapse: collapse;">';
-                                    $order_html .= '<thead style="background:lightgray; color:white">';
-                                        $order_html .= '<tr style="text-transform: uppercase!important;    font-weight: 700!important;">';
-                                            $order_html .= '<th style="text-align: left!important;width: 60%;padding:10px">Item</th>';
-                                            $order_html .= '<th style="text-align: center!important;padding:10px">Qty.</th>';
-                                            $order_html .= '<th style="text-align: right!important;padding:10px">Item Total</th>';
-                                        $order_html .= '</tr>';
-                                    $order_html .= '</thead>';
-                                    $order_html .= '<tbody style="font-weight: 600!important;">';
+                        //     // Order Items
+                        //     $order_html  = "";
+                        //     $order_html .= '<div>';
+                        //         $order_html .= '<table style="width:100%; border:1px solid gray;border-collapse: collapse;">';
+                        //             $order_html .= '<thead style="background:lightgray; color:white">';
+                        //                 $order_html .= '<tr style="text-transform: uppercase!important;    font-weight: 700!important;">';
+                        //                     $order_html .= '<th style="text-align: left!important;width: 60%;padding:10px">Item</th>';
+                        //                     $order_html .= '<th style="text-align: center!important;padding:10px">Qty.</th>';
+                        //                     $order_html .= '<th style="text-align: right!important;padding:10px">Item Total</th>';
+                        //                 $order_html .= '</tr>';
+                        //             $order_html .= '</thead>';
+                        //             $order_html .= '<tbody style="font-weight: 600!important;">';
 
-                                        if(count($order_items) > 0)
-                                        {
-                                            foreach($order_items as $order_item)
-                                            {
-                                                $item_dt = itemDetails($order_item['item_id']);
-                                                $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
-                                                $options_array = (isset($order_item['options']) && !empty($order_item['options'])) ? unserialize($order_item['options']) : '';
-                                                if(count($options_array) > 0)
-                                                {
-                                                    $options_array = implode(', ',$options_array);
-                                                }
+                        //                 if(count($order_items) > 0)
+                        //                 {
+                        //                     foreach($order_items as $order_item)
+                        //                     {
+                        //                         $item_dt = itemDetails($order_item['item_id']);
+                        //                         $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
+                        //                         $options_array = (isset($order_item['options']) && !empty($order_item['options'])) ? unserialize($order_item['options']) : '';
+                        //                         if(count($options_array) > 0)
+                        //                         {
+                        //                             $options_array = implode(', ',$options_array);
+                        //                         }
 
-                                                $order_html .= '<tr>';
+                        //                         $order_html .= '<tr>';
 
-                                                    $order_html .= '<td style="text-align: left!important;padding:10px; border-bottom:1px solid gray;">';
-                                                        $order_html .= '<div style="align-items: center!important;display: flex!important;">';
-                                                            $order_html .= '<a style="display: inline-block;
-                                                            flex-shrink: 0;position: relative;border-radius: 0.75rem;">';
-                                                                $order_html .= '<span style="width: 50px;
-                                                                height: 50px;display: flex;
-                                                                align-items: center;
-                                                                justify-content: center;
-                                                                font-weight: 500;background-repeat: no-repeat;
-                                                                background-position: center center;
-                                                                background-size: cover;
-                                                                border-radius: 0.75rem; background-image:url('.$item_image.')"></span>';
-                                                            $order_html .= '</a>';
-                                                            $order_html .= '<div style="display: block;    margin-left: 3rem!important;">';
-                                                                $order_html .= '<a style="font-weight: 700!important;color: #7e8299;
-                                                                ">'.$order_item->item_name.'</a>';
+                        //                             $order_html .= '<td style="text-align: left!important;padding:10px; border-bottom:1px solid gray;">';
+                        //                                 $order_html .= '<div style="align-items: center!important;display: flex!important;">';
+                        //                                     $order_html .= '<a style="display: inline-block;
+                        //                                     flex-shrink: 0;position: relative;border-radius: 0.75rem;">';
+                        //                                         $order_html .= '<span style="width: 50px;
+                        //                                         height: 50px;display: flex;
+                        //                                         align-items: center;
+                        //                                         justify-content: center;
+                        //                                         font-weight: 500;background-repeat: no-repeat;
+                        //                                         background-position: center center;
+                        //                                         background-size: cover;
+                        //                                         border-radius: 0.75rem; background-image:url('.$item_image.')"></span>';
+                        //                                     $order_html .= '</a>';
+                        //                                     $order_html .= '<div style="display: block;    margin-left: 3rem!important;">';
+                        //                                         $order_html .= '<a style="font-weight: 700!important;color: #7e8299;
+                        //                                         ">'.$order_item->item_name.'</a>';
 
-                                                                if(!empty($options_array))
-                                                                {
-                                                                    $order_html .= '<div style="color: #a19e9e;display: block;">'.$options_array.'</div>';
-                                                                }
-                                                                else
-                                                                {
-                                                                    $order_html .= '<div style="color: #a19e9e;display: block;"></div>';
-                                                                }
+                        //                                         if(!empty($options_array))
+                        //                                         {
+                        //                                             $order_html .= '<div style="color: #a19e9e;display: block;">'.$options_array.'</div>';
+                        //                                         }
+                        //                                         else
+                        //                                         {
+                        //                                             $order_html .= '<div style="color: #a19e9e;display: block;"></div>';
+                        //                                         }
 
-                                                            $order_html .= '</div>';
-                                                        $order_html .= '</div>';
-                                                    $order_html .= '</td>';
+                        //                                     $order_html .= '</div>';
+                        //                                 $order_html .= '</div>';
+                        //                             $order_html .= '</td>';
 
-                                                    $order_html .= '<td style="text-align: center!important;padding:10px; border-bottom:1px solid gray;">';
-                                                        $order_html .= $order_item['item_qty'];
-                                                    $order_html .= '</td>';
+                        //                             $order_html .= '<td style="text-align: center!important;padding:10px; border-bottom:1px solid gray;">';
+                        //                                 $order_html .= $order_item['item_qty'];
+                        //                             $order_html .= '</td>';
 
-                                                    $order_html .= '<td style="text-align: right!important;padding:10px; border-bottom:1px solid gray;">';
-                                                        $order_html .= $order_item['sub_total_text'];
-                                                    $order_html .= '</td>';
+                        //                             $order_html .= '<td style="text-align: right!important;padding:10px; border-bottom:1px solid gray;">';
+                        //                                 $order_html .= $order_item['sub_total_text'];
+                        //                             $order_html .= '</td>';
 
-                                                $order_html .= '</tr>';
-                                            }
-                                        }
+                        //                         $order_html .= '</tr>';
+                        //                     }
+                        //                 }
 
-                                    $order_html .= '</tbody>';
-                                $order_html .= '</table>';
-                            $order_html .= '</div>';
-                            $message = str_replace('{items}',$order_html,$message);
+                        //             $order_html .= '</tbody>';
+                        //         $order_html .= '</table>';
+                        //     $order_html .= '</div>';
+                        //     $message = str_replace('{items}',$order_html,$message);
 
-                            // Order Total
-                            $order_total_html = "";
-                            $order_total_html .= '<div>';
-                                $order_total_html .= '<table style="width:50%; border:1px solid gray;border-collapse: collapse;">';
-                                    $order_total_html .= '<tbody style="font-weight: 700!important;">';
-                                        $order_total_html .= '<tr>';
-                                            $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Sub Total : </td>';
-                                            $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">'.$order_dt->order_total_text.'</td>';
-                                        $order_total_html .= '</tr>';
+                        //     // Order Total
+                        //     $order_total_html = "";
+                        //     $order_total_html .= '<div>';
+                        //         $order_total_html .= '<table style="width:50%; border:1px solid gray;border-collapse: collapse;">';
+                        //             $order_total_html .= '<tbody style="font-weight: 700!important;">';
+                        //                 $order_total_html .= '<tr>';
+                        //                     $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Sub Total : </td>';
+                        //                     $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">'.$order_dt->order_total_text.'</td>';
+                        //                 $order_total_html .= '</tr>';
 
-                                        if($order_dt->discount_per > 0)
-                                        {
-                                            $order_total_html .= '<tr>';
-                                                $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
-                                                $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
-                                            $order_total_html .= '</tr>';
+                        //                 if($order_dt->discount_per > 0)
+                        //                 {
+                        //                     $order_total_html .= '<tr>';
+                        //                         $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
+                        //                         $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
+                        //                     $order_total_html .= '</tr>';
 
-                                            $order_total_html .= '<tr>';
-                                                $order_total_html .= '<td style="padding:10px;">Total : </td>';
-                                                $order_total_html .= '<td style="padding:10px;">';
-                                                    $order_total_html .= Currency::currency($currency)->format($order_dt->discount_value);
-                                                $order_total_html .= '</td>';
-                                            $order_total_html .= '</tr>';
-                                        }
+                        //                     $order_total_html .= '<tr>';
+                        //                         $order_total_html .= '<td style="padding:10px;">Total : </td>';
+                        //                         $order_total_html .= '<td style="padding:10px;">';
+                        //                             $order_total_html .= Currency::currency($currency)->format($order_dt->discount_value);
+                        //                         $order_total_html .= '</td>';
+                        //                     $order_total_html .= '</tr>';
+                        //                 }
 
-                                    $order_total_html .= '</tbody>';
-                                $order_total_html .= '</table>';
-                            $order_total_html .= '</div>';
-                            $message = str_replace('{total}',$order_total_html,$message);
+                        //             $order_total_html .= '</tbody>';
+                        //         $order_total_html .= '</table>';
+                        //     $order_total_html .= '</div>';
+                        //     $message = str_replace('{total}',$order_total_html,$message);
 
-                            $headers = "MIME-Version: 1.0" . "\r\n";
-                            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                        //     $headers = "MIME-Version: 1.0" . "\r\n";
+                        //     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
-                            // More headers
-                            $headers .= 'From: <'.$from.'>' . "\r\n";
+                        //     // More headers
+                        //     $headers .= 'From: <'.$from.'>' . "\r\n";
 
-                            mail($to,$subject,$message,$headers);
-                        }
+                        //     mail($to,$subject,$message,$headers);
+                        // }
                     }
 
                 }
