@@ -34,7 +34,34 @@
 
             <div class="col-md-12">
                 <div class="row">
-                    <!-- Restaurant Card -->
+
+                    @if(count($subscriptions) > 0)
+                        @foreach ($subscriptions as $subscription)
+                            <div class="col-md-4">
+                                <div class="card info-card sales-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $subscription->name }}</h5>
+
+                                        <div class="d-flex align-items-center">
+                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                @if(!empty($subscription->icon) && file_exists('public/admin_uploads/subscriptions/'.$subscription->icon))
+                                                    <img src="{{ asset('public/admin_uploads/subscriptions/'.$subscription->icon) }}" width="45" class="rounded-circle">
+                                                @else
+                                                    <img src="{{ asset('public/admin_images/not-found/not-found4.png') }}" width="45" class="rounded-circle">
+                                                @endif
+                                            </div>
+                                            <div class="ps-3">
+                                                <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total Shops')}}
+                                                    - {{ isset($subscription['user_subscriptions_count']) ? $subscription['user_subscriptions_count'] : 0 }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+
+                    {{-- <!-- Restaurant Card -->
                     <div class="col-md-4">
                         <div class="card info-card sales-card">
                             <div class="card-body">
@@ -51,7 +78,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 

@@ -24,10 +24,23 @@ class SubscriptionRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'title' => 'required',
             'price' => 'required|numeric',
             'duration' => 'required',
+            'icon' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG|dimensions:width=200,height=200',
         ];
+
+        if($this->subscription_id)
+        {
+            $rules += [
+                'title' => 'required|unique:subscriptions,name,'.$this->subscription_id,
+            ];
+        }
+        else
+        {
+            $rules += [
+                'title' => 'required|unique:subscriptions,name',
+            ];
+        }
 
         return $rules;
     }

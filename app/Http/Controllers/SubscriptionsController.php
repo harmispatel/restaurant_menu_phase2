@@ -50,6 +50,15 @@ class SubscriptionsController extends Controller
         $subscription->status = $status;
         $subscription->permissions = $permission;
         $subscription->description = $description;
+
+        // Insert Subscription Icon if is Exists
+        if($request->hasFile('icon'))
+        {
+            $imgname = "subscription_".time().".". $request->file('icon')->getClientOriginalExtension();
+            $request->file('icon')->move(public_path('admin_uploads/subscriptions/'), $imgname);
+            $subscription->icon = $imgname;
+        }
+
         $subscription->save();
 
         return redirect()->route('subscriptions')->with('success','Subscription has been Inserted SuccessFully....');
@@ -61,10 +70,19 @@ class SubscriptionsController extends Controller
     {
         try
         {
-            $id = $request->id;
+            $subscription_id = $request->id;
+
+            // Get Subscription Details
+            $subscription = Subscriptions::where('id',$subscription_id)->first();
+            $subscription_icon = isset($subscription->icon) ? $subscription->icon : '';
+
+            if(!empty($subscription_icon) && file_exists('public/admin_uploads/subscriptions/'.$subscription_icon))
+            {
+                unlink('public/admin_uploads/subscriptions/'.$subscription_icon);
+            }
 
             // Delete Subscription
-            Subscriptions::where('id',$id)->delete();
+            Subscriptions::where('id',$subscription_id)->delete();
 
             return response()->json([
                 'success' => 1,
@@ -130,6 +148,22 @@ class SubscriptionsController extends Controller
         $subscription->status = $status;
         $subscription->permissions = $permission;
         $subscription->description = $description;
+
+        // Insert Subscription Icon if is Exists
+        if($request->hasFile('icon'))
+        {
+            // Delete old Icon
+            $old_icon = isset($subscription->icon) ? $subscription->icon : "";
+            if(!empty($old_icon) && file_exists('public/admin_uploads/subscriptions/'.$old_icon))
+            {
+                unlink('public/admin_uploads/subscriptions/'.$old_icon);
+            }
+
+            $imgname = "subscription_".time().".". $request->file('icon')->getClientOriginalExtension();
+            $request->file('icon')->move(public_path('admin_uploads/subscriptions/'), $imgname);
+            $subscription->icon = $imgname;
+        }
+
         $subscription->update();
 
         return redirect()->route('subscriptions')->with('success','Subscription has been Updated SuccessFully....');

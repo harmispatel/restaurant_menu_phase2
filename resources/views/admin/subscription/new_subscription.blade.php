@@ -93,9 +93,21 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <small class="text-muted">{{ __('Enter Duration in Months')}}</small>
+                                        <code>{{ __('Enter Duration in Months')}}</code>
                                     </div>
                                     <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="icon" class="form-label">{{ __('Icon')}}</label>
+                                            <input type="file" name="icon" id="icon" class="form-control {{ ($errors->has('icon')) ? 'is-invalid' : '' }}">
+                                            @if($errors->has('icon'))
+                                                <div class="invalid-feedback">
+                                                    {{ $errors->first('icon') }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <code>Valid Dimensions of Icon is up to (200*200)</code>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
                                         <div class="form-group">
                                             <label for="status" class="form-label">{{ __('Status')}}</label>
                                             <div class="form-check form-switch">

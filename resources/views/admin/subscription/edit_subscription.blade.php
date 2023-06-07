@@ -94,9 +94,28 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <small class="text-muted">{{ __('Enter Duration in Months')}}</small>
+                                        <code class="text-muted">{{ __('Enter Duration in Months')}}</code>
                                     </div>
                                     <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="icon" class="form-label">{{ __('Icon')}}</label>
+                                            <input type="file" name="icon" id="icon" class="form-control {{ ($errors->has('icon')) ? 'is-invalid' : '' }}">
+                                            @if($errors->has('icon'))
+                                                <div class="invalid-feedback">
+                                                    {{ $errors->first('icon') }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <code>Valid Dimensions of Icon is up to (200*200)</code>
+                                        <div class="form-group mt-2">
+                                            @if(!empty($subscription->icon) && file_exists('public/admin_uploads/subscriptions/'.$subscription->icon))
+                                                <img src="{{ asset('public/admin_uploads/subscriptions/'.$subscription->icon) }}" width="65">
+                                            @else
+                                                <img src="{{ asset('public/admin_images/not-found/not-found4.png') }}" width="65">
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
                                         <div class="form-group">
                                             <label for="status" class="form-label">{{ __('Status')}}</label>
                                             <div class="form-check form-switch">
@@ -121,14 +140,6 @@
                                         @endphp
                                         <div class="row mt-1">
                                             <div class="col-md-12">
-                                                {{-- <div class="form-group">
-                                                    <input type="checkbox" name="banner" id="banner" class="form-check-input" value="1" {{ (isset($permissions['banner']) && $permissions['banner'] == 1) ? 'checked' : '' }}>
-                                                    <label for="banner" class="form-label">Banner</label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="checkbox" name="add_edit_clone_theme" id="add_edit_clone_theme" class="form-check-input" value="1" {{ (isset($permissions['add_edit_clone_theme']) && $permissions['add_edit_clone_theme'] == 1) ? 'checked' : '' }}>
-                                                    <label for="add_edit_clone_theme" class="form-label">Add, Edit & Clone Themes</label>
-                                                </div> --}}
                                                 <div class="form-group mb-1">
                                                     <div class="form-check form-switch">
                                                         <input class="form-check-input" type="checkbox" name="add_edit_clone_theme" role="switch" id="add_edit_clone_theme" value="1" {{ (isset($permissions['add_edit_clone_theme']) && $permissions['add_edit_clone_theme'] == 1) ? 'checked' : '' }}>

@@ -59,6 +59,7 @@
                                     <tr>
                                         <th>{{ __('Id')}}</th>
                                         <th>{{ __('Name')}}</th>
+                                        <th>{{ __('Icon')}}</th>
                                         <th>{{ __('Price')}}</th>
                                         <th>{{ __('Duration')}}</th>
                                         <th>{{ __('Status')}}</th>
@@ -70,6 +71,13 @@
                                         <tr>
                                             <td>{{ $subscription->id }}</td>
                                             <td>{{ $subscription->name }}</td>
+                                            <td>
+                                                @if(!empty($subscription->icon) && file_exists('public/admin_uploads/subscriptions/'.$subscription->icon))
+                                                    <img src="{{ asset('public/admin_uploads/subscriptions/'.$subscription->icon) }}" width="60" style="border: 2px solid gray;" class="rounded-circle">
+                                                @else
+                                                    <img src="{{ asset('public/admin_images/not-found/not-found4.png') }}" width="60" style="border: 2px solid gray;" class="rounded-circle">
+                                                @endif
+                                            </td>
                                             <td>€ {{ $subscription->price }}</td>
                                             <td>{{ $subscription->duration }} Months</td>
                                             <td>
