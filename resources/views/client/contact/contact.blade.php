@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
-                            <label class="form-label">{{ __('Title')}}</label>
+                            <label class="form-label">{{ __('Subject')}}</label>
                             <input class="form-control {{ $errors->has('title') ? 'is-invalid' : ''}}" type="text" name="title">
                             @if($errors->has('title'))
                                 <div class="invalid-feedback">

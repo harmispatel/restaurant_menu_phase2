@@ -58,6 +58,7 @@
     "InActive":"Ανενεργό",
     "New Subscription":"Νέα Συνδρομή",
     "Title":"Τίτλος",
+    "Subject":"Θέμα",
     "Enter Duration in Months":"Εισαγωγή Διάρκειας σε Μήνες",
     "Indicative Icons Not Found!":"Δεν βρέθηκαν Ενδεικτικά Εικονίδια!",
     "Edit Indicative Icons":"Επεξεργασία Ενδεικτικών Εικονιδίων",
@@ -398,5 +399,10 @@
     "CARD EXPIRY" : "ΛΗΞΗ ΚΑΡΤΑΣ",
     "CARD CVC" : "ΚΑΡΤΑ CVC",
     "CARD HOLDER NAME" : "ΟΝΟΜΑ ΙΔΙΟΚΤΗΤΗ ΚΑΡΤΑΣ",
-    "Pay" : "Πληρωμή"
+    "Pay" : "Πληρωμή",
+
+    "Mail Forms" : "Έντυπα αλληλογραφίας",
+    "Orders Mail Form Client" : "Παραγγελία αλληλογραφίας από τον πελάτη",
+    "Orders Mail Form Customer" : "Φόρμα αλληλογραφίας παραγγελιών Πελάτης",
+    "Check In Mail Form" : "Έλεγχος Αλληλογραφίας"
 }

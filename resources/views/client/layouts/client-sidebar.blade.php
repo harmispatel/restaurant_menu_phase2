@@ -211,7 +211,7 @@
         <li class="nav-item">
             <a class="nav-link {{ ($routeName == 'languages') ? 'active-tab' : '' }}" href="{{ route('languages') }}">
                 <i class="bi bi-translate {{ ($routeName == 'languages') ? 'icon-tab' : '' }}"></i>
-            <span>{{ __('Langueges') }}</span>
+            <span>{{ __('Languages') }}</span>
             </a>
         </li>
 

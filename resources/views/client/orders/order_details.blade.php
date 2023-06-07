@@ -62,10 +62,12 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-center">
-                            <div class="col-md-12 mb-2">
+                            <div class="col-md-6 mb-2">
                                 <h3>{{ __('Order') }} : #{{ $order->id }}</h3>
+                            </div>
+                            <div class="col-md-6 mb-2 text-end">
                                 @if($enable_print == 1)
-                                    <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i></a>
+                                    <a class="btn btn-sm btn-primary ms-3" onclick="printReceipt({{ $order->id }})"><i class="bi bi-printer"></i> Print</a>
                                 @endif
                             </div>
                             <div class="col-md-6 mb-2">

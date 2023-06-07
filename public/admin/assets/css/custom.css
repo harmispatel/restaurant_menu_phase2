@@ -36,8 +36,8 @@
 }
 
 .shop_logo_name img{
-     width: 70%; 
-    height: 80px;
+    width: 50%;
+    height: auto;
     margin-left: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 30%);
     border: 1px solid gray;

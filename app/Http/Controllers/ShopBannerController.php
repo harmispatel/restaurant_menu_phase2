@@ -387,7 +387,7 @@ class ShopBannerController extends Controller
             $html = '';
             $html .= '<div class="lang-tab">';
                 // Primary Language
-                $html .= '<a class="'.$primary_active_tab.' title="'.$primary_lang_name.'" text-uppercase" onclick="updateByCode(\''.$primary_lang_code.'\')">'.$primary_lang_code.'</a>';
+                $html .= '<a class="'.$primary_active_tab.' text-uppercase" title="'.$primary_lang_name.'" onclick="updateByCode(\''.$primary_lang_code.'\')">'.$primary_lang_code.'</a>';
 
                 // Additional Language
                 foreach($additional_languages as $value)
@@ -400,7 +400,7 @@ class ShopBannerController extends Controller
                     // Additional Active Tab
                     $additional_active_tab = ($add_lang_code == $current_lang_code) ? 'active' : '';
 
-                    $html .= '<a class="'.$additional_active_tab.' title="'.$add_lang_name.'" text-uppercase" onclick="updateByCode(\''.$add_lang_code.'\')">'.$add_lang_code.'</a>';
+                    $html .= '<a class="'.$additional_active_tab.' text-uppercase" title="'.$add_lang_name.'" onclick="updateByCode(\''.$add_lang_code.'\')">'.$add_lang_code.'</a>';
                 }
             $html .= '</div>';
 

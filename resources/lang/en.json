@@ -61,6 +61,7 @@
     "Enter Duration in Months":"Enter Duration in Months",
     "Edit Indicative Icons":"Edit Indicative Icons",
     "Edit Clients":"Edit Clients",
+    "Subject":"Subject",
 
 
     "Icon":"Icon",
@@ -407,5 +408,10 @@
     "CARD EXPIRY" : "CARD EXPIRY",
     "CARD CVC" : "CARD CVC",
     "CARD HOLDER NAME" : "CARD HOLDER NAME",
-    "Pay" : "Pay"
+    "Pay" : "Pay",
+
+    "Mail Forms" : "Mail Forms",
+    "Orders Mail Form Client" : "Orders Mail Form Client",
+    "Orders Mail Form Customer" : "Orders Mail Form Customer",
+    "Check In Mail Form" : "Check In Mail Form"
 }
