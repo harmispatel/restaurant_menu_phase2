@@ -29,7 +29,11 @@
 
 @section('content')
 
-    <input type="hidden" name="par_cat_id" id="par_cat_id" value="{{ $parent_cat_id }}">
+    @if($parent_cat_id == 'gallery')
+        <input type="hidden" name="par_cat_id" id="par_cat_id" value="">
+    @else
+        <input type="hidden" name="par_cat_id" id="par_cat_id" value="{{ $parent_cat_id }}">
+    @endif
 
     {{-- Edit Modal --}}
     <div class="modal fade" id="editCategoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
@@ -58,7 +62,11 @@
                 </div>
                 <form id="addCategoryForm" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="parent_cat_id" id="parent_cat_id" value="{{ $parent_cat_id }}">
+                        @if($parent_cat_id == 'gallery')
+                            <input type="hidden" name="parent_cat_id" id="parent_cat_id" value="">
+                        @else
+                            <input type="hidden" name="parent_cat_id" id="parent_cat_id" value="{{ $parent_cat_id }}">
+                        @endif
                     <input type="hidden" name="schedule_array" id="schedule_array">
                     <div class="modal-body">
                         <div class="row">
@@ -81,7 +89,7 @@
                                         @endif
 
                                         @if(isset($package_permissions['gallery']) && !empty($package_permissions['gallery']) && $package_permissions['gallery'] == 1)
-                                            <option value="gallery">Image Gallery</option>
+                                            <option value="gallery" {{ (isset($parent_cat_id) && !empty($parent_cat_id) && $parent_cat_id == 'gallery') ? 'selected' :'' }}>Image Gallery</option>
                                         @endif
 
                                         @if(isset($package_permissions['check_in']) && !empty($package_permissions['check_in']) && $package_permissions['check_in'] == 1)

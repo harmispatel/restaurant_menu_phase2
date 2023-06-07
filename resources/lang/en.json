@@ -411,7 +411,7 @@
     "Pay" : "Pay",
 
     "Mail Forms" : "Mail Forms",
-    "Orders Mail Form Client" : "Orders Mail Form Client",
+    "Orders Mail Form Owner" : "Orders Mail Form Owner",
     "Orders Mail Form Customer" : "Orders Mail Form Customer",
     "Check In Mail Form" : "Check In Mail Form"
 }

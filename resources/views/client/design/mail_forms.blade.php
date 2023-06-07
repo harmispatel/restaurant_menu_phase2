@@ -18,7 +18,7 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label class="form-label" for="orders_mail_form_client">{{ __('Orders Mail Form Client') }}</label>
+                            <label class="form-label" for="orders_mail_form_client">{{ __('Orders Mail Form Owner') }}</label>
                             <textarea name="orders_mail_form_client" id="orders_mail_form_client" class="form-control editor">{{ (isset($client_settings['orders_mail_form_client']) && !empty($client_settings['orders_mail_form_client'])) ? $client_settings['orders_mail_form_client'] : '' }}</textarea>
                             <code>Tags : ({shop_logo}, {shop_name}, {firstname}, {lastname}, {order_id}, {order_type}, {payment_method}, {items}, {total})</code>
                         </div>

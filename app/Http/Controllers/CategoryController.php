@@ -125,128 +125,128 @@ class CategoryController extends Controller
 
         try
         {
-                $category = new Category();
-                $category->name = $name;
-                $category->category_type = $category_type;
-                $category->$category_name_key = $name;
-                $category->schedule_type = $schedule_type;
-                $category->schedule = $schedule;
+            $category = new Category();
+            $category->name = $name;
+            $category->category_type = $category_type;
+            $category->$category_name_key = $name;
+            $category->schedule_type = $schedule_type;
+            $category->schedule = $schedule;
 
-                if($schedule_type == 'time')
+            if($schedule_type == 'time')
+            {
+                $category->schedule_value = $schedule_arr;
+            }
+            else
+            {
+                $category->sch_start_date = $start_date;
+                $category->sch_end_date = $end_date;
+            }
+
+
+            // Description
+            if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in')
+            {
+                $category->description = $description;
+                $category->$category_description_key = $description;
+            }
+
+            // Cover
+            if($category_type == 'page' || $category_type == 'link' || $category_type == 'gallery' || $category_type == 'check_in' || $category_type == 'parent_category' || $category_type == 'pdf_page')
+            {
+                if($request->hasFile('cover'))
                 {
-                    $category->schedule_value = $schedule_arr;
+                    $cover_name = "cover_".time().".". $request->file('cover')->getClientOriginalExtension();
+                    $request->file('cover')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories/'), $cover_name);
+                    $category->cover = $cover_name;
+                }
+            }
+
+            // URL
+            if($category_type == 'link')
+            {
+                $category->link_url = isset($request->url) ? $request->url : '';
+            }
+
+            // Bg Color
+            if($category_type == 'check_in')
+            {
+                $category->styles = isset($request->checkin_styles) ? serialize($request->checkin_styles) : '';
+            }
+
+            // Parent Category
+            if($category_type == 'parent_category')
+            {
+                if(isset($request->parent_cat) && !empty($request->parent_cat) && $request->parent_cat == 0)
+                {
+                    $category->parent_category = 1;
+                }
+                elseif(empty($request->parent_cat) || !isset($request->parent_cat))
+                {
+                    $category->parent_category = 1;
                 }
                 else
                 {
-                    $category->sch_start_date = $start_date;
-                    $category->sch_end_date = $end_date;
+                    $category->parent_id = $request->parent_cat;
+                    $category->category_type = 'product_category';
                 }
+            }
 
-
-                // Description
-                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'check_in')
+            // Pdf File
+            if($category_type == 'pdf_page')
+            {
+                if($request->hasFile('pdf'))
                 {
-                    $category->description = $description;
-                    $category->$category_description_key = $description;
+                    $file_name = "pdf_".time().".". $request->file('pdf')->getClientOriginalExtension();
+                    $request->file('pdf')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories/'), $file_name);
+                    $category->file = $file_name;
                 }
+            }
 
-                // Cover
-                if($category_type == 'page' || $category_type == 'link' || $category_type == 'gallery' || $category_type == 'check_in' || $category_type == 'parent_category' || $category_type == 'pdf_page')
+            if(isset($request->parent_cat_id) && !empty($request->parent_cat_id))
+            {
+                $category->parent_id = $request->parent_cat_id;
+            }
+
+            $category->published = $published;
+            $category->shop_id = $shop_id;
+            $category->order_key = $category_order;
+            $category->save();
+
+            // Multiple Images
+            if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'gallery' || $category_type == 'parent_category')
+            {
+                // Insert Category Image if is Exists
+                $all_images = (isset($request->og_image)) ? $request->og_image : [];
+                if(count($all_images) > 0)
                 {
-                    if($request->hasFile('cover'))
+                    foreach($all_images as $image)
                     {
-                        $cover_name = "cover_".time().".". $request->file('cover')->getClientOriginalExtension();
-                        $request->file('cover')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories/'), $cover_name);
-                        $category->cover = $cover_name;
+                        $image_token = genratetoken(10);
+                        $og_image = $image;
+                        $image_arr = explode(";base64,", $og_image);
+                        $image_type_ext = explode("image/", $image_arr[0]);
+                        $image_base64 = base64_decode($image_arr[1]);
+
+                        $imgname = "category_".$image_token.".".$image_type_ext[1];
+                        $img_path = public_path('client_uploads/shops/'.$shop_slug.'/categories/'.$imgname);
+                        file_put_contents($img_path,$image_base64);
+                        // $request->file('image')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories'), $imgname);
+
+                        // Insert Image
+                        $new_img = new CategoryImages();
+                        $new_img->category_id = $category->id;
+                        $new_img->image = $imgname;
+                        $new_img->save();
+
                     }
                 }
-
-                // URL
-                if($category_type == 'link')
-                {
-                    $category->link_url = isset($request->url) ? $request->url : '';
-                }
-
-                // Bg Color
-                if($category_type == 'check_in')
-                {
-                    $category->styles = isset($request->checkin_styles) ? serialize($request->checkin_styles) : '';
-                }
-
-                // Parent Category
-                if($category_type == 'parent_category')
-                {
-                    if(isset($request->parent_cat) && !empty($request->parent_cat) && $request->parent_cat == 0)
-                    {
-                        $category->parent_category = 1;
-                    }
-                    elseif(empty($request->parent_cat) || !isset($request->parent_cat))
-                    {
-                        $category->parent_category = 1;
-                    }
-                    else
-                    {
-                        $category->parent_id = $request->parent_cat;
-                        $category->category_type = 'product_category';
-                    }
-                }
-
-                // Pdf File
-                if($category_type == 'pdf_page')
-                {
-                    if($request->hasFile('pdf'))
-                    {
-                        $file_name = "pdf_".time().".". $request->file('pdf')->getClientOriginalExtension();
-                        $request->file('pdf')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories/'), $file_name);
-                        $category->file = $file_name;
-                    }
-                }
-
-                if(isset($request->parent_cat_id) && !empty($request->parent_cat_id))
-                {
-                    $category->parent_id = $request->parent_cat_id;
-                }
-
-                $category->published = $published;
-                $category->shop_id = $shop_id;
-                $category->order_key = $category_order;
-                $category->save();
-
-                // Multiple Images
-                if($category_type == 'product_category' || $category_type == 'page' || $category_type == 'gallery' || $category_type == 'parent_category')
-                {
-                    // Insert Category Image if is Exists
-                    $all_images = (isset($request->og_image)) ? $request->og_image : [];
-                    if(count($all_images) > 0)
-                    {
-                        foreach($all_images as $image)
-                        {
-                            $image_token = genratetoken(10);
-                            $og_image = $image;
-                            $image_arr = explode(";base64,", $og_image);
-                            $image_type_ext = explode("image/", $image_arr[0]);
-                            $image_base64 = base64_decode($image_arr[1]);
-
-                            $imgname = "category_".$image_token.".".$image_type_ext[1];
-                            $img_path = public_path('client_uploads/shops/'.$shop_slug.'/categories/'.$imgname);
-                            file_put_contents($img_path,$image_base64);
-                            // $request->file('image')->move(public_path('client_uploads/shops/'.$shop_slug.'/categories'), $imgname);
-
-                            // Insert Image
-                            $new_img = new CategoryImages();
-                            $new_img->category_id = $category->id;
-                            $new_img->image = $imgname;
-                            $new_img->save();
-
-                        }
-                    }
-                }
+            }
 
 
-                return response()->json([
-                    'success' => 1,
-                    'message' => "Category has been Inserted SuccessFully....",
-                ]);
+            return response()->json([
+                'success' => 1,
+                'message' => "Category has been Inserted SuccessFully....",
+            ]);
         }
         catch (\Throwable $th)
         {
