@@ -214,8 +214,10 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
                             }
                         }
 
+                        $item_image = (isset($item['image'])) ? $item['image'] : '';
+
                         // Images
-                        $item_data[] = "";
+                        $item_data[] = $item_image;
 
                         // Tags
                         $item_tags = CategoryProductTags::with(['hasOneTag'])->where('category_id',$cat_dt['id'])->where('item_id',$item['id'])->get();
