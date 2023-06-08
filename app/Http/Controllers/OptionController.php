@@ -16,7 +16,22 @@ class OptionController extends Controller
     {
         $data['shop_id'] = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $data['options'] = Option::with(['optionPrices'])->where('shop_id',$data['shop_id'])->get();
-        return view('client.options.options',$data);
+
+        // Subscrption ID
+        $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
+        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+        {
+            return view('client.options.options',$data);
+        }
+        else
+        {
+            return redirect()->route('client.dashboard')->with('error','Unauthorized Action!');
+        }
+
     }
 
 

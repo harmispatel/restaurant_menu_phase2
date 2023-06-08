@@ -699,23 +699,26 @@ class ItemsController extends Controller
                                         $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$primary_item_calories.'">';
                                     $html .= '</div>';
 
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
-                                        $html .= '<select name="options[]" id="'.$primary_lang_code.'_options" class="form-select" multiple>';
-                                            if(count($options) > 0)
-                                            {
-                                                foreach($options as $opt)
+                                    if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                    {
+                                        $html .= '<div class="form-group mb-3">';
+                                            $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
+                                            $html .= '<select name="options[]" id="'.$primary_lang_code.'_options" class="form-select" multiple>';
+                                                if(count($options) > 0)
                                                 {
-                                                    $html .= '<option value="'.$opt["id"].'"';
-                                                        if(in_array($opt["id"],$item_options))
-                                                        {
-                                                            $html .= 'selected';
-                                                        }
-                                                    $html .='>'.$opt["title"].'</option>';
+                                                    foreach($options as $opt)
+                                                    {
+                                                        $html .= '<option value="'.$opt["id"].'"';
+                                                            if(in_array($opt["id"],$item_options))
+                                                            {
+                                                                $html .= 'selected';
+                                                            }
+                                                        $html .='>'.$opt["title"].'</option>';
+                                                    }
                                                 }
-                                            }
-                                        $html .= '</select>';
-                                    $html .= '</div>';
+                                            $html .= '</select>';
+                                        $html .= '</div>';
+                                    }
 
                                     $html .= '<div class="form-group mb-3">';
                                         $html .= '<div class="row">';
@@ -1008,23 +1011,26 @@ class ItemsController extends Controller
                                             $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$add_item_calories.'">';
                                         $html .= '</div>';
 
-                                        $html .= '<div class="form-group mb-3">';
-                                            $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
-                                            $html .= '<select name="options[]" id="'.$add_lang_code.'_options" class="form-select" multiple>';
-                                                if(count($options) > 0)
-                                                {
-                                                    foreach($options as $opt)
+                                        if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                        {
+                                            $html .= '<div class="form-group mb-3">';
+                                                $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
+                                                $html .= '<select name="options[]" id="'.$add_lang_code.'_options" class="form-select" multiple>';
+                                                    if(count($options) > 0)
                                                     {
-                                                        $html .= '<option value="'.$opt["id"].'"';
-                                                            if(in_array($opt["id"],$item_options))
-                                                            {
-                                                                $html .= 'selected';
-                                                            }
-                                                        $html .='>'.$opt["title"].'</option>';
+                                                        foreach($options as $opt)
+                                                        {
+                                                            $html .= '<option value="'.$opt["id"].'"';
+                                                                if(in_array($opt["id"],$item_options))
+                                                                {
+                                                                    $html .= 'selected';
+                                                                }
+                                                            $html .='>'.$opt["title"].'</option>';
+                                                        }
                                                     }
-                                                }
-                                            $html .= '</select>';
-                                        $html .= '</div>';
+                                                $html .= '</select>';
+                                            $html .= '</div>';
+                                        }
 
                                         $html .= '<div class="form-group mb-3">';
                                             $html .= '<div class="row">';
@@ -1296,23 +1302,26 @@ class ItemsController extends Controller
                             $html .= '<input type="text" name="calories" id="calories" class="form-control" value="'.$primary_item_calories.'">';
                         $html .= '</div>';
 
-                        $html .= '<div class="form-group mb-3">';
-                            $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
-                            $html .= '<select name="options[]" id="'.$primary_lang_code.'_options" class="form-select" multiple>';
-                                if(count($options) > 0)
-                                {
-                                    foreach($options as $opt)
+                        if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                        {
+                            $html .= '<div class="form-group mb-3">';
+                                $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
+                                $html .= '<select name="options[]" id="'.$primary_lang_code.'_options" class="form-select" multiple>';
+                                    if(count($options) > 0)
                                     {
-                                        $html .= '<option value="'.$opt["id"].'"';
-                                            if(in_array($opt["id"],$item_options))
-                                            {
-                                                $html .= 'selected';
-                                            }
-                                        $html .='>'.$opt["title"].'</option>';
+                                        foreach($options as $opt)
+                                        {
+                                            $html .= '<option value="'.$opt["id"].'"';
+                                                if(in_array($opt["id"],$item_options))
+                                                {
+                                                    $html .= 'selected';
+                                                }
+                                            $html .='>'.$opt["title"].'</option>';
+                                        }
                                     }
-                                }
-                            $html .= '</select>';
-                        $html .= '</div>';
+                                $html .= '</select>';
+                            $html .= '</div>';
+                        }
 
                         $html .= '<div class="form-group mb-3">';
                             $html .= '<div class="row">';

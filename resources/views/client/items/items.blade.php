@@ -191,18 +191,20 @@
                             </div>
 
                             {{-- Attributes --}}
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="options" class="form-label">{{ __('Attributes')}}</label>
-                                    <select name="options[]" id="options" class="form-control" multiple>
-                                        @if(count($options) > 0)
-                                            @foreach ($options as $option)
-                                                <option value="{{ $option->id }}">{{ $option->title }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
+                            @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="options" class="form-label">{{ __('Attributes')}}</label>
+                                        <select name="options[]" id="options" class="form-control" multiple>
+                                            @if(count($options) > 0)
+                                                @foreach ($options as $option)
+                                                    <option value="{{ $option->id }}">{{ $option->title }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
 
                             {{-- Status Buttons --}}
                             <div class="row mb-3">

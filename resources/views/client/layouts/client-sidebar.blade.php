@@ -169,42 +169,47 @@
                         <span>{{ __('Tags') }}</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('options') }}" class="{{ ($routeName == 'options') ? 'active-link' : '' }}">
-                        <span>{{ __('Order Attributes') }}</span>
-                    </a>
-                </li>
+
+                @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                    <li>
+                        <a href="{{ route('options') }}" class="{{ ($routeName == 'options') ? 'active-link' : '' }}">
+                            <span>{{ __('Order Attributes') }}</span>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </li>
 
         {{-- Orders Nav --}}
-        <li class="nav-item">
-            <a class="nav-link {{ (($routeName != 'order.settings') && ($routeName != 'client.orders') && ($routeName != 'client.orders.history') && ($routeName != 'view.order') && ($routeName != 'payment.settings')) ? 'collapsed' : '' }} {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'active-tab' : '' }}" data-bs-target="#orders-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'true' : 'false' }}">
-                <i class="bi bi-cart-check {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'icon-tab' : '' }}"></i><span>{{ __('Orders') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'icon-tab' : '' }}"></i>
-            </a>
-            <ul id="orders-nav" class="nav-content sidebar-ul collapse {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('client.orders') }}" class="{{ (($routeName == 'client.orders')) ? 'active-link' : '' }}">
-                        <span>{{ __('Pending Orders') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('client.orders.history') }}" class="{{ (($routeName == 'client.orders.history') || ($routeName == 'view.order')) ? 'active-link' : '' }}">
-                        <span>{{ __('Orders History') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('order.settings') }}" class="{{ (($routeName == 'order.settings') &&  count($routeParams) == 0) ? 'active-link' : '' }}">
-                        <span>{{ __('Order Settings') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('payment.settings') }}" class="{{ (($routeName == 'payment.settings')) ? 'active-link' : '' }}">
-                        <span>{{ __('Payment Settings') }}</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
+        @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+            <li class="nav-item">
+                <a class="nav-link {{ (($routeName != 'order.settings') && ($routeName != 'client.orders') && ($routeName != 'client.orders.history') && ($routeName != 'view.order') && ($routeName != 'payment.settings')) ? 'collapsed' : '' }} {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'active-tab' : '' }}" data-bs-target="#orders-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'true' : 'false' }}">
+                    <i class="bi bi-cart-check {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'icon-tab' : '' }}"></i><span>{{ __('Orders') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'icon-tab' : '' }}"></i>
+                </a>
+                <ul id="orders-nav" class="nav-content sidebar-ul collapse {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('client.orders') }}" class="{{ (($routeName == 'client.orders')) ? 'active-link' : '' }}">
+                            <span>{{ __('Pending Orders') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('client.orders.history') }}" class="{{ (($routeName == 'client.orders.history') || ($routeName == 'view.order')) ? 'active-link' : '' }}">
+                            <span>{{ __('Orders History') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('order.settings') }}" class="{{ (($routeName == 'order.settings') &&  count($routeParams) == 0) ? 'active-link' : '' }}">
+                            <span>{{ __('Order Settings') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('payment.settings') }}" class="{{ (($routeName == 'payment.settings')) ? 'active-link' : '' }}">
+                            <span>{{ __('Payment Settings') }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
 
 
         {{-- Languages Nav --}}

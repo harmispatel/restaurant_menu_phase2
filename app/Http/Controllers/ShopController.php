@@ -1238,56 +1238,59 @@ class ShopController extends Controller
                             $html .= '</div>';
                         }
 
-                        // Options
-                        $option_ids = (isset($item['options']) && !empty($item['options'])) ? unserialize($item['options']) : [];
-
-                        $html .= "<input type='hidden' name='option_ids' id='option_ids' value='".json_encode($option_ids,TRUE)."'>";
-
-                        if(count($option_ids) > 0)
+                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
                         {
-                            $html .= '<div class="col-md-12 mb-3 cart-price">';
-                                foreach($option_ids as $outer_key => $opt_id)
-                                {
-                                    $html .= '<div class="row p-3" id="option_'.$outer_key.'">';
-                                        $opt_dt = Option::with(['optionPrices'])->where('id',$opt_id)->first();
-                                        $option_prices = (isset($opt_dt['optionPrices'])) ? $opt_dt['optionPrices'] : [];
+                            // Options
+                            $option_ids = (isset($item['options']) && !empty($item['options'])) ? unserialize($item['options']) : [];
 
-                                        if(count($option_prices) > 0)
-                                        {
-                                            $html .= '<div class="col-md-12">';
-                                                $html .= '<b>'.$opt_dt[$title_key].'</b>';
-                                            $html .= '</div>';
+                            $html .= "<input type='hidden' name='option_ids' id='option_ids' value='".json_encode($option_ids,TRUE)."'>";
 
-                                            foreach($option_prices as $key => $option_price)
+                            if(count($option_ids) > 0)
+                            {
+                                $html .= '<div class="col-md-12 mb-3 cart-price">';
+                                    foreach($option_ids as $outer_key => $opt_id)
+                                    {
+                                        $html .= '<div class="row p-3" id="option_'.$outer_key.'">';
+                                            $opt_dt = Option::with(['optionPrices'])->where('id',$opt_id)->first();
+                                            $option_prices = (isset($opt_dt['optionPrices'])) ? $opt_dt['optionPrices'] : [];
+
+                                            if(count($option_prices) > 0)
                                             {
-                                                $opt_price = Currency::currency($currency)->format($option_price['price']);
-                                                $opt_price_label = (isset($option_price[$name_key])) ? $option_price[$name_key] : "";
-                                                if(isset($opt_dt['multiple_select']) && $opt_dt['multiple_select'] == 1)
+                                                $html .= '<div class="col-md-12">';
+                                                    $html .= '<b>'.$opt_dt[$title_key].'</b>';
+                                                $html .= '</div>';
+
+                                                foreach($option_prices as $key => $option_price)
                                                 {
-                                                    $is_checked = (isset($opt_dt['pre_select']) && $opt_dt['pre_select'] == 1) ? 'checked' : '';
-                                                    $html .= '<div class="col-6">';
-                                                        $html .= '<input type="checkbox" value="'.$option_price['price'].'" name="option_price_checkbox_'.$outer_key.'" onchange="updatePrice()" id="option_price_checkbox_'.$outer_key.'_'.$key.'" class="me-2" opt_price_id="'.$option_price['id'].'" '.$is_checked.'>';
-                                                        $html .= '<label class="form-label" for="option_price_checkbox_'.$outer_key.'_'.$key.'">'.$opt_price_label.'</label>';
-                                                    $html .= '</div>';
-                                                    $html .= '<div class="col-6 text-end">';
-                                                        $html .= '<label class="form-label">'.$opt_price.'</label>';
-                                                    $html .= '</div>';
-                                                }
-                                                else
-                                                {
-                                                    $html .= '<div class="col-6">';
-                                                        $html .= '<input type="radio" value="'.$option_price['price'].'" name="option_price_radio_'.$outer_key.'" onchange="updatePrice()" id="option_price_radio_'.$outer_key.'_'.$key.'" class="me-2" opt_price_id="'.$option_price['id'].'">';
-                                                        $html .= '<label class="form-label" for="option_price_radio_'.$outer_key.'_'.$key.'">'.$opt_price_label.'</label>';
-                                                    $html .= '</div>';
-                                                    $html .= '<div class="col-6 text-end">';
-                                                        $html .= '<label class="form-label">'.$opt_price.'</label>';
-                                                    $html .= '</div>';
+                                                    $opt_price = Currency::currency($currency)->format($option_price['price']);
+                                                    $opt_price_label = (isset($option_price[$name_key])) ? $option_price[$name_key] : "";
+                                                    if(isset($opt_dt['multiple_select']) && $opt_dt['multiple_select'] == 1)
+                                                    {
+                                                        $is_checked = (isset($opt_dt['pre_select']) && $opt_dt['pre_select'] == 1) ? 'checked' : '';
+                                                        $html .= '<div class="col-6">';
+                                                            $html .= '<input type="checkbox" value="'.$option_price['price'].'" name="option_price_checkbox_'.$outer_key.'" onchange="updatePrice()" id="option_price_checkbox_'.$outer_key.'_'.$key.'" class="me-2" opt_price_id="'.$option_price['id'].'" '.$is_checked.'>';
+                                                            $html .= '<label class="form-label" for="option_price_checkbox_'.$outer_key.'_'.$key.'">'.$opt_price_label.'</label>';
+                                                        $html .= '</div>';
+                                                        $html .= '<div class="col-6 text-end">';
+                                                            $html .= '<label class="form-label">'.$opt_price.'</label>';
+                                                        $html .= '</div>';
+                                                    }
+                                                    else
+                                                    {
+                                                        $html .= '<div class="col-6">';
+                                                            $html .= '<input type="radio" value="'.$option_price['price'].'" name="option_price_radio_'.$outer_key.'" onchange="updatePrice()" id="option_price_radio_'.$outer_key.'_'.$key.'" class="me-2" opt_price_id="'.$option_price['id'].'">';
+                                                            $html .= '<label class="form-label" for="option_price_radio_'.$outer_key.'_'.$key.'">'.$opt_price_label.'</label>';
+                                                        $html .= '</div>';
+                                                        $html .= '<div class="col-6 text-end">';
+                                                            $html .= '<label class="form-label">'.$opt_price.'</label>';
+                                                        $html .= '</div>';
+                                                    }
                                                 }
                                             }
-                                        }
-                                    $html .= '</div>';
-                                }
-                            $html .= '</div>';
+                                        $html .= '</div>';
+                                    }
+                                $html .= '</div>';
+                            }
                         }
 
                         if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)

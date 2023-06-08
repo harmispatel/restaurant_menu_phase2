@@ -16,9 +16,22 @@ class OrderController extends Controller
     public function index()
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
-
         $data['orders'] = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->orderBy('id','DESC')->get();
-        return view('client.orders.orders',$data);
+
+        // Subscrption ID
+        $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
+        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+        {
+            return view('client.orders.orders',$data);
+        }
+        else
+        {
+            return redirect()->route('client.dashboard')->with('error','Unauthorized Action!');
+        }
     }
 
 
@@ -206,7 +219,21 @@ class OrderController extends Controller
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $data['orders'] = Order::where('shop_id',$shop_id)->get();
-        return view('client.orders.orders_history',$data);
+
+        // Subscrption ID
+        $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
+        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+        {
+            return view('client.orders.orders_history',$data);
+        }
+        else
+        {
+            return redirect()->route('client.dashboard')->with('error','Unauthorized Action!');
+        }
     }
 
 
