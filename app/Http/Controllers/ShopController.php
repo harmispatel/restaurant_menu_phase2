@@ -507,6 +507,8 @@ class ShopController extends Controller
                                                 }
                                             $html .= '</ul>';
 
+                                            $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
+
                                             $html .= '</div>';
                                         $html .= '</div>';
                                     }
@@ -754,6 +756,8 @@ class ShopController extends Controller
                                                 }
                                             $html .= '</ul>';
 
+                                            $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
+
                                             $html .= '</div>';
                                         $html .= '</div>';
                                     }
@@ -937,6 +941,8 @@ class ShopController extends Controller
                                                 }
                                             }
                                         $html .= '</ul>';
+
+                                        $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
 
                                         $html .= '</div>';
                                     $html .= '</div>';

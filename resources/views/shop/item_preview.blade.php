@@ -248,6 +248,8 @@
                                                                             @endif
                                                                         @endif
                                                                     @endif
+
+                                                                    <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                                 </div>
                                                             </div>
                                                         @else
@@ -407,6 +409,8 @@
                                                                                 @endif
                                                                             @endif
                                                                         @endif
+
+                                                                        <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                                     </div>
                                                                 </div>
                                                             @else
@@ -560,6 +564,8 @@
                                                                     @endif
                                                                 @endif
                                                             @endif
+
+                                                            <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                         </div>
                                                     </div>
                                                 @else
