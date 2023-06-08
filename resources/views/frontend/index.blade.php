@@ -8,6 +8,8 @@
     <link href="{{ asset('public/admin_images/favicons/home.png') }}" rel="icon">
     <link rel="stylesheet" href="{{ asset('public/admin/assets/vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"/>
+    {{-- Toastr CSS --}}
+    <link rel="stylesheet" href="{{ asset('public/admin/assets/vendor/css/toastr.min.css') }}">
 <style>
 
 .bgimg {
@@ -149,5 +151,23 @@
     </div>
 
     <script src="{{ asset('public/admin/assets/vendor/bootstrap/js/bootstrap.min.js') }}" ></script>
+    <script src="{{ asset('public/client/assets/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('public/admin/assets/vendor/js/toastr.min.js') }}"></script>
+
+    <script type="text/javascript">
+
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            timeOut: 4000
+        }
+
+        // Error Messages
+        @if (Session::has('error'))
+            toastr.error('{{ Session::get('error') }}')
+        @endif
+
+    </script>
 </body>
 </html>
