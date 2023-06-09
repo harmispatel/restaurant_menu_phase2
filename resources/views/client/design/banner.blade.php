@@ -50,6 +50,12 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-12">
+                                <label for="display" class="form-label">{{ __('Background Color') }}</label>
+                                <input type="color" name="background_color" id="background_color" value="#ffffff" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
                                 <label for="description" class="form-label">{{ __('Description') }}</label>
                                 <textarea name="description" id="description" class="form-control"></textarea>
                             </div>

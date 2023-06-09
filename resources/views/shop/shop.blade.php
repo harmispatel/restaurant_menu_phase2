@@ -31,6 +31,7 @@
     $theme_settings = themeSettings($shop_theme_id);
     $slider_buttons = (isset($theme_settings['banner_slide_button']) && !empty($theme_settings['banner_slide_button'])) ? $theme_settings['banner_slide_button'] : 0;
     $slider_delay_time = (isset($theme_settings['banner_delay_time']) && !empty($theme_settings['banner_delay_time'])) ? $theme_settings['banner_delay_time'] : 3000;
+    $banner_height = (isset($theme_settings['banner_height']) && !empty($theme_settings['banner_height'])) ? $theme_settings['banner_height'] : 350;
 
     // Get Subscription ID
     $subscription_id = getClientSubscriptionID($shop_details['id']);
@@ -54,29 +55,31 @@
     @if(isset($package_permissions['banner']) && !empty($package_permissions['banner']) && $package_permissions['banner'] == 1)
         @if(isset($theme_settings['banner_position']) && !empty($theme_settings['banner_position']) && $theme_settings['banner_position'] == 'top')
             @if(count($shop_banners) > 0)
-                <section class="home_main_slider">
-                    <div class="swiper-container h-100">
-                        <div class="swiper-wrapper">
-                            @foreach ($shop_banners as $key => $banner)
-                                @if(($banner->display == 'both' || $banner->display == 'image') && (isset($banner[$banner_key]) && !empty($banner[$banner_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key])))
-                                    <div class="swiper-slide" style="background-image: url('{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key]) }}')">
-                                @else
-                                    <div class="swiper-slide">
-                                @endif
-                                    @if($banner->display == 'both' || $banner->display == 'description')
-                                        @if(isset($banner[$banner_text_key]) && !empty($banner[$banner_text_key]))
-                                            <div class="swiper-text">
-                                                {!! $banner[$banner_text_key] !!}
-                                            </div>
-                                        @endif
+                <section class="home_main_slider" style="height: {{ $banner_height }}px;">
+                    <div class="container h-100">
+                        <div class="swiper-container h-100 position-relative">
+                            <div class="swiper-wrapper">
+                                @foreach ($shop_banners as $key => $banner)
+                                    @if(($banner->display == 'both' || $banner->display == 'image') && (isset($banner[$banner_key]) && !empty($banner[$banner_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key])))
+                                        <div class="swiper-slide" style="background-image: url('{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key]) }}')">
+                                    @else
+                                        <div class="swiper-slide" style="background-color: {{ $banner->background_color }};">
                                     @endif
-                                </div>
-                            @endforeach
+                                        @if($banner->display == 'both' || $banner->display == 'description')
+                                            @if(isset($banner[$banner_text_key]) && !empty($banner[$banner_text_key]))
+                                                <div class="swiper-text">
+                                                    {!! $banner[$banner_text_key] !!}
+                                                </div>
+                                            @endif
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if($slider_buttons == 1)
+                                <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
+                                <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
+                            @endif
                         </div>
-                        @if($slider_buttons == 1)
-                            <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
-                            <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
-                        @endif
                     </div>
                 </section>
             @endif
@@ -143,29 +146,31 @@
     @if(isset($package_permissions['banner']) && !empty($package_permissions['banner']) && $package_permissions['banner'] == 1)
         @if(isset($theme_settings['banner_position']) && !empty($theme_settings['banner_position']) && $theme_settings['banner_position'] == 'bottom')
             @if(count($shop_banners) > 0)
-                <section class="home_main_slider">
-                    <div class="swiper-container h-100">
-                        <div class="swiper-wrapper">
-                            @foreach ($shop_banners as $key => $banner)
-                                @if(($banner->display == 'both' || $banner->display == 'image') && (isset($banner[$banner_key]) && !empty($banner[$banner_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key])))
-                                    <div class="swiper-slide" style="background-image: url('{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key]) }}')">
-                                @else
-                                    <div class="swiper-slide">
-                                @endif
-                                    @if($banner->display == 'both' || $banner->display == 'description')
-                                        @if(isset($banner[$banner_text_key]) && !empty($banner[$banner_text_key]))
-                                            <div class="swiper-text">
-                                                {!! $banner[$banner_text_key] !!}
-                                            </div>
-                                        @endif
+                <section class="home_main_slider" style="height: {{ $banner_height }}px;">
+                    <div class="container h-100">
+                        <div class="swiper-container h-100 position-relative">
+                            <div class="swiper-wrapper">
+                                @foreach ($shop_banners as $key => $banner)
+                                    @if(($banner->display == 'both' || $banner->display == 'image') && (isset($banner[$banner_key]) && !empty($banner[$banner_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key])))
+                                        <div class="swiper-slide" style="background-image: url('{{ asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner[$banner_key]) }}')">
+                                    @else
+                                        <div class="swiper-slide" style="background-color: {{ $banner->background_color }};">
                                     @endif
-                                </div>
-                            @endforeach
+                                        @if($banner->display == 'both' || $banner->display == 'description')
+                                            @if(isset($banner[$banner_text_key]) && !empty($banner[$banner_text_key]))
+                                                <div class="swiper-text">
+                                                    {!! $banner[$banner_text_key] !!}
+                                                </div>
+                                            @endif
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if($slider_buttons == 1)
+                                <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
+                                <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
+                            @endif
                         </div>
-                        @if($slider_buttons == 1)
-                            <div class="swiper-slider-button-prev swiper-btn"><i class="fa-sharp fa-solid fa-arrow-right"></i></div>
-                            <div class="swiper-slider-button-next swiper-btn"><i class="fa-sharp fa-solid fa-arrow-left"></i></div>
-                        @endif
                     </div>
                 </section>
             @endif
@@ -312,7 +317,7 @@
             }, introSec);
 
             new Swiper('.home_main_slider .swiper-container', {
-                loop: true,
+                // loop: true,
                 speed:1000,
                 effect: 'fade',
                 slidesPerView: 1,

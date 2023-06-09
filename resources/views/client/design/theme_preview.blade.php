@@ -172,6 +172,16 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-7">
+                                                                <span>{{ __('Banner Height')}}</span>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="form-group">
+                                                                    <input type="number" name="banner_height" id="banner_height" class="form-control" value="{{ isset($settings['banner_height']) ? $settings['banner_height'] : '' }}">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-7">
                                                                 <span>{{ __('Background Color')}}</span>
                                                             </div>
                                                             <div class="col-md-5">

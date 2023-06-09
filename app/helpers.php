@@ -230,6 +230,7 @@
             'search_box_icon_color',
             'read_more_link_color',
             'read_more_link_label',
+            'banner_height',
         ]);
 
         $settings = [];

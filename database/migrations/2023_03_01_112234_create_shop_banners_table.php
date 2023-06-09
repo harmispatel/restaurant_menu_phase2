@@ -18,6 +18,7 @@ class CreateShopBannersTable extends Migration
             $table->integer('shop_id');
             $table->string('key');
             $table->string('display')->nullable();
+            $table->string('background_color')->nullable();
 
             $table->longText('description')->nullable();
             $table->longText('en_description')->nullable();

@@ -53,6 +53,7 @@ class ShopBannerController extends Controller
 
         $description = $request->description;
         $display = $request->display;
+        $background_color = $request->background_color;
         $description_key = $lang_code."_description";
         $image_key = $lang_code."_image";
 
@@ -62,6 +63,7 @@ class ShopBannerController extends Controller
             $banner->shop_id = $shop_id;
             $banner->key = 'shop_banner';
             $banner->display = $display;
+            $banner->background_color = $background_color;
             $banner->description = $description;
             $banner->$description_key = $description;
 
@@ -127,6 +129,7 @@ class ShopBannerController extends Controller
             $default_image = asset('public/client_images/not-found/no_image_1.jpg');
             $banner_image = (isset($banner_details[$banner_image_key]) && !empty($banner_details[$banner_image_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_details[$banner_image_key])) ? asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_details[$banner_image_key]) : $default_image;
             $banner_desc = isset($banner_details[$banner_description_key]) ? $banner_details[$banner_description_key] : '';
+            $background_color = isset($banner_details['background_color']) ? $banner_details['background_color'] : '';
 
             // Dynamic Language Bar
             if(count($additional_languages) > 0)
@@ -183,6 +186,13 @@ class ShopBannerController extends Controller
                                             $html .='>'.$val.'</option>';
                                         }
                                     $html .= '</select>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+
+                            $html .= '<div class="row mb-3">';
+                                $html .= '<div class="col-md-12">';
+                                    $html .= '<label for="display" class="form-label">'.__('Background Color').'</label>';
+                                    $html .= '<input type="color" name="background_color" id="background_color" value="'.$background_color.'" class="form-control">';
                                 $html .= '</div>';
                             $html .= '</div>';
 
@@ -245,6 +255,13 @@ class ShopBannerController extends Controller
 
                             $html .= '<div class="row mb-3">';
                                 $html .= '<div class="col-md-12">';
+                                    $html .= '<label for="display" class="form-label">'.__('Background Color').'</label>';
+                                    $html .= '<input type="color" name="background_color" id="background_color" value="'.$background_color.'" class="form-control">';
+                                $html .= '</div>';
+                            $html .= '</div>';
+
+                            $html .= '<div class="row mb-3">';
+                                $html .= '<div class="col-md-12">';
                                     $html .= '<label for="description" class="form-label">'. __('Description').'</label>';
                                     $html .= '<textarea name="description" id="description" class="form-control">'.$banner_desc.'</textarea>';
                                 $html .= '</div>';
@@ -281,6 +298,7 @@ class ShopBannerController extends Controller
         $banner_id = $request->banner_id;
         $description = $request->description;
         $display = $request->display;
+        $background_color = $request->background_color;
         $active_lang_code = $request->active_lang_code;
         $next_lang_code = $request->next_lang_code;
 
@@ -296,6 +314,7 @@ class ShopBannerController extends Controller
             // Update Banner
             $banner = ShopBanner::find($banner_id);
             $banner->display = $display;
+            $banner->background_color = $background_color;
             $banner->description = $description;
             $banner->$update_description_key = $description;
 
@@ -377,6 +396,7 @@ class ShopBannerController extends Controller
         $default_image = asset('public/client_images/not-found/no_image_1.jpg');
         $banner_image = (isset($banner_details[$banner_image_key]) && !empty($banner_details[$banner_image_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_details[$banner_image_key])) ? asset('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_details[$banner_image_key]) : $default_image;
         $banner_desc = isset($banner_details[$banner_description_key]) ? $banner_details[$banner_description_key] : '';
+        $background_color = isset($banner_details['background_color']) ? $banner_details['background_color'] : '';
 
         // Primary Active Tab
         $primary_active_tab = ($primary_lang_code == $current_lang_code) ? 'active' : '';
@@ -444,6 +464,13 @@ class ShopBannerController extends Controller
 
                         $html .= '<div class="row mb-3">';
                             $html .= '<div class="col-md-12">';
+                                $html .= '<label for="display" class="form-label">'.__('Background Color').'</label>';
+                                $html .= '<input type="color" name="background_color" id="background_color" value="'.$background_color.'" class="form-control">';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="row mb-3">';
+                            $html .= '<div class="col-md-12">';
                                 $html .= '<label for="description" class="form-label">'. __('Description').'</label>';
                                 $html .= '<textarea name="description" id="description" class="form-control">'.$banner_desc.'</textarea>';
                             $html .= '</div>';
@@ -501,6 +528,13 @@ class ShopBannerController extends Controller
 
                         $html .= '<div class="row mb-3">';
                             $html .= '<div class="col-md-12">';
+                                $html .= '<label for="display" class="form-label">'.__('Background Color').'</label>';
+                                $html .= '<input type="color" name="background_color" id="background_color" value="'.$background_color.'" class="form-control">';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
+                        $html .= '<div class="row mb-3">';
+                            $html .= '<div class="col-md-12">';
                                 $html .= '<label for="description" class="form-label">'. __('Description').'</label>';
                                 $html .= '<textarea name="description" id="description" class="form-control">'.$banner_desc.'</textarea>';
                             $html .= '</div>';
@@ -525,6 +559,7 @@ class ShopBannerController extends Controller
 
         $banner_id = $request->banner_id;
         $display = $request->display;
+        $background_color = $request->background_color;
         $description = $request->description;
         $active_lang_code = $request->active_lang_code;
 
@@ -540,6 +575,7 @@ class ShopBannerController extends Controller
             // Update Banner
             $banner = ShopBanner::find($banner_id);
             $banner->display = $display;
+            $banner->background_color = $background_color;
             $banner->description = $description;
             $banner->$update_description_key = $description;
 

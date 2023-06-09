@@ -1882,7 +1882,7 @@
     height:calc(100vh - 100px);
     width: 100%;
     position: relative;
-    background-color:#000;
+    /* background-color:#000; */
     overflow: hidden;
 }
 
