@@ -168,6 +168,10 @@
             toastr.error('{{ Session::get('error') }}')
         @endif
 
+        $(document).ready(function () {
+            window.location.href = "https://www.thesmartqr.gr";
+        });
+
     </script>
 </body>
 </html>
