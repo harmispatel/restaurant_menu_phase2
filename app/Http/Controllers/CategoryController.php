@@ -41,6 +41,10 @@ class CategoryController extends Controller
             }
             else
             {
+                if($uri == 'product_category')
+                {
+                    return redirect()->route('categories');
+                }
                 return redirect()->route('categories')->with('error','This Action is Unauthorized!');
             }
         }
