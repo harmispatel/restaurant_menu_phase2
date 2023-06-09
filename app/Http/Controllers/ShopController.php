@@ -507,7 +507,10 @@ class ShopController extends Controller
                                                 }
                                             $html .= '</ul>';
 
-                                            $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
+                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                                            {
+                                                $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
+                                            }
 
                                             $html .= '</div>';
                                         $html .= '</div>';
@@ -756,7 +759,10 @@ class ShopController extends Controller
                                                 }
                                             $html .= '</ul>';
 
-                                            $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
+                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                                            {
+                                                $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
+                                            }
 
                                             $html .= '</div>';
                                         $html .= '</div>';
@@ -942,7 +948,10 @@ class ShopController extends Controller
                                             }
                                         $html .= '</ul>';
 
-                                        $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
+                                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                                        {
+                                            $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
+                                        }
 
                                         $html .= '</div>';
                                     $html .= '</div>';

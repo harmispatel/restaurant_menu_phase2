@@ -249,7 +249,9 @@
                                                                         @endif
                                                                     @endif
 
-                                                                    <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
+                                                                    @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                                                        <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         @else
@@ -410,7 +412,9 @@
                                                                             @endif
                                                                         @endif
 
-                                                                        <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
+                                                                        @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                                                            <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
                                                             @else
@@ -565,7 +569,9 @@
                                                                 @endif
                                                             @endif
 
-                                                            <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
+                                                            @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                                                <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 @else
