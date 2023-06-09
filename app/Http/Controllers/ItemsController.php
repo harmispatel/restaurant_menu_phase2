@@ -742,11 +742,6 @@ class ItemsController extends Controller
                                                 $html .= '</label>';
                                                 $html .= '<label for="mark_sign" class="form-label">'.__('Recommended').'</label>';
                                             $html .= '</div>';
-                                        $html .= '</div>';
-                                    $html .= '</div>';
-
-                                    $html .= '<div class="form-group mb-3">';
-                                        $html .= '<div class="row">';
                                             $html .= '<div class="col-md-6 day_special mb-2">';
                                                 $html .= '<label class="switch me-2">';
                                                     $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';
@@ -778,8 +773,8 @@ class ItemsController extends Controller
                                                 $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
                                             $html .= '</div>';
                                         $html .= '</div>';
+                                        $html .= '</div>';
                                     $html .= '</div>';
-                                $html .= '</div>';
 
 
                                 $html .= '<div class="form-group mb-3">';
@@ -1054,11 +1049,6 @@ class ItemsController extends Controller
                                                     $html .= '</label>';
                                                     $html .= '<label for="mark_sign" class="form-label">'.__('Recommended').'</label>';
                                                 $html .= '</div>';
-                                            $html .= '</div>';
-                                        $html .= '</div>';
-
-                                        $html .= '<div class="form-group mb-3">';
-                                            $html .= '<div class="row">';
                                                 $html .= '<div class="col-md-6 day_special mb-2">';
                                                     $html .= '<label class="switch me-2">';
                                                         $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';
@@ -1087,8 +1077,8 @@ class ItemsController extends Controller
                                                             $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
                                                         $html .= '</span>';
                                                     $html .= '</label>';
-                                                $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
-                                            $html .= '</div>';
+                                                    $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
+                                                $html .= '</div>';
                                             $html .= '</div>';
                                         $html .= '</div>';
                                     $html .= '</div>';
@@ -1345,11 +1335,6 @@ class ItemsController extends Controller
                                     $html .= '</label>';
                                     $html .= '<label for="mark_sign" class="form-label">'.__('Recommended').'</label>';
                                 $html .= '</div>';
-                            $html .= '</div>';
-                        $html .= '</div>';
-
-                        $html .= '<div class="form-group mb-3">';
-                            $html .= '<div class="row">';
                                 $html .= '<div class="col-md-6 day_special mb-2">';
                                     $html .= '<label class="switch me-2">';
                                         $html .= '<input type="checkbox" id="day_special" name="day_special" value="1" '.$item_day_special.'>';

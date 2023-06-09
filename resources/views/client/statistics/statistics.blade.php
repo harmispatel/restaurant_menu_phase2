@@ -30,7 +30,7 @@
         </div>
         <div class="chart mb-3">
 
-            <canvas id="lineChart"></canvas>
+            <canvas id="lineChart" style="max-height: 400px; display: block; box-sizing: border-box; height: 221px; width: 442px;" width="442" height="221"></canvas>
 
         </div>
 

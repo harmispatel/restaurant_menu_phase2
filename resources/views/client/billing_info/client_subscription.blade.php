@@ -58,7 +58,16 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <code class="fs-5">Your Subscription will Expire In {{ $expire_date }} Days.</code>
+                                            @php
+                                                if($expire_date > 60)
+                                                {
+                                                    $color = 'success';
+                                                }
+                                                else {
+                                                    $color = 'danger';
+                                                }
+                                            @endphp
+                                            <strong class="text-{{ $color }}">Your Subscription will Expire In {{ $expire_date }} Days.</strong>
                                         </td>
                                     </tr>
                                 </tbody>
