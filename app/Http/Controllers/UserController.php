@@ -60,7 +60,7 @@ class UserController extends Controller
     public function clientsList($id="")
     {
         $settings = getAdminSettings();
-        $favourite_client_limit = isset($settings['favourite_client_limit']) ? $settings['favourite_client_limit'] : 5;
+        // $favourite_client_limit = isset($settings['favourite_client_limit']) ? $settings['favourite_client_limit'] : 5;
 
         if(empty($id))
         {
@@ -68,8 +68,23 @@ class UserController extends Controller
         }
         else
         {
-            $data['clients'] = User::with(['hasOneShop','hasOneSubscription'])->where('id',$id)->get();
+            if(is_numeric($id))
+            {
+                $data['clients'] = User::with(['hasOneShop','hasOneSubscription'])->where('id',$id)->get();
+            }
+            else
+            {
+                $data['clients'] = User::with(['hasOneShop','hasOneSubscription'])->whereHas('hasOneSubscription', function($q) use ($id){
+                    $q->whereHas('subscription', function($r) use ($id)
+                    {
+                        $r->where('name',$id);
+                    });
+                })->get();
+            }
         }
+
+        $data['filter_id'] = $id;
+        $data['subscriptions'] = Subscriptions::where('status',1)->get();
 
         return view('admin.clients.clients_list',$data);
     }

@@ -47,6 +47,23 @@
                 </div>
             @endif
 
+            <div class="col-md-12 mb-2">
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <select name="subscription" id="subscription" class="form-select">
+                            <option value=""> -- Filter By Subscriptions -- </option>
+                            @if(count($subscriptions) > 0)
+                                @foreach ($subscriptions as $subscription)
+                                    <option value="{{ $subscription->name }}" {{ ($subscription->name == $filter_id) ? 'selected' : '' }}>{{ $subscription->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             {{-- Clients Card --}}
             <div class="col-md-12">
                 <div class="card">
@@ -227,6 +244,13 @@
             });
         }
 
+
+        // Function for Subscriptions Filter
+        $('#subscription').on('change',function(){
+            var sub_name = $(this).val();
+            var redirectRoute = "{{ route('clients.list') }}"+'/'+sub_name;
+            window.location.href = redirectRoute;
+        })
 
     </script>
 @endsection
