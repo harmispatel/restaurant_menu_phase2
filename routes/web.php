@@ -312,8 +312,8 @@ Route::post('total-with-currency',function(Request $request)
 })->name('total.with.currency');
 
 // Shops
-Route::get('/{shop_slug}/{catID?}',[ShopController::class,'index'])->name('restaurant')->where('shop_slug','[a-z]+');
-Route::get('{shop_slug}/items/{catID}',[ShopController::class,'itemPreview'])->name('items.preview')->where('shop_slug','[a-z]+');
+Route::get('/{shop_slug}/{catID?}',[ShopController::class,'index'])->name('restaurant')->where('shop_slug','[a-z-]+');
+Route::get('{shop_slug}/items/{catID}',[ShopController::class,'itemPreview'])->name('items.preview')->where('shop_slug','[a-z-]+');
 Route::post('shop-locale-change',[ShopController::class,'changeShopLocale'])->name('shop.locale.change');
 Route::post('search-shop-categories',[ShopController::class,'searchCategories'])->name('shop.categories.search');
 Route::post('search-shop-items',[ShopController::class,'searchItems'])->name('shop.items.search');

@@ -42,7 +42,7 @@ class ClientRequest extends FormRequest
         {
             $rules += [
                 'email' => 'required|email|unique:users,email',
-                'shop_url' => 'required|regex:/^[a-zA-Z]+$/|unique:shops,shop_slug',
+                'shop_url' => 'required|regex:/^[a-zA-Z-]+$/|unique:shops,shop_slug',
                 'password' => 'required|min:6',
                 'confirm_password' => 'required|same:password',
                 'primary_language' => 'required',
