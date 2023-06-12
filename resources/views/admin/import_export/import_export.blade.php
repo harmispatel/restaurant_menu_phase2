@@ -95,27 +95,36 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title p-0">
-                            <h2>Instructions</h2>
+                            <h2>{{ __('Instructions') }}</h2>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <ul style="list-style: none;padding: 0; margin: 0;" class="text-muted">
-                                    <li class="fw-bold">For Menu With Only Root Categories.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> In PARENT field (Cell B2) add 0 in PARENT NAME field (Cell C2) leave it blank.</li>
+                                    <li class="fw-bold">{{ __('Simple Menu Without Sub Categories.') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('Below PARENT field (Cell B2) insert 0.') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('Below PARENT NAME field (Cell C2) leave it blank.') }}</li>
                                     <br>
 
-                                    <li class="fw-bold">For Menu With Parent Categories for HOTELS or LARGE MENUS.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> It is mandatory to write bellow TYPE field (Cell A2) The Element Type.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Is also mandatory to write bellow PARENT (Cell B2) ONLY values of 1 or 0.
+                                    <li class="fw-bold">{{ __('Menu With Sub Categories for HOTELS or LARGE MENUS.') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('It is mandatory to insert below TYPE field (Cell A2) The Element Type.') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('It Is also mandatory to insert below PARENT (Cell B2) ONLY values of 1 or 0.') }}
                                         <ol class="ms-3" type="a">
-                                            <li>For parent category write 1 (Cell B2).</li>
-                                            <li>For NOT Parent write 0 (Cell B2).</li>
+                                            <li>{{ __('For Main Category insert 1 (Cell B2).') }}</li>
+                                            <li>{{ __('For Sub Category insert 0 (Cell B2).') }}</li>
                                         </ol>
                                     </li>
                                     <br>
 
-                                    <li class="fw-bold">For TYPE field, there are only 7 Types of Elements.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Available Element Types :
+                                    <li class="fw-bold">{{ __('Sub Categories') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('It is mandatory to insert the name* of the Primary Category to which it belongs, below PARENT NAME (Cell C2).') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('*English Language (Cell A4 0r B4)') }}</li>
+                                    <br>
+
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('Items will be inserted ONLY in Main Categories & Sub Categories') }}</li>
+                                    <br>
+
+                                    <li class="fw-bold">{{ __('For TYPE field, there are only 7 Types of Elements.') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('Available Element Types:') }}
                                         <ol class="ms-3">
                                             <li>parent_category</li>
                                             <li>product_category</li>
@@ -128,28 +137,19 @@
                                     </li>
                                     <br>
 
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> For Child Category it is mandatory the Parent Category Name (from English Language) (Cell A4 0r B4) bellow PARENT NAME (Cell C2).</li>
+                                    <li class="fw-bold">{{ __('Other Pages') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('To create a page, insert: page in TYPE field (Cell A2).') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('To create a PDF page, insert: pdf_page in TYPE field (Cell A2).') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('To create an Image Gallery Page, insert: gallery in TYPE field (Cell A2).') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('To create a Check-In Page, insert: check_in in TYPE field (Cell A2).') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('To create a Link Page, insert: link in TYPE field (Cell A2). You can also insert the link bellow LINK field (Cell D2).') }}</li>
                                     <br>
 
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Items will be inserted ONLY if your category is a category or a child category.</li>
-                                    <br>
-
-                                    <li class="fw-bold">Other Pages</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add a page, type: page in TYPE field (Cell A2).</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add PDF page, type: pdf_page in TYPE field (Cell A2).</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add Image Gallery Page, type: gallery in TYPE field (Cell A2).</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add CheckIn Page, type: check_in in TYPE field (Cell A2).</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> To add Link Page, type: link in TYPE field (Cell A2). You can also add the link bellow LINK field (Cell D2).</li>
-                                    <br>
-
-                                    <li class="fw-bold">To Import</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Data in Excel file should be in the same format as the DEMO Excel file!</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Before Import Your CSV Click on Download Demo CSV Button and Check DEMO CSV.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> Before Import Catalogue Select Client Shop & Delete Old Catalogue if any.</li>
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> After Delete Catalogue Select Client Shop Then Choose CSV File & Click on Import Button.</li>
-                                    <br>
-
-                                    <li><i class="bi bi-arrow-right-circle text-success"></i> And if category is parent and not-child(root) then don't write anything in Parent Name leave it blank.</li>
+                                    <li class="fw-bold">{{ __('To Import') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('Data in Excel file should be in the same format as the DEMO Excel file!') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('Before Import Your CSV Click on Download Demo CSV Button and Check DEMO CSV.') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('Before Import Catalogue Choose the correct business! Then Delete Old Catalogue if any.') }}</li>
+                                    <li><i class="bi bi-arrow-right-circle text-success"></i> {{ __('After Delete Catalogue Choose the correct business! Then Choose CSV File & Click on Import Button.') }}</li>
                                 </ul>
                             </div>
                         </div>
