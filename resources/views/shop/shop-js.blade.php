@@ -137,14 +137,14 @@
                 var checkbox_array = $('input[name="option_price_checkbox_'+opt_key+'"]:checked').map(function () {
                     if(this.value)
                     {
-                        checkbox_price += parseInt(this.value);
+                        checkbox_price += parseFloat(this.value);
                     }
                 }).get();
-                radio_price += parseInt(inner_radio);
+                radio_price += parseFloat(inner_radio);
             });
         }
 
-        base_price = (parseInt(base_price) + parseInt(radio_price) + parseInt(checkbox_price)) * parseInt(quantity);
+        base_price = (parseFloat(base_price) + parseFloat(radio_price) + parseFloat(checkbox_price)) * parseInt(quantity);
         base_price = base_price.toFixed(2);
 
         // Get Total with Currency

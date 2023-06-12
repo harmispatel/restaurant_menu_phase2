@@ -139,15 +139,17 @@ class PaypalController extends Controller
         $amount = new Amount();
         $amount->setCurrency($currency);
 
+        $final_amount = number_format($final_amount,2);
+
         if($discount_per > 0)
         {
             $discount_amount = ($final_amount * $discount_per) / 100;
-            $total = $final_amount - $discount_amount;
+            $total = number_format($final_amount - $discount_amount,2);
 
             $amount->setTotal($total);
             $amount->setDetails( new Details([
                 'subtotal' => $final_amount,
-                'discount' => $discount_amount,
+                'discount' => number_format($discount_amount,2),
                 'currency' => $currency,
             ]));
         }
@@ -155,7 +157,6 @@ class PaypalController extends Controller
         {
             $amount->setTotal($final_amount);
         }
-
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)->setItemList($item_list)->setDescription('Your transaction description')->setInvoiceNumber(uniqid());
