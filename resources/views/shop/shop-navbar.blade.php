@@ -56,9 +56,9 @@
                 @elseif ($logo_position == 'left')
                     <a class="navbar-brand m-0" href="{{ route('restaurant',$shop_details['shop_slug']) }}">
                         @if(!empty($shop_logo) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo))
-                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo) }}" width="160">
+                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo) }}" height="45">
                         @else
-                            <img src="{{ $default_logo }}" width="160">
+                            <img src="{{ $default_logo }}" height="45">
                         @endif
                     </a>
                 @elseif ($search_box_position == 'left')
@@ -81,9 +81,9 @@
                 @if($logo_position == 'center')
                     <a class="navbar-brand m-0" href="{{ route('restaurant',$shop_details['shop_slug']) }}">
                         @if(!empty($shop_logo) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo))
-                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo) }}" width="160">
+                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo) }}" height="45">
                         @else
-                            <img src="{{ $default_logo }}" width="160">
+                            <img src="{{ $default_logo }}" height="45">
                         @endif
                     </a>
                 @elseif ($search_box_position == 'center')
@@ -135,9 +135,9 @@
                 @elseif ($logo_position == 'right')
                     <a class="navbar-brand m-0" href="{{ route('restaurant',$shop_details['shop_slug']) }}">
                         @if(!empty($shop_logo) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo))
-                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo) }}" width="160">
+                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo) }}" height="45">
                         @else
-                            <img src="{{ $default_logo }}" width="160">
+                            <img src="{{ $default_logo }}" height="45">
                         @endif
                     </a>
                 @elseif ($search_box_position == 'right')
@@ -191,9 +191,9 @@
                 </div>
                 <a class="navbar-brand m-0" href="{{ route('restaurant',$shop_details['shop_slug']) }}">
                     @if(!empty($shop_logo) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo))
-                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo) }}" width="160">
+                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$shop_logo) }}" height="45">
                     @else
-                        <img src="{{ $default_logo }}" width="160">
+                        <img src="{{ $default_logo }}" height="45">
                     @endif
                 </a>
                 <div>

@@ -73,23 +73,23 @@
                             <div class="col-md-4">
                                 <select name="checkout_type" id="checkout_type" class="form-control">
                                     @if(isset($order_settings['delivery']) && $order_settings['delivery'] == 1)
-                                        <option value="delivery" {{ ($current_check_type == 'delivery') ? 'selected' : '' }}>Delivery</option>
+                                        <option value="delivery" {{ ($current_check_type == 'delivery') ? 'selected' : '' }}>{{ __('Delivery') }}</option>
                                     @endif
                                     @if(isset($order_settings['takeaway']) && $order_settings['takeaway'] == 1)
-                                        <option value="takeaway" {{ ($current_check_type == 'takeaway') ? 'selected' : '' }}>Takeaway</option>
+                                        <option value="takeaway" {{ ($current_check_type == 'takeaway') ? 'selected' : '' }}>{{ __('Takeaway') }}</option>
                                     @endif
                                     @if(isset($order_settings['room_delivery']) && $order_settings['room_delivery'] == 1)
-                                        <option value="room_delivery" {{ ($current_check_type == 'room_delivery') ? 'selected' : '' }}>Room Delivery</option>
+                                        <option value="room_delivery" {{ ($current_check_type == 'room_delivery') ? 'selected' : '' }}>{{ __('Room Delivery') }}</option>
                                     @endif
                                     @if(isset($order_settings['table_service']) && $order_settings['table_service'] == 1)
-                                        <option value="table_service" {{ ($current_check_type == 'table_service') ? 'selected' : '' }}>Table Service</option>
+                                        <option value="table_service" {{ ($current_check_type == 'table_service') ? 'selected' : '' }}>{{ __('Table Service') }}</option>
                                     @endif
                                 </select>
                             </div>
                         @endif
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body view_cart">
                     <div class="row mb-2">
                         <div class="col-md-12">
                             @forelse ($cart as $cart_val)
@@ -109,11 +109,67 @@
                                 @endphp
 
                                 <div class="row align-items-center">
-                                    <div class="col-md-6">
-                                        <div class="cart-media">
+                                    <div class="col-md-3">
+                                        <a class="d-block text-dark text-decoration-none" style="font-size:1.4rem;"><b>{{ $item_name }}</b></a>
+                                        <img src="{{ $item_image }}" class="w-25">
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        @if(!empty($item_price_label))
+                                            {{ $item_price_label }} -
+                                        @endif
+                                        {{ $item_price }}
+                                    </div>
+                                    <div class="col-md-3 text-center mt-1">
+                                        <div class="row">
+                                            @if(count($categories_data) > 0)
+                                                <div class="col-md-12">
+                                                    <strong>{{ __('Order Options') }}</strong>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <ul class="my-0 list-unstyled">
+                                                        @foreach ($categories_data as $option_id)
+                                                            @php
+                                                                $my_opt = $option_id;
+                                                            @endphp
+
+                                                            @if(is_array($my_opt))
+                                                                @if(count($my_opt) > 0)
+                                                                    @foreach ($my_opt as $optid)
+                                                                        @php
+                                                                            $opt_price_dt = App\Models\OptionPrice::where('id',$optid)->first();
+                                                                            $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                            $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                        @endphp
+                                                                        <li style="font-size: 14px">
+                                                                            @if(!empty($opt_price_name))
+                                                                                {{ $opt_price_name }} -
+                                                                            @endif
+                                                                            {{ $opt_price }}
+                                                                        </li>
+                                                                    @endforeach
+                                                                @endif
+                                                            @else
+                                                                @php
+                                                                    $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->first();
+                                                                    $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                    $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                @endphp
+                                                                <li style="font-size: 14px">
+                                                                    @if(!empty($opt_price_name))
+                                                                        {{ $opt_price_name }} -
+                                                                    @endif
+                                                                    {{ $opt_price }}
+                                                                </li>
+                                                            @endif
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        {{-- <div class="cart-media">
                                             <img src="{{ $item_image }}" width="100" height="100">
                                             <div class="media-body ms-3">
-                                                <a class="d-block text-dark text-decoration-none fs-2"><b>{{ $item_name }}</b></a>
+                                                <a class="d-block text-dark text-decoration-none" style="font-size:1.4rem;"><b>{{ $item_name }}</b></a>
                                                 @if(count($categories_data) > 0)
                                                     <ul class="my-2">
                                                         @foreach ($categories_data as $option_id)
@@ -154,21 +210,15 @@
                                                     </ul>
                                                 @endif
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
-                                    <div class="col-md-2 text-center">
-                                        @if(!empty($item_price_label))
-                                            <b>{{ $item_price_label }} - </b>
-                                        @endif
-                                        {{ $item_price }}
-                                    </div>
-                                    <div class="col-md-2 text-center">
-                                        <b>{{ __('Sub Total') }} : </b>{{ $cart_val['total_amount_text'] }}
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="d-flex align-items-center qty-m-view">
-                                            <input type="number" onchange="updateCart({{ $cart_val['item_id'] }},this)" class="form-control me-2 text-center" value="{{ $cart_val['quantity'] }}" old-qty="{{ $cart_val['quantity'] }}">
-                                            <a onclick="removeCartItem({{ $cart_val['item_id'] }})" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                                    <div class="col-md-4">
+                                        <div class="view_cart_qty d-flex align-items-center justify-content-between">
+                                            <div class="d-flex w-100"><b>{{ __('Value') }} : </b>&nbsp;{{ $cart_val['total_amount_text'] }}</div>
+                                            <div class="d-flex align-items-center justify-content-end qty-m-view">
+                                                <input type="number" onchange="updateCart({{ $cart_val['item_id'] }},this)" class="form-control me-2 text-center" value="{{ $cart_val['quantity'] }}" old-qty="{{ $cart_val['quantity'] }}">
+                                                <a onclick="removeCartItem({{ $cart_val['item_id'] }})" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

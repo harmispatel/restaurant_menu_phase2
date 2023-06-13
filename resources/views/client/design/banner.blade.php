@@ -35,7 +35,7 @@
                             <div class="col-md-12">
                                 <label for="image" class="form-label">{{ __('Image') }}</label>
                                 <input type="file" name="image" id="image" class="form-control">
-                                <code>{{ __('Banner Dimensions (1920*300)') }}</code>
+                                <code>{{ __('Banner Dimensions (1140*300)') }}</code>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -709,6 +709,34 @@
                 }
             });
 
+        }
+
+
+        // Function for Delete Banner Image
+        function deleteBannerImage(bannerID,languageCode)
+        {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('banners.delete.image') }}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "lang_code" : languageCode,
+                    "banner_id" : bannerID,
+                },
+                dataType: "JSON",
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        toastr.success(response.message);
+                        $('.banner-img').remove();
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                    }
+                }
+            });
         }
 
     </script>

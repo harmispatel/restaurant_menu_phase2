@@ -300,7 +300,7 @@
     "Payment Methods" : "Payment Methods",
     "Select Your Payment Method" : "Select Your Payment Method",
     "For bank transfer subscriptions contact" : "For bank transfer subscriptions contact",
-    "Banner Dimensions (1920*300)" : "Banner Dimensions (1920*300)",
+    "Banner Dimensions (1140*300)" : "Banner Dimensions (1140*300)",
     "Send":"Send",
     "Support mails":"Support mails",
     "Support Mail Form":"Support Mail Form",
@@ -440,5 +440,9 @@
     "Data in Excel file should be in the same format as the DEMO Excel file!": "Data in Excel file should be in the same format as the DEMO Excel file!",
     "Before Import Your CSV Click on Download Demo CSV Button and Check DEMO CSV.": "Before Import Your CSV Click on Download Demo CSV Button and Check DEMO CSV.",
     "Before Import Catalogue Choose the correct business! Then Delete Old Catalogue if any.": "Before Import Catalogue Choose the correct business! Then Delete Old Catalogue if any.",
-    "After Delete Catalogue Choose the correct business! Then Choose CSV File & Click on Import Button.": "After Delete Catalogue Choose the correct business! Then Choose CSV File & Click on Import Button."
+    "After Delete Catalogue Choose the correct business! Then Choose CSV File & Click on Import Button.": "After Delete Catalogue Choose the correct business! Then Choose CSV File & Click on Import Button.",
+
+    "Order Options": "Order Options",
+    "Value": "Value",
+    "Add It": "Add It"
 }

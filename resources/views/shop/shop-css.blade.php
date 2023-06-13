@@ -163,7 +163,7 @@
             }
 
             .shop-main{
-                margin-top: 55px;
+                margin-top: 90px;
             }
         @endif
 

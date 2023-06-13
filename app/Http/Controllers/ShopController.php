@@ -1265,7 +1265,7 @@ class ShopController extends Controller
 
                                             if(count($option_prices) > 0)
                                             {
-                                                $html .= '<div class="col-md-12">';
+                                                $html .= '<div class="col-md-12 mb-2">';
                                                     $html .= '<b>'.$opt_dt[$title_key].'</b>';
                                                 $html .= '</div>';
 
@@ -1304,29 +1304,34 @@ class ShopController extends Controller
 
                         if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
                         {
-                            $html .= '<div class="row">';
-                                $html .= '<div class="col-md-4">';
-                                    $html .= '<div class="input-group" style="width:130px">';
-                                        $html .= '<span class="input-group-btn">';
-                                            $html .= '<button type="button" class="btn btn-danger btn-number" disabled="disabled" data-type="minus" onclick="QuntityIncDec(this)" data-field="quant[1]" style="border-radius:5px 0 0 5px">';
-                                                $html .= '<span class="fa fa-minus"></span>';
-                                            $html .= '</button>';
-                                        $html .= '</span>';
-                                        $html .= '<input type="text" name="quant[1]" id="quantity" onchange="QuntityIncDecOnChange(this)" class="form-control input-number" value="1" min="1" max="1000">';
-                                        $html .= '<span class="input-group-btn">';
-                                            $html .= '<button type="button" onclick="QuntityIncDec(this)" class="btn btn-success btn-number" data-type="plus" data-field="quant[1]" style="border-radius:0 5px 5px 0">';
-                                                $html .= '<span class="fa fa-plus"></span>';
-                                            $html .= '</button>';
-                                        $html .= '</span>';
+                            $html .= '<div class="col-md-12 cart-price">';
+                                $html .= '<div class="row p-3">';
+                                    $html .= '<div class="col-md-12">';
+                                        $html .= '<div class="d-flex align-items-center justify-content-between">';
+                                            $html .= '<div class="input-group" style="width:130px">';
+                                                $html .= '<span class="input-group-btn">';
+                                                    $html .= '<button type="button" class="btn btn-danger btn-number" disabled="disabled" data-type="minus" onclick="QuntityIncDec(this)" data-field="quant[1]" style="border-radius:5px 0 0 5px">';
+                                                        $html .= '<span class="fa fa-minus"></span>';
+                                                    $html .= '</button>';
+                                                $html .= '</span>';
+                                                $html .= '<input type="text" name="quant[1]" id="quantity" onchange="QuntityIncDecOnChange(this)" class="form-control input-number" value="1" min="1" max="1000">';
+                                                $html .= '<span class="input-group-btn">';
+                                                    $html .= '<button type="button" onclick="QuntityIncDec(this)" class="btn btn-success btn-number" data-type="plus" data-field="quant[1]" style="border-radius:0 5px 5px 0">';
+                                                        $html .= '<span class="fa fa-plus"></span>';
+                                                    $html .= '</button>';
+                                                $html .= '</span>';
+                                            $html .= '</div>';
+                                            $html .= '<a class="btn btn-primary" onclick="addToCart('.$item['id'].')"><i class="bi bi-cart4"></i> '.__('Add It').'</a>';
+                                        $html .= '</div>';
                                     $html .= '</div>';
                                 $html .= '</div>';
                             $html .= '</div>';
 
-                            $html .= '<div class="row">';
-                                $html .= '<div class="col-md-12 text-center mt-3">';
-                                    $html .= '<a class="btn btn-primary" onclick="addToCart('.$item['id'].')"><i class="bi bi-cart4"></i> '.__('Add to Cart').'</a>';
-                                $html .= '</div>';
-                            $html .= '</div>';
+                            // $html .= '<div class="row">';
+                            //     $html .= '<div class="col-md-12 text-center mt-3">';
+                            //         $html .= '<a class="btn btn-primary" onclick="addToCart('.$item['id'].')"><i class="bi bi-cart4"></i> '.__('Add It').'</a>';
+                            //     $html .= '</div>';
+                            // $html .= '</div>';
                         }
 
                     }

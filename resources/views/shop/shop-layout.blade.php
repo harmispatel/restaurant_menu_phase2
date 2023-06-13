@@ -40,7 +40,7 @@
     @include('shop.shop-navbar')
 
     {{-- Main Content --}}
-    <main id="main" class="main shop-main py-3">
+    <main id="main" class="main shop-main">
         @yield('content')
     </main>
 

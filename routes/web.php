@@ -177,7 +177,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/banners-delete', [ShopBannerController::class,'destroy'])->name('banners.delete');
         Route::post('/banners-edit', [ShopBannerController::class,'edit'])->name('banners.edit');
         Route::post('/banners-update', [ShopBannerController::class,'update'])->name('banners.update');
-        Route::get('/banners-image-delete/{key}', [ShopBannerController::class,'deleteBanner'])->name('banners.delete.image');
+        Route::post('/banners-image-delete', [ShopBannerController::class,'deleteBanner'])->name('banners.delete.image');
         Route::post('update-banners-by-lang',[ShopBannerController::class,'updateByLangCode'])->name('banners.update-by-lang');
 
         Route::get('/design-general-info', [DesignController::class,'generalInfo'])->name('design.general-info');

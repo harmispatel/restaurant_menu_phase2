@@ -165,9 +165,13 @@ class ShopBannerController extends Controller
                                 $html .= '<div class="col-md-12">';
                                     $html .= '<label for="image" class="form-label">'. __('Image') .'</label>';
                                     $html .= '<input type="file" name="image" id="image" class="form-control">';
-                                    $html .= '<code>'.__('Banner Dimensions (1920*300)').'</code>';
-                                    $html .= '<div>';
-                                        $html .= '<img src='.$banner_image.' class="mt-2" width="120">';
+                                    $html .= '<code>'.__('Banner Dimensions (1140*300)').'</code>';
+                                    $html .= '<div class="position-relative mt-2 banner-img">';
+                                        $html .= '<img src='.$banner_image.' class="" width="160">';
+                                        if(isset($banner_details[$banner_image_key]) && !empty($banner_details[$banner_image_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_details[$banner_image_key]))
+                                        {
+                                            $html .= '<a onclick="deleteBannerImage('.$banner_id.',\''.$primary_lang_code.'\')" class="btn btn-sm btn-danger position-absolute" style="top:0;left:0"><i class="bi bi-trash"></i></a>';
+                                        }
                                     $html .= '</div>';
                                 $html .= '</div>';
                             $html .= '</div>';
@@ -229,9 +233,13 @@ class ShopBannerController extends Controller
                                 $html .= '<div class="col-md-12">';
                                     $html .= '<label for="image" class="form-label">'. __('Image') .'</label>';
                                     $html .= '<input type="file" name="image" id="image" class="form-control">';
-                                    $html .= '<code>'.__('Banner Dimensions (1920*300)').'</code>';
-                                    $html .= '<div>';
-                                        $html .= '<img src='.$banner_image.' class="mt-2" width="120">';
+                                    $html .= '<code>'.__('Banner Dimensions (1140*300)').'</code>';
+                                    $html .= '<div class="position-relative mt-2 banner-img">';
+                                        $html .= '<img src='.$banner_image.' class="" width="160">';
+                                        if(isset($banner_details[$banner_image_key]) && !empty($banner_details[$banner_image_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_details[$banner_image_key]))
+                                        {
+                                            $html .= '<a onclick="deleteBannerImage('.$banner_id.',\''.$primary_lang_code.'\')" class="btn btn-sm btn-danger position-absolute" style="top:0;left:0"><i class="bi bi-trash"></i></a>';
+                                        }
                                     $html .= '</div>';
                                 $html .= '</div>';
                             $html .= '</div>';
@@ -438,9 +446,13 @@ class ShopBannerController extends Controller
                             $html .= '<div class="col-md-12">';
                                 $html .= '<label for="image" class="form-label">'. __('Image') .'</label>';
                                 $html .= '<input type="file" name="image" id="image" class="form-control">';
-                                $html .= '<code>'.__('Banner Dimensions (1920*300)').'</code>';
-                                $html .= '<div>';
-                                    $html .= '<img src='.$banner_image.' class="mt-2" width="120">';
+                                $html .= '<code>'.__('Banner Dimensions (1140*300)').'</code>';
+                                $html .= '<div class="position-relative mt-2 banner-img">';
+                                    $html .= '<img src='.$banner_image.' class="" width="160">';
+                                    if(isset($banner_details[$banner_image_key]) && !empty($banner_details[$banner_image_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_details[$banner_image_key]))
+                                    {
+                                        $html .= '<a onclick="deleteBannerImage('.$banner_id.',\''.$current_lang_code.'\')" class="btn btn-sm btn-danger position-absolute" style="top:0;left:0"><i class="bi bi-trash"></i></a>';
+                                    }
                                 $html .= '</div>';
                             $html .= '</div>';
                         $html .= '</div>';
@@ -502,9 +514,13 @@ class ShopBannerController extends Controller
                             $html .= '<div class="col-md-12">';
                                 $html .= '<label for="image" class="form-label">'. __('Image') .'</label>';
                                 $html .= '<input type="file" name="image" id="image" class="form-control">';
-                                $html .= '<code>'.__('Banner Dimensions (1920*300)').'</code>';
-                                $html .= '<div>';
-                                    $html .= '<img src='.$banner_image.' class="mt-2" width="120">';
+                                $html .= '<code>'.__('Banner Dimensions (1140*300)').'</code>';
+                                $html .= '<div class="position-relative mt-2 banner-img">';
+                                    $html .= '<img src='.$banner_image.' class="" width="160">';
+                                    if(isset($banner_details[$banner_image_key]) && !empty($banner_details[$banner_image_key]) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$banner_details[$banner_image_key]))
+                                    {
+                                        $html .= '<a onclick="deleteBannerImage('.$banner_id.',\''.$current_lang_code.'\')" class="btn btn-sm btn-danger position-absolute" style="top:0;left:0"><i class="bi bi-trash"></i></a>';
+                                    }
                                 $html .= '</div>';
                             $html .= '</div>';
                         $html .= '</div>';
@@ -615,30 +631,45 @@ class ShopBannerController extends Controller
 
 
     // Delete Banner Image
-    public function deleteBanner($key)
+    public function deleteBanner(Request $request)
     {
-        $clientID = isset(Auth::user()->id) ? Auth::user()->id : '';
-        $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
-        $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
-        $image_key = $key."_image";
+        $language_code = $request->lang_code;
+        $banner_id = $request->banner_id;
+        $shop_id = (isset(Auth::user()->hasOneShop['shop']->id)) ? Auth::user()->hasOneShop['shop']->id : '';
+        $shop_slug = (isset(Auth::user()->hasOneShop['shop']->shop_slug)) ? Auth::user()->hasOneShop['shop']->shop_slug : '';
+        $image_key = $language_code."_image";
 
-        $get_banner = ShopBanner::where('shop_id',$shop_id)->where('key','shop_banner')->first();
-        $setting_id = isset($get_banner->id) ? $get_banner->id : '';
-        $lang_bannner = isset($get_banner[$image_key]) ? $get_banner[$image_key] : '';
-
-        if(!empty($lang_bannner) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$lang_bannner))
+        try
         {
-            unlink('public/client_uploads/shops/'.$shop_slug.'/banners/'.$lang_bannner);
-        }
+            $banner = ShopBanner::find($banner_id);
 
-        if(!empty($setting_id))
+            if($banner)
+            {
+                $lang_bannner = isset($banner[$image_key]) ? $banner[$image_key] : '';
+
+                if(!empty($lang_bannner) && file_exists('public/client_uploads/shops/'.$shop_slug.'/banners/'.$lang_bannner))
+                {
+                    unlink('public/client_uploads/shops/'.$shop_slug.'/banners/'.$lang_bannner);
+                }
+
+                $banner->image = "";
+                $banner->$image_key = "";
+                $banner->update();
+            }
+
+            return response()->json([
+                'success' => 1,
+                'message' => 'Banner Image has been Removed SuccessFully...',
+            ]);
+
+        }
+        catch (\Throwable $th)
         {
-            $banner = ShopBanner::find($setting_id);
-            $banner->$image_key = "";
-            $banner->update();
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
         }
-
-        return redirect()->route('design.banner')->with('success','Banner has been Removed SuccessFully...');
 
     }
 
