@@ -20,6 +20,8 @@
     // Auto Print
     $auto_print = (isset($order_setting['auto_print']) && !empty($order_setting['auto_print'])) ? $order_setting['auto_print'] : 0;
     $enable_print = (isset($order_setting['enable_print']) && !empty($order_setting['enable_print'])) ? $order_setting['enable_print'] : 0;
+    // Print Font Size
+    $printFontSize = (isset($order_setting['print_font_size']) && !empty($order_setting['print_font_size'])) ? $order_setting['print_font_size'] : 20;
 
 
     // Shop Currency
@@ -360,6 +362,7 @@
     <script type="text/javascript">
 
         var enablePrint = "{{ $enable_print }}";
+        var printFontSize = "{{ $printFontSize }}";
 
         toastr.options = {
             "closeButton": true,
@@ -404,6 +407,7 @@
                                 $('#print-data').html('');
                                 $('#print-data').append(response.data);
                                 $('#print-data').show();
+                                $('.ord-rec-body').attr('style','font-size:'+printFontSize+'px;')
 
                                 html2canvas(document.getElementById('print-data'), { scale: 5 }).then(function (canvas)
                                 {
