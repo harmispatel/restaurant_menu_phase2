@@ -1579,7 +1579,7 @@ class ShopController extends Controller
 
             if(isset($cart[$item_id]))
             {
-                $new_amount = $total_amount / $quantity;
+                $new_amount = $total_amount;
                 $quantity = $quantity + $cart[$item_id]['quantity'];
                 $total_amount = $total_amount + $new_amount;
                 $total_amount_text = Currency::currency($currency)->format($total_amount);
