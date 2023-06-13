@@ -146,6 +146,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('search-items',[ItemsController::class,'searchItems'])->name('items.search');
         Route::post('edit-items',[ItemsController::class,'edit'])->name('items.edit');
         Route::post('update-items',[ItemsController::class,'update'])->name('items.update');
+        Route::post('update-items-by-lang',[ItemsController::class,'updateByLangCode'])->name('items.update.by.lang');
         Route::post('sorting-items',[ItemsController::class,'sorting'])->name('items.sorting');
         Route::post('delete-price-items',[ItemsController::class,'deleteItemPrice'])->name('items.delete.price');
         Route::get('delete-items-image/{id}',[ItemsController::class,'deleteItemImage'])->name('items.delete.image');

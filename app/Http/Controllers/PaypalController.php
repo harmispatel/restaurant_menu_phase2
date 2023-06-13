@@ -221,7 +221,7 @@ class PaypalController extends Controller
         $shop_logo = '<img src="'.$shop_logo.'" width="100">';
 
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
-        $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
+        $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
 
         $shop_settings = getClientSettings($shop_id);
 

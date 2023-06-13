@@ -1419,7 +1419,7 @@ class ShopController extends Controller
         $shop_logo = '<img src="'.$shop_logo.'" width="100">';
 
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
-        $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
+        $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
         $client_email = (isset($shop_user->user['email']) && !empty($shop_user->user['email'])) ? $shop_user->user['email'] : '';
 
 
@@ -1994,7 +1994,7 @@ class ShopController extends Controller
         $orders_mail_form_customer = (isset($shop_settings['orders_mail_form_customer'])) ? $shop_settings['orders_mail_form_customer'] : '';
 
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
-        $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
+        $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
 
         if($payment_method == 'cash')
         {

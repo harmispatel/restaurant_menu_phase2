@@ -1586,6 +1586,10 @@
         margin: 10px 0;
       }
 
+      .home_main_slider .swiper-slide p{
+          font-size:13px;
+      }
+
       #itemDetailsModal .cart-price .col-md-6{
         text-align: left!important;
       }
@@ -1662,9 +1666,9 @@
         text-align: center;
       }
 
-      .home_main_slider{
-        height:250px!important;
-      }
+      /*.home_main_slider{*/
+      /*  height:250px!important;*/
+      /*}*/
 
       .home_main_slider .swiper-slide .swiper-text{
         font-size:10px;
@@ -2156,3 +2160,6 @@ span.qty-number {
     font-size: 24px;
 }
 
+.home_main_slider .swiper-slide p{
+    margin:0;
+}

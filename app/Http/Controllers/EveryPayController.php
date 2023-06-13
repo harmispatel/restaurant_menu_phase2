@@ -131,7 +131,7 @@ class EveryPayController extends Controller
                 $orders_mail_form_customer = (isset($shop_settings['orders_mail_form_customer'])) ? $shop_settings['orders_mail_form_customer'] : '';
 
                 $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
-                $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : '';
+                $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
 
                 // Ip Address
                 $user_ip = $request->ip();

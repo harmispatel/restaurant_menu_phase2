@@ -41,7 +41,7 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="type" class="form-label">{{ __('Type')}}</label>
-                                <select name="type" id="type" onchange="togglePrice('add')" class="form-control">
+                                <select name="type" id="type" onchange="togglePrice('addItemModal')" class="form-control">
                                     <option value="1">{{ __('Product')}}</option>
                                     <option value="2">{{ __('Divider')}}</option>
                                 </select>
@@ -92,14 +92,14 @@
                         </div>
                         <div class="row mb-4 priceDiv price_div justify-content-end">
                             <div class="col-md-3">
-                                <a onclick="addPrice('add')" class="btn addPriceBtn btn-info text-white">{{ __('Add Price')}}</a>
+                                <a onclick="addPrice('addItemModal')" class="btn addPriceBtn btn-info text-white">{{ __('Add Price')}}</a>
                             </div>
                         </div>
 
                         {{-- More Details --}}
                         <div class="row mb-3">
                             <div class="col-md-12 text-center">
-                                <a class="btn btn-sm btn-primary" style="cursor: pointer" onclick="toggleMoreDetails('addItemForm')" id="more_dt_btn">More Details.. <i class="bi bi-eye-slash"></i></a>
+                                <a class="btn btn-sm btn-primary" style="cursor: pointer" onclick="toggleMoreDetails('addItemModal')" id="more_dt_btn">More Details.. <i class="bi bi-eye-slash"></i></a>
                             </div>
                         </div>
                         <div id="more_details" style="display: none;">
@@ -256,7 +256,7 @@
                                         <label for="publish" class="form-label">{{ __('Published')}}</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mt-2">
+                                <div class="col-md-6 mt-2 review_rating">
                                     <div class="form-group">
                                         <label class="switch me-2">
                                             <input type="checkbox" id="review_rating" name="review_rating" value="1">
@@ -289,6 +289,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="item_lang_div">
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-success" onclick="updateItem()">{{ __('Update') }}</a>
                 </div>
             </div>
         </div>
@@ -617,7 +620,7 @@
             $('.ck-editor').remove();
             addItemEditor = "";
             $('#addItemForm').trigger('reset');
-            toggleMoreDetails('addItemForm')
+            toggleMoreDetails('addItemModal')
         });
 
         // Remove Text Editor from Edit Item Modal
@@ -633,15 +636,15 @@
         });
 
         // Function for add New Price
-        function addPrice(key)
+        function addPrice(ModalName)
         {
-            if(key === 'add')
+            if(ModalName === 'addItemModal')
             {
                 var formType = "#addItemForm #priceDiv";
             }
             else
             {
-                var formType = "#"+key+" #priceDiv";
+                var formType = "#edit_item_form #priceDiv";
             }
 
             var count = $(formType).children('.price').length;
@@ -981,66 +984,55 @@
                         $('#editItemModal #item_lang_div').html('');
                         $('#editItemModal #item_lang_div').append(response.data);
 
-                        // Language Array
-                        const langArr = response.language_array;
-
                         // Item Type
                         const itemType = response.item_type;
 
                         // If Item Type is Divider Then Hide Price Divs
                         if(itemType === 2)
                         {
-                            $('.price_div').hide();
-                            $('.calories_div').hide();
-                            $('.day_special').hide();
-                            $('.mark_sign').hide();
-                            $('.mark_new').hide();
+                            $('#editItemModal .price_div').hide();
+                            $('#editItemModal .calories_div').hide();
+                            $('#editItemModal .day_special').hide();
+                            $('#editItemModal .mark_sign').hide();
+                            $('#editItemModal .mark_new').hide();
+                            $('#editItemModal .review_rating').hide();
                         }
                         else
                         {
-                            $('.price_div').show();
-                            $('.calories_div').show();
-                            $('.day_special').show();
-                            $('.mark_sign').show();
-                            $('.mark_new').show();
+                            $('#editItemModal .price_div').show();
+                            $('#editItemModal .calories_div').show();
+                            $('#editItemModal .day_special').show();
+                            $('#editItemModal .mark_sign').show();
+                            $('#editItemModal .mark_new').show();
+                            $('#editItemModal .review_rating').show();
                         }
 
-                        // Reinitialized all Select 2
-                        if(langArr != undefined)
-                        {
-                            $.each(langArr, function (index, value)
-                            {
-                                var ingredientsEle = "#editItemModal #"+value+"_ingredients";
-                                var tagsEle = "#editItemModal #"+value+"_tags";
-                                var optionsEle = "#editItemModal #"+value+"_options";
+                        // Intialized Ingredients SelectBox
+                        var ingredientsEle = "#editItemModal #ingredients";
+                        $(ingredientsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Indicative Icons",
+                        });
 
-                                // Intialized Ingredients SelectBox
-                                $(ingredientsEle).select2({
-                                    dropdownParent: $("#editItemModal"),
-                                    placeholder: "Select Indicative Icons",
-                                });
+                        // Intialized Tags SelectBox
+                        var tagsEle = "#editItemModal #tags";
+                        $(tagsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Add New Tags",
+                            tags: true,
+                        });
 
-                                // Intialized Options SelectBox
-                                $(optionsEle).select2({
-                                    dropdownParent: $("#editItemModal"),
-                                    placeholder: "Select Attributes",
-                                });
+                        // Intialized Options SelectBox
+                        var optionsEle = "#editItemModal #options";
+                        $(optionsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Attributes",
+                        });
 
-                                // Intialized Tags SelectBox
-                                $(tagsEle).select2({
-                                    dropdownParent: $("#editItemModal"),
-                                    placeholder: "Add New Tags",
-                                    tags: true,
-                                });
-                            });
-                        }
-
+                        // Description Text Editor
                         $('.ck-editor').remove();
                         editItemEditor = "";
-
-                        var my_item_textarea = $('#item_description_'+response.primary_code)[0];
-
-                        // Text Editor
+                        var my_item_textarea = $('#item_description')[0];
                         CKEDITOR.ClassicEditor.create(my_item_textarea,
                         {
                             toolbar: {
@@ -1142,18 +1134,197 @@
         }
 
 
-
-        // Function for Update Item
-        function updateItem(langCode)
+        // Update Item By Language Code
+        function updateItemByCode(next_lang_code)
         {
-            var formID = langCode+"_item_form";
+            var formID = "edit_item_form";
             var myFormData = new FormData(document.getElementById(formID));
             myFormData.set('item_description',editItemEditor.getData());
+            myFormData.append('next_lang_code',next_lang_code);
 
-            // Remove Validation Class
-            $("#"+formID+' #item_name').removeClass('is-invalid');
-            $("#"+formID+' #category').removeClass('is-invalid');
-            $("#"+formID+' #item_image').removeClass('is-invalid');
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('items.update.by.lang') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#editItemModal #item_lang_div').html('');
+                        $('#editItemModal #item_lang_div').append(response.data);
+
+                        // Item Type
+                        const itemType = response.item_type;
+
+                        // If Item Type is Divider Then Hide Price Divs
+                        if(itemType === 2)
+                        {
+                            $('#editItemModal .price_div').hide();
+                            $('#editItemModal .calories_div').hide();
+                            $('#editItemModal .day_special').hide();
+                            $('#editItemModal .mark_sign').hide();
+                            $('#editItemModal .mark_new').hide();
+                            $('#editItemModal .review_rating').hide();
+                        }
+                        else
+                        {
+                            $('#editItemModal .price_div').show();
+                            $('#editItemModal .calories_div').show();
+                            $('#editItemModal .day_special').show();
+                            $('#editItemModal .mark_sign').show();
+                            $('#editItemModal .mark_new').show();
+                            $('#editItemModal .review_rating').show();
+                        }
+
+                        // Intialized Ingredients SelectBox
+                        var ingredientsEle = "#editItemModal #ingredients";
+                        $(ingredientsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Indicative Icons",
+                        });
+
+                        // Intialized Tags SelectBox
+                        var tagsEle = "#editItemModal #tags";
+                        $(tagsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Add New Tags",
+                            tags: true,
+                        });
+
+                        // Intialized Options SelectBox
+                        var optionsEle = "#editItemModal #options";
+                        $(optionsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Attributes",
+                        });
+
+                        // Description Text Editor
+                        $('.ck-editor').remove();
+                        editItemEditor = "";
+                        var my_item_textarea = $('#item_description')[0];
+                        CKEDITOR.ClassicEditor.create(my_item_textarea,
+                        {
+                            toolbar: {
+                                items: [
+                                    'heading', '|',
+                                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                                    'bulletedList', 'numberedList', 'todoList', '|',
+                                    'outdent', 'indent', '|',
+                                    'undo', 'redo',
+                                    '-',
+                                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                                    'alignment', '|',
+                                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                                    'sourceEditing'
+                                ],
+                                shouldNotGroupWhenFull: true
+                            },
+                            list: {
+                                properties: {
+                                    styles: true,
+                                    startIndex: true,
+                                    reversed: true
+                                }
+                            },
+                            'height':500,
+                            fontSize: {
+                                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                                supportAllValues: true
+                            },
+                            htmlSupport: {
+                                allow: [
+                                    {
+                                        name: /.*/,
+                                        attributes: true,
+                                        classes: true,
+                                        styles: true
+                                    }
+                                ]
+                            },
+                            htmlEmbed: {
+                                showPreviews: true
+                            },
+                            link: {
+                                decorators: {
+                                    addTargetToExternalLinks: true,
+                                    defaultProtocol: 'https://',
+                                    toggleDownloadable: {
+                                        mode: 'manual',
+                                        label: 'Downloadable',
+                                        attributes: {
+                                            download: 'file'
+                                        }
+                                    }
+                                }
+                            },
+                            mention: {
+                                feeds: [
+                                    {
+                                        marker: '@',
+                                        feed: [
+                                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                            '@sugar', '@sweet', '@topping', '@wafer'
+                                        ],
+                                        minimumCharacters: 1
+                                    }
+                                ]
+                            },
+                            removePlugins: [
+                                'CKBox',
+                                'CKFinder',
+                                'EasyImage',
+                                'RealTimeCollaborativeComments',
+                                'RealTimeCollaborativeTrackChanges',
+                                'RealTimeCollaborativeRevisionHistory',
+                                'PresenceList',
+                                'Comments',
+                                'TrackChanges',
+                                'TrackChangesData',
+                                'RevisionHistory',
+                                'Pagination',
+                                'WProofreader',
+                                'MathType'
+                            ]
+                        }).then( editor => {
+                            editItemEditor = editor;
+                        });
+                    }
+                    else
+                    {
+                        $('#editItemModal').modal('hide');
+                        $('#editItemModal #item_lang_div').html('');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    if(response.responseJSON.errors)
+                    {
+                        $.each(response.responseJSON.errors, function (i, error) {
+                            toastr.error(error);
+                        });
+                    }
+                }
+            });
+        }
+
+
+        // Function for Update Item
+        function updateItem()
+        {
+            var formID = "edit_item_form";
+            var myFormData = new FormData(document.getElementById(formID));
+            myFormData.set('item_description',editItemEditor.getData());
 
             // Clear all Toastr Messages
             toastr.clear();
@@ -1187,34 +1358,11 @@
                 },
                 error: function(response)
                 {
-                    // All Validation Errors
-                    const validationErrors = (response?.responseJSON?.errors) ? response.responseJSON.errors : '';
-
-                    if (validationErrors != '')
+                    if(response.responseJSON.errors)
                     {
-                        // Name Error
-                        var nameError = (validationErrors.item_name) ? validationErrors.item_name : '';
-                        if (nameError != '')
-                        {
-                            $("#"+formID+' #item_name').addClass('is-invalid');
-                            toastr.error(nameError);
-                        }
-
-                        // Category Error
-                        var categoryError = (validationErrors.category) ? validationErrors.category : '';
-                        if (categoryError != '')
-                        {
-                            $("#"+formID+' #category').addClass('is-invalid');
-                            toastr.error(categoryError);
-                        }
-
-                        // Image Error
-                        var imageError = (validationErrors.item_image) ? validationErrors.item_image : '';
-                        if (imageError != '')
-                        {
-                            $("#"+formID+' #item_image').addClass('is-invalid');
-                            toastr.error(imageError);
-                        }
+                        $.each(response.responseJSON.errors, function (i, error) {
+                            toastr.error(error);
+                        });
                     }
                 }
             });
@@ -1224,51 +1372,27 @@
 
 
         // Function for Hide & Show Price
-        function togglePrice(formType,dynamicID="")
+        function togglePrice(ModalName)
         {
-            if(formType === 'add')
-            {
-                var currVal = $('#type :selected').val();
+            var currVal = $('#'+ModalName+' #type :selected').val();
 
-                if(currVal == 2)
-                {
-                    $("#addItemForm .price_div").hide();
-                    $("#addItemForm .calories_div").hide();
-                    $("#addItemForm .day_special").hide();
-                    $("#addItemForm .mark_sign").hide();
-                    $("#addItemForm .mark_new").hide();
-                }
-                else
-                {
-                    $("#addItemForm .price_div").show();
-                    $("#addItemForm .calories_div").show();
-                    $("#addItemForm .day_special").show();
-                    $("#addItemForm .mark_sign").show();
-                    $("#addItemForm .mark_new").show();
-                }
+            if(currVal == 2)
+            {
+                $("#"+ModalName+" .price_div").hide();
+                $("#"+ModalName+" .calories_div").hide();
+                $("#"+ModalName+" .day_special").hide();
+                $("#"+ModalName+" .mark_sign").hide();
+                $("#"+ModalName+" .mark_new").hide();
+                $("#"+ModalName+" .review_rating").hide();
             }
-            else if(formType === 'edit')
+            else
             {
-                var formId = "#"+dynamicID;
-                var currSelectedVal = $(formId+' #type :selected').val();
-
-                if(currSelectedVal == 2)
-                {
-                    $(formId+" .price_div").hide();
-                    $(formId+" .calories_div").hide();
-                    $(formId+" .day_special").hide();
-                    $(formId+" .mark_sign").hide();
-                    $(formId+" .mark_new").hide();
-                }
-                else
-                {
-                    $(formId+" .price_div").show();
-                    $(formId+" .calories_div").show();
-                    $(formId+" .day_special").show();
-                    $(formId+" .mark_sign").show();
-                    $(formId+" .mark_new").show();
-                }
-
+                $("#"+ModalName+" .price_div").show();
+                $("#"+ModalName+" .calories_div").show();
+                $("#"+ModalName+" .day_special").show();
+                $("#"+ModalName+" .mark_sign").show();
+                $("#"+ModalName+" .mark_new").show();
+                $("#"+ModalName+" .review_rating").show();
             }
         }
 
@@ -1597,7 +1721,7 @@
         function imageCropper(formID,ele)
         {
             var currentFile = ele.files[0];
-            var myFormID = formID+"_item_form";
+            var myFormID = formID;
             var fitPreview = 0;
 
             if (currentFile)
@@ -1618,7 +1742,7 @@
                     if(fileSize > 2)
                     {
                         toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
-                        $('#'+myFormID+' #'+formID+'item_image').val('');
+                        $('#'+myFormID+' #item_image').val('');
                         return false;
                     }
                     else
@@ -1626,7 +1750,7 @@
                         if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
                         {
                             toastr.error("The Item Image must be a file of type: png, jpg, svg, jpeg");
-                            $('#'+myFormID+' #'+formID+'item_image').val('');
+                            $('#'+myFormID+' #item_image').val('');
                             return false;
                         }
                         else
@@ -1634,8 +1758,8 @@
                             if(cropper)
                             {
                                 cropper.destroy();
-                                $('.resize-image').attr('src',"");
-                                $('.img-crop-sec').hide();
+                                $('#'+myFormID+' #resize-image').attr('src',"");
+                                $('#'+myFormID+' .img-crop-sec').hide();
                             }
 
                             $('#'+myFormID+' #resize-image').attr('src',"");
@@ -1664,6 +1788,7 @@
             cropper.reset();
         }
 
+
         // Canel Cropper
         function cancelCropper(formID)
         {
@@ -1671,9 +1796,10 @@
             $('#'+formID+' #resize-image').attr('src',"");
             $('#'+formID+' .img-crop-sec').hide();
             $('#'+formID+' #image').val('');
-            $('#'+formID+' #'+formID+'item_image').val('');
+            $('#'+formID+' #item_image').val('');
             $('#'+formID+' #og_image').val('');
         }
+
 
         // Save Cropper Image
         function saveCropper(formID)
@@ -1712,6 +1838,7 @@
             }
         }
 
+
         // Delete Cropper
         function deleteCropper(formID)
         {
@@ -1732,7 +1859,7 @@
             }
             else
             {
-                $('#'+formID+' #'+formID+'item_image').val('');
+                $('#'+formID+' #item_image').val('');
                 $('#'+formID+" #crp-img-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
                 $('#'+formID+' #edit-img').show();
                 $('#'+formID+' #rep-image').hide();
@@ -1740,16 +1867,17 @@
 
         }
 
+
         // Function for Toggle more Information
-        function toggleMoreDetails(fid)
+        function toggleMoreDetails(ModalName)
         {
-            if(fid == 'addItemForm')
+            if(ModalName == 'addItemModal')
             {
-                var formId = '#'+fid;
+                var formId = '#addItemForm';
             }
             else
             {
-                var formId = '#editItemModal';
+                var formId = '#edit_item_form';
             }
 
             var curr_icon = $(formId+' #more_dt_btn i').attr('class');

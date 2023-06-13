@@ -648,7 +648,8 @@ class OrderController extends Controller
     public function setPrinterLicense()
     {
         $license_owner = 'Dimitris Bourlos - 1 WebApp Lic - 1 WebServer Lic';
-        $license_key  = '661C6658D5FC2787F94AC3E96C33BBE59C5FC29D';
+        // $license_key  = '661C6658D5FC2787F94AC3E96C33BBE59C5FC29D';
+        $license_key  = '6FFB09414392C388097D50175A10478DE4611F4A';
 
         //DO NOT MODIFY THE FOLLOWING CODE
         $timestamp = request()->query('timestamp');
