@@ -1268,7 +1268,7 @@ class ShopController extends Controller
                                                 $html .= '<div class="col-md-12 mb-2">';
                                                     $html .= '<b>'.$opt_dt[$title_key].'</b>';
                                                 $html .= '</div>';
-
+                                                $radio_key = 0;
                                                 foreach($option_prices as $key => $option_price)
                                                 {
                                                     $opt_price = Currency::currency($currency)->format($option_price['price']);
@@ -1286,8 +1286,18 @@ class ShopController extends Controller
                                                     }
                                                     else
                                                     {
+                                                        $radio_key ++;
+                                                        if($radio_key == 1)
+                                                        {
+                                                            $auto_check_radio = 'checked';
+                                                        }
+                                                        else
+                                                        {
+                                                            $auto_check_radio = "";
+                                                        }
+
                                                         $html .= '<div class="col-6">';
-                                                            $html .= '<input type="radio" value="'.$option_price['price'].'" name="option_price_radio_'.$outer_key.'" onchange="updatePrice()" id="option_price_radio_'.$outer_key.'_'.$key.'" class="me-2" opt_price_id="'.$option_price['id'].'">';
+                                                            $html .= '<input type="radio" value="'.$option_price['price'].'" name="option_price_radio_'.$outer_key.'" onchange="updatePrice()" id="option_price_radio_'.$outer_key.'_'.$key.'" class="me-2" opt_price_id="'.$option_price['id'].'" '.$auto_check_radio.'>';
                                                             $html .= '<label class="form-label" for="option_price_radio_'.$outer_key.'_'.$key.'">'.$opt_price_label.'</label>';
                                                         $html .= '</div>';
                                                         $html .= '<div class="col-6 text-end">';
