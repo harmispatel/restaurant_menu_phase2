@@ -1596,9 +1596,9 @@ class ShopController extends Controller
 
             if(isset($cart[$item_id]))
             {
-                $new_amount = $total_amount;
+                $new_amount = number_format($total_amount / $quantity,2);
                 $quantity = $quantity + $cart[$item_id]['quantity'];
-                $total_amount = $total_amount + $new_amount;
+                $total_amount = $new_amount * $quantity;
                 $total_amount_text = Currency::currency($currency)->format($total_amount);
 
                 $cart[$item_id] = [
@@ -1776,7 +1776,9 @@ class ShopController extends Controller
         }
 
         $discount_per = (isset($order_settings['discount_percentage']) && ($order_settings['discount_percentage'] > 0)) ? $order_settings['discount_percentage'] : 0;
+        $discount_type = (isset($order_settings['discount_type'])) ? $order_settings['discount_type'] : 'percentage';
         session()->put('discount_per',$discount_per);
+        session()->put('discount_type',$discount_type);
         session()->save();
 
         // Primary Language Details
@@ -1908,6 +1910,7 @@ class ShopController extends Controller
         $checkout_type = $request->checkout_type;
         $payment_method = $request->payment_method;
         $discount_per = session()->get('discount_per');
+        $discount_type = session()->get('discount_type');
 
         if($checkout_type == 'takeaway')
         {
@@ -2192,8 +2195,16 @@ class ShopController extends Controller
                 $update_order = Order::find($order->id);
                 if($discount_per > 0)
                 {
-                    $discount_amount = ($final_amount * $discount_per) / 100;
+                    if($discount_type == 'fixed')
+                    {
+                        $discount_amount = $discount_per;
+                    }
+                    else
+                    {
+                        $discount_amount = ($final_amount * $discount_per) / 100;
+                    }
                     $update_order->discount_per = $discount_per;
+                    $update_order->discount_type = $discount_type;
                     $update_order->discount_value = $final_amount - $discount_amount;
                 }
                 $update_order->order_total = $final_amount;
@@ -2313,7 +2324,14 @@ class ShopController extends Controller
                                         {
                                             $order_total_html .= '<tr>';
                                                 $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
-                                                $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_details->discount_per.'%</td>';
+                                                if($discount_type == 'fixed')
+                                                {
+                                                    $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($order_details->discount_per).'</td>';
+                                                }
+                                                else
+                                                {
+                                                    $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_details->discount_per.'%</td>';
+                                                }
                                             $order_total_html .= '</tr>';
 
                                             $order_total_html .= '<tr>';
@@ -2478,6 +2496,7 @@ class ShopController extends Controller
             session()->forget('cart');
             session()->forget('checkout_type');
             session()->forget('discount_per');
+            session()->forget('discount_type');
             session()->forget('cust_lat');
             session()->forget('cust_long');
             session()->forget('cust_address');

@@ -78,6 +78,8 @@ class ItemsController extends Controller
         $name = $request->name;
         $calories = $request->calories;
         $description = $request->description;
+        $discount_type = $request->discount_type;
+        $discount = $request->discount;
         $is_new = isset($request->is_new) ? $request->is_new : 0;
         $as_sign = isset($request->is_sign) ? $request->is_sign : 0;
         $published = isset($request->published) ? $request->published : 0;
@@ -116,6 +118,8 @@ class ItemsController extends Controller
             $item->$item_calories_key = $calories;
             $item->$item_description_key = $description;
 
+            $item->discount_type = $discount_type;
+            $item->discount = $discount;
             $item->published = $published;
             $item->order_key = $item_order;
             $item->ingredients = $ingredients;
@@ -464,6 +468,7 @@ class ItemsController extends Controller
             $item_is_new = (isset($item['is_new']) && $item['is_new'] == 1) ? 'checked' : '';
             $item_as_sign = (isset($item['as_sign']) && $item['as_sign'] == 1) ? 'checked' : '';
             $item_day_special = (isset($item['day_special']) && $item['day_special'] == 1) ? 'checked' : '';
+            $discount = (isset($item['discount']) && !empty($item['discount'])) ? $item['discount'] : 0;
 
             // Item Category Tags Array
             if(count($item_cat_tags) > 0)
@@ -604,6 +609,31 @@ class ItemsController extends Controller
                             $html .= '</div>';
 
                             $html .= '<div class="row" id="more_details" style="display: none;">';
+
+                                // Discount Type
+                                $html .= '<div class="col-md-12 mb-3">';
+                                    $html .= '<label class="form-label" for="item_description">'.__('Discount Type').'</label>';
+                                    $html .= '<select name="discount_type" id="discount_type" class="form-control">';
+                                        $html .= '<option value="percentage" ';
+                                            if($item['discount_type'] == 'percentage')
+                                            {
+                                                $html .= 'selected';
+                                            }
+                                        $html .= '>Percentage</option>';
+                                        $html .= '<option value="fixed" ';
+                                            if($item['discount_type'] == 'fixed')
+                                            {
+                                                $html .= 'selected';
+                                            }
+                                        $html .= '>Fixed</option>';
+                                    $html .= '</select>';
+                                $html .= '</div>';
+
+                                // Discount
+                                $html .= '<div class="col-md-12 mb-3">';
+                                    $html .= '<label class="form-label" for="item_description">'.__('Discount').'</label>';
+                                    $html .= '<input type="number" name="discount" id="discount" class="form-control" value="'.$discount.'">';
+                                $html .= '</div>';
 
                                 // Description
                                 $html .= '<div class="col-md-12 mb-3">';
@@ -915,6 +945,31 @@ class ItemsController extends Controller
                             $html .= '</div>';
 
                             $html .= '<div class="row" id="more_details" style="display: none;">';
+
+                                // Discount Type
+                                $html .= '<div class="col-md-12 mb-3">';
+                                    $html .= '<label class="form-label" for="item_description">'.__('Discount Type').'</label>';
+                                    $html .= '<select name="discount_type" id="discount_type" class="form-control">';
+                                        $html .= '<option value="percentage" ';
+                                            if($item['discount_type'] == 'percentage')
+                                            {
+                                                $html .= 'selected';
+                                            }
+                                        $html .= '>Percentage</option>';
+                                        $html .= '<option value="fixed" ';
+                                            if($item['discount_type'] == 'fixed')
+                                            {
+                                                $html .= 'selected';
+                                            }
+                                        $html .= '>Fixed</option>';
+                                    $html .= '</select>';
+                                $html .= '</div>';
+
+                                // Discount
+                                $html .= '<div class="col-md-12 mb-3">';
+                                    $html .= '<label class="form-label" for="item_description">'.__('Discount').'</label>';
+                                    $html .= '<input type="number" name="discount" id="discount" class="form-control" value="'.$discount.'">';
+                                $html .= '</div>';
 
                                 // Description
                                 $html .= '<div class="col-md-12 mb-3">';
@@ -1149,6 +1204,8 @@ class ItemsController extends Controller
         $item_type = $request->type;
         $category = $request->category;
         $item_name = $request->item_name;
+        $discount_type = $request->discount_type;
+        $discount = $request->discount;
         $item_description = $request->item_description;
         $item_calories = $request->calories;
         $is_new = isset($request->is_new) ? $request->is_new : 0;
@@ -1197,6 +1254,8 @@ class ItemsController extends Controller
                 $item->ingredients = $ingredients;
                 $item->options = $options;
                 $item->type = $item_type;
+                $item->discount_type = $discount_type;
+                $item->discount = $discount;
 
                 $item->name = $item_name;
                 $item->description = $item_description;
@@ -1339,6 +1398,8 @@ class ItemsController extends Controller
         $item_name = $request->item_name;
         $item_description = $request->item_description;
         $item_calories = $request->calories;
+        $discount_type = $request->discount_type;
+        $discount = $request->discount;
         $is_new = isset($request->is_new) ? $request->is_new : 0;
         $is_sign = isset($request->is_sign) ? $request->is_sign : 0;
         $day_special = isset($request->day_special) ? $request->day_special : 0;
@@ -1390,6 +1451,8 @@ class ItemsController extends Controller
                 $item->ingredients = $ingredients;
                 $item->options = $options;
                 $item->type = $item_type;
+                $item->discount_type = $discount_type;
+                $item->discount = $discount;
 
                 $item->name = $item_name;
                 $item->description = $item_description;
@@ -1598,6 +1661,7 @@ class ItemsController extends Controller
         $item_is_new = (isset($item['is_new']) && $item['is_new'] == 1) ? 'checked' : '';
         $item_as_sign = (isset($item['as_sign']) && $item['as_sign'] == 1) ? 'checked' : '';
         $item_day_special = (isset($item['day_special']) && $item['day_special'] == 1) ? 'checked' : '';
+        $discount = (isset($item['discount']) && !empty($item['discount'])) ? $item['discount'] : 0;
 
         // Item Category Tags Array
         if(count($item_cat_tags) > 0)
@@ -1741,6 +1805,31 @@ class ItemsController extends Controller
                         $html .= '</div>';
 
                         $html .= '<div class="row" id="more_details" style="display: none;">';
+
+                            // Discount Type
+                            $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<label class="form-label" for="item_description">'.__('Discount Type').'</label>';
+                                $html .= '<select name="discount_type" id="discount_type" class="form-control">';
+                                    $html .= '<option value="percentage" ';
+                                        if($item['discount_type'] == 'percentage')
+                                        {
+                                            $html .= 'selected';
+                                        }
+                                    $html .= '>Percentage</option>';
+                                    $html .= '<option value="fixed" ';
+                                        if($item['discount_type'] == 'fixed')
+                                        {
+                                            $html .= 'selected';
+                                        }
+                                    $html .= '>Fixed</option>';
+                                $html .= '</select>';
+                            $html .= '</div>';
+
+                            // Discount
+                            $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<label class="form-label" for="item_description">'.__('Discount').'</label>';
+                                $html .= '<input type="number" name="discount" id="discount" class="form-control" value="'.$discount.'">';
+                            $html .= '</div>';
 
                             // Description
                             $html .= '<div class="col-md-12 mb-3">';
@@ -2051,6 +2140,31 @@ class ItemsController extends Controller
                         $html .= '</div>';
 
                         $html .= '<div class="row" id="more_details" style="display: none;">';
+
+                            // Discount Type
+                            $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<label class="form-label" for="item_description">'.__('Discount Type').'</label>';
+                                $html .= '<select name="discount_type" id="discount_type" class="form-control">';
+                                    $html .= '<option value="percentage" ';
+                                        if($item['discount_type'] == 'percentage')
+                                        {
+                                            $html .= 'selected';
+                                        }
+                                    $html .= '>Percentage</option>';
+                                    $html .= '<option value="fixed" ';
+                                        if($item['discount_type'] == 'fixed')
+                                        {
+                                            $html .= 'selected';
+                                        }
+                                    $html .= '>Fixed</option>';
+                                $html .= '</select>';
+                            $html .= '</div>';
+
+                            // Discount
+                            $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<label class="form-label" for="item_description">'.__('Discount').'</label>';
+                                $html .= '<input type="number" name="discount" id="discount" class="form-control" value="'.$discount.'">';
+                            $html .= '</div>';
 
                             // Description
                             $html .= '<div class="col-md-12 mb-3">';

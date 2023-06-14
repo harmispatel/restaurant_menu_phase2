@@ -73,6 +73,7 @@ class EveryPayController extends Controller
         $shop_logo = '<img src="'.$shop_logo.'" width="100">';
 
         $discount_per = session()->get('discount_per');
+        $discount_type = session()->get('discount_type');
         $card_number = str_replace(' ','',$request->card_number);
         $card_holder = $request->card_holder;
         $card_cvc = $request->card_cvc;
@@ -311,8 +312,16 @@ class EveryPayController extends Controller
                     $update_order = Order::find($order->id);
                     if($discount_per > 0)
                     {
-                        $discount_amount = ($final_amount * $discount_per) / 100;
+                        if($discount_type == 'fixed')
+                        {
+                            $discount_amount = $discount_per;
+                        }
+                        else
+                        {
+                            $discount_amount = ($final_amount * $discount_per) / 100;
+                        }
                         $update_order->discount_per = $discount_per;
+                        $update_order->discount_type = $discount_type;
                         $update_order->discount_value = $final_amount - $discount_amount;
                     }
                     $update_order->order_total = $final_amount;
@@ -435,7 +444,14 @@ class EveryPayController extends Controller
                                             {
                                                 $order_total_html .= '<tr>';
                                                     $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
-                                                    $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
+                                                    if($discount_type == 'fixed')
+                                                    {
+                                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($order_dt->discount_per).'</td>';
+                                                    }
+                                                    else
+                                                    {
+                                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
+                                                    }
                                                 $order_total_html .= '</tr>';
 
                                                 $order_total_html .= '<tr>';
@@ -601,6 +617,7 @@ class EveryPayController extends Controller
                 session()->forget('checkout_type');
                 session()->forget('order_details');
                 session()->forget('discount_per');
+                session()->forget('discount_type');
                 session()->forget('cust_lat');
                 session()->forget('cust_long');
                 session()->forget('cust_address');

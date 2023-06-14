@@ -60,6 +60,9 @@
                 <div class="card">
                     <div class="card-body" id="order">
                         @forelse ($orders as $order)
+                            @php
+                                $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
+                            @endphp
                             <div class="order">
                                 <div class="order-btn d-flex align-items-center justify-content-end">
                                     <div class="d-flex align-items-center flex-wrap">{{ __('Estimated time of arrival') }} <input type="number" name="estimated_time" onchange="changeEstimatedTime(this)" id="estimated_time" value="{{ $order->estimated_time }}" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="{{ $order->id }}" {{ ($order->order_status == 'accepted') ? 'disabled' : '' }}> {{ __('Minutes') }}.
@@ -116,11 +119,22 @@
                                                     </tr>
                                                     <tr>
                                                         <td><b>{{ __('Discount') }}</b></td>
-                                                        <td class="text-end">- {{ $order->discount_per }}%</td>
+                                                        @if($discount_type == 'fixed')
+                                                            <td class="text-end">- {{ Currency::currency($currency)->format($order->discount_per) }}</td>
+                                                        @else
+                                                            <td class="text-end">- {{ $order->discount_per }}%</td>
+                                                        @endif
                                                     </tr>
                                                     <tr class="text-end">
                                                         @php
-                                                            $discount_amount = ($order->order_total * $order->discount_per) / 100;
+                                                            if($discount_type == 'fixed')
+                                                            {
+                                                                $discount_amount = $order->discount_per;
+                                                            }
+                                                            else
+                                                            {
+                                                                $discount_amount = ($order->order_total * $order->discount_per) / 100;
+                                                            }
                                                             $discount_amount = $order->order_total - $discount_amount;
                                                         @endphp
                                                         <td colspan="2"><strong>{{ Currency::currency($currency)->format($discount_amount) }}</strong></td>

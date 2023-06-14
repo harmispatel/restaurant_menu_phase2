@@ -46,6 +46,7 @@ class PaypalController extends Controller
         $current_lang_code = (session()->has('locale')) ? session()->get('locale') : 'en';
 
         $discount_per = session()->get('discount_per');
+        $discount_type = session()->get('discount_type');
 
         // Keys
         $name_key = $current_lang_code."_name";
@@ -143,7 +144,14 @@ class PaypalController extends Controller
 
         if($discount_per > 0)
         {
-            $discount_amount = ($final_amount * $discount_per) / 100;
+            if($discount_type == 'fixed')
+            {
+                $discount_amount = $discount_per;
+            }
+            else
+            {
+                $discount_amount = ($final_amount * $discount_per) / 100;
+            }
             $total = number_format($final_amount - $discount_amount,2);
 
             $amount->setTotal($total);
@@ -207,6 +215,7 @@ class PaypalController extends Controller
     {
         $cart = session()->get('cart', []);
         $discount_per = session()->get('discount_per');
+        $discount_type = session()->get('discount_type');
 
         // Shop Details
         $data['shop_details'] = Shop::where('shop_slug',$shop_slug)->first();
@@ -453,8 +462,16 @@ class PaypalController extends Controller
                 $update_order = Order::find($order->id);
                 if($discount_per > 0)
                 {
-                    $discount_amount = ($final_amount * $discount_per) / 100;
+                    if($discount_type == 'fixed')
+                    {
+                        $discount_amount = $discount_per;
+                    }
+                    else
+                    {
+                        $discount_amount = ($final_amount * $discount_per) / 100;
+                    }
                     $update_order->discount_per = $discount_per;
+                    $update_order->discount_type = $discount_type;
                     $update_order->discount_value = $final_amount - $discount_amount;
                 }
                 $update_order->order_total = $final_amount;
@@ -576,7 +593,14 @@ class PaypalController extends Controller
                                         {
                                             $order_total_html .= '<tr>';
                                                 $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
-                                                $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
+                                                if($discount_type == 'fixed')
+                                                {
+                                                    $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($order_dt->discount_per).'</td>';
+                                                }
+                                                else
+                                                {
+                                                    $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
+                                                }
                                             $order_total_html .= '</tr>';
 
                                             $order_total_html .= '<tr>';
@@ -745,6 +769,7 @@ class PaypalController extends Controller
             session()->forget('order_details');
             session()->forget('paypal_payment_id');
             session()->forget('discount_per');
+            session()->forget('discount_type');
             session()->forget('cust_lat');
             session()->forget('cust_long');
             session()->forget('cust_address');

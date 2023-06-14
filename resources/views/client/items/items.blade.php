@@ -104,6 +104,25 @@
                         </div>
                         <div id="more_details" style="display: none;">
 
+                            {{-- Discount Type --}}
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="description" class="form-label">{{ __('Discount Type')}}</label>
+                                    <select name="discount_type" id="discount_type" class="form-select">
+                                        <option value="percentage">Percentage</option>
+                                        <option value="fixed">Fixed</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{-- Discount Value --}}
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="discount" class="form-label">{{ __('Discount') }}</label>
+                                    <input type="number" name="discount" id="discount" value="0" class="form-control">
+                                </div>
+                            </div>
+
                             {{-- Description --}}
                             <div class="row mb-3">
                                 <div class="col-md-12">

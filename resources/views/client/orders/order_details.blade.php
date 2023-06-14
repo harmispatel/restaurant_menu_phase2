@@ -23,6 +23,7 @@
     // Print Font Size
     $printFontSize = (isset($order_setting['print_font_size']) && !empty($order_setting['print_font_size'])) ? $order_setting['print_font_size'] : 20;
 
+    $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
 
     // Shop Currency
     $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
@@ -330,7 +331,11 @@
                                                     <td colspan="2" class="text-dark fs-5 text-end">
                                                         {{ __('Discount') }}
                                                     </td>
-                                                    <td class="text-dark fs-5 text-end">- {{ $order->discount_per }}%</td>
+                                                    @if($discount_type == 'fixed')
+                                                        <td class="text-dark fs-5 text-end">- {{ Currency::currency($currency)->format($order->discount_per) }}</td>
+                                                    @else
+                                                        <td class="text-dark fs-5 text-end">- {{ $order->discount_per }}%</td>
+                                                    @endif
                                                 </tr>
                                                 <tr>
                                                     <td colspan="3" class="text-dark fs-5 fw-bold text-end">

@@ -57,6 +57,8 @@ class OrderController extends Controller
         {
             foreach($orders as $order)
             {
+                $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
+
                 $html .= '<div class="order">';
                     $html .= '<div class="order-btn d-flex align-items-center justify-content-end">';
                         $html .= '<div class="d-flex align-items-center flex-wrap">'.__('Estimated time of arrival').' <input type="number" onchange="changeEstimatedTime(this)" name="estimated_time" id="estimated_time" value="'.$order->estimated_time.'" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="'.$order->id.'"';
@@ -142,10 +144,24 @@ class OrderController extends Controller
 
                                         $html .= '<tr>';
                                             $html .= '<td><b>'.__('Discount').'</b></td>';
-                                            $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
+                                            if($discount_type == 'fixed')
+                                            {
+                                                $html .= '<td class="text-end">- '.Currency::currency($currency)->format($order->discount_per).'</td>';
+                                            }
+                                            else
+                                            {
+                                                $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
+                                            }
                                         $html .= '</tr>';
 
-                                        $discount_amount = ($order->order_total * $order->discount_per) / 100;
+                                        if($discount_type == 'fixed')
+                                        {
+                                            $discount_amount = $order->discount_per;
+                                        }
+                                        else
+                                        {
+                                            $discount_amount = ($order->order_total * $order->discount_per) / 100;
+                                        }
                                         $discount_amount = $order->order_total - $discount_amount;
 
                                         $html .= '<tr class="text-end">';
@@ -266,6 +282,7 @@ class OrderController extends Controller
         $all_data['schedule_array'] = $request->schedule_array;
         $all_data['default_printer'] = (isset($request->default_printer)) ? $request->default_printer : '';
         $all_data['receipt_intro'] = $request->receipt_intro;
+        $all_data['discount_type'] = $request->discount_type;
         $all_data['auto_print'] = (isset($request->auto_print)) ? $request->auto_print : 0;
         $all_data['play_sound'] = (isset($request->play_sound)) ? $request->play_sound : 0;
         $all_data['enable_print'] = (isset($request->enable_print)) ? $request->enable_print : 0;
@@ -410,6 +427,7 @@ class OrderController extends Controller
             if($order->id)
             {
                 $order_items = (isset($order->order_items) && count($order->order_items) > 0) ? $order->order_items : [];
+                $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
 
                 $checkout_type =  (isset($order->checkout_type)) ? $order->checkout_type : '';
                 $payment_method =  (isset($order->payment_method)) ? $order->payment_method : '';
@@ -526,7 +544,14 @@ class OrderController extends Controller
                                     {
                                         $order_total_html .= '<tr>';
                                             $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
-                                            $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order->discount_per.'%</td>';
+                                            if($discount_type == 'fixed')
+                                            {
+                                                $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($order->discount_per).'</td>';
+                                            }
+                                            else
+                                            {
+                                                $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order->discount_per.'%</td>';
+                                            }
                                         $order_total_html .= '</tr>';
 
                                         $order_total_html .= '<tr>';
@@ -669,6 +694,7 @@ class OrderController extends Controller
         try
         {
             $order = Order::with(['order_items','shop'])->where('id',$order_id)->first();
+            $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
             $shop_id = (isset($order->shop['id'])) ? $order->shop['id'] : '';
 
             $shop_settings = getClientSettings($shop_id);
@@ -775,7 +801,14 @@ class OrderController extends Controller
                                     $html .= '<table class="table">';
                                         if($order->discount_per > 0)
                                         {
-                                            $discount_amount = ($order->order_total * $order->discount_per) / 100;
+                                            if($discount_type == 'fixed')
+                                            {
+                                                $discount_amount = $order->discount_per;
+                                            }
+                                            else
+                                            {
+                                                $discount_amount = ($order->order_total * $order->discount_per) / 100;
+                                            }
                                             $discount_amount = $order->order_total - $discount_amount;
                                             $discount_amount = Currency::currency($currency)->format($discount_amount);
 
@@ -783,10 +816,23 @@ class OrderController extends Controller
                                                 $html .= '<td><strong>Sub Total : </strong></td><td class="text-end">'.$order_total_text.'</td>';
                                             $html .= '</tr>';
                                             $html .= '<tr>';
-                                                $html .= '<td><strong>Discount : </strong></td><td class="text-end">-'.$order->discount_per.'%</td>';
+                                                if($discount_type == 'fixed')
+                                                {
+                                                    $html .= '<td><strong>Discount : </strong></td><td class="text-end">-'.Currency::currency($currency)->format($order->discount_per).'</td>';
+                                                }
+                                                else
+                                                {
+                                                    $html .= '<td><strong>Discount : </strong></td><td class="text-end">-'.$order->discount_per.'%</td>';
+                                                }
                                             $html .= '</tr>';
                                             $html .= '<tr>';
                                                 $html .= '<td><strong>Total : </strong></td><td class="text-end">'.$discount_amount.'</td>';
+                                            $html .= '</tr>';
+                                        }
+                                        else
+                                        {
+                                            $html .= '<tr>';
+                                                $html .= '<td><strong>Sub Total : </strong></td><td class="text-end">'.$order_total_text.'</td>';
                                             $html .= '</tr>';
                                         }
                                     $html .= '</table>';

@@ -119,6 +119,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mt-3">
+                                    <label for="discount_type" class="form-label">{{ __('Discount Type') }}</label>
+                                    <select name="discount_type" id="discount_type" class="form-select ord-setting">
+                                        <option value="percentage" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'percentage') ? 'selected' : '' }}>Percentage</option>
+                                        <option value="fixed" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'fixed') ? 'selected' : '' }}>Fixed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mt-3">
                                     <label for="discount_percentage" class="form-label">{{ __('Discount percentage (discount percentage applied to the total amount), if left null no discount is applied.') }}</label>
                                     <input type="number" name="discount_percentage" id="discount_percentage" class="form-control ord-setting" value="{{ (isset($order_settings['discount_percentage'])) ? $order_settings['discount_percentage'] : '' }}">
                                 </div>
@@ -164,8 +173,15 @@
                             {{-- Printer Settings --}}
                             <div class="row">
                                 <h3>{{ __('Print Settings') }}</h3>
+                                <div class="col-md-12">
+                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Before you enable print option. ') }}</label> <br>
+                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('You have to install the client software JS Print Manager Ver. 6.x.x') }}</label> <br>
+                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Download or Visit this Link') }}</label> <br>
+                                    <a href="{{ url('/neodynamic-jspm/jspm6-6-win.zip') }}" class="btn btn-primary btn-sm mt-2 mb-2"><i class="bi bi-download"></i> Download</a> <br>
+                                    <a class="mt-3" href="https://www.neodynamic.com/downloads/jspm/">JS Print Manager</a>
+                                </div>
                             </div>
-                            <div class="row mt-2">
+                            <div class="row mt-3">
                                 <div class="col-md-6 mb-2">
                                     <label class="switch me-2">
                                         <input type="checkbox" value="1" name="enable_print" id="enable_print" class="ord-setting" {{ (isset($order_settings['enable_print']) && $order_settings['enable_print'] == 1) ? 'checked' : '' }}>
@@ -540,7 +556,7 @@
         }
 
         // Enabled Update Btn
-        $('input, #default_printer, #printer_paper, #printer_tray, #notification_sound').on('change',function(){
+        $('input, #default_printer, #printer_paper, #printer_tray, #notification_sound, #discount_type').on('change',function(){
             $('#update-btn').removeAttr('disabled',true);
         });
 

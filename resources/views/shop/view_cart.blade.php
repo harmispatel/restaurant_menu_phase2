@@ -45,6 +45,7 @@
     }
 
     $discount_per = session()->get('discount_per');
+    $discount_type = session()->get('discount_type');
 
     $delivery_schedule = checkDeliverySchedule($shop_details['id']);
 
@@ -241,11 +242,22 @@
                                 @if($discount_per > 0)
                                     <tr>
                                         <td><b>{{ __('Discount') }}</b></td>
-                                        <td class="text-end">- {{ $discount_per }}%</td>
+                                        @if($discount_type == 'fixed')
+                                            <td class="text-end">- {{ Currency::currency($currency)->format($discount_per) }}</td>
+                                        @else
+                                            <td class="text-end">- {{ $discount_per }}%</td>
+                                        @endif
                                     </tr>
                                     <tr class="text-end">
                                         @php
-                                            $discount_amount = ($total_amount * $discount_per) / 100;
+                                            if($discount_type == 'fixed')
+                                            {
+                                                $discount_amount = $discount_per;
+                                            }
+                                            else
+                                            {
+                                                $discount_amount = ($total_amount * $discount_per) / 100;
+                                            }
                                             $discount_amount = $total_amount - $discount_amount;
                                         @endphp
                                         <td colspan="2"><strong>{{ Currency::currency($currency)->format($discount_amount) }}</strong></td>

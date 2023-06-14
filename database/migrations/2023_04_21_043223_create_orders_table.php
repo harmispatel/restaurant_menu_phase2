@@ -37,6 +37,7 @@ class CreateOrdersTable extends Migration
             $table->string('estimated_time')->nullable();
             $table->string('total_qty')->nullable();
             $table->string('discount_per')->nullable();
+            $table->string('discount_type')->nullable();
             $table->string('discount_value')->nullable();
             $table->string('order_total')->nullable();
             $table->string('order_total_text')->nullable();

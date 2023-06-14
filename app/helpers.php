@@ -110,6 +110,7 @@
             'notification_sound',
             'enable_print',
             'print_font_size',
+            'discount_type',
         ]);
 
         $settings = [];
