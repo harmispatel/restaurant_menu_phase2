@@ -1223,7 +1223,16 @@ class ShopController extends Controller
 
                         if(count($price_arr) > 0)
                         {
-                            $html .= '<div class="col-md-12 mt-3 cart-price">';
+                            if(count($price_arr) > 1)
+                            {
+                                $display = '';
+                            }
+                            else
+                            {
+                                $display = 'none';
+                            }
+
+                            $html .= '<div class="col-md-12 mt-3 cart-price" style="display:'.$display.'">';
                                 $html .= '<div class="row p-3">';
                                 foreach ($price_arr as $key => $value)
                                 {
