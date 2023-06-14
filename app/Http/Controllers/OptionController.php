@@ -67,6 +67,7 @@ class OptionController extends Controller
 
         $options = isset($request->option) ? $request->option : [];
         $multiple_selection = isset($request->multiple_selection) ? $request->multiple_selection : 0;
+        $enabled_price = isset($request->enabled_price) ? $request->enabled_price : 0;
 
         if(count($options) > 0)
         {
@@ -77,6 +78,7 @@ class OptionController extends Controller
                 $option->shop_id = $shop_id;
                 $option->title = $request->title;
                 $option->multiple_select = $multiple_selection;
+                $option->enabled_price = $enabled_price;
 
                 if($multiple_selection == 1)
                 {
@@ -150,6 +152,7 @@ class OptionController extends Controller
             // Option Details
             $option_details = Option::with(['optionPrices'])->where('id',$option_id)->first();
             $multiple_selection_active = (isset($option_details['multiple_select']) && $option_details['multiple_select'] == 1) ? 'checked' : '';
+            $enable_price_active = (isset($option_details['enabled_price']) && $option_details['enabled_price'] == 1) ? 'checked' : '';
             $pre_selection_active = (isset($option_details['pre_select']) && $option_details['pre_select'] == 1) ? 'checked' : '';
             $option_prices = (isset($option_details['optionPrices'])) ? $option_details['optionPrices'] : [];
 
@@ -215,6 +218,17 @@ class OptionController extends Controller
                                 $html .= '</div>';
                             $html .= '</div>';
 
+                            $html .= '<div class="row mb-3">';
+                                $html .= '<div class="col-md-4">';
+                                    $html .= '<label for="enabled_price" class="form-label">'. __('Enabled Prices').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-8">';
+                                    $html .= '<label class="switch ms-2">';
+                                        $html .= '<input value="1" type="checkbox" id="enabled_price" name="enabled_price" '.$enable_price_active.' onchange="togglePrices(\'editOptionModal\')"><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                    $html .= '</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+
                             $html .= '<div class="row mb-3 pre-select" style="display:';
                                 if($multiple_selection_active == '')
                                 {
@@ -242,7 +256,7 @@ class OptionController extends Controller
                                                 foreach($option_prices as $key => $opt_price)
                                                 {
                                                     $opt_name = isset($opt_price[$primary_lang_code."_name"]) ? $opt_price[$primary_lang_code."_name"] : '';
-                                                    $price = $opt_price['price'];
+                                                    $price = isset($opt_price['price']) ? $opt_price['price'] : 0.00;
                                                     $opt_key = $key + 1;
 
                                                     $html .= '<div class="row mb-2 option" id="option_'.$opt_key.'">';
@@ -251,7 +265,7 @@ class OptionController extends Controller
                                                             $html .= '<input type="text" name="option[name][]" class="form-control" placeholder="Option Name" value="'.$opt_name.'">';
                                                         $html .= '</div>';
                                                         $html .= '<div class="col-md-4">';
-                                                            $html .= '<input type="number" name="option[price][]" class="form-control" placeholder="Option Price" value="'.$price.'">';
+                                                            $html .= '<input type="number" name="option[price][]" class="form-control opt-price" placeholder="Option Price" value="'.$price.'">';
                                                         $html .= '</div>';
                                                         $html .= '<div class="col-md-2">';
                                                             $html .= '<a class="btn btn-sm btn-danger" onclick="deleteOptionPrice('.$opt_price['id'].','.$opt_key.')"><i class="fa fa-trash"></i></a>';
@@ -309,6 +323,17 @@ class OptionController extends Controller
                                 $html .= '</div>';
                             $html .= '</div>';
 
+                            $html .= '<div class="row mb-3">';
+                                $html .= '<div class="col-md-4">';
+                                    $html .= '<label for="enabled_price" class="form-label">'. __('Enabled Prices').'</label>';
+                                $html .= '</div>';
+                                $html .= '<div class="col-md-8">';
+                                    $html .= '<label class="switch ms-2">';
+                                        $html .= '<input value="1" type="checkbox" id="enabled_price" name="enabled_price" '.$enable_price_active.' onchange="togglePrices(\'editOptionModal\')"><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                    $html .= '</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+
                             $html .= '<div class="row mb-3 pre-select" style="display:';
                                 if($multiple_selection_active == '')
                                 {
@@ -336,7 +361,7 @@ class OptionController extends Controller
                                                 foreach($option_prices as $key => $opt_price)
                                                 {
                                                     $opt_name = isset($opt_price[$primary_lang_code."_name"]) ? $opt_price[$primary_lang_code."_name"] : '';
-                                                    $price = $opt_price['price'];
+                                                    $price = isset($opt_price['price']) ? $opt_price['price'] : 0.00;
                                                     $opt_key = $key + 1;
 
                                                     $html .= '<div class="row mb-2 option" id="option_'.$opt_key.'">';
@@ -345,7 +370,7 @@ class OptionController extends Controller
                                                             $html .= '<input type="text" name="option[name][]" class="form-control" placeholder="Option Name" value="'.$opt_name.'">';
                                                         $html .= '</div>';
                                                         $html .= '<div class="col-md-4">';
-                                                            $html .= '<input type="number" name="option[price][]" class="form-control" placeholder="Option Price" value="'.$price.'">';
+                                                            $html .= '<input type="number" name="option[price][]" class="form-control opt-price" placeholder="Option Price" value="'.$price.'">';
                                                         $html .= '</div>';
                                                         $html .= '<div class="col-md-2">';
                                                             $html .= '<a class="btn btn-sm btn-danger" onclick="deleteOptionPrice('.$opt_price['id'].','.$opt_key.')"><i class="fa fa-trash"></i></a>';
@@ -370,6 +395,7 @@ class OptionController extends Controller
                 'success' => 1,
                 'message' => 'Data has been Fetched SuccessFully..',
                 'data' => $html,
+                'enable_price' => $enable_price_active,
             ]);
 
         }
@@ -394,6 +420,7 @@ class OptionController extends Controller
         $options = isset($request->option) ? $request->option : [];
         $multiple_selection = isset($request->multiple_selection) ? $request->multiple_selection : 0;
         $pre_select = isset($request->pre_select) ? $request->pre_select : 0;
+        $enabled_price = isset($request->enabled_price) ? $request->enabled_price : 0;
         $active_lang_code = $request->active_lang_code;
         $next_lang_code = $request->next_lang_code;
 
@@ -413,6 +440,7 @@ class OptionController extends Controller
                 $option = Option::find($option_id);
                 $option->title = $request->title;
                 $option->multiple_select = $multiple_selection;
+                $option->enabled_price = $enabled_price;
 
                 if($multiple_selection == 1)
                 {
@@ -458,10 +486,13 @@ class OptionController extends Controller
 
                 $html_data = $this->getEditOptionData($next_lang_code,$option_id);
 
+                $enable_price_active = (isset($option['enabled_price']) && $option['enabled_price'] == 1) ? 'checked' : '';
+
                 return response()->json([
                     'success' => 1,
                     'message' => 'Data has been Updated SuccessFully...',
                     'data' => $html_data,
+                    'enable_price' => $enable_price_active,
                 ]);
 
             }
@@ -491,6 +522,7 @@ class OptionController extends Controller
         // Option Details
         $option_details = Option::with(['optionPrices'])->where('id',$option_id)->first();
         $multiple_selection_active = (isset($option_details['multiple_select']) && $option_details['multiple_select'] == 1) ? 'checked' : '';
+        $enable_price_active = (isset($option_details['enabled_price']) && $option_details['enabled_price'] == 1) ? 'checked' : '';
         $pre_selection_active = (isset($option_details['pre_select']) && $option_details['pre_select'] == 1) ? 'checked' : '';
         $option_prices = (isset($option_details['optionPrices'])) ? $option_details['optionPrices'] : [];
 
@@ -562,6 +594,17 @@ class OptionController extends Controller
                             $html .= '</div>';
                         $html .= '</div>';
 
+                        $html .= '<div class="row mb-3">';
+                            $html .= '<div class="col-md-4">';
+                                $html .= '<label for="enabled_price" class="form-label">'. __('Enabled Prices').'</label>';
+                            $html .= '</div>';
+                            $html .= '<div class="col-md-8">';
+                                $html .= '<label class="switch ms-2">';
+                                    $html .= '<input value="1" type="checkbox" id="enabled_price" name="enabled_price" '.$enable_price_active.' onchange="togglePrices(\'editOptionModal\')"><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                $html .= '</label>';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
                         $html .= '<div class="row mb-3 pre-select" style="display:';
                                 if($multiple_selection_active == '')
                                 {
@@ -589,7 +632,7 @@ class OptionController extends Controller
                                             foreach($option_prices as $key => $opt_price)
                                             {
                                                 $opt_name = isset($opt_price[$current_lang_code."_name"]) ? $opt_price[$current_lang_code."_name"] : '';
-                                                $price = $opt_price['price'];
+                                                $price = isset($opt_price['price']) ? $opt_price['price'] : 0.00;
                                                 $opt_key = $key + 1;
 
                                                 $html .= '<div class="row mb-2 option" id="option_'.$opt_key.'">';
@@ -598,7 +641,7 @@ class OptionController extends Controller
                                                         $html .= '<input type="text" name="option[name][]" class="form-control" placeholder="Option Name" value="'.$opt_name.'">';
                                                     $html .= '</div>';
                                                     $html .= '<div class="col-md-4">';
-                                                        $html .= '<input type="number" name="option[price][]" class="form-control" placeholder="Option Price" value="'.$price.'">';
+                                                        $html .= '<input type="number" name="option[price][]" class="form-control opt-price" placeholder="Option Price" value="'.$price.'">';
                                                     $html .= '</div>';
                                                     $html .= '<div class="col-md-2">';
                                                         $html .= '<a class="btn btn-sm btn-danger" onclick="deleteOptionPrice('.$opt_price['id'].','.$opt_key.')"><i class="fa fa-trash"></i></a>';
@@ -656,6 +699,17 @@ class OptionController extends Controller
                             $html .= '</div>';
                         $html .= '</div>';
 
+                        $html .= '<div class="row mb-3">';
+                            $html .= '<div class="col-md-4">';
+                                $html .= '<label for="enabled_price" class="form-label">'. __('Enabled Prices').'</label>';
+                            $html .= '</div>';
+                            $html .= '<div class="col-md-8">';
+                                $html .= '<label class="switch ms-2">';
+                                    $html .= '<input value="1" type="checkbox" id="enabled_price" name="enabled_price" '.$enable_price_active.' onchange="togglePrices(\'editOptionModal\')"><span class="slider round"><i class="fa-solid fa-circle-check check_icon"></i><i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i></span>';
+                                $html .= '</label>';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
                         $html .= '<div class="row mb-3 pre-select" style="display:';
                                 if($multiple_selection_active == '')
                                 {
@@ -683,7 +737,7 @@ class OptionController extends Controller
                                             foreach($option_prices as $key => $opt_price)
                                             {
                                                 $opt_name = isset($opt_price[$primary_lang_code."_name"]) ? $opt_price[$primary_lang_code."_name"] : '';
-                                                $price = $opt_price['price'];
+                                                $price = isset($opt_price['price']) ? $opt_price['price'] : 0.00;
                                                 $opt_key = $key + 1;
 
                                                 $html .= '<div class="row mb-2 option" id="option_'.$opt_key.'">';
@@ -692,7 +746,7 @@ class OptionController extends Controller
                                                         $html .= '<input type="text" name="option[name][]" class="form-control" placeholder="Option Name" value="'.$opt_name.'">';
                                                     $html .= '</div>';
                                                     $html .= '<div class="col-md-4">';
-                                                        $html .= '<input type="number" name="option[price][]" class="form-control" placeholder="Option Price" value="'.$price.'">';
+                                                        $html .= '<input type="number" name="option[price][]" class="form-control opt-price" placeholder="Option Price" value="'.$price.'">';
                                                     $html .= '</div>';
                                                     $html .= '<div class="col-md-2">';
                                                         $html .= '<a class="btn btn-sm btn-danger" onclick="deleteOptionPrice('.$opt_price['id'].','.$opt_key.')"><i class="fa fa-trash"></i></a>';
@@ -727,6 +781,7 @@ class OptionController extends Controller
         $options = isset($request->option) ? $request->option : [];
         $multiple_selection = isset($request->multiple_selection) ? $request->multiple_selection : 0;
         $pre_select = isset($request->pre_select) ? $request->pre_select : 0;
+        $enabled_price = isset($request->enabled_price) ? $request->enabled_price : 0;
         $active_lang_code = $request->active_lang_code;
 
         $request->validate([
@@ -745,6 +800,7 @@ class OptionController extends Controller
                 $option = Option::find($option_id);
                 $option->title = $request->title;
                 $option->multiple_select = $multiple_selection;
+                $option->enabled_price = $enabled_price;
 
                 if($multiple_selection == 1)
                 {

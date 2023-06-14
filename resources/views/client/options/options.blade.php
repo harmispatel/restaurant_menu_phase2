@@ -16,18 +16,18 @@
                     <form method="POST" id="addOptionForm" enctype="multipart/form-data">
                         @csrf
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="title" class="form-label">{{ __('Title') }}</label>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <input type="text" name="title" id="title" class="form-control" placeholder="Enter Attribute Title">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="multiple_selection" class="form-label">{{ __('Multiple Selection') }}</label>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <label class="switch ms-2">
                                     <input type="checkbox" id="multiple_selection" name="multiple_selection" value="1">
                                     <span class="slider round">
@@ -37,11 +37,25 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="enabled_price" class="form-label">{{ __('Enabled Prices') }}</label>
+                            </div>
+                            <div class="col-md-9">
+                                <label class="switch ms-2">
+                                    <input type="checkbox" id="enabled_price" name="enabled_price" value="1" checked onchange="togglePrices('addOptionModal')">
+                                    <span class="slider round">
+                                        <i class="fa-solid fa-circle-check check_icon"></i>
+                                        <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">{{ __('Order Attributes') }}</label>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="row">
                                     <div class="col-md-12 mb-2" id="option_sec">
                                     </div>
@@ -190,7 +204,7 @@
                     html += '<input type="text" name="option[name][]" class="form-control" placeholder="Attribute Name">';
                 html += '</div>';
                 html += '<div class="col-md-4">';
-                    html += '<input type="number" name="option[price][]" class="form-control" placeholder="Attribute Price">';
+                    html += '<input type="number" name="option[price][]" class="form-control opt-price" placeholder="Attribute Price" value="0.00">';
                 html += '</div>';
                 html += '<div class="col-md-2">';
                     html += '<a class="btn btn-sm btn-danger" onclick="$(\'#option_'+count+'\').remove()"><i class="fa fa-trash"></i></a>';
@@ -315,6 +329,14 @@
                     {
                         $('#editOptionModal #option_edit_div').html(response.data);
                         $('#editOptionModal').modal('show');
+                        if(response.enable_price == 'checked')
+                        {
+                            $('.opt-price').show();
+                        }
+                        else
+                        {
+                            $('.opt-price').hide();
+                        }
                     }
                     else
                     {
@@ -348,6 +370,15 @@
                     {
                         $('#editOptionModal #option_edit_div').html('');
                         $('#editOptionModal #option_edit_div').html(response.data);
+
+                        if(response.enable_price == 'checked')
+                        {
+                            $('.opt-price').show();
+                        }
+                        else
+                        {
+                            $('.opt-price').hide();
+                        }
                     }
                     else
                     {
@@ -437,7 +468,7 @@
         }
 
 
-        // Show Hide Pre Selection
+        // Show-Hide Pre Selection
         function togglePreSelection(){
             var isCheck = $('#editOptionForm #multiple_selection').is(":checked");
             if(isCheck == false)
@@ -447,6 +478,21 @@
             else
             {
                 $('#editOptionForm .pre-select').show();
+            }
+        }
+
+
+        // Show-Hide Prices
+        function togglePrices(ModalName)
+        {
+            const isChecked = $('#'+ModalName+' #enabled_price').prop('checked');
+            if(isChecked == true)
+            {
+                $('.opt-price').show();
+            }
+            else
+            {
+                $('.opt-price').hide();
             }
         }
 

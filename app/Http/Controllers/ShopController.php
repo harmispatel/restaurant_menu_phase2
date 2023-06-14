@@ -1261,6 +1261,7 @@ class ShopController extends Controller
                                     {
                                         $html .= '<div class="row p-3" id="option_'.$outer_key.'">';
                                             $opt_dt = Option::with(['optionPrices'])->where('id',$opt_id)->first();
+                                            $enable_price = (isset($opt_dt['enabled_price'])) ? $opt_dt['enabled_price'] : '';
                                             $option_prices = (isset($opt_dt['optionPrices'])) ? $opt_dt['optionPrices'] : [];
 
                                             if(count($option_prices) > 0)
@@ -1281,7 +1282,10 @@ class ShopController extends Controller
                                                             $html .= '<label class="form-label" for="option_price_checkbox_'.$outer_key.'_'.$key.'">'.$opt_price_label.'</label>';
                                                         $html .= '</div>';
                                                         $html .= '<div class="col-6 text-end">';
-                                                            $html .= '<label class="form-label">'.$opt_price.'</label>';
+                                                            if($enable_price == 1)
+                                                            {
+                                                                $html .= '<label class="form-label">'.$opt_price.'</label>';
+                                                            }
                                                         $html .= '</div>';
                                                     }
                                                     else
@@ -1301,7 +1305,10 @@ class ShopController extends Controller
                                                             $html .= '<label class="form-label" for="option_price_radio_'.$outer_key.'_'.$key.'">'.$opt_price_label.'</label>';
                                                         $html .= '</div>';
                                                         $html .= '<div class="col-6 text-end">';
-                                                            $html .= '<label class="form-label">'.$opt_price.'</label>';
+                                                            if($enable_price == 1)
+                                                            {
+                                                                $html .= '<label class="form-label">'.$opt_price.'</label>';
+                                                            }
                                                         $html .= '</div>';
                                                     }
                                                 }
