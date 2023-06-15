@@ -215,6 +215,17 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-7">
+                                                                <span>{{ __('Label Color Transparency')}}</span>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="range" id="label_color_transparency" min="0" max="1" step="0.1" value="{{ (isset($settings['label_color_transparency']) && !empty($settings['label_color_transparency'])) ? $settings['label_color_transparency'] : 1 }}" name="label_color_transparency">
+                                                                    <output class="ms-1" for="label_color_transparency" id="slider-value">{{ (isset($settings['label_color_transparency']) && !empty($settings['label_color_transparency'])) ? $settings['label_color_transparency'] : 1 }}</output>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-7">
                                                                 <span>{{ __('Social Media Icons Color')}}</span>
                                                             </div>
                                                             <div class="col-md-5">
@@ -553,6 +564,12 @@
             var value = $('#'+textID).val();
             $('#'+colorPickerID).val(value);
         }
+
+        // Function for Label Color Opacity
+        $('#label_color_transparency').on("change mousemove", function()
+        {
+            $('#slider-value').html($(this).val());
+        });
 
         // Success Toastr Message
         @if (Session::has('success'))

@@ -232,6 +232,7 @@
             'read_more_link_color',
             'read_more_link_label',
             'banner_height',
+            'label_color_transparency',
         ]);
 
         $settings = [];

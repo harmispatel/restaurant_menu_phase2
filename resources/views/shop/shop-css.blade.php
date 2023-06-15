@@ -79,8 +79,13 @@
 
         /* Label Color */
         @if(isset($theme_settings['label_color']) && !empty($theme_settings['label_color']))
+            @php
+                $rgb_label_color = hexToRgb($theme_settings['label_color']);
+                $label_color_tran = (isset($theme_settings['label_color_transparency']) && !empty($theme_settings['label_color_transparency'])) ? $theme_settings['label_color_transparency'] : 1;
+            @endphp
             .menu_list .menu_list_item .item_name{
-                background-color : {{ $theme_settings['label_color'] }}!important;
+                /* background-color : {{ $theme_settings['label_color'] }}!important; */
+                background-color : rgba({{ $rgb_label_color['r'] }},{{ $rgb_label_color['g'] }},{{ $rgb_label_color['b'] }},{{ $label_color_tran }})!important;
             }
         @endif
 

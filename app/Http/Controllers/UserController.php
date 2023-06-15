@@ -264,6 +264,7 @@ class UserController extends Controller
                         'read_more_link_color' => '#0000ff',
                         'read_more_link_label' => 'Read More',
                         'banner_height' => '350',
+                        'label_color_transparency' => 1,
                     ];
 
                     foreach($setting_keys as $key => $val)
@@ -318,6 +319,7 @@ class UserController extends Controller
                         'read_more_link_color' => '#9f9f9f',
                         'read_more_link_label' => 'Read More',
                         'banner_height' => '350',
+                        'label_color_transparency' => 1,
                     ];
 
                     foreach($setting_keys as $key => $val)

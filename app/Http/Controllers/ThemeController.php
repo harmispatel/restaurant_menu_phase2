@@ -75,6 +75,7 @@ class ThemeController extends Controller
             'read_more_link_color',
             'read_more_link_label',
             'banner_height',
+            'label_color_transparency',
         ]);
 
         $settings = [];
@@ -164,6 +165,7 @@ class ThemeController extends Controller
             'read_more_link_color' => $request->read_more_link_color,
             'read_more_link_label' => $request->read_more_link_label,
             'banner_height' => $request->banner_height,
+            'label_color_transparency' => $request->label_color_transparency,
         ];
 
         if($request->hasFile('today_special_icon'))
@@ -297,6 +299,7 @@ class ThemeController extends Controller
             'read_more_link_color' => $request->read_more_link_color,
             'read_more_link_label' => $request->read_more_link_label,
             'banner_height' => $request->banner_height,
+            'label_color_transparency' => $request->label_color_transparency,
         ];
 
         if($request->hasFile('today_special_icon'))
@@ -408,6 +411,7 @@ class ThemeController extends Controller
             'read_more_link_color',
             'read_more_link_label',
             'banner_height',
+            'label_color_transparency',
         ]);
 
         $settings = [];
