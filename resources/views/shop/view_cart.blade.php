@@ -538,7 +538,7 @@
                 {
                     $('#check-btn').attr('disabled',true);
                     $('#min-amount-msg').html('');
-                    $('#min-amount-msg').append('<code class="fs-4">'+remain_amount+' {{ __("Left for the minimum order") }}.</code>');
+                    $('#min-amount-msg').append('<code class="fs-6">'+remain_amount+' {{ __("Left for the minimum order") }}.</code>');
                     $('#min-amount-msg').show();
                 }
 

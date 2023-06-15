@@ -440,8 +440,6 @@
     // Check Delivery Schedule
     function checkDeliverySchedule($shop_id)
     {
-        date_default_timezone_set('Asia/Kolkata');
-
         $current_date = Carbon::now();
         $today = strtolower($current_date->format('l'));
         $current_time = strtotime($current_date->format('G:i'));
