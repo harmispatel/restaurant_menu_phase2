@@ -406,7 +406,7 @@ class ShopController extends Controller
                                                     $html .= '</div>';
                                                 }
 
-                                                $html .= '<p>'.(isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "".'</p>';
+                                                $html .= '<div class="item-desc">'.(isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "".'</div>';
 
                                             $html .= '</div>';
                                         $html .= '</div>';
@@ -485,12 +485,12 @@ class ShopController extends Controller
                                             if(strlen(strip_tags($desc)) > 180)
                                             {
                                                 $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
-                                                $html .= '<p>'.$desc.' ... <br>
-                                                <a class="read-more-desc">'.$read_more_label.'</a></p>';
+                                                $html .= '<div class="item-desc">'.$desc.' ... <br>
+                                                <a class="read-more-desc">'.$read_more_label.'</a></div>';
                                             }
                                             else
                                             {
-                                                $html .= '<p>'.strip_tags($desc).'</p>';
+                                                $html .= '<div class="item-desc">'.strip_tags($desc).'</div>';
                                             }
 
                                             $html .= '<ul class="price_ul">';
@@ -658,7 +658,7 @@ class ShopController extends Controller
                                                     $html .= '</div>';
                                                 }
                                                 $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
-                                                $html .= '<p>'.json_decode($desc,true).'</p>';
+                                                $html .= '<div class="item-desc">'.json_decode($desc,true).'</div>';
 
                                             $html .= '</div>';
                                         $html .= '</div>';
@@ -737,12 +737,12 @@ class ShopController extends Controller
                                             if(strlen(strip_tags($desc)) > 180)
                                             {
                                                 $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
-                                                $html .= '<p>'.$desc.' ... <br>
-                                                <a class="read-more-desc">'.$read_more_label.'</a></p>';
+                                                $html .= '<div class="item-desc">'.$desc.' ... <br>
+                                                <a class="read-more-desc">'.$read_more_label.'</a></div>';
                                             }
                                             else
                                             {
-                                                $html .= '<p>'.strip_tags($desc).'</p>';
+                                                $html .= '<div class="item-desc">'.strip_tags($desc).'</div>';
                                             }
 
                                             $html .= '<ul class="price_ul">';
@@ -847,7 +847,7 @@ class ShopController extends Controller
                                             }
 
                                             $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
-                                            $html .= '<p>'.json_decode($desc,true).'</p>';
+                                            $html .= '<div class="item-desc">'.json_decode($desc,true).'</div>';
 
                                         $html .= '</div>';
                                     $html .= '</div>';
@@ -926,12 +926,12 @@ class ShopController extends Controller
                                         if(strlen(strip_tags($desc)) > 180)
                                         {
                                             $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
-                                            $html .= '<p>'.$desc.' ... <br>
-                                                <a class="read-more-desc">'.$read_more_label.'</a></p>';
+                                            $html .= '<div class="item-desc">'.$desc.' ... <br>
+                                                <a class="read-more-desc">'.$read_more_label.'</a></div>';
                                         }
                                         else
                                         {
-                                            $html .= '<p>'.strip_tags($desc).'</p>';
+                                            $html .= '<div class="item-desc">'.strip_tags($desc).'</di>';
                                         }
 
                                         $html .= '<ul class="price_ul">';

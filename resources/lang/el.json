@@ -342,7 +342,7 @@
     "Other Settings" : "Αλλες ρυθμίσεις",
     "Auto Order Approval" : "Αυτόματη Έγκριση παραγγελίας",
     "Minimum amount needed for delivery, if left null any amount is acceptable." : "Ελάχιστο ποσό που απαιτείται για Παραγγελία. Εάν μείνει κενό αποδέχεστε όλα τα ποσά.",
-    "Discount percentage (discount percentage applied to the total amount), if left null no discount is applied." : "Ποσοστό έκπτωσης (Το ποσοστό έκπτωσης εφαρμόζεται στο συνολικό ποσό). Εάν μείνει κενό, δεν εφαρμόζεται έκπτωση.",
+    "Enter the desired discount value, discount applies to the total amount! Leave blank to disable." : "Εισάγετε την τιμή έκπτωσης που επιθυμείτε, Η έκπτωση εφαρμόζεται στο συνολικό ποσό! Αφήστε το κενό για απενεργοποίηση.",
     "Default estimated minutes until order arrival" : "Προεπιλεγμένα εκτιμώμενα λεπτά για τις παραδόσεις",
     "Notification Settings" : "Ρυθμίσεις ειδοποιήσεων",
     "Play Sound" : "Αναπαραγωγή ήχου",
@@ -413,10 +413,13 @@
     "Discount Type": "Τύπος έκπτωσης",
     "Before you enable print option.": "Πριν ενεργοποιήσετε την εκτύπωση.",
     "You have to install the client software JS Print Manager Ver. 6.x.x": "Πρέπει να εγκαταστήσετε το απαραίτητο λογισμικό επικοινωνίας 'client' JS Print Manager Ver. 6.x.x",
-    "Download or Visit this": "Κάντε λήψη ή επισκεφθείτε αυτό",
-    "Link" : "Σύνδεσμος",
+    "Download or Visit this": "Κατεβάστε ή επισκεφτείτε τον",
+    "Link" : "σύνδεσμο",
     "Percentage %" : "Ποσοστά %",
     "Fixed Amount" : " Προκαθορισμένο Ποσό",
 
-    "Label Color Transparency": "Διαφάνεια χρώματος ετικέτας"
+    "Label Color Transparency": "Διαφάνεια χρώματος ετικέτας",
+    "Item Box Background Color": "Χρώμα φόντου κουτιού αντικειμένου",
+    "Item Title Color": "Χρώμα τίτλου αντικειμένου",
+    "Item Description Color": "Στοιχείο Περιγραφή Χρώμα"
 }

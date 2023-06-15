@@ -377,7 +377,7 @@
     "Other Settings" : "Other Settings",
     "Auto Order Approval" : "Auto Order Approval",
     "Minimum amount needed for delivery, if left null any amount is acceptable." : "Minimum amount needed for delivery, if left null any amount is acceptable.",
-    "Discount percentage (discount percentage applied to the total amount), if left null no discount is applied." : "Discount percentage (discount percentage applied to the total amount), if left null no discount is applied.",
+    "Enter the desired discount value, discount applies to the total amount! Leave blank to disable." : "Enter the desired discount value, discount applies to the total amount! Leave blank to disable.",
     "Default estimated minutes until order arrival" : "Default estimated minutes until order arrival",
     "Notification Settings" : "Notification Settings",
     "Play Sound" : "Play Sound",
@@ -454,5 +454,8 @@
     "Percentage %" : "Percentage %",
     "Fixed Amount" : "Fixed Amount",
 
-    "Label Color Transparency": "Label Color Transparency"
+    "Label Color Transparency": "Label Color Transparency",
+    "Item Box Background Color": "Item Box Background Color",
+    "Item Title Color": "Item Title Color",
+    "Item Description Color": "Item Description Color"
 }

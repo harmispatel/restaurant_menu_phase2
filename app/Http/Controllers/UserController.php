@@ -265,6 +265,9 @@ class UserController extends Controller
                         'read_more_link_label' => 'Read More',
                         'banner_height' => '350',
                         'label_color_transparency' => 1,
+                        'item_box_background_color' => '#ffffff',
+                        'item_title_color' => '#4d572b',
+                        'item_description_color' => '#000000',
                     ];
 
                     foreach($setting_keys as $key => $val)
@@ -320,6 +323,9 @@ class UserController extends Controller
                         'read_more_link_label' => 'Read More',
                         'banner_height' => '350',
                         'label_color_transparency' => 1,
+                        'item_box_background_color' => '#000000',
+                        'item_title_color' => '#ffffff',
+                        'item_description_color' => '#ffffff',
                     ];
 
                     foreach($setting_keys as $key => $val)

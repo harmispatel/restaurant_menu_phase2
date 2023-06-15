@@ -1082,7 +1082,7 @@
   .single_item_inr p{
     margin:0;
     font-size:18px;
-    color:#000000;
+    /* color:#000000; */
     font-weight:600;
   }
   .price_ul{
@@ -1337,7 +1337,7 @@
       .single_item_inr p{
         margin:0;
         font-size:15px;
-        color:#000000;
+        /* color:#000000; */
         font-weight:600;
       }
 

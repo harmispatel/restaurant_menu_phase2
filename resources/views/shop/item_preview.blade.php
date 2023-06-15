@@ -215,11 +215,11 @@
                                                                         $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
                                                                     @endphp
                                                                     @if(strlen(strip_tags($desc)) > 180)
-                                                                        <p>
+                                                                        <div class="item-desc">
                                                                             {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
-                                                                            <a class="read-more-desc">{{ $read_more_label }}</a></p>
+                                                                            <a class="read-more-desc">{{ $read_more_label }}</a></div>
                                                                     @else
-                                                                        <p>{!! $desc !!}</p>
+                                                                        <div class="item-desc">{!! $desc !!}</div>
                                                                     @endif
 
                                                                     {{-- Price Section --}}
@@ -317,7 +317,7 @@
                                                                         @endif
 
                                                                         {{-- Description Section --}}
-                                                                        <p>{!! (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "" !!}</p>
+                                                                        <div>{!! (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "" !!}</div>
 
                                                                     </div>
                                                                 </div>
@@ -401,11 +401,11 @@
                                                                             $desc = (isset($item->product[$description_key]) && !empty($item->product[$description_key])) ? $item->product[$description_key] : "";
                                                                         @endphp
                                                                         @if(strlen(strip_tags($desc)) > 180)
-                                                                            <p>
+                                                                            <div class="item-desc">
                                                                                 {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
-                                                                                <a class="read-more-desc">{{ $read_more_label }}</a></p>
+                                                                                <a class="read-more-desc">{{ $read_more_label }}</a></div>
                                                                         @else
-                                                                            <p>{!! $desc !!}</p>
+                                                                            <div class="item-desc">{!! $desc !!}</div>
                                                                         @endif
 
                                                                         {{-- Price Section --}}
@@ -502,7 +502,7 @@
                                                                             @endif
 
                                                                             {{-- Description Section --}}
-                                                                            <p>{!! (isset($item->product[$description_key]) && !empty($item->product[$description_key])) ? $item->product[$description_key] : "" !!}</p>
+                                                                            <div class="item-desc">{!! (isset($item->product[$description_key]) && !empty($item->product[$description_key])) ? $item->product[$description_key] : "" !!}</div>
 
                                                                         </div>
                                                                     </div>
@@ -581,11 +581,11 @@
                                                                 $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
                                                             @endphp
                                                             @if(strlen(strip_tags($desc)) > 180)
-                                                                <p>
+                                                                <div class="item-desc">
                                                                     {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
-                                                                    <a class="read-more-desc">{{ $read_more_label }}</a></p>
+                                                                    <a class="read-more-desc">{{ $read_more_label }}</a></div>
                                                             @else
-                                                                <p>{!! $desc !!}</p>
+                                                                <div class="item-desc">{!! $desc !!}</div>
                                                             @endif
 
                                                             {{-- Price Section --}}
@@ -682,7 +682,7 @@
                                                                 @endif
 
                                                                 {{-- Description Section --}}
-                                                                <p>{!! (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "" !!}</p>
+                                                                <div class="item-desc">{!! (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "" !!}</div>
                                                             </div>
                                                         </div>
                                                     @endif

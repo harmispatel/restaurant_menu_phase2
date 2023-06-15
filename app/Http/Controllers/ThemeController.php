@@ -76,6 +76,9 @@ class ThemeController extends Controller
             'read_more_link_label',
             'banner_height',
             'label_color_transparency',
+            'item_box_background_color',
+            'item_title_color',
+            'item_description_color',
         ]);
 
         $settings = [];
@@ -166,6 +169,9 @@ class ThemeController extends Controller
             'read_more_link_label' => $request->read_more_link_label,
             'banner_height' => $request->banner_height,
             'label_color_transparency' => $request->label_color_transparency,
+            'item_box_background_color' => $request->item_box_background_color,
+            'item_title_color' => $request->item_title_color,
+            'item_description_color' => $request->item_description_color,
         ];
 
         if($request->hasFile('today_special_icon'))
@@ -300,6 +306,9 @@ class ThemeController extends Controller
             'read_more_link_label' => $request->read_more_link_label,
             'banner_height' => $request->banner_height,
             'label_color_transparency' => $request->label_color_transparency,
+            'item_box_background_color' => $request->item_box_background_color,
+            'item_title_color' => $request->item_title_color,
+            'item_description_color' => $request->item_description_color,
         ];
 
         if($request->hasFile('today_special_icon'))
@@ -412,6 +421,9 @@ class ThemeController extends Controller
             'read_more_link_label',
             'banner_height',
             'label_color_transparency',
+            'item_box_background_color',
+            'item_title_color',
+            'item_description_color',
         ]);
 
         $settings = [];

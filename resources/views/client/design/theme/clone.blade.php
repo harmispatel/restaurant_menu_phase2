@@ -314,6 +314,39 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
+                                                                <span>{{ __('Item Box Background Color')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="item_box_background_color" name="item_box_background_color" class="form-control me-2 p-0" value="{{ isset($settings['item_box_background_color']) ? $settings['item_box_background_color'] : '' }}" onchange="changeVal('item_box_background_color','item_box_background_color_input')">
+                                                                    <input id="item_box_background_color_input" type="text" class="form-control" value="{{ isset($settings['item_box_background_color']) ? $settings['item_box_background_color'] : '' }}" onkeyup="changeColor('item_box_background_color_input','item_box_background_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>{{ __('Item Title Color')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="item_title_color" name="item_title_color" class="form-control me-2 p-0" value="{{ isset($settings['item_title_color']) ? $settings['item_title_color'] : '' }}" onchange="changeVal('item_title_color','item_title_color_input')">
+                                                                    <input id="item_title_color_input" type="text" class="form-control" value="{{ isset($settings['item_title_color']) ? $settings['item_title_color'] : '' }}" onkeyup="changeColor('item_title_color_input','item_title_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>{{ __('Item Description Color')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="item_description_color" name="item_description_color" class="form-control me-2 p-0" value="{{ isset($settings['item_description_color']) ? $settings['item_description_color'] : '' }}" onchange="changeVal('item_description_color','item_description_color_input')">
+                                                                    <input id="item_description_color_input" type="text" class="form-control" value="{{ isset($settings['item_description_color']) ? $settings['item_description_color'] : '' }}" onkeyup="changeColor('item_description_color_input','item_description_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
                                                                 <span>{{ __('Item Box Shadow')}}</span>
                                                             </div>
                                                             <div class="col-md-4">

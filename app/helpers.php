@@ -233,6 +233,9 @@
             'read_more_link_label',
             'banner_height',
             'label_color_transparency',
+            'item_box_background_color',
+            'item_title_color',
+            'item_description_color',
         ]);
 
         $settings = [];
@@ -587,9 +590,21 @@
         $total = 0;
         if(count($cart) > 0)
         {
-            foreach($cart as $val)
+            foreach($cart as $cart_data)
             {
-                $total += (isset($val['total_amount'])) ? $val['total_amount'] : 0;
+                if(count($cart_data) > 0)
+                {
+                    foreach($cart_data as $cart_val)
+                    {
+                        if(count($cart_val) > 0)
+                        {
+                            foreach($cart_val as $cart_item)
+                            {
+                                $total += (isset($cart_item['total_amount'])) ? $cart_item['total_amount'] : 0;
+                            }
+                        }
+                    }
+                }
             }
         }
         return $total;

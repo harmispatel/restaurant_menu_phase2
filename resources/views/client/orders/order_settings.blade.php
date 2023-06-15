@@ -128,7 +128,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mt-3">
-                                    <label for="discount_percentage" class="form-label">{{ __('Discount percentage (discount percentage applied to the total amount), if left null no discount is applied.') }}</label>
+                                    <label for="discount_percentage" class="form-label">{{ __('Enter the desired discount value, discount applies to the total amount! Leave blank to disable.') }}</label>
                                     <input type="number" name="discount_percentage" id="discount_percentage" class="form-control ord-setting" value="{{ (isset($order_settings['discount_percentage'])) ? $order_settings['discount_percentage'] : '' }}">
                                 </div>
                             </div>
@@ -174,7 +174,7 @@
                             <div class="row">
                                 <h3>{{ __('Print Settings') }}</h3>
                                 <div class="col-md-12">
-                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Before you enable print option. ') }}</label> <br>
+                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Before you enable print option.') }}</label> <br>
                                     <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('You have to install the client software JS Print Manager Ver. 6.x.x') }}</label> <br>
                                     <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Download or Visit this') }} <a target="_incognito" href="https://www.neodynamic.com/downloads/jspm/">{{ __('Link') }}</a></label> <br>
                                     <a href="{{ url('/neodynamic-jspm/jspm6-6-win.zip') }}" class="btn btn-primary btn-sm mt-2 mb-2"><i class="bi bi-download"></i> Download</a> <br>

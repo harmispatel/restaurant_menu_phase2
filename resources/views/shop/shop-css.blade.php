@@ -127,6 +127,31 @@
             }
         @endif
 
+
+        /* Item Box Background Color */
+        @if(isset($theme_settings['item_box_background_color']) && !empty($theme_settings['item_box_background_color']))
+            .single_item_inr{
+                background-color : {{ $theme_settings['item_box_background_color'] }}!important;
+            }
+        @endif
+
+
+        /* Item Title Color */
+        @if(isset($theme_settings['item_title_color']) && !empty($theme_settings['item_title_color']))
+            .single_item_inr h3{
+                color : {{ $theme_settings['item_title_color'] }}!important;
+            }
+        @endif
+
+
+        /* Item Description Color */
+        @if(isset($theme_settings['item_description_color']) && !empty($theme_settings['item_description_color']))
+            .single_item_inr .item-desc{
+                color : {{ $theme_settings['item_description_color'] }}!important;
+            }
+        @endif
+
+
         /* Tags Font Color */
         @if(isset($theme_settings['tag_font_color']) && !empty($theme_settings['tag_font_color']))
             .nav-item .tags-btn{
