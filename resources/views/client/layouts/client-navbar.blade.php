@@ -15,12 +15,14 @@
 
     $logo = (isset(Auth::user()->hasOneShop->shop['logo']) && !empty(Auth::user()->hasOneShop->shop['logo'])) ? Auth::user()->hasOneShop->shop['logo'] : '';
 
+    $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
 @endphp
 
 <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between text-center">
-        <a href="{{ route('client.dashboard') }}" class="logo d-flex align-items-center justify-content-center">
+        <a href="{{ route('restaurant',$shop_slug) }}" target="_blank" class="logo d-flex align-items-center justify-content-center">
             @if(!empty($logo))
                 <img class="w-100" src="{{ $logo }}" alt="Logo">
             @else

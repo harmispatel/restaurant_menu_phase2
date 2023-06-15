@@ -130,7 +130,7 @@
 
         /* Item Box Background Color */
         @if(isset($theme_settings['item_box_background_color']) && !empty($theme_settings['item_box_background_color']))
-            .single_item_inr{
+            .single_item_inr.devider-border{
                 background-color : {{ $theme_settings['item_box_background_color'] }}!important;
             }
         @endif
