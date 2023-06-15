@@ -247,12 +247,27 @@ class EveryPayController extends Controller
 
                         // Item Details
                         $item_details = Items::where('id',$cart_val['item_id'])->first();
+                        $item_discount = (isset($item_details['discount'])) ? $item_details['discount'] : 0;
+                        $item_discount_type = (isset($item_details['discount_type'])) ? $item_details['discount_type'] : 'percentage';
                         $item_name = (isset($item_details[$name_key])) ? $item_details[$name_key] : '';
 
                         //Price Details
                         $price_detail = ItemPrice::where('id',$cart_val['option_id'])->first();
                         $price_label = (isset($price_detail[$label_key])) ? $price_detail[$label_key] : '';
                         $item_price = (isset($price_detail['price'])) ? $price_detail['price'] : '';
+
+                        if($item_discount > 0)
+                        {
+                            if($item_discount_type == 'fixed')
+                            {
+                                $item_price = number_format($item_price - $item_discount,2);
+                            }
+                            else
+                            {
+                                $dis_per = $item_price * $item_discount / 100;
+                                $item_price = number_format($item_price - $dis_per,2);
+                            }
+                        }
 
                         if(!empty($price_label))
                         {

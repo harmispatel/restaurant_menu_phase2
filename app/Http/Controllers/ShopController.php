@@ -1121,6 +1121,8 @@ class ShopController extends Controller
                 $item_desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : $item['description'];
                 $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
                 $price_arr = getItemPrice($item['id']);
+                $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
+                $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
 
                 $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
                 $html .= '<input type="hidden" name="shop_id" id="shop_id" value="'.$request->shop_id.'">';
@@ -1218,7 +1220,25 @@ class ShopController extends Controller
                         $html .= '<div class="col-md-12 text-center py-2" style="border-top: 2px solid #ccc; border-bottom: 2px solid #ccc">';
                             $t_price = (isset($price_arr[0]->price)) ? Currency::currency($currency)->format($price_arr[0]->price) : Currency::currency($currency)->format(0.00);
                             $html .= '<div><b id="total_price">'.$t_price.'</b></div>';
-                            $html .= "<input type='hidden' name='total_amount' id='total_amount' value='".$price_arr[0]->price."'>";
+
+                            if($item_discount > 0)
+                            {
+                                if($item_discount_type == 'fixed')
+                                {
+                                    $hidden_price = number_format($price_arr[0]->price - $item_discount,2);
+                                }
+                                else
+                                {
+                                    $dis_per = $price_arr[0]->price * $item_discount / 100;
+                                    $hidden_price = number_format($price_arr[0]->price - $dis_per,2);
+                                }
+                                $html .= "<input type='hidden' name='total_amount' id='total_amount' value='".$hidden_price."'>";
+                            }
+                            else
+                            {
+                                $html .= "<input type='hidden' name='total_amount' id='total_amount' value='".$price_arr[0]->price."'>";
+                            }
+
                         $html .= '</div>';
 
                         if(count($price_arr) > 0)
@@ -1236,11 +1256,26 @@ class ShopController extends Controller
                                 $html .= '<div class="row p-3">';
                                 foreach ($price_arr as $key => $value)
                                 {
-                                    $price = Currency::currency($currency)->format($value['price']);
+                                    if($item_discount > 0)
+                                    {
+                                        if($item_discount_type == 'fixed')
+                                        {
+                                            $price = number_format($value['price'] - $item_discount,2);
+                                        }
+                                        else
+                                        {
+                                            $price_per = $value['price'] *  $item_discount / 100;
+                                            $price = number_format($value['price'] - $price_per,2);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $price = $value['price'];
+                                    }
                                     $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
 
                                     $html .= '<div class="col-6">';
-                                        $html .= '<input type="radio" name="base_price" onchange="updatePrice()" value="'.$value['price'].'" id="base_price_'.$key.'" class="me-2" ';
+                                        $html .= '<input type="radio" name="base_price" onchange="updatePrice()" value="'.$price.'" id="base_price_'.$key.'" class="me-2" ';
                                             if($key == 0)
                                             {
                                                 $html .= 'checked';
@@ -1249,7 +1284,7 @@ class ShopController extends Controller
                                         $html .= '<label class="form-label" for="base_price_'.$key.'">'.$price_label.'</label>';
                                     $html .= '</div>';
                                     $html .= '<div class="col-6 text-end">';
-                                        $html .= '<label class="form-label">'.$price.'</label>';
+                                        $html .= '<label class="form-label">'.Currency::currency($currency)->format($price).'</label>';
                                     $html .= '</div>';
                                 }
                                 $html .= '</div>';
@@ -2139,12 +2174,27 @@ class ShopController extends Controller
 
                     // Item Details
                     $item_details = Items::where('id',$cart_val['item_id'])->first();
+                    $item_discount = (isset($item_details['discount'])) ? $item_details['discount'] : 0;
+                    $item_discount_type = (isset($item_details['discount_type'])) ? $item_details['discount_type'] : 'percentage';
                     $item_name = (isset($item_details[$name_key])) ? $item_details[$name_key] : '';
 
                     //Price Details
                     $price_detail = ItemPrice::where('id',$cart_val['option_id'])->first();
                     $price_label = (isset($price_detail[$label_key])) ? $price_detail[$label_key] : '';
-                    $item_price = (isset($price_detail['price'])) ? $price_detail['price'] : '';
+                    $item_price = (isset($price_detail['price'])) ? $price_detail['price'] : 0;
+
+                    if($item_discount > 0)
+                    {
+                        if($item_discount_type == 'fixed')
+                        {
+                            $item_price = number_format($item_price - $item_discount,2);
+                        }
+                        else
+                        {
+                            $dis_per = $item_price * $item_discount / 100;
+                            $item_price = number_format($item_price - $dis_per,2);
+                        }
+                    }
 
                     if(!empty($price_label))
                     {
@@ -2196,7 +2246,6 @@ class ShopController extends Controller
                     $order_items->item_qty = $cart_val['quantity'];
                     $order_items->sub_total = $total_amount;
                     $order_items->sub_total_text = $total_amount_text;
-                    $order_items->item_price_label = $price_label;
                     $order_items->options = serialize($otpions_arr);
                     $order_items->save();
                 }

@@ -154,6 +154,10 @@
                                             <div class="row">
                                                 @if(count($all_items) > 0)
                                                     @foreach ($all_items as $item)
+                                                        @php
+                                                            $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
+                                                            $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
+                                                        @endphp
                                                         @if($item['type'] == 1)
                                                             <div class="col-md-6 col-lg-3 mb-3">
                                                                 <div class="single_item_inr devider-border" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
@@ -231,7 +235,26 @@
                                                                                     $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
                                                                                 @endphp
                                                                                 <li>
-                                                                                    <p>{{ $price_label }} <span>{{ $price }}</span></p>
+                                                                                    @if($item_discount > 0)
+                                                                                        @php
+                                                                                            if($item_discount_type == 'fixed')
+                                                                                            {
+                                                                                                $new_amount = number_format($value['price'] - $item_discount,2);
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                $per_value = $value['price'] * $item_discount / 100;
+                                                                                                $new_amount = number_format($value['price'] - $per_value,2);
+                                                                                            }
+                                                                                        @endphp
+                                                                                        <p>
+                                                                                            {{ $price_label }} <span class="text-decoration-line-through">{{ $price }}</span> <span>{{ Currency::currency($currency)->format($new_amount) }}</span>
+                                                                                        </p>
+                                                                                    @else
+                                                                                        <p>
+                                                                                            {{ $price_label }} <span>{{ $price }}</span>
+                                                                                        </p>
+                                                                                    @endif
                                                                                 </li>
                                                                             @endforeach
                                                                         @endif
@@ -317,6 +340,10 @@
                                                 <div class="row">
                                                     @if(count($tag_items) > 0)
                                                         @foreach ($tag_items as $item)
+                                                            @php
+                                                                $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
+                                                                $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
+                                                            @endphp
                                                             @if($item['type'] == 1)
                                                                 <div class="col-md-6 col-lg-3 mb-3">
                                                                     <div class="single_item_inr devider-border" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
@@ -394,7 +421,26 @@
                                                                                         $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
                                                                                     @endphp
                                                                                     <li>
-                                                                                        <p>{{ $price_label }} <span>{{ $price }}</span></p>
+                                                                                        @if($item_discount > 0)
+                                                                                            @php
+                                                                                                if($item_discount_type == 'fixed')
+                                                                                                {
+                                                                                                    $new_amount = number_format($value['price'] - $item_discount,2);
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    $per_value = $value['price'] * $item_discount / 100;
+                                                                                                    $new_amount = number_format($value['price'] - $per_value,2);
+                                                                                                }
+                                                                                            @endphp
+                                                                                            <p>
+                                                                                                {{ $price_label }} <span class="text-decoration-line-through">{{ $price }}</span> <span>{{ Currency::currency($currency)->format($new_amount) }}</span>
+                                                                                            </p>
+                                                                                        @else
+                                                                                            <p>
+                                                                                                {{ $price_label }} <span>{{ $price }}</span>
+                                                                                            </p>
+                                                                                        @endif
                                                                                     </li>
                                                                                 @endforeach
                                                                             @endif
@@ -474,6 +520,10 @@
                                     <div class="row">
                                         @if(count($all_items) > 0)
                                             @foreach ($all_items as $item)
+                                                @php
+                                                    $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
+                                                    $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
+                                                @endphp
                                                 @if($item['type'] == 1)
                                                     <div class="col-md-6 col-lg-3 mb-3">
                                                         <div class="single_item_inr devider-border" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
@@ -551,7 +601,26 @@
                                                                             $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
                                                                         @endphp
                                                                         <li>
-                                                                            <p>{{ $price_label }} <span>{{ $price }}</span></p>
+                                                                            @if($item_discount > 0)
+                                                                                @php
+                                                                                    if($item_discount_type == 'fixed')
+                                                                                    {
+                                                                                        $new_amount = number_format($value['price'] - $item_discount,2);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        $per_value = $value['price'] * $item_discount / 100;
+                                                                                        $new_amount = number_format($value['price'] - $per_value,2);
+                                                                                    }
+                                                                                @endphp
+                                                                                <p>
+                                                                                    {{ $price_label }} <span class="text-decoration-line-through">{{ $price }}</span> <span>{{ Currency::currency($currency)->format($new_amount) }}</span>
+                                                                                </p>
+                                                                            @else
+                                                                                <p>
+                                                                                    {{ $price_label }} <span>{{ $price }}</span>
+                                                                                </p>
+                                                                            @endif
                                                                         </li>
                                                                     @endforeach
                                                                 @endif

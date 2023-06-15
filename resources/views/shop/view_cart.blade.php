@@ -98,6 +98,8 @@
                                     $categories_data = $cart_val['categories_data'];
 
                                     $item_dt = itemDetails($cart_val['item_id']);
+                                    $item_discount = (isset($item_dt['discount'])) ? $item_dt['discount'] : 0;
+                                    $item_discount_type = (isset($item_dt['discount_type'])) ? $item_dt['discount_type'] : 'percentage';
                                     $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
 
                                     $item_name = (isset($item_dt[$name_key])) ? $item_dt[$name_key] : '';
@@ -118,7 +120,23 @@
                                         @if(!empty($item_price_label))
                                             {{ $item_price_label }} -
                                         @endif
-                                        {{ $item_price }}
+                                        @if($item_discount > 0)
+                                            @php
+                                                if($item_discount_type == 'fixed')
+                                                {
+                                                    $new_price = number_format($item_price_details['price'] - $item_discount,2);
+                                                }
+                                                else
+                                                {
+                                                    $dis_per = $item_price_details['price'] * $item_discount / 100;
+                                                    $new_price = number_format($item_price_details['price'] - $dis_per,2);
+                                                }
+                                            @endphp
+                                            <span class="text-decoration-line-through">{{ $item_price }}</span>
+                                            <span>{{ Currency::currency($currency)->format($new_price) }}</span>
+                                        @else
+                                            <span>{{ $item_price }}</span>
+                                        @endif
                                     </div>
                                     <div class="col-md-3 text-center mt-1">
                                         <div class="row">
