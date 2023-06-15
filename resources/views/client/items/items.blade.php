@@ -109,8 +109,8 @@
                                 <div class="col-md-12">
                                     <label for="description" class="form-label">{{ __('Discount Type')}}</label>
                                     <select name="discount_type" id="discount_type" class="form-select">
-                                        <option value="percentage">Percentage</option>
-                                        <option value="fixed">Fixed</option>
+                                        <option value="percentage">{{ __('Percentage %') }}</option>
+                                        <option value="fixed">{{ __('Fixed Amount') }}</option>
                                     </select>
                                 </div>
                             </div>

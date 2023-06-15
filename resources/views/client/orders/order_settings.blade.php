@@ -121,8 +121,8 @@
                                 <div class="col-md-6 mt-3">
                                     <label for="discount_type" class="form-label">{{ __('Discount Type') }}</label>
                                     <select name="discount_type" id="discount_type" class="form-select ord-setting">
-                                        <option value="percentage" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'percentage') ? 'selected' : '' }}>Percentage</option>
-                                        <option value="fixed" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'fixed') ? 'selected' : '' }}>Fixed</option>
+                                        <option value="percentage" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'percentage') ? 'selected' : '' }}>{{ __('Percentage %') }}</option>
+                                        <option value="fixed" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'fixed') ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -176,9 +176,8 @@
                                 <div class="col-md-12">
                                     <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Before you enable print option. ') }}</label> <br>
                                     <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('You have to install the client software JS Print Manager Ver. 6.x.x') }}</label> <br>
-                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Download or Visit this Link') }}</label> <br>
+                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Download or Visit this') }} <a target="_incognito" href="https://www.neodynamic.com/downloads/jspm/">{{ __('Link') }}</a></label> <br>
                                     <a href="{{ url('/neodynamic-jspm/jspm6-6-win.zip') }}" class="btn btn-primary btn-sm mt-2 mb-2"><i class="bi bi-download"></i> Download</a> <br>
-                                    <a class="mt-3" href="https://www.neodynamic.com/downloads/jspm/">JS Print Manager</a>
                                 </div>
                             </div>
                             <div class="row mt-3">

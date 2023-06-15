@@ -619,13 +619,13 @@ class ItemsController extends Controller
                                             {
                                                 $html .= 'selected';
                                             }
-                                        $html .= '>Percentage</option>';
+                                        $html .= '>'.__('Percentage %').'</option>';
                                         $html .= '<option value="fixed" ';
                                             if($item['discount_type'] == 'fixed')
                                             {
                                                 $html .= 'selected';
                                             }
-                                        $html .= '>Fixed</option>';
+                                        $html .= '>'.__('Fixed Amount').'</option>';
                                     $html .= '</select>';
                                 $html .= '</div>';
 
@@ -955,13 +955,13 @@ class ItemsController extends Controller
                                             {
                                                 $html .= 'selected';
                                             }
-                                        $html .= '>Percentage</option>';
+                                        $html .= '>'.__('Percentage %').'</option>';
                                         $html .= '<option value="fixed" ';
                                             if($item['discount_type'] == 'fixed')
                                             {
                                                 $html .= 'selected';
                                             }
-                                        $html .= '>Fixed</option>';
+                                        $html .= '>'.__('Fixed Amount').'</option>';
                                     $html .= '</select>';
                                 $html .= '</div>';
 
@@ -1815,13 +1815,13 @@ class ItemsController extends Controller
                                         {
                                             $html .= 'selected';
                                         }
-                                    $html .= '>Percentage</option>';
+                                    $html .= '>'.__('Percentage %').'</option>';
                                     $html .= '<option value="fixed" ';
                                         if($item['discount_type'] == 'fixed')
                                         {
                                             $html .= 'selected';
                                         }
-                                    $html .= '>Fixed</option>';
+                                    $html .= '>'.__('Fixed Amount').'</option>';
                                 $html .= '</select>';
                             $html .= '</div>';
 
@@ -2150,13 +2150,13 @@ class ItemsController extends Controller
                                         {
                                             $html .= 'selected';
                                         }
-                                    $html .= '>Percentage</option>';
+                                    $html .= '>'.__('Percentage %').'</option>';
                                     $html .= '<option value="fixed" ';
                                         if($item['discount_type'] == 'fixed')
                                         {
                                             $html .= 'selected';
                                         }
-                                    $html .= '>Fixed</option>';
+                                    $html .= '>'.__('Fixed Amount').'</option>';
                                 $html .= '</select>';
                             $html .= '</div>';
 

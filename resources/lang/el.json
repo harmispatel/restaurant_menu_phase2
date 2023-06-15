@@ -413,5 +413,8 @@
     "Discount Type": "Τύπος έκπτωσης",
     "Before you enable print option.": "Πριν ενεργοποιήσετε την εκτύπωση.",
     "You have to install the client software JS Print Manager Ver. 6.x.x": "Πρέπει να εγκαταστήσετε το απαραίτητο λογισμικό επικοινωνίας 'client' JS Print Manager Ver. 6.x.x",
-    "Download or Visit this Link": "Κατεβάστε ή επισκεφτείτε τον σύνδεσμο"
+    "Download or Visit this": "Κάντε λήψη ή επισκεφθείτε αυτό",
+    "Link" : "Σύνδεσμος",
+    "Percentage %" : "Ποσοστά %",
+    "Fixed Amount" : " Προκαθορισμένο Ποσό"
 }
