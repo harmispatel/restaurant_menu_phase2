@@ -552,11 +552,30 @@
         $total_quantity = 0;
         if(count($cart) > 0)
         {
-            foreach($cart as $val)
+            foreach($cart as $cart_data)
             {
-                $total_quantity += (isset($val['quantity'])) ? $val['quantity'] : 0;
+                if(count($cart_data) > 0)
+                {
+                    foreach ($cart_data as $cart_val)
+                    {
+                        if(count($cart_val) > 0)
+                        {
+                            foreach($cart_val as $item)
+                            {
+                                $total_quantity += (isset($item['quantity'])) ? $item['quantity'] : 0;
+                            }
+                        }
+                    }
+                }
             }
         }
+
+        if($total_quantity == 0)
+        {
+            session()->forget('cart');
+            session()->save();
+        }
+
         return $total_quantity;
     }
 

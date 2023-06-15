@@ -16,6 +16,7 @@ class PaypalController extends Controller
 
     public function payWithpaypal($shop_slug)
     {
+        $all_item = [];
         $checkout_type = session()->get('checkout_type');
 
         if(empty($checkout_type))
@@ -73,85 +74,99 @@ class PaypalController extends Controller
         }
 
         // Add Items
-        foreach($cart as $cart_val)
+        foreach($cart as $cart_data)
         {
-            $otpions_arr = [];
-            $item_price = 0.00;
-            $total_amount = $cart_val['total_amount'];
-            $total_amount_text = $cart_val['total_amount_text'];
-            $categories_data = (isset($cart_val['categories_data']) && !empty($cart_val['categories_data'])) ? $cart_val['categories_data'] : [];
-
-            if(count($categories_data) > 0)
+            if(count($cart_data) > 0)
             {
-                foreach ($categories_data as $option_id)
+                foreach($cart_data as $cart_val)
                 {
-                    $my_opt = $option_id;
-                    if(is_array($my_opt))
+                    if(count($cart_val) > 0)
                     {
-                        if(count($my_opt) > 0)
+                        foreach($cart_val as $cart_item)
                         {
-                            foreach ($my_opt as $optid)
+                            $otpions_arr = [];
+                            $item_price = 0.00;
+                            $total_amount = $cart_item['total_amount'];
+                            $total_amount_text = $cart_item['total_amount_text'];
+                            $categories_data = (isset($cart_item['categories_data']) && !empty($cart_item['categories_data'])) ? $cart_item['categories_data'] : [];
+
+                            if(count($categories_data) > 0)
                             {
-                                $opt_price_dt = OptionPrice::where('id',$optid)->first();
-                                $opt_price = (isset($opt_price_dt['price'])) ? $opt_price_dt['price'] : 0.00;
-                                $item_price += $opt_price;
+                                foreach ($categories_data as $option_id)
+                                {
+                                    $my_opt = $option_id;
+                                    if(is_array($my_opt))
+                                    {
+                                        if(count($my_opt) > 0)
+                                        {
+                                            foreach ($my_opt as $optid)
+                                            {
+                                                $opt_price_dt = OptionPrice::where('id',$optid)->first();
+                                                $opt_price = (isset($opt_price_dt['price'])) ? $opt_price_dt['price'] : 0.00;
+                                                $item_price += $opt_price;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $opt_price_dt = OptionPrice::where('id',$my_opt)->first();
+                                        $opt_price = (isset($opt_price_dt['price'])) ? $opt_price_dt['price'] : 0.00;
+                                        $item_price += $opt_price;
+                                    }
+                                }
                             }
+
+                            // Item Details
+                            $item_details = Items::where('id',$cart_item['item_id'])->first();
+                            $item_discount = (isset($item_details['discount'])) ? $item_details['discount'] : 0;
+                            $item_discount_type = (isset($item_details['discount_type'])) ? $item_details['discount_type'] : 'percentage';
+                            $item_name = (isset($item_details[$name_key])) ? $item_details[$name_key] : '';
+
+                            //Price Details
+                            $price_detail = ItemPrice::where('id',$cart_item['option_id'])->first();
+                            $price_label = (isset($price_detail[$label_key])) ? $price_detail[$label_key] : '';
+                            $item_qty = $cart_item['quantity'];
+                            if(isset($price_detail['price']))
+                            {
+                                if($item_discount > 0)
+                                {
+                                    if($item_discount_type == 'fixed')
+                                    {
+                                        $new_price = number_format($price_detail['price'] - $item_discount, 2);
+                                    }
+                                    else
+                                    {
+                                        $dis_per = $price_detail['price'] * $item_discount / 100;
+                                        $new_price = number_format($price_detail['price'] - $dis_per, 2);;
+                                    }
+                                    $item_price += $new_price;
+                                }
+                                else
+                                {
+                                    $item_price += $price_detail['price'];
+                                }
+                            }
+
+                            if(!empty($price_label))
+                            {
+                                $otpions_arr[] = $price_label;
+                            }
+
+                            $final_amount += $total_amount;
+
+                            $item = new Item();
+                            $item->setName($item_name);
+                            $item->setCurrency($currency);
+                            $item->setQuantity($item_qty);
+                            $item->setPrice($item_price);
+                            $all_item[] = $item;
                         }
                     }
-                    else
-                    {
-                        $opt_price_dt = OptionPrice::where('id',$my_opt)->first();
-                        $opt_price = (isset($opt_price_dt['price'])) ? $opt_price_dt['price'] : 0.00;
-                        $item_price += $opt_price;
-                    }
                 }
             }
 
-            // Item Details
-            $item_details = Items::where('id',$cart_val['item_id'])->first();
-            $item_discount = (isset($item_details['discount'])) ? $item_details['discount'] : 0;
-            $item_discount_type = (isset($item_details['discount_type'])) ? $item_details['discount_type'] : 'percentage';
-            $item_name = (isset($item_details[$name_key])) ? $item_details[$name_key] : '';
-
-            //Price Details
-            $price_detail = ItemPrice::where('id',$cart_val['option_id'])->first();
-            $price_label = (isset($price_detail[$label_key])) ? $price_detail[$label_key] : '';
-            $item_qty = $cart_val['quantity'];
-            if(isset($price_detail['price']))
-            {
-                if($item_discount > 0)
-                {
-                    if($item_discount_type == 'fixed')
-                    {
-                        $new_price = number_format($price_detail['price'] - $item_discount, 2);
-                    }
-                    else
-                    {
-                        $dis_per = $price_detail['price'] * $item_discount / 100;
-                        $new_price = number_format($price_detail['price'] - $dis_per, 2);;
-                    }
-                    $item_price += $new_price;
-                }
-                else
-                {
-                    $item_price += $price_detail['price'];
-                }
-            }
-
-            if(!empty($price_label))
-            {
-                $otpions_arr[] = $price_label;
-            }
-
-            $final_amount += $total_amount;
-
-            $item = new Item();
-            $item->setName($item_name);
-            $item->setCurrency($currency);
-            $item->setQuantity($item_qty);
-            $item->setPrice($item_price);
-            $all_item[] = $item;
         }
+
         $item_list = new ItemList();
         $item_list->setItems($all_item);
 
@@ -409,87 +424,99 @@ class PaypalController extends Controller
             // Insert Order Items
             if($order->id)
             {
-                foreach($cart as $cart_val)
+                foreach($cart as $cart_data)
                 {
-                    $otpions_arr = [];
-
-                    // Item Details
-                    $item_details = Items::where('id',$cart_val['item_id'])->first();
-                    $item_discount = (isset($item_details['discount'])) ? $item_details['discount'] : 0;
-                    $item_discount_type = (isset($item_details['discount_type'])) ? $item_details['discount_type'] : 'percentage';
-                    $item_name = (isset($item_details[$name_key])) ? $item_details[$name_key] : '';
-
-                    //Price Details
-                    $price_detail = ItemPrice::where('id',$cart_val['option_id'])->first();
-                    $price_label = (isset($price_detail[$label_key])) ? $price_detail[$label_key] : '';
-                    $item_price = (isset($price_detail['price'])) ? $price_detail['price'] : '';
-
-                    if($item_discount > 0)
+                    if(count($cart_data) > 0)
                     {
-                        if($item_discount_type == 'fixed')
+                        foreach($cart_data as $cart_val)
                         {
-                            $item_price = number_format($item_price - $item_discount,2);
-                        }
-                        else
-                        {
-                            $dis_per = $item_price * $item_discount / 100;
-                            $item_price = number_format($item_price - $dis_per,2);
-                        }
-                    }
-
-                    if(!empty($price_label))
-                    {
-                        $otpions_arr[] = $price_label;
-                    }
-
-
-                    $total_amount = $cart_val['total_amount'];
-                    $total_amount_text = $cart_val['total_amount_text'];
-                    $categories_data = (isset($cart_val['categories_data']) && !empty($cart_val['categories_data'])) ? $cart_val['categories_data'] : [];
-
-                    $final_amount += $total_amount;
-                    $total_qty += $cart_val['quantity'];
-
-                    if(count($categories_data) > 0)
-                    {
-                        foreach($categories_data as $option_id)
-                        {
-                            $my_opt = $option_id;
-
-                            if(is_array($my_opt))
+                            if(count($cart_val) > 0)
                             {
-                                if(count($my_opt) > 0)
+                                foreach($cart_val as $cart_item)
                                 {
-                                    foreach ($my_opt as $optid)
+                                    $otpions_arr = [];
+
+                                    // Item Details
+                                    $item_details = Items::where('id',$cart_item['item_id'])->first();
+                                    $item_discount = (isset($item_details['discount'])) ? $item_details['discount'] : 0;
+                                    $item_discount_type = (isset($item_details['discount_type'])) ? $item_details['discount_type'] : 'percentage';
+                                    $item_name = (isset($item_details[$name_key])) ? $item_details[$name_key] : '';
+
+                                    //Price Details
+                                    $price_detail = ItemPrice::where('id',$cart_item['option_id'])->first();
+                                    $price_label = (isset($price_detail[$label_key])) ? $price_detail[$label_key] : '';
+                                    $item_price = (isset($price_detail['price'])) ? $price_detail['price'] : '';
+
+                                    if($item_discount > 0)
                                     {
-                                        $opt_price_dt = OptionPrice::where('id',$optid)->first();$opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                        $otpions_arr[] = $opt_price_name;
+                                        if($item_discount_type == 'fixed')
+                                        {
+                                            $item_price = number_format($item_price - $item_discount,2);
+                                        }
+                                        else
+                                        {
+                                            $dis_per = $item_price * $item_discount / 100;
+                                            $item_price = number_format($item_price - $dis_per,2);
+                                        }
                                     }
+
+                                    if(!empty($price_label))
+                                    {
+                                        $otpions_arr[] = $price_label;
+                                    }
+
+
+                                    $total_amount = $cart_item['total_amount'];
+                                    $total_amount_text = $cart_item['total_amount_text'];
+                                    $categories_data = (isset($cart_item['categories_data']) && !empty($cart_item['categories_data'])) ? $cart_item['categories_data'] : [];
+
+                                    $final_amount += $total_amount;
+                                    $total_qty += $cart_item['quantity'];
+
+                                    if(count($categories_data) > 0)
+                                    {
+                                        foreach($categories_data as $option_id)
+                                        {
+                                            $my_opt = $option_id;
+
+                                            if(is_array($my_opt))
+                                            {
+                                                if(count($my_opt) > 0)
+                                                {
+                                                    foreach ($my_opt as $optid)
+                                                    {
+                                                        $opt_price_dt = OptionPrice::where('id',$optid)->first();$opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                        $otpions_arr[] = $opt_price_name;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                $opt_price_dt = OptionPrice::where('id',$my_opt)->first();
+                                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                $otpions_arr[] = $opt_price_name;
+                                            }
+                                        }
+                                    }
+
+                                    // Order Items
+                                    $order_items = new OrderItems();
+                                    $order_items->shop_id = $shop_id;
+                                    $order_items->order_id = $order->id;
+                                    $order_items->item_id = $cart_item['item_id'];
+                                    $order_items->item_name = $item_name;
+                                    $order_items->item_price = $item_price;
+                                    $order_items->item_price_label = $price_label;
+                                    $order_items->item_qty = $cart_item['quantity'];
+                                    $order_items->sub_total = $total_amount;
+                                    $order_items->sub_total_text = $total_amount_text;
+                                    $order_items->item_price_label = $price_label;
+                                    $order_items->options = serialize($otpions_arr);
+                                    $order_items->save();
                                 }
                             }
-                            else
-                            {
-                                $opt_price_dt = OptionPrice::where('id',$my_opt)->first();
-                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                $otpions_arr[] = $opt_price_name;
-                            }
                         }
                     }
-
-                    // Order Items
-                    $order_items = new OrderItems();
-                    $order_items->shop_id = $shop_id;
-                    $order_items->order_id = $order->id;
-                    $order_items->item_id = $cart_val['item_id'];
-                    $order_items->item_name = $item_name;
-                    $order_items->item_price = $item_price;
-                    $order_items->item_price_label = $price_label;
-                    $order_items->item_qty = $cart_val['quantity'];
-                    $order_items->sub_total = $total_amount;
-                    $order_items->sub_total_text = $total_amount_text;
-                    $order_items->item_price_label = $price_label;
-                    $order_items->options = serialize($otpions_arr);
-                    $order_items->save();
                 }
 
                 $update_order = Order::find($order->id);

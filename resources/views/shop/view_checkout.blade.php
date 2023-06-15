@@ -289,79 +289,87 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @if(count($cart) > 0)
-                                    @foreach ($cart as $cart_val)
-                                        @php
-                                            $categories_data = $cart_val['categories_data'];
+                                    @foreach ($cart as $cart_data)
+                                        @if(count($cart_data) > 0)
+                                            @foreach ($cart_data as $cart_val)
+                                                @if(count($cart_val) > 0)
+                                                    @foreach ($cart_val as $cart_item)
+                                                        @php
+                                                            $categories_data = $cart_item['categories_data'];
 
-                                            $item_dt = itemDetails($cart_val['item_id']);
-                                            $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
+                                                            $item_dt = itemDetails($cart_item['item_id']);
+                                                            $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
 
-                                            $item_name = (isset($item_dt[$name_key])) ? $item_dt[$name_key] : '';
+                                                            $item_name = (isset($item_dt[$name_key])) ? $item_dt[$name_key] : '';
 
-                                            $item_price_details = App\Models\ItemPrice::where('id',$cart_val['option_id'])->first();
-                                            $item_price = (isset($item_price_details['price'])) ? Currency::currency($currency)->format($item_price_details['price']) : 0.00;
-                                            $item_price_label = (isset($item_price_details[$label_key])) ? $item_price_details[$label_key] : '';
+                                                            $item_price_details = App\Models\ItemPrice::where('id',$cart_item['option_id'])->first();
+                                                            $item_price = (isset($item_price_details['price'])) ? Currency::currency($currency)->format($item_price_details['price']) : 0.00;
+                                                            $item_price_label = (isset($item_price_details[$label_key])) ? $item_price_details[$label_key] : '';
 
-                                            $total_amount += isset($cart_val['total_amount']) ? $cart_val['total_amount'] : 0;
-                                        @endphp
+                                                            $total_amount += isset($cart_item['total_amount']) ? $cart_item['total_amount'] : 0;
+                                                        @endphp
 
-                                        <div class="row align-items-center mb-2 bg-light p-2 m-2">
-                                            <div class="col-md-2 text-center">
-                                                <span class="me-2">{{ $cart_val['quantity'] }} <span> x </span></span>
-                                                <img src="{{ $item_image }}" width="40" height="40">
-                                            </div>
-                                            <div class="col-md-6 text-center">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <b>{{ $item_name }}</b>
-                                                    </div>
-                                                </div>
+                                                        <div class="row align-items-center mb-2 bg-light p-2 m-2">
+                                                            <div class="col-md-2 text-center">
+                                                                <span class="me-2">{{ $cart_item['quantity'] }} <span> x </span></span>
+                                                                <img src="{{ $item_image }}" width="40" height="40">
+                                                            </div>
+                                                            <div class="col-md-6 text-center">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <b>{{ $item_name }}</b>
+                                                                    </div>
+                                                                </div>
 
-                                                <div class="row mt-1">
-                                                    <div class="col-md-12">
-                                                        @if(!empty($item_price_label))
-                                                            {{ $item_price_label }},
-                                                        @endif
+                                                                <div class="row mt-1">
+                                                                    <div class="col-md-12">
+                                                                        @if(!empty($item_price_label))
+                                                                            {{ $item_price_label }},
+                                                                        @endif
 
-                                                        @if(count($categories_data) > 0)
-                                                            @foreach ($categories_data as $option_id)
-                                                                @php
-                                                                    $my_opt = $option_id;
-                                                                @endphp
+                                                                        @if(count($categories_data) > 0)
+                                                                            @foreach ($categories_data as $option_id)
+                                                                                @php
+                                                                                    $my_opt = $option_id;
+                                                                                @endphp
 
-                                                                @if(is_array($my_opt))
-                                                                    @if(count($my_opt) > 0)
-                                                                        @foreach ($my_opt as $optid)
-                                                                            @php
-                                                                                $opt_price_dt = App\Models\OptionPrice::where('id',$optid)->first();
-                                                                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                                $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-                                                                            @endphp
-                                                                            @if(!empty($opt_price_name))
-                                                                                {{ $opt_price_name }},
-                                                                            @endif
-                                                                        @endforeach
-                                                                    @endif
-                                                                @else
-                                                                    @php
-                                                                        $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->first();
-                                                                        $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                        $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-                                                                    @endphp
-                                                                    @if(!empty($opt_price_name))
-                                                                        {{ $opt_price_name }},
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        @endif
-                                                    </div>
-                                                </div>
+                                                                                @if(is_array($my_opt))
+                                                                                    @if(count($my_opt) > 0)
+                                                                                        @foreach ($my_opt as $optid)
+                                                                                            @php
+                                                                                                $opt_price_dt = App\Models\OptionPrice::where('id',$optid)->first();
+                                                                                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                                $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                                            @endphp
+                                                                                            @if(!empty($opt_price_name))
+                                                                                                {{ $opt_price_name }},
+                                                                                            @endif
+                                                                                        @endforeach
+                                                                                    @endif
+                                                                                @else
+                                                                                    @php
+                                                                                        $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->first();
+                                                                                        $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                        $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                                    @endphp
+                                                                                    @if(!empty($opt_price_name))
+                                                                                        {{ $opt_price_name }},
+                                                                                    @endif
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
 
-                                            </div>
-                                            <div class="col-md-3 text-center">
-                                                <b>{{ __('Sub Total') }} : </b>{{ $cart_val['total_amount_text'] }}
-                                            </div>
-                                        </div>
+                                                            </div>
+                                                            <div class="col-md-3 text-center">
+                                                                <b>{{ __('Sub Total') }} : </b>{{ $cart_item['total_amount_text'] }}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     @endforeach
                                 @endif
                             </div>

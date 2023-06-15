@@ -51,6 +51,8 @@
 
     $current_check_type = session()->get('checkout_type');
 
+    $total_cart_qty = getCartQuantity();
+
 @endphp
 
 @extends('shop.shop-layout')
@@ -93,69 +95,84 @@
                 <div class="card-body view_cart">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            @forelse ($cart as $cart_val)
-                                @php
-                                    $categories_data = $cart_val['categories_data'];
+                            @forelse ($cart as $cart_key => $cart_data)
+                                @foreach ($cart_data as $cart_val)
+                                    @foreach ($cart_val as $cart_item_key => $cart_item)
+                                        @php
+                                            $categories_data = $cart_item['categories_data'];
 
-                                    $item_dt = itemDetails($cart_val['item_id']);
-                                    $item_discount = (isset($item_dt['discount'])) ? $item_dt['discount'] : 0;
-                                    $item_discount_type = (isset($item_dt['discount_type'])) ? $item_dt['discount_type'] : 'percentage';
-                                    $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
+                                            $item_dt = itemDetails($cart_item['item_id']);
+                                            $item_discount = (isset($item_dt['discount'])) ? $item_dt['discount'] : 0;
+                                            $item_discount_type = (isset($item_dt['discount_type'])) ? $item_dt['discount_type'] : 'percentage';
+                                            $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
 
-                                    $item_name = (isset($item_dt[$name_key])) ? $item_dt[$name_key] : '';
+                                            $item_name = (isset($item_dt[$name_key])) ? $item_dt[$name_key] : '';
 
-                                    $item_price_details = App\Models\ItemPrice::where('id',$cart_val['option_id'])->first();
-                                    $item_price = (isset($item_price_details['price'])) ? Currency::currency($currency)->format($item_price_details['price']) : 0.00;
-                                    $item_price_label = (isset($item_price_details[$label_key])) ? $item_price_details[$label_key] : '';
+                                            $item_price_details = App\Models\ItemPrice::where('id',$cart_item['option_id'])->first();
+                                            $item_price = (isset($item_price_details['price'])) ? Currency::currency($currency)->format($item_price_details['price']) : 0.00;
+                                            $item_price_label = (isset($item_price_details[$label_key])) ? $item_price_details[$label_key] : '';
 
-                                    $total_amount += isset($cart_val['total_amount']) ? $cart_val['total_amount'] : 0;
-                                @endphp
+                                            $total_amount += isset($cart_item['total_amount']) ? $cart_item['total_amount'] : 0;
+                                        @endphp
+                                        <div class="row align-items-center">
+                                            <div class="col-md-3">
+                                                <a class="d-block text-dark text-decoration-none" style="font-size:1.4rem;"><b>{{ $item_name }}</b></a>
+                                                <img src="{{ $item_image }}" class="w-25">
+                                            </div>
+                                            <div class="col-md-2 text-center">
+                                                @if(!empty($item_price_label))
+                                                    {{ $item_price_label }} -
+                                                @endif
+                                                @if($item_discount > 0)
+                                                    @php
+                                                        if($item_discount_type == 'fixed')
+                                                        {
+                                                            $new_price = number_format($item_price_details['price'] - $item_discount,2);
+                                                        }
+                                                        else
+                                                        {
+                                                            $dis_per = $item_price_details['price'] * $item_discount / 100;
+                                                            $new_price = number_format($item_price_details['price'] - $dis_per,2);
+                                                        }
+                                                    @endphp
+                                                    <span class="text-decoration-line-through">{{ $item_price }}</span>
+                                                    <span>{{ Currency::currency($currency)->format($new_price) }}</span>
+                                                @else
+                                                    <span>{{ $item_price }}</span>
+                                                @endif
+                                            </div>
+                                            <div class="col-md-3 text-center mt-1">
+                                                <div class="row">
+                                                    @if(count($categories_data) > 0)
+                                                        <div class="col-md-12">
+                                                            <strong>{{ __('Order Options') }}</strong>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <ul class="my-0 list-unstyled">
+                                                                @foreach ($categories_data as $option_id)
+                                                                    @php
+                                                                        $my_opt = $option_id;
+                                                                    @endphp
 
-                                <div class="row align-items-center">
-                                    <div class="col-md-3">
-                                        <a class="d-block text-dark text-decoration-none" style="font-size:1.4rem;"><b>{{ $item_name }}</b></a>
-                                        <img src="{{ $item_image }}" class="w-25">
-                                    </div>
-                                    <div class="col-md-2 text-center">
-                                        @if(!empty($item_price_label))
-                                            {{ $item_price_label }} -
-                                        @endif
-                                        @if($item_discount > 0)
-                                            @php
-                                                if($item_discount_type == 'fixed')
-                                                {
-                                                    $new_price = number_format($item_price_details['price'] - $item_discount,2);
-                                                }
-                                                else
-                                                {
-                                                    $dis_per = $item_price_details['price'] * $item_discount / 100;
-                                                    $new_price = number_format($item_price_details['price'] - $dis_per,2);
-                                                }
-                                            @endphp
-                                            <span class="text-decoration-line-through">{{ $item_price }}</span>
-                                            <span>{{ Currency::currency($currency)->format($new_price) }}</span>
-                                        @else
-                                            <span>{{ $item_price }}</span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-3 text-center mt-1">
-                                        <div class="row">
-                                            @if(count($categories_data) > 0)
-                                                <div class="col-md-12">
-                                                    <strong>{{ __('Order Options') }}</strong>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <ul class="my-0 list-unstyled">
-                                                        @foreach ($categories_data as $option_id)
-                                                            @php
-                                                                $my_opt = $option_id;
-                                                            @endphp
-
-                                                            @if(is_array($my_opt))
-                                                                @if(count($my_opt) > 0)
-                                                                    @foreach ($my_opt as $optid)
+                                                                    @if(is_array($my_opt))
+                                                                        @if(count($my_opt) > 0)
+                                                                            @foreach ($my_opt as $optid)
+                                                                                @php
+                                                                                    $opt_price_dt = App\Models\OptionPrice::where('id',$optid)->first();
+                                                                                    $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                    $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                                @endphp
+                                                                                <li style="font-size: 14px">
+                                                                                    @if(!empty($opt_price_name))
+                                                                                        {{ $opt_price_name }} -
+                                                                                    @endif
+                                                                                    {{ $opt_price }}
+                                                                                </li>
+                                                                            @endforeach
+                                                                        @endif
+                                                                    @else
                                                                         @php
-                                                                            $opt_price_dt = App\Models\OptionPrice::where('id',$optid)->first();
+                                                                            $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->first();
                                                                             $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
                                                                             $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
                                                                         @endphp
@@ -165,87 +182,28 @@
                                                                             @endif
                                                                             {{ $opt_price }}
                                                                         </li>
-                                                                    @endforeach
-                                                                @endif
-                                                            @else
-                                                                @php
-                                                                    $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->first();
-                                                                    $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                    $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-                                                                @endphp
-                                                                <li style="font-size: 14px">
-                                                                    @if(!empty($opt_price_name))
-                                                                        {{ $opt_price_name }} -
                                                                     @endif
-                                                                    {{ $opt_price }}
-                                                                </li>
-                                                            @endif
-                                                        @endforeach
-                                                    </ul>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                            @endif
-                                        </div>
-                                        {{-- <div class="cart-media">
-                                            <img src="{{ $item_image }}" width="100" height="100">
-                                            <div class="media-body ms-3">
-                                                <a class="d-block text-dark text-decoration-none" style="font-size:1.4rem;"><b>{{ $item_name }}</b></a>
-                                                @if(count($categories_data) > 0)
-                                                    <ul class="my-2">
-                                                        @foreach ($categories_data as $option_id)
-                                                            @php
-                                                                $my_opt = $option_id;
-                                                            @endphp
-
-                                                            @if(is_array($my_opt))
-                                                                @if(count($my_opt) > 0)
-                                                                    @foreach ($my_opt as $optid)
-                                                                        @php
-                                                                            $opt_price_dt = App\Models\OptionPrice::where('id',$optid)->first();
-                                                                            $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                            $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-                                                                        @endphp
-                                                                        <li>
-                                                                            @if(!empty($opt_price_name))
-                                                                                <b>{{ $opt_price_name }} - </b>
-                                                                            @endif
-                                                                            {{ $opt_price }}
-                                                                        </li>
-                                                                    @endforeach
-                                                                @endif
-                                                            @else
-                                                                @php
-                                                                    $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->first();
-                                                                    $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                    $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-                                                                @endphp
-                                                                <li>
-                                                                    @if(!empty($opt_price_name))
-                                                                        <b>{{ $opt_price_name }} - </b>
-                                                                    @endif
-                                                                    {{ $opt_price }}
-                                                                </li>
-                                                            @endif
-                                                        @endforeach
-                                                    </ul>
-                                                @endif
                                             </div>
-                                        </div> --}}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="view_cart_qty d-flex align-items-center justify-content-between">
-                                            <div class="d-flex w-100"><b>{{ __('Value') }} : </b>&nbsp;{{ $cart_val['total_amount_text'] }}</div>
-                                            <div class="d-flex align-items-center justify-content-end qty-m-view">
-                                                <input type="number" onchange="updateCart({{ $cart_val['item_id'] }},this)" class="form-control me-2 text-center" value="{{ $cart_val['quantity'] }}" old-qty="{{ $cart_val['quantity'] }}">
-                                                <a onclick="removeCartItem({{ $cart_val['item_id'] }})" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                                            <div class="col-md-4">
+                                                <div class="view_cart_qty d-flex align-items-center justify-content-between">
+                                                    <div class="d-flex w-100"><b>{{ __('Value') }} : </b>&nbsp;{{ $cart_item['total_amount_text'] }}</div>
+                                                    <div class="d-flex align-items-center justify-content-end qty-m-view">
+                                                        <input type="number" onchange="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},this)" class="form-control me-2 text-center" value="{{ $cart_item['quantity'] }}" old-qty="{{ $cart_item['quantity'] }}">
+                                                        <a onclick="removeCartItem({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }})" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <hr>
+                                        <hr>
+                                    @endforeach
+                                @endforeach
                             @empty
-                                <div class="col-md-12 text-center">
-                                    <h4>Cart is Empty</h4>
-                                </div>
+                                <h4 class="text-center">Cart is Empty</h4>
                             @endforelse
                         </div>
                     </div>
@@ -412,6 +370,10 @@
 
     <script type="text/javascript">
 
+        var total_qty = @json($total_cart_qty);
+        var shop_slug = @json($shop_slug);
+        var empty_redirect = @json(url('restaurant'))+'/'+shop_slug;
+
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
@@ -428,7 +390,7 @@
         @endif
 
         // Function for Update Cart
-        function updateCart(itemID,ele)
+        function updateCart(itemID,priceID,item_key,ele)
         {
             var qty = $(ele).val();
             var old_qty = $(ele).attr('old-qty');
@@ -443,6 +405,8 @@
                     'old_quantity' : old_qty,
                     'item_id' : itemID,
                     'currency' : currency,
+                    'price_id' : priceID,
+                    'item_key' : item_key,
                 },
                 dataType: "JSON",
                 success: function (response)
@@ -467,7 +431,7 @@
         }
 
         // Function for Remove Cart Items
-        function removeCartItem(itemID)
+        function removeCartItem(itemID,priceID,item_key)
         {
             $.ajax({
                 type: "POST",
@@ -475,6 +439,8 @@
                 data: {
                     "_token" : "{{ csrf_token() }}",
                     'item_id' : itemID,
+                    'price_id' : priceID,
+                    'item_key' : item_key,
                 },
                 dataType: "JSON",
                 success: function (response)
@@ -554,7 +520,13 @@
         });
 
 
-        $(document).ready(function () {
+        $(document).ready(function ()
+        {
+            if(total_qty == 0)
+            {
+                window.location.href = "";
+            }
+
             var check_type = $('#checkout_type :selected').val();
             if(check_type == 'delivery')
             {
