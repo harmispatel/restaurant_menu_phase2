@@ -159,7 +159,7 @@
                                                             $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
                                                         @endphp
                                                         @if($item['type'] == 1)
-                                                            <div class="col-md-6 col-lg-3 mb-3">
+                                                            <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
                                                                 <div class="single_item_inr devider-border" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
 
                                                                     {{-- Image Section --}}
@@ -345,7 +345,7 @@
                                                                 $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
                                                             @endphp
                                                             @if($item['type'] == 1)
-                                                                <div class="col-md-6 col-lg-3 mb-3">
+                                                                <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
                                                                     <div class="single_item_inr devider-border" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
 
                                                                         {{-- Image Section --}}
@@ -525,7 +525,7 @@
                                                     $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
                                                 @endphp
                                                 @if($item['type'] == 1)
-                                                    <div class="col-md-6 col-lg-3 mb-3">
+                                                    <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
                                                         <div class="single_item_inr devider-border" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
 
                                                             {{-- Image Section --}}

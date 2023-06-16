@@ -997,6 +997,7 @@
     font-size:16px;
     font-weight:400;
     color:#4d572b;
+    white-space: nowrap;
   }
 
   .item_box_main > .nav-tabs .nav-link{
@@ -1052,7 +1053,7 @@
   .item_image img {
       width: 120px;
       height: 120px;
-      margin-top: 30px;
+      margin-top: 45px;
       /* margin-top: 25px; */
       border-radius: 50%;
       border: 2px solid #fff;
@@ -1063,7 +1064,7 @@
     color: #4d572b;
     font-weight:700;
     /* margin-top: 30px; */
-    margin-top: 5px;
+    margin-top: 20px;
   }
   .single_item_inr img.tag-img{
       position: absolute;
@@ -1573,6 +1574,9 @@
   }
 
   @media (max-width:767px) {
+    .single_item_inr h3{
+        margin-top: 25px;
+    }
       .sec_main .menu_list{
           display: grid;
           grid-template-columns: repeat(2, 1fr);

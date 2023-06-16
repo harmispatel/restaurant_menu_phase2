@@ -413,7 +413,7 @@ class ShopController extends Controller
                                     }
                                     else
                                     {
-                                        $html .= '<div class="col-md-6 col-lg-3 mb-3">';
+                                        $html .= '<div class="col-md-6 col-lg-6 col-xl-3 mb-3">';
                                             $html .= '<div class="single_item_inr devider-border" onclick="getItemDetails('.$item->id.','.$shop_id.')" style="cursor: pointer">';
 
                                             if(!empty($item['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item['image']))
@@ -665,7 +665,7 @@ class ShopController extends Controller
                                     }
                                     else
                                     {
-                                        $html .= '<div class="col-md-6 col-lg-3 mb-3">';
+                                        $html .= '<div class="col-md-6 col-lg-6 col-xl-3 mb-3">';
                                             $html .= '<div class="single_item_inr devider-border" onclick="getItemDetails('.$item->id.','.$shop_id.')" style="cursor: pointer">';
 
                                             if(!empty($item['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item['image']))
@@ -854,7 +854,7 @@ class ShopController extends Controller
                                 }
                                 else
                                 {
-                                    $html .= '<div class="col-md-6 col-lg-3 mb-3">';
+                                    $html .= '<div class="col-md-6 col-lg-6 col-xl-3 mb-3">';
                                         $html .= '<div class="single_item_inr devider-border" onclick="getItemDetails('.$item->id.','.$shop_id.')" style="cursor: pointer">';
 
                                         if(!empty($item['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item['image']))
