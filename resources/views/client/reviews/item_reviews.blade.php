@@ -32,10 +32,11 @@
                                 <thead>
                                     <tr>
                                         <th>{{ __('Id')}}</th>
-                                        <th>{{ __('Category')}}</th>
+                                        {{-- <th>{{ __('Category')}}</th> --}}
                                         <th>{{ __('Item')}}</th>
-                                        <th style="width: 18%">{{ __('Rating')}}</th>
+                                        <th style="width: 25%">{{ __('Rating')}}</th>
                                         <th style="width: 30%">{{ __('Comment')}}</th>
+                                        <th>{{ __('Email')}}</th>
                                         <th style="width: 15%">{{ __('Time') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
@@ -44,7 +45,7 @@
                                     @forelse ($item_reviews as $review)
                                         <tr>
                                             <td>{{ $review->id }}</td>
-                                            <td>{{ (isset($review->item->category['en_name'])) ? $review->item->category['en_name'] : '' }}</td>
+                                            {{-- <td>{{ (isset($review->item->category['en_name'])) ? $review->item->category['en_name'] : '' }}</td> --}}
                                             <td>{{ (isset($review->item['en_name'])) ? $review->item['en_name'] : '' }}</td>
                                             <td>
                                                 <div class="rated">
@@ -54,7 +55,7 @@
                                                 </div>
                                             </td>
                                             <td>{{ $review->comment }}</td>
-                                            <td>{{ $review->created_at->diffForHumans(); }}</td>
+                                            <td style="white-space: nowrap;">{{ $review->created_at->diffForHumans(); }}</td>
                                             <td>
                                                 <a onclick="delteItemReview({{ $review->id }})" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
                                             </td>

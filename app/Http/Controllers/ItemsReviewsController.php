@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemReview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ItemsReviewsController extends Controller
 {
     function index()
     {
-        $data['item_reviews'] = ItemReview::with(['item'])->orderBy('id','desc')->get();
+        $shop_id = (isset(Auth::user()->hasOneShop->shop['id'])) ? Auth::user()->hasOneShop->shop['id'] : '';
+        $data['item_reviews'] = ItemReview::with(['item'])->orderBy('id','desc')->where('shop_id',$shop_id)->get();
         return view('client.reviews.item_reviews',$data);
     }
 

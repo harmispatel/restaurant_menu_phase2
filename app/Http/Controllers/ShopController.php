@@ -485,12 +485,12 @@ class ShopController extends Controller
                                             if(strlen(strip_tags($desc)) > 180)
                                             {
                                                 $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
-                                                $html .= '<div class="item-desc">'.$desc.' ... <br>
-                                                <a class="read-more-desc">'.$read_more_label.'</a></div>';
+                                                $html .= '<div class="item-desc"><p>'.$desc.' ... <br>
+                                                <a class="read-more-desc">'.$read_more_label.'</a></p></div>';
                                             }
                                             else
                                             {
-                                                $html .= '<div class="item-desc">'.strip_tags($desc).'</div>';
+                                                $html .= '<div class="item-desc"><p>'.strip_tags($desc).'</p></div>';
                                             }
 
                                             $html .= '<ul class="price_ul">';
@@ -737,12 +737,12 @@ class ShopController extends Controller
                                             if(strlen(strip_tags($desc)) > 180)
                                             {
                                                 $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
-                                                $html .= '<div class="item-desc">'.$desc.' ... <br>
-                                                <a class="read-more-desc">'.$read_more_label.'</a></div>';
+                                                $html .= '<div class="item-desc"><p>'.$desc.' ... <br>
+                                                <a class="read-more-desc">'.$read_more_label.'</a></p></div>';
                                             }
                                             else
                                             {
-                                                $html .= '<div class="item-desc">'.strip_tags($desc).'</div>';
+                                                $html .= '<div class="item-desc"><p?>'.strip_tags($desc).'</p></div>';
                                             }
 
                                             $html .= '<ul class="price_ul">';
@@ -926,12 +926,12 @@ class ShopController extends Controller
                                         if(strlen(strip_tags($desc)) > 180)
                                         {
                                             $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n"));
-                                            $html .= '<div class="item-desc">'.$desc.' ... <br>
-                                                <a class="read-more-desc">'.$read_more_label.'</a></div>';
+                                            $html .= '<div class="item-desc"><p>'.$desc.' ... <br>
+                                                <a class="read-more-desc">'.$read_more_label.'</a></p></div>';
                                         }
                                         else
                                         {
-                                            $html .= '<div class="item-desc">'.strip_tags($desc).'</di>';
+                                            $html .= '<div class="item-desc"><p>'.strip_tags($desc).'</p></div>';
                                         }
 
                                         $html .= '<ul class="price_ul">';

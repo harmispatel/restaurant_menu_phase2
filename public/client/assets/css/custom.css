@@ -2096,6 +2096,8 @@ span.qty-number {
     float: left;
     height: 46px;
     padding: 0 10px;
+    display:flex;
+    flex-direction: row-reverse;
 }
 .rate:not(:checked) > input {
     position:absolute;
@@ -2150,6 +2152,8 @@ span.qty-number {
     float: left;
     height: 46px;
     padding: 0 10px;
+    display:flex;
+    flex-direction: row-reverse;
 }
 .rated:not(:checked) > input {
     position:absolute;

@@ -216,8 +216,11 @@
                                                                     @endphp
                                                                     @if(strlen(strip_tags($desc)) > 180)
                                                                         <div class="item-desc">
-                                                                            {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
-                                                                            <a class="read-more-desc">{{ $read_more_label }}</a></div>
+                                                                            <p>
+                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
+                                                                                <a class="read-more-desc">{{ $read_more_label }}</a>
+                                                                            </p>
+                                                                        </div>
                                                                     @else
                                                                         <div class="item-desc">{!! $desc !!}</div>
                                                                     @endif
@@ -402,8 +405,11 @@
                                                                         @endphp
                                                                         @if(strlen(strip_tags($desc)) > 180)
                                                                             <div class="item-desc">
-                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
-                                                                                <a class="read-more-desc">{{ $read_more_label }}</a></div>
+                                                                                <p>
+                                                                                    {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
+                                                                                    <a class="read-more-desc">{{ $read_more_label }}</a>
+                                                                                </p>
+                                                                            </div>
                                                                         @else
                                                                             <div class="item-desc">{!! $desc !!}</div>
                                                                         @endif
@@ -582,8 +588,11 @@
                                                             @endphp
                                                             @if(strlen(strip_tags($desc)) > 180)
                                                                 <div class="item-desc">
-                                                                    {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
-                                                                    <a class="read-more-desc">{{ $read_more_label }}</a></div>
+                                                                    <p>
+                                                                        {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc),150), "\n")) !!}... <br>
+                                                                        <a class="read-more-desc">{{ $read_more_label }}</a>
+                                                                    </p>
+                                                                </div>
                                                             @else
                                                                 <div class="item-desc">{!! $desc !!}</div>
                                                             @endif
