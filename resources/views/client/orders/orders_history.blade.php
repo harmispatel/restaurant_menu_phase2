@@ -36,12 +36,13 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped">
+                            <table class="table table-striped" id="order_history">
                                 <thead>
                                     <tr>
                                         <th>{{ __('Order No.') }}</th>
                                         <th>{{ __('Status') }}</th>
-                                        <th>{{ __('Estimated Time') }}</th>
+                                        <th>{{ __('Customer') }}</th>
+                                        <th>{{ __('Mobile No.') }}</th>
                                         <th>{{ __('Total Price') }}</th>
                                         <th>{{ __('Created At') }}</th>
                                         <th>{{ __('Actions') }}</th>
@@ -61,7 +62,14 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                {{ $order->estimated_time }} Min.
+                                                @if((isset($order['firstname']) && !empty($order['firstname'])) || (isset($order['lastname']) && !empty($order['lastname'])))
+                                                    {{ $order['firstname'] }} {{ $order['lastname'] }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if(isset($order['phone']) && !empty($order['phone']))
+                                                    {{ $order['phone'] }}
+                                                @endif
                                             </td>
                                             <td>
                                                 @if($order->discount_per > 0)
@@ -99,6 +107,9 @@
 {{-- Custom Script --}}
 @section('page-js')
     <script type="text/javascript">
+
+        // $('#order_history').Datatable();
+        $('#order_history').DataTable();
 
         toastr.options = {
             "closeButton": true,

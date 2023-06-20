@@ -23,7 +23,7 @@
 <script src="{{ asset('public/admin/assets/vendor/js/sweet-alert.js') }}"></script>
 
 {{-- Data Table --}}
-<script src="{{ asset('public/admin/assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 {{-- Toastr --}}
 <script src="{{ asset('public/admin/assets/vendor/js/toastr.min.js') }}"></script>

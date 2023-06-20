@@ -209,6 +209,17 @@
                             </div>
                         @elseif ($checkout_type == 'delivery')
                             <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <label for="address" class="form-label">{{ __('Address') }} <span class="text-danger">*</span></label>
+                                    <input type="hidden" name="latitude" id="latitude" value="{{ $cust_lat }}">
+                                    <input type="hidden" name="longitude" id="longitude" value="{{ $cust_lng }}">
+                                    <input type="text" name="address" id="address" class="form-control {{ ($errors->has('address')) ? 'is-invalid' : '' }}" value="{{ $cust_address }}">
+                                    @if($errors->has('address'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('address') }}
+                                        </div>
+                                    @endif
+                                </div>
                                 <div class="col-md-6 mb-2">
                                     <label for="firstname" class="form-label">{{ __('First Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="firstname" id="firstname" class="form-control {{ ($errors->has('firstname')) ? 'is-invalid' : '' }}" value="{{ old('firstname') }}">
@@ -242,17 +253,6 @@
                                     @if($errors->has('phone'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('phone') }}
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="col-md-12 mb-2">
-                                    <label for="address" class="form-label">{{ __('Address') }} <span class="text-danger">*</span></label>
-                                    <input type="hidden" name="latitude" id="latitude" value="{{ $cust_lat }}">
-                                    <input type="hidden" name="longitude" id="longitude" value="{{ $cust_lng }}">
-                                    <input type="text" name="address" id="address" class="form-control {{ ($errors->has('address')) ? 'is-invalid' : '' }}" value="{{ $cust_address }}">
-                                    @if($errors->has('address'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('address') }}
                                         </div>
                                     @endif
                                 </div>

@@ -261,7 +261,6 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/finalized-order',[OrderController::class,'finalizedOrder'])->name('finalized.order');
         Route::get('/order-view/{id}',[OrderController::class,'viewOrder'])->name('view.order');
         Route::get('/clear-delivey-range',[OrderController::class,'clearDeliveryRangeSettings'])->name('remove.delivery.range');
-        Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
         Route::post('/get-order-receipt',[OrderController::class,'getOrderReceipt'])->name('order.receipt');
         Route::post('/order-notification',[OrderController::class,'orderNotification'])->name('order.notification');
         Route::get('/new-orders',[OrderController::class,'getNewOrders'])->name('new.orders');
@@ -330,6 +329,7 @@ Route::get('{my_shop_slug}/checkout/success/{id}',[ShopController::class,'checko
 Route::post('set-checkout-type',[ShopController::class,'setCheckoutType'])->name('set.checkout.type');
 Route::post('check-order-status',[ShopController::class,'checkOrderStatus'])->name('check.order.status');
 Route::post('send-item-review',[ShopController::class,'sendItemReview'])->name('send.item.review');
+Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
 
 // Paypal Payment
 Route::get('{my_shop_slug}/paypal/payment/',[PaypalController::class,'payWithpaypal'])->name('paypal.payment');

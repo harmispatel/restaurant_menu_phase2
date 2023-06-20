@@ -183,7 +183,7 @@ class PaypalController extends Controller
             }
             else
             {
-                $discount_amount = ($final_amount * $discount_per) / 100;
+                $discount_amount = number_format(($final_amount * $discount_per) / 100,2);
             }
             $total = number_format($final_amount - $discount_amount,2);
 
