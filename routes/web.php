@@ -201,6 +201,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/language-update-catdetails', [LanguageController::class,'updateCategoryDetails'])->name('language.update-category-details');
         Route::post('/language-itemdetails', [LanguageController::class,'getItemDetails'])->name('language.itemdetails');
         Route::post('/language-update-itemdetails', [LanguageController::class,'updateItemDetails'])->name('language.update-item-details');
+        Route::post('/language-google-translate', [LanguageController::class,'setGoogleTranslate'])->name('language.google.translate');
 
 
         // Shop QrCode

@@ -158,6 +158,7 @@
         // Keys
         $keys = ([
             'primary_language',
+            'google_translate',
         ]);
 
         $settings = [];

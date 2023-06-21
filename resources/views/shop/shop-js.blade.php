@@ -15,6 +15,8 @@
 {{-- Masonary --}}
 <script src="{{ asset('public/client/assets/js/lightbox.js') }}"></script>
 
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js"></script>
+
 {{-- Common JS Functions --}}
 <script type="text/javascript">
 
@@ -396,6 +398,17 @@
             }
         });
     }
+
+
+    // Auto Translate
+    $('#auto_translate').on('change',function(){
+        var isChecked = $(this).prop('checked');
+        if(isChecked == true)
+        {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'translated_languages');
+            $('.goog-te-combo').addClass('form-select');
+        }
+    });
 
 </script>
 

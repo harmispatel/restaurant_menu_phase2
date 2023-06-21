@@ -32,11 +32,55 @@ class LanguageController extends Controller
     }
 
 
+    // On - Off Google Translate
+    public function setGoogleTranslate(Request $request)
+    {
+        try
+        {
+            $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
+            $status = $request->status;
+
+            $setting = LanguageSettings::where('shop_id',$shop_id)->where('key','google_translate')->first();
+            $setting_id = (isset($setting->id)) ? $setting->id : '';
+
+            // Insert or Update Default Key
+            if(!empty($setting_id) || $setting_id != '')
+            {
+                $primary_lang = LanguageSettings::find($setting_id);
+                $primary_lang->value = $status;
+                $primary_lang->update();
+            }
+            else
+            {
+                $primary_lang = new LanguageSettings();
+                $primary_lang->shop_id = $shop_id;
+                $primary_lang->key = "google_translate";
+                $primary_lang->value = $status;
+                $primary_lang->save();
+            }
+
+            $custom_message = ($status == 1) ? 'Enabled' : 'Disabled';
+
+            return response()->json([
+                'success' => 1,
+                'message' => "Google Translate has been $custom_message SucessFully....",
+            ]);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => "Internal Server Error!",
+            ]);
+        }
+    }
+
+
     // Set Primary Language
     public function setPrimaryLanguage(Request $request)
     {
-        // try
-        // {
+        try
+        {
             $shop_id = $request->shop_id;
             $language_id = $request->language_id;
 
@@ -175,14 +219,14 @@ class LanguageController extends Controller
                 'message' => "Primary Language has been changed SuccessFully...",
             ]);
 
-        // }
-        // catch (\Throwable $th)
-        // {
-        //     return response()->json([
-        //         'success' => 0,
-        //         'message' => "Internal Server Error!",
-        //     ]);
-        // }
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => "Internal Server Error!",
+            ]);
+        }
     }
 
 

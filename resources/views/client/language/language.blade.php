@@ -5,6 +5,7 @@
     // Get Language Settings
     $language_settings = clientLanguageSettings($userShopId);
     $primary_lang_id = isset($language_settings['primary_language']) ? $language_settings['primary_language'] : '';
+    $google_translate = isset($language_settings['google_translate']) ? $language_settings['google_translate'] : 0;
 
 @endphp
 
@@ -99,7 +100,7 @@
                                 <label class="form-label">{{ __('Google translate')}}</label>
                                 <br/>
                                 <label class="switch">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" name="google_translate" id="google_translate" value="1" {{ ($google_translate == 1) ? 'checked' : '' }}>
                                     <span class="slider round">
                                         <i class="fa-solid fa-circle-check check_icon"></i>
                                         <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
@@ -519,6 +520,42 @@
             });
 
         }
+
+
+        // Function for On/Off Google Translate Functionality
+        $('#google_translate').on('change',function(){
+            var isChecked = $(this).prop('checked');
+            if(isChecked == true)
+            {
+                isChecked = 1;
+            }
+            else
+            {
+                isChecked = 0;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('language.google.translate') }}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    'status' : isChecked,
+                },
+                dataType: "JSON",
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        toastr.success(response.message);
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                    }
+                }
+            });
+
+        });
 
     </script>
 

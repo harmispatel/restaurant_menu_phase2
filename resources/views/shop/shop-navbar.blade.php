@@ -15,6 +15,10 @@
 
     // Cart Quantity
     $total_quantity = getCartQuantity();
+
+    // Get Language Settings
+    $language_settings = clientLanguageSettings($shop_id);
+    $google_translate = isset($language_settings['google_translate']) ? $language_settings['google_translate'] : 0;
 @endphp
 
 <header class="header_preview header-sticky">
@@ -49,6 +53,21 @@
                                             <a onclick="changeLanguage('{{ $langCode }}')" style="cursor: pointer;">{{ isset($language->language['name']) ? $language->language['name'] : "" }}</a>
                                         </li>
                                     @endforeach
+                                    @if($google_translate == 1)
+                                        <li>
+                                            <div class="form-group">
+                                                    <label class="me-2">Auto Translate</label>
+                                                    <label class="switch me-2">
+                                                        <input type="checkbox" value="1" name="auto_translate" id="auto_translate" value="1">
+                                                        <span class="slider round">
+                                                            <i class="fa-solid fa-circle-check check_icon"></i>
+                                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                                        </span>
+                                                    </label>
+                                            </div>
+                                            <div class="form-group mt-3" id="translated_languages"></div>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         @endif
@@ -128,6 +147,21 @@
                                             <a onclick="changeLanguage('{{ $langCode }}')" style="cursor: pointer;">{{ isset($language->language['name']) ? $language->language['name'] : "" }}</a>
                                         </li>
                                     @endforeach
+                                    @if($google_translate == 1)
+                                        <li>
+                                            <div class="form-group">
+                                                    <label class="me-2">Auto Translate</label>
+                                                    <label class="switch me-2">
+                                                        <input type="checkbox" value="1" name="auto_translate" id="auto_translate" value="1">
+                                                        <span class="slider round">
+                                                            <i class="fa-solid fa-circle-check check_icon"></i>
+                                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                                        </span>
+                                                    </label>
+                                            </div>
+                                            <div class="form-group mt-3" id="translated_languages"></div>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         @endif
@@ -185,6 +219,21 @@
                                         <a onclick="changeLanguage('{{ $langCode }}')" style="cursor: pointer;">{{ isset($language->language['name']) ? $language->language['name'] : "" }}</a>
                                     </li>
                                 @endforeach
+                                @if($google_translate == 1)
+                                    <li>
+                                        <div class="form-group">
+                                                <label class="me-2">Auto Translate</label>
+                                                <label class="switch me-2">
+                                                    <input type="checkbox" value="1" name="auto_translate" id="auto_translate" value="1">
+                                                    <span class="slider round">
+                                                        <i class="fa-solid fa-circle-check check_icon"></i>
+                                                        <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                                    </span>
+                                                </label>
+                                        </div>
+                                        <div class="form-group mt-3" id="translated_languages"></div>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     @endif
