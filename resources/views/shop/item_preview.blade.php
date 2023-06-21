@@ -222,7 +222,7 @@
                                                                             </p>
                                                                         </div>
                                                                     @else
-                                                                        <div class="item-desc">{!! $desc !!}</div>
+                                                                        <div class="item-desc"><p>{!! $desc !!}</p></div>
                                                                     @endif
 
                                                                     {{-- Price Section --}}
@@ -411,7 +411,7 @@
                                                                                 </p>
                                                                             </div>
                                                                         @else
-                                                                            <div class="item-desc">{!! $desc !!}</div>
+                                                                            <div class="item-desc"><p>{!! $desc !!}</p></div>
                                                                         @endif
 
                                                                         {{-- Price Section --}}
@@ -594,7 +594,7 @@
                                                                     </p>
                                                                 </div>
                                                             @else
-                                                                <div class="item-desc">{!! $desc !!}</div>
+                                                                <div class="item-desc"><p>{!! $desc !!}</p></div>
                                                             @endif
 
                                                             {{-- Price Section --}}
