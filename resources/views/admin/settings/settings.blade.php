@@ -331,7 +331,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Days for Send First Expiry Mail') }}</b>
+                                    <b>{{ __('1st notification email') }}</b>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="number" name="days_for_send_first_expiry_mail" id="days_for_send_first_expiry_mail" value="{{ isset($settings['days_for_send_first_expiry_mail']) ? $settings['days_for_send_first_expiry_mail'] : '' }}" class="form-control">
@@ -339,7 +339,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Days for Send Second Expiry Mail') }}</b>
+                                    <b>{{ __('2nd notification email') }}</b>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="number" name="days_for_send_second_expiry_mail" id="days_for_send_second_expiry_mail" value="{{ isset($settings['days_for_send_second_expiry_mail']) ? $settings['days_for_send_second_expiry_mail'] : '' }}" class="form-control">
@@ -358,7 +358,7 @@
                             @endphp
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Subscription Expiry mails')}}</b>
+                                    <b>{{ __('Admins Recipient email')}}</b>
                                 </div>
                                 <div class="col-md-6">
                                 <input type="text" name="subscription_expiry_mails" class="form-control {{ ($errors->has('subscription_expiry_mails')) ? 'is-invalid' : '' }}" value="{{ $expiry_emails }}">

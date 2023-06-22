@@ -460,7 +460,7 @@
     "Item Description Color": "Item Description Color",
 
     "Subscription Expire Mail Form" : "Subscription Expire Mail Form",
-    "Days for Send First Expiry Mail" : "Days for Send First Expiry Mail",
-    "Days for Send Second Expiry Mail" : "Days for Send Second Expiry Mail",
-    "Subscription Expiry mails" : "Subscription Expiry mails"
+    "1st notification email" : "1st notification email",
+    "2nd notification email" : "2nd notification email",
+    "Admins Recipient email" : "Admins Recipient email"
 }

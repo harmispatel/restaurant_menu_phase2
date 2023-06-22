@@ -424,7 +424,7 @@
     "Item Description Color": "Χρώμα Περιγραφής Προϊόντος",
 
     "Subscription Expire Mail Form" : "Φόρμα αλληλογραφίας λήξης συνδρομής",
-    "Days for Send First Expiry Mail" : "Ημέρες για αποστολή πρώτης αλληλογραφίας λήξης",
-    "Days for Send Second Expiry Mail" : "Ημέρες για αποστολή δεύτερης αλληλογραφίας λήξης",
-    "Subscription Expiry mails" : "Μηνύματα λήξης συνδρομής"
+    "1st notification email" : "1ο email ειδοποίησης",
+    "2nd notification email" : "2ο email ειδοποίησης",
+    "Admins Recipient email" : "Διευθυντές email παραλήπτη"
 }
