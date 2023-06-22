@@ -24,6 +24,8 @@ class AdminSettingsController extends Controller
             'contact_us_email',
             'google_map_api',
             'contact_us_mail_template',
+            'subscription_expire_mail',
+            'days_for_send_expiry_mail',
         ]);
 
         $settings = [];
@@ -65,6 +67,8 @@ class AdminSettingsController extends Controller
         $all_data['contact_us_email'] = serialize($explode);
         $all_data['google_map_api'] = $request->google_map_api;
         $all_data['contact_us_mail_template'] = $request->contact_us_mail_template;
+        $all_data['subscription_expire_mail'] = $request->subscription_expire_mail;
+        $all_data['days_for_send_expiry_mail'] = $request->days_for_send_expiry_mail;
 
         if($request->hasFile('logo'))
         {
