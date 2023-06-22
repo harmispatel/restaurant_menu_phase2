@@ -1977,7 +1977,8 @@ span.qty-number {
     right: -5px;
     width: 20px;
     height: 20px;
-    background: #ff0000;
+    background: #fff;
+    color:#ff0000;
     font-size: 15px;
     border-radius: 50%;
     display: flex;
@@ -2155,4 +2156,21 @@ span.qty-number {
 
 .qty-m-view .form-control {
     width: 70px;
+}
+
+
+header .cart-btn
+{
+    position: fixed;
+    top: 50%;
+    right:0;
+    transform:translate(0 , -50%);
+    width:60px;
+    height:60px;
+    border-radius: 50%;
+    background-color: red;
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
