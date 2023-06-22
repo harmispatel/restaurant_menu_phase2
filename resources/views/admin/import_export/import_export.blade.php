@@ -82,6 +82,7 @@
                                     <div class="form-group">
                                         <button class="btn btn-sm btn-success">{{ __('Import') }}</button>
                                         <a class="btn btn-danger btn-sm" onclick="deleteShopData()">{{ __('Delete Category & Items') }}</a>
+                                        <a class="btn btn-danger btn-sm" onclick="deleteOrders()">{{ __('Delete Orders') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -204,6 +205,66 @@
                         $.ajax({
                             type: "POST",
                             url: "{{ route('client.delete.data') }}",
+                            data: {
+                                "_token" : "{{ csrf_token() }}",
+                                "shop_id" : shopID,
+                            },
+                            dataType: "JSON",
+                            success: function (response)
+                            {
+                                if(response.success == 1)
+                                {
+                                    swal(response.message, {
+                                        icon: "success",
+                                    });
+
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1200);
+                                }
+                                else
+                                {
+                                    toastr.error(response.message);
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        swal("Cancelled", "", "error");
+                    }
+                });
+            }
+        }
+
+
+
+        // Function for Delete Shop Orders
+        function deleteOrders()
+        {
+            var shopID = $('#shop :selected').val();
+
+            if(shopID == '')
+            {
+                toastr.error('Please Select Shop!');
+                return false;
+            }
+            else
+            {
+
+                swal({
+                    title: "Are you sure You want to Delete It ?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelData) =>
+                {
+                    if (willDelData)
+                    {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('client.delete.orders') }}",
                             data: {
                                 "_token" : "{{ csrf_token() }}",
                                 "shop_id" : shopID,

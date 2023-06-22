@@ -1175,6 +1175,32 @@ class UserController extends Controller
     }
 
 
+    // Delete Clients Orders
+    public function deleteClientsOrders(Request $request)
+    {
+        $shop_id = $request->shop_id;
+
+        try
+        {
+            // Delete Client Orders
+            OrderItems::where('shop_id',$shop_id)->delete();
+            Order::where('shop_id',$shop_id)->delete();
+
+            return response()->json([
+                'success' => 1,
+                'message' => 'Order has been Deleted SuccessFully...',
+            ]);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
+    }
+
+
     // Verify Client Password
     function verifyClientPassword(Request $request)
     {

@@ -426,5 +426,7 @@
     "Subscription Expire Mail Form" : "Φόρμα αλληλογραφίας λήξης συνδρομής",
     "1st notification email" : "1ο email ειδοποίησης",
     "2nd notification email" : "2ο email ειδοποίησης",
-    "Admins Recipient email" : "Διευθυντές email παραλήπτη"
+    "Admins Recipient email" : "Διευθυντές email παραλήπτη",
+
+    "Delete Orders" : "Διαγραφή παραγγελιών"
 }

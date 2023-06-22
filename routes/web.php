@@ -67,6 +67,7 @@ Route::group(['prefix' => 'admin'], function ()
         Route::get('/access-clients/{id}',[UserController::class,'clientAccess'])->name('clients.access');
         Route::post('/update-clients',[UserController::class,'update'])->name('clients.update');
         Route::post('/delete-clients-data',[UserController::class,'deleteClientsData'])->name('client.delete.data');
+        Route::post('/delete-clients-orders',[UserController::class,'deleteClientsOrders'])->name('client.delete.orders');
 
         // Subscription
         Route::get('/subscriptions',[SubscriptionsController::class,'index'])->name('subscriptions');
