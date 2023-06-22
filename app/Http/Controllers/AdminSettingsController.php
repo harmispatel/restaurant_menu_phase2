@@ -25,7 +25,9 @@ class AdminSettingsController extends Controller
             'google_map_api',
             'contact_us_mail_template',
             'subscription_expire_mail',
-            'days_for_send_expiry_mail',
+            'days_for_send_first_expiry_mail',
+            'days_for_send_second_expiry_mail',
+            'subscription_expiry_mails',
         ]);
 
         $settings = [];
@@ -60,15 +62,18 @@ class AdminSettingsController extends Controller
             'contact_us_email'              =>          'required',
         ]);
 
-        $explode = explode(',',str_replace(' ','',$request->contact_us_email));
+        $explode_contact_us_email = explode(',',str_replace(' ','',$request->contact_us_email));
+        $explode_subscription_expiry_mails = explode(',',str_replace(' ','',$request->subscription_expiry_mails));
 
         $all_data['favourite_client_limit'] = $request->favourite_client_limit;
         $all_data['copyright_text'] = $request->copyright_text;
-        $all_data['contact_us_email'] = serialize($explode);
+        $all_data['contact_us_email'] = serialize($explode_contact_us_email);
         $all_data['google_map_api'] = $request->google_map_api;
         $all_data['contact_us_mail_template'] = $request->contact_us_mail_template;
         $all_data['subscription_expire_mail'] = $request->subscription_expire_mail;
-        $all_data['days_for_send_expiry_mail'] = $request->days_for_send_expiry_mail;
+        $all_data['days_for_send_first_expiry_mail'] = $request->days_for_send_first_expiry_mail;
+        $all_data['days_for_send_second_expiry_mail'] = $request->days_for_send_second_expiry_mail;
+        $all_data['subscription_expiry_mails'] = serialize($explode_subscription_expiry_mails);
 
         if($request->hasFile('logo'))
         {

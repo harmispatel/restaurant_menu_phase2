@@ -457,5 +457,10 @@
     "Label Color Transparency": "Label Color Transparency",
     "Item Box Background Color": "Item Box Background Color",
     "Item Title Color": "Item Title Color",
-    "Item Description Color": "Item Description Color"
+    "Item Description Color": "Item Description Color",
+
+    "Subscription Expire Mail Form" : "Subscription Expire Mail Form",
+    "Days for Send First Expiry Mail" : "Days for Send First Expiry Mail",
+    "Days for Send Second Expiry Mail" : "Days for Send Second Expiry Mail",
+    "Subscription Expiry mails" : "Subscription Expiry mails"
 }

@@ -294,8 +294,8 @@
                                     $emails = '';
                                 }
                             @endphp
-                             {{-- Fav Clients Limit --}}
-                             <div class="row mb-3">
+                            {{-- Fav Clients Limit --}}
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <b>{{ __('Support mails')}}</b>
                                 </div>
@@ -326,15 +326,50 @@
                                 </div>
                                 <div class="col-md-6">
                                     <textarea name="subscription_expire_mail" id="subscription_expire_mail" class="form-control">{{ isset($settings['subscription_expire_mail']) ? $settings['subscription_expire_mail'] : '' }}</textarea>
-                                    <code>Tags : ({shop_name}, {shop_logo}, {message}, {expiry_date})</code>
+                                    <code>Tags : ({shop_name}, {shop_logo}, {expiry_date})</code>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Days for Send Expiry Mail') }}</b>
+                                    <b>{{ __('Days for Send First Expiry Mail') }}</b>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="number" name="days_for_send_expiry_mail" id="days_for_send_expiry_mail" value="{{ isset($settings['days_for_send_expiry_mail']) ? $settings['days_for_send_expiry_mail'] : '' }}" class="form-control">
+                                    <input type="number" name="days_for_send_first_expiry_mail" id="days_for_send_first_expiry_mail" value="{{ isset($settings['days_for_send_first_expiry_mail']) ? $settings['days_for_send_first_expiry_mail'] : '' }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Days for Send Second Expiry Mail') }}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="number" name="days_for_send_second_expiry_mail" id="days_for_send_second_expiry_mail" value="{{ isset($settings['days_for_send_second_expiry_mail']) ? $settings['days_for_send_second_expiry_mail'] : '' }}" class="form-control">
+                                </div>
+                            </div>
+                            @php
+                                $expiry_email_arr = isset($settings['subscription_expiry_mails']) ? $settings['subscription_expiry_mails'] : '';
+                                if($expiry_email_arr)
+                                {
+                                    $unserialize_expiry_emails = unserialize($expiry_email_arr);
+                                    $expiry_emails  = implode(",",$unserialize_expiry_emails);
+                                }
+                                else {
+                                    $expiry_emails = '';
+                                }
+                            @endphp
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Subscription Expiry mails')}}</b>
+                                </div>
+                                <div class="col-md-6">
+                                <input type="text" name="subscription_expiry_mails" class="form-control {{ ($errors->has('subscription_expiry_mails')) ? 'is-invalid' : '' }}" value="{{ $expiry_emails }}">
+                                <code>Notes</code> <br>
+                                <code>1) enter mail id's in this format : abc@gmail.com,xyz@gmail.com</code> <br>
+                                <code>2) Space Not Allowed after email</code>
+                                    @if($errors->has('subscription_expiry_mails'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('subscription_expiry_mails') }}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="row mb-3">

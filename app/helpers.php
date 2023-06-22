@@ -22,7 +22,9 @@
             'google_map_api',
             'contact_us_mail_template',
             'subscription_expire_mail',
-            'days_for_send_expiry_mail',
+            'days_for_send_first_expiry_mail',
+            'days_for_send_second_expiry_mail',
+            'subscription_expiry_mails',
         ]);
 
         $settings = [];
