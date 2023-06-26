@@ -75,6 +75,7 @@ class OrderController extends Controller
                         if($order->order_status == 'pending')
                         {
                             $html .= '<a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder('.$order->id.')"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> '.__('Accept').'</a>';
+                            $html .= '<a class="btn btn-sm btn-danger ms-3" onclick="rejectOrder('.$order->id.')"><i class="bi bi-x-circle" data-bs-toggle="tooltip" title="Reject"></i> '.__('Reject').'</a>';
                         }
                         elseif($order->order_status == 'accepted')
                         {
@@ -582,6 +583,33 @@ class OrderController extends Controller
             return response()->json([
                 'success' => 1,
                 'message' => 'Order has been Accepted SuccessFully...',
+            ]);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
+    }
+
+
+    // Function for Reject Order
+    public function rejectOrder(Request $request)
+    {
+        $order_id = $request->order_id;
+        try
+        {
+            // Update Order Status
+            $order = Order::find($order_id);
+            $order->order_status = 'rejected';
+            $order->is_new = 0;
+            $order->update();
+
+            return response()->json([
+                'success' => 1,
+                'message' => 'Order has been Rejected SuccessFully...',
             ]);
         }
         catch (\Throwable $th)

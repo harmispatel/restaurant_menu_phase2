@@ -428,5 +428,8 @@
     "2nd notification email" : "2ο email ειδοποίησης",
     "Admins Recipient email" : "Διευθυντές email παραλήπτη",
 
-    "Delete Orders" : "Διαγραφή παραγγελιών"
+    "Delete Orders" : "Διαγραφή παραγγελιών",
+
+    "Sorry you can't order!" : "Λυπούμαστε δεν μπορείτε να παραγγείλετε!",
+    "The store is closed during these hours." : "Tο κατάστημα είναι κλειστό αυτές τις ώρες."
 }

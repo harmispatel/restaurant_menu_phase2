@@ -51,6 +51,11 @@
                             <p>Your order has been accepted and will be at your location in 30 minutes.</p>
                             <a class="btn btn-primary" href="{{ route('restaurant',$shop_slug) }}">Back to Menu</a>
                         </div>
+                        <div class="col-md-12 text-center mb-3 reject-div" style="display: none;">
+                            <i class="bi bi-x-circle text-danger fs-2"></i>
+                            <p>Sorry, Your order has been Rejected.</p>
+                            <a class="btn btn-primary" href="{{ route('restaurant',$shop_slug) }}">Back to Menu</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,6 +96,12 @@
                 $('.success-div p').html('Your order has been accepted and will be at your location in '+estimated_time+' minutes.');
                 $('.success-div').show();
             }
+            else if(order_status == 'rejected')
+            {
+                $('.pending-div').hide();
+                $('.reject-div p').html('Sorry, Your order has been Rejected.');
+                $('.reject-div').show();
+            }
             else
             {
                 checkStaus();
@@ -119,6 +130,10 @@
                             if(response.success == 1)
                             {
                                 if(response.status == 'accepted')
+                                {
+                                    location.reload();
+                                }
+                                else if(response.status == 'rejected')
                                 {
                                     location.reload();
                                 }

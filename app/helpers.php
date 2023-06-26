@@ -134,6 +134,8 @@
     {
         // Keys
         $keys = [
+            'cash',
+            'cash_pos',
             'paypal',
             'paypal_mode',
             'paypal_public_key',

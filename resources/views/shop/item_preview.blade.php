@@ -275,7 +275,7 @@
                                                                         @endif
                                                                     @endif
 
-                                                                    @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                                                    @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0))
                                                                         <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                                     @endif
                                                                 </div>
@@ -464,7 +464,7 @@
                                                                             @endif
                                                                         @endif
 
-                                                                        @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                                                        @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0))
                                                                             <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                                         @endif
                                                                     </div>
@@ -647,7 +647,7 @@
                                                                 @endif
                                                             @endif
 
-                                                            @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                                                            @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0))
                                                                 <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                             @endif
                                                         </div>

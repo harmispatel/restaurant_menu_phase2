@@ -59,6 +59,8 @@
                                                     <span class="badge bg-warning">Pending</span>
                                                 @elseif ($order->order_status == 'accepted')
                                                     <span class="badge bg-primary">Accepted</span>
+                                                @elseif ($order->order_status == 'rejected')
+                                                    <span class="badge bg-danger">Rejected</span>
                                                 @endif
                                             </td>
                                             <td>

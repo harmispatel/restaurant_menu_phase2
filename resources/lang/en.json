@@ -464,5 +464,8 @@
     "2nd notification email" : "2nd notification email",
     "Admins Recipient email" : "Admins Recipient email",
 
-    "Delete Orders" : "Delete Orders"
+    "Delete Orders" : "Delete Orders",
+
+    "Sorry you can't order!" : "Sorry you can't order!",
+    "The store is closed during these hours." : "The store is closed during these hours."
 }

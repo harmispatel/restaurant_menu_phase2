@@ -31,6 +31,36 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="card-title d-flex justify-content-between align-items-center">
+                                        <h3>{{ __('Cash') }}</h3>
+                                        <label class="switch me-2">
+                                            <input type="checkbox" value="1" name="cash" id="cash" {{ (isset($payment_settings['cash']) && $payment_settings['cash'] == 1) ? 'checked' : '' }}>
+                                            <span class="slider round" data-bs-toggle="tooltip" title="Active / InActive EveryPay">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card-title d-flex justify-content-between align-items-center">
+                                        <h3>{{ __('Cash POS') }}</h3>
+                                        <label class="switch me-2">
+                                            <input type="checkbox" value="1" name="cash_pos" id="cash_pos" {{ (isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1) ? 'checked' : '' }}>
+                                            <span class="slider round" data-bs-toggle="tooltip" title="Active / InActive EveryPay">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card-title d-flex justify-content-between align-items-center">
                                         <h3>{{ __('EveryPay') }}</h3>
                                         <label class="switch me-2">
                                             <input type="checkbox" value="1" name="every_pay" id="every_pay" {{ (isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1) ? 'checked' : '' }}>

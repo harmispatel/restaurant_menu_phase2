@@ -69,6 +69,7 @@
                                     </div>
                                     @if($order->order_status == 'pending')
                                         <a class="btn btn-sm btn-primary ms-3" onclick="acceptOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Accept"></i> {{ __('Accept') }}</a>
+                                        <a class="btn btn-sm btn-danger ms-3" onclick="rejectOrder({{ $order->id }})"><i class="bi bi-x-circle" data-bs-toggle="tooltip" title="Reject"></i> {{ __('Reject') }}</a>
                                     @elseif($order->order_status == 'accepted')
                                         <a class="btn btn-sm btn-success ms-3" onclick="finalizedOrder({{ $order->id }})"><i class="bi bi-check-circle" data-bs-toggle="tooltip" title="Complete"></i> {{ __('Finalize') }}</a>
                                     @endif
@@ -410,6 +411,55 @@
                 }
             });
         }
+
+
+        // Function for Reject Order
+        function rejectOrder(ordID)
+        {
+            swal({
+                title: "Are you sure You want to Reject this Order ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willRejectThisOrder) =>
+            {
+                if (willRejectThisOrder)
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('reject.order') }}",
+                        data: {
+                            "_token":"{{ csrf_token() }}",
+                            "order_id":ordID,
+                        },
+                        dataType: "JSON",
+                        success: function (response)
+                        {
+                            if(response.success == 1)
+                            {
+                                toastr.success(response.message);
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1000);
+                            }
+                            else
+                            {
+                                toastr.error(response.message);
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1300);
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Cancelled", "", "error");
+                }
+            });
+        }
+
 
         // Function for get New Orders
         setInterval(() =>

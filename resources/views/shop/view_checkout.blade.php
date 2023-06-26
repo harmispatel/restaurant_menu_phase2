@@ -126,7 +126,12 @@
                                 <div class="col-md-6">
                                     <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
                                     <select name="payment_method" id="payment_method" class="form-select">
-                                        <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
+                                            <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @endif
+                                        @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
+                                            <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
+                                        @endif
                                         @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
@@ -150,7 +155,12 @@
                                 <div class="col-md-6">
                                     <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
                                     <select name="payment_method" id="payment_method" class="form-select">
-                                        <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
+                                            <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @endif
+                                        @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
+                                            <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
+                                        @endif
                                         @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
@@ -197,7 +207,12 @@
                                 <div class="col-md-6">
                                     <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
                                     <select name="payment_method" id="payment_method" class="form-select">
-                                        <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
+                                            <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @endif
+                                        @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
+                                            <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
+                                        @endif
                                         @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif
@@ -274,7 +289,12 @@
                                 <div class="col-md-6">
                                     <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
                                     <select name="payment_method" id="payment_method" class="form-select">
-                                        <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
+                                            <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                        @endif
+                                        @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
+                                            <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
+                                        @endif
                                         @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
                                             <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
                                         @endif

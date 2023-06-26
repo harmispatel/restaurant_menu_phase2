@@ -257,6 +257,13 @@
                                 <button type="button" id="check-btn" class="btn btn-lg btn-primary mt-2">{{ __('Checkout') }}</button>
                             </div>
                         </div>
+                    @else
+                        <div class="row">
+                            <div class="col-md-12 text-danger" style="font-size:20px;">
+                                {{ __("Sorry you can't order!") }} <br>
+                                {{ __("The store is closed during these hours.") }}
+                            </div>
+                        </div>
                     @endif
                 </div>
             </div>

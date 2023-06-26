@@ -22,6 +22,8 @@ class PaymentController extends Controller
 
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
 
+        $cash = (isset($request->cash)) ? $request->cash : 0;
+        $cash_pos = (isset($request->cash_pos)) ? $request->cash_pos : 0;
         $paypal = (isset($request->paypal)) ? $request->paypal : 0;
         $paypal_mode = (isset($request->paypal_mode)) ? $request->paypal_mode : 'sandbox';
         $every_pay = (isset($request->every_pay)) ? $request->every_pay : 0;
@@ -53,6 +55,8 @@ class PaymentController extends Controller
         try
         {
             $datas = [
+                'cash' => $cash,
+                'cash_pos' => $cash_pos,
                 'paypal' => $paypal,
                 'paypal_mode' => $paypal_mode,
                 'paypal_public_key' => $paypal_public_key,

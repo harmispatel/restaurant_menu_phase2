@@ -507,7 +507,7 @@ class ShopController extends Controller
                                                 }
                                             $html .= '</ul>';
 
-                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0)
                                             {
                                                 $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
                                             }
@@ -759,7 +759,7 @@ class ShopController extends Controller
                                                 }
                                             $html .= '</ul>';
 
-                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0)
                                             {
                                                 $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
                                             }
@@ -948,7 +948,7 @@ class ShopController extends Controller
                                             }
                                         $html .= '</ul>';
 
-                                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0)
                                         {
                                             $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
                                         }
@@ -1967,7 +1967,8 @@ class ShopController extends Controller
 
         if($delivery_schedule == 0)
         {
-            return redirect()->route('restaurant',$shop_slug)->with('error','We are sorry the venue is no longer accepting orders.');
+            $message = __("Sorry you can't order!")." ".__("The store is closed during these hours.");
+            return redirect()->route('restaurant',$shop_slug)->with('error',$message);
         }
 
         // Primary Language Details
@@ -2115,7 +2116,7 @@ class ShopController extends Controller
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
         $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
 
-        if($payment_method == 'cash')
+        if($payment_method == 'cash' || $payment_method == 'cash_pos')
         {
             if($checkout_type == 'takeaway')
             {

@@ -260,6 +260,7 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/orders-history',[OrderController::class,'ordersHistory'])->name('client.orders.history');
         Route::post('/orders-change-estimate',[OrderController::class,'changeOrderEstimate'])->name('change.order.estimate');
         Route::post('/accept-order',[OrderController::class,'acceptOrder'])->name('accept.order');
+        Route::post('/reject-order',[OrderController::class,'rejectOrder'])->name('reject.order');
         Route::post('/finalized-order',[OrderController::class,'finalizedOrder'])->name('finalized.order');
         Route::get('/order-view/{id}',[OrderController::class,'viewOrder'])->name('view.order');
         Route::get('/clear-delivey-range',[OrderController::class,'clearDeliveryRangeSettings'])->name('remove.delivery.range');
