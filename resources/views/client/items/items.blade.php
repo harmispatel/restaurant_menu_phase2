@@ -1699,7 +1699,7 @@
                     }
                     else
                     {
-                        currRatio = 450 / 250;
+                        currRatio = 700 / 400;
                     }
 
                     fileSize = currentFile.size / 1024 / 1024;
@@ -1771,7 +1771,7 @@
                     }
                     else
                     {
-                        currRatio = 450 / 250;
+                        currRatio = 700 / 400;
                     }
 
                     fileSize = currentFile.size / 1024 / 1024;
@@ -1855,8 +1855,8 @@
             else
             {
                 var canvas = cropper.getCroppedCanvas({
-                    width:450,
-                    height:250
+                    width:700,
+                    height:400
                 });
             }
 
