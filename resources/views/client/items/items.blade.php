@@ -1680,6 +1680,7 @@
             const myFormID = this.form.id;
             const currentFile = this.files[0];
             var fitPreview = 0;
+            var item_type = $('#addItemModal #type').val();
 
             if (currentFile)
             {
@@ -1690,6 +1691,15 @@
                     if(this.width === 400 && this.height === 400)
                     {
                         fitPreview = 1;
+                    }
+
+                    if(item_type == 1)
+                    {
+                        currRatio = 1;
+                    }
+                    else
+                    {
+                        currRatio = 450 / 250;
                     }
 
                     fileSize = currentFile.size / 1024 / 1024;
@@ -1723,7 +1733,7 @@
 
                             const CrpImage = document.getElementById('resize-image');
                             cropper = new Cropper(CrpImage, {
-                                aspectRatio: 1 / 1,
+                                aspectRatio: currRatio,
                                 zoomable:false,
                                 cropBoxResizable: false,
                                 preview: '#'+myFormID+' .preview',
@@ -1742,6 +1752,7 @@
             var currentFile = ele.files[0];
             var myFormID = formID;
             var fitPreview = 0;
+            var item_type = $('#editItemModal #type').val();
 
             if (currentFile)
             {
@@ -1752,6 +1763,15 @@
                     if(this.width === 400 && this.height === 400)
                     {
                         fitPreview = 1;
+                    }
+
+                    if(item_type == 1)
+                    {
+                        currRatio = 1;
+                    }
+                    else
+                    {
+                        currRatio = 450 / 250;
                     }
 
                     fileSize = currentFile.size / 1024 / 1024;
@@ -1789,7 +1809,7 @@
                             const CrpImage = $('#'+myFormID+' #resize-image')[0];
 
                             cropper = new Cropper(CrpImage, {
-                                aspectRatio: 1 / 1,
+                                aspectRatio: currRatio,
                                 zoomable:false,
                                 cropBoxResizable: false,
                                 preview: '#'+myFormID+' .preview',
@@ -1823,10 +1843,23 @@
         // Save Cropper Image
         function saveCropper(formID)
         {
-            var canvas = cropper.getCroppedCanvas({
-                width:400,
-                height:400
-		    });
+            var item_type = $('#'+formID+" #type").val();
+
+            if(item_type == 1)
+            {
+                var canvas = cropper.getCroppedCanvas({
+                    width:400,
+                    height:400
+                });
+            }
+            else
+            {
+                var canvas = cropper.getCroppedCanvas({
+                    width:450,
+                    height:250
+                });
+            }
+
 
             canvas.toBlob(function(blob)
             {

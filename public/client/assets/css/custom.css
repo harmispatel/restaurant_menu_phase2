@@ -1012,15 +1012,19 @@ input:checked + .slider .check_icon{
     flex-direction: column;
   }
 
-  .devider{
-      background:none !important;
-      border: none !important;
-      border-radius: 0;
-  }
-
-  .devider .item_image img{
-      margin: 0;
-  }
+  .devider {
+    background:none !important;
+    border: none !important;
+    border-radius: 0;
+    padding: 20px 0;
+    display:block;
+}
+.devider .item_image img{
+    margin: 0;
+    width:100%;
+    height:300px;
+    border-radius: 0%;
+}
 
   .item_image img {
       width: 120px;
@@ -1531,6 +1535,10 @@ input:checked + .slider .check_icon{
   }
 
   @media (max-width:767px) {
+    .devider .item_image img{
+        width:100%;
+        height:auto;
+      }
     .single_item_inr h3{
         margin-top: 25px;
     }

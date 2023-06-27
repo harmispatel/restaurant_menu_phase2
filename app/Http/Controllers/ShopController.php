@@ -2326,6 +2326,10 @@ class ShopController extends Controller
                     $update_order->discount_type = $discount_type;
                     $update_order->discount_value = $final_amount - $discount_amount;
                 }
+                else
+                {
+                    $update_order->discount_value = $final_amount;
+                }
                 $update_order->order_total = $final_amount;
                 $update_order->order_total_text = Currency::currency($currency)->format($final_amount);
                 $update_order->total_qty = $total_qty;

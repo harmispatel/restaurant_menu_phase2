@@ -31,6 +31,7 @@
     <input type="hidden" name="order_id" id="order_id" value="{{ isset($order_details['id']) ? $order_details['id'] : '' }}">
     <input type="hidden" name="order_status" id="order_status" value="{{ isset($order_details['order_status']) ? $order_details['order_status'] : '' }}">
     <input type="hidden" name="estimated_time" id="estimated_time" value="{{ isset($order_details['estimated_time']) ? $order_details['estimated_time'] : '' }}">
+    <input type="hidden" name="reject_reason" id="reject_reason" value="{{ isset($order_details['reject_reason']) ? $order_details['reject_reason'] : '' }}">
 
     <section class="mt-5 mb-5">
         <div class="container px-3 my-5 clearfix">
@@ -53,7 +54,7 @@
                         </div>
                         <div class="col-md-12 text-center mb-3 reject-div" style="display: none;">
                             <i class="bi bi-x-circle text-danger fs-2"></i>
-                            <p>Sorry, Your order has been Rejected.</p>
+                            <p>{{ __('Sorry, your order has been declined. Reason:') }} {{ isset($order_details['reject_reason']) ? $order_details['reject_reason'] : '' }}</p>
                             <a class="btn btn-primary" href="{{ route('restaurant',$shop_slug) }}">Back to Menu</a>
                         </div>
                     </div>
@@ -89,6 +90,7 @@
             var order_status = $('#order_status').val();
             var order_id = $('#order_id').val();
             var estimated_time = $('#estimated_time').val();
+            var reject_reason = $('#reject_reason').val();
 
             if(order_status == 'accepted')
             {
@@ -99,7 +101,7 @@
             else if(order_status == 'rejected')
             {
                 $('.pending-div').hide();
-                $('.reject-div p').html('Sorry, Your order has been Rejected.');
+                $('.reject-div p').html(@json(__('Sorry, your order has been declined. Reason:'))+" "+reject_reason);
                 $('.reject-div').show();
             }
             else

@@ -34,6 +34,7 @@ class CreateOrdersTable extends Migration
             $table->string('table',50)->nullable();
             $table->string('room',50)->nullable();
             $table->string('order_status');
+            $table->text('reject_reason')->nullable();
             $table->string('estimated_time')->nullable();
             $table->string('total_qty')->nullable();
             $table->string('discount_per')->nullable();

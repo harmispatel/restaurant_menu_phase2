@@ -55,6 +55,7 @@
                                                 </div>
                                             </td>
                                             <td>{{ $review->comment }}</td>
+                                            <td>{{ $review->email }}</td>
                                             <td style="white-space: nowrap;">{{ $review->created_at->diffForHumans(); }}</td>
                                             <td>
                                                 <a onclick="delteItemReview({{ $review->id }})" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
@@ -99,7 +100,17 @@
             })
             .then((passResponse) =>
             {
-                if (passResponse != '')
+                if (passResponse == '')
+                {
+                    swal("Please Enter Password  to Delete Review!", {
+                        icon: "info",
+                    });
+                }
+                else if(passResponse == null)
+                {
+                    return false;
+                }
+                else
                 {
                     $.ajax({
                         type: "POST",
@@ -172,12 +183,6 @@
                                 });
                             }
                         }
-                    });
-                }
-                else
-                {
-                    swal("Please Enter Password  to Delete Review!", {
-                        icon: "info",
                     });
                 }
             });

@@ -416,46 +416,79 @@
         // Function for Reject Order
         function rejectOrder(ordID)
         {
+
             swal({
-                title: "Are you sure You want to Reject this Order ?",
-                icon: "warning",
+                title: "Enter Reason for Reject Order.",
+                icon: "info",
                 buttons: true,
                 dangerMode: true,
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Enter Your Reason",
+                        type: "text",
+                    },
+                },
+                closeOnClickOutside: false,
             })
-            .then((willRejectThisOrder) =>
+            .then((reasonResponse) =>
             {
-                if (willRejectThisOrder)
+                if (reasonResponse == '')
                 {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('reject.order') }}",
-                        data: {
-                            "_token":"{{ csrf_token() }}",
-                            "order_id":ordID,
-                        },
-                        dataType: "JSON",
-                        success: function (response)
-                        {
-                            if(response.success == 1)
-                            {
-                                toastr.success(response.message);
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1000);
-                            }
-                            else
-                            {
-                                toastr.error(response.message);
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1300);
-                            }
-                        }
+                    swal("Please Enter Reason to Reject Order!", {
+                        icon: "info",
                     });
+                    return false;
+                }
+                else if(reasonResponse == null)
+                {
+                    return false;
                 }
                 else
                 {
-                    swal("Cancelled", "", "error");
+                    swal({
+                        title: "Are you sure You want to Reject this Order ?",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willRejectThisOrder) =>
+                    {
+                        if (willRejectThisOrder)
+                        {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('reject.order') }}",
+                                data: {
+                                    "_token":"{{ csrf_token() }}",
+                                    "order_id":ordID,
+                                    "reject_reason":reasonResponse,
+                                },
+                                dataType: "JSON",
+                                success: function (response)
+                                {
+                                    if(response.success == 1)
+                                    {
+                                        toastr.success(response.message);
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1000);
+                                    }
+                                    else
+                                    {
+                                        toastr.error(response.message);
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1300);
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            swal("Cancelled", "", "error");
+                        }
+                    });
                 }
             });
         }

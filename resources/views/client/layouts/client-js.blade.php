@@ -37,12 +37,17 @@
 {{-- Ckeditor --}}
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/super-build/ckeditor.js"></script>
 
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+{{-- Date Range Picker --}}
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+
 <script src="https://howlerjs.com/assets/howler.js/dist/howler.min.js"></script>
 
 <script type="text/javascript">
 
-    $(document).ready(function ()
-    {
+    $(document).ready(function (){
         OrderNotification();
     });
 

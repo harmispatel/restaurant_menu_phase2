@@ -6,6 +6,7 @@ use App\Models\DeliveryAreas;
 use App\Models\Order;
 use App\Models\OrderSetting;
 use App\Models\UserShop;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Magarrent\LaravelCurrencyFormatter\Facades\Currency;
@@ -232,10 +233,139 @@ class OrderController extends Controller
 
 
     // Function for Display Client Orders History
-    public function ordersHistory()
+    public function ordersHistory(Request $request)
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
-        $data['orders'] = Order::where('shop_id',$shop_id)->get();
+        $data['payment_method'] = '';
+        $data['status_filter'] = '';
+        $data['day_filter'] = '';
+        $data['total_text'] = 'Total Amount';
+        $data['total'] = 0.00;
+        $data['start_date'] = Carbon::now();
+        $data['end_date'] = Carbon::now();
+        $data['StartDate'] = '';
+        $data['EndDate'] = '';
+
+        if($request->isMethod('get'))
+        {
+            $data['orders'] = Order::where('shop_id',$shop_id)->get();
+            $data['total'] = Order::sum('discount_value');
+        }
+        else
+        {
+            $orders = Order::where('shop_id',$shop_id);
+            $start_date = $request->start_date;
+            $end_date = $request->end_date;
+            $data['payment_method'] = (isset($request->filter_by_payment_method)) ? $request->filter_by_payment_method : '';
+            $data['status_filter'] = (isset($request->filter_by_status)) ? $request->filter_by_status : '';
+
+            // Payment Method Filter
+            if(!empty($data['payment_method']))
+            {
+                $orders = $orders->where('payment_method',$data['payment_method']);
+                $data['total'] = $orders->sum('discount_value');
+            }
+            else
+            {
+                $data['total'] = $orders->sum('discount_value');
+            }
+
+            // Status Filter
+            if(!empty($data['status_filter']))
+            {
+                $orders = $orders->where('order_status',$data['status_filter']);
+                $data['total'] = $orders->sum('discount_value');
+            }
+            else
+            {
+                $data['total'] = $orders->sum('discount_value');
+            }
+
+            if(!empty($start_date) && !empty($end_date))
+            {
+                $data['start_date'] = $start_date;
+                $data['StartDate'] = $start_date;
+                $data['end_date'] = $end_date;
+                $data['EndDate'] = $end_date;
+
+                $orders = $orders->whereBetween('created_at', [$data['start_date'], $data['end_date']]);
+                $data['total'] = $orders->sum('discount_value');
+                $data['orders'] = $orders->get();
+            }
+            else
+            {
+
+                // Day Filter
+                $data['day_filter'] = (isset($request->filter_by_day)) ? $request->filter_by_day : '';
+                if(!empty($data['day_filter']))
+                {
+                    if($data['day_filter'] == 'today')
+                    {
+                        $today = Carbon::today();
+                        $orders = $orders->whereDate('created_at', $today);
+                        $data['total_text'] = "Today's Total Amount";
+                        $data['total'] = $orders->sum('discount_value');
+                    }
+                    elseif($data['day_filter'] == 'this_week')
+                    {
+                        $startOfWeek = Carbon::now()->startOfWeek();
+                        $endOfWeek = Carbon::now()->endOfWeek();
+                        $orders = $orders->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
+                        $data['total_text'] = "This Week Total Amount";
+                        $data['total'] = $orders->sum('discount_value');
+                    }
+                    elseif($data['day_filter'] == 'last_week')
+                    {
+                        $startOfWeek = Carbon::now()->subWeek()->startOfWeek();
+                        $endOfWeek = Carbon::now()->subWeek()->endOfWeek();
+                        $orders = $orders->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
+                        $data['total_text'] = "Last Week Total Amount";
+                        $data['total'] = $orders->sum('discount_value');
+                    }
+                    elseif($data['day_filter'] == 'this_month')
+                    {
+                        $currentMonth = Carbon::now()->format('Y-m');
+                        $orders = $orders->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$currentMonth]);
+                        $data['total_text'] = "This Month Total Amount";
+                        $data['total'] = $orders->sum('discount_value');
+                    }
+                    elseif($data['day_filter'] == 'last_month')
+                    {
+                        $startDate = Carbon::now()->subMonth()->startOfMonth();
+                        $endDate = Carbon::now()->subMonth()->endOfMonth();
+                        $orders = $orders->whereBetween('created_at', [$startDate, $endDate]);
+                        $data['total_text'] = "Last Month Total Amount";
+                        $data['total'] = $orders->sum('discount_value');
+                    }
+                    elseif($data['day_filter'] == 'last_six_month')
+                    {
+                        $startDate = Carbon::now()->subMonths(6)->startOfMonth();
+                        $endDate = Carbon::now()->subMonth()->endOfMonth();
+                        $orders = $orders->whereBetween('created_at', [$startDate, $endDate]);
+                        $data['total_text'] = "Last Six Months Total Amount";
+                        $data['total'] = $orders->sum('discount_value');
+                    }
+                    elseif($data['day_filter'] == 'this_year')
+                    {
+                        $startOfYear = Carbon::now()->startOfYear();
+                        $endOfYear = Carbon::now()->endOfYear();
+                        $orders = $orders->whereBetween('created_at', [$startOfYear, $endOfYear]);
+                        $data['total_text'] = "This Year Total Amount";
+                        $data['total'] = $orders->sum('discount_value');
+                    }
+                    elseif($data['day_filter'] == 'last_year')
+                    {
+                        $startOfYear = Carbon::now()->subYear()->startOfYear();
+                        $endOfYear = Carbon::now()->subYear()->endOfYear();
+                        $orders = $orders->whereBetween('created_at', [$startOfYear, $endOfYear]);
+                        $data['total_text'] = "Last Year Total Amount";
+                        $data['total'] = $orders->sum('discount_value');
+                    }
+                }
+            }
+
+            $data['orders'] = $orders->get();
+        }
 
         // Subscrption ID
         $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
@@ -599,12 +729,14 @@ class OrderController extends Controller
     public function rejectOrder(Request $request)
     {
         $order_id = $request->order_id;
+        $reject_reason = $request->reject_reason;
         try
         {
             // Update Order Status
             $order = Order::find($order_id);
             $order->order_status = 'rejected';
             $order->is_new = 0;
+            $order->reject_reason = $reject_reason;
             $order->update();
 
             return response()->json([

@@ -257,7 +257,7 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/orders-settings',[OrderController::class,'OrderSettings'])->name('order.settings');
         Route::post('/orders-settings-update',[OrderController::class,'UpdateOrderSettings'])->name('update.order.settings');
         Route::get('/orders',[OrderController::class,'index'])->name('client.orders');
-        Route::get('/orders-history',[OrderController::class,'ordersHistory'])->name('client.orders.history');
+        Route::match(['get','post'],'orders-history',[OrderController::class,'ordersHistory'])->name('client.orders.history');
         Route::post('/orders-change-estimate',[OrderController::class,'changeOrderEstimate'])->name('change.order.estimate');
         Route::post('/accept-order',[OrderController::class,'acceptOrder'])->name('accept.order');
         Route::post('/reject-order',[OrderController::class,'rejectOrder'])->name('reject.order');

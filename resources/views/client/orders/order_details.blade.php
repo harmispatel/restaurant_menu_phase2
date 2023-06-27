@@ -271,6 +271,11 @@
                                     </div>
                                 </div>
                             @endif
+                            @if($order->order_status == 'rejected')
+                                <div class="col-md-12 mt-2 mb-2">
+                                    <strong>Order Rejection Reason : </strong> {{ $order->reject_reason }}
+                                </div>
+                            @endif
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0">
@@ -322,7 +327,7 @@
                                             @endif
                                             <tr>
                                                 <td colspan="2" class="text-dark fs-5 text-end">
-                                                    {{ __('Sub Total') }}
+                                                    {{ __('Total') }}
                                                 </td>
                                                 <td class="text-dark fs-5 text-end">{{ $order->order_total_text }}</td>
                                             </tr>
