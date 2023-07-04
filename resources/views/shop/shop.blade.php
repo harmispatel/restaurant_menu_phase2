@@ -281,6 +281,7 @@
             @endphp
 
             <div class="cover-img">
+                <a class="close-cover btn-danger p-2 rounded-circle d-flex align-items-center justify-content-center position-fixed" style="width: 50px; height: 50px; top:10px; right:10px;text-decoration:none; cursor: pointer; z-index:9999" onclick="$('.cover-img').hide();"><i class="fa-solid fa-times"></i></a>
                 @if($intro_file_ext == 'mp4' || $intro_file_ext == 'mov')
                     <video src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/intro_icons/'.$shop_settings['shop_intro_icon']) }}" width="100%" autoplay muted loop>
                 </video>

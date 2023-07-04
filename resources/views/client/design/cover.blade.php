@@ -28,7 +28,7 @@
                         </label>
                     </div>
                     <div class="add_logo_sec_body">
-                        <form id="introIconForm" method="POST" enctype="multipart/form-data">
+                        <form id="introIconForm" method="POST" action="javascript:void(0)" enctype="multipart/form-data">
                             @csrf
                             <code>Intro image will appear before your digital menu for the duration specified image Specs : File size < 2MB, Recommended image size : (1920 x 1080) pixels.</code>
                             <div class="add_logo_sec_body_inr">

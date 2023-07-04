@@ -439,7 +439,7 @@ input:checked + .slider .check_icon{
       align-items: center;
       justify-content: center;
       background-color: #ffffff;
-      z-index: 99;
+      z-index: 999;
   }
 
   .logo-loader{
