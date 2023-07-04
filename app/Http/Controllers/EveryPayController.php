@@ -267,6 +267,7 @@ class EveryPayController extends Controller
                     $order->floor = $order_details['floor'];
                     $order->door_bell = $order_details['door_bell'];
                     $order->instructions = $order_details['instructions'];
+                    $order->street_number = $order_details['street_number'];
                     $order->checkout_type = $checkout_type;
                     $order->is_new = $is_new;
                     $order->payment_method = $payment_method;

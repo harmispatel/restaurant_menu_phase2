@@ -101,6 +101,7 @@
                                             <li><strong>{{ __('Telephone') }} : </strong> {{ $order->phone }}</li>
                                             <li><strong>{{ __('Email') }} : </strong> {{ $order->email }}</li>
                                             <li><strong>{{ __('Address') }} : </strong> {{ $order->address }}</li>
+                                            <li><strong>{{ __('Street Number') }} : </strong> {{ $order->street_number }}</li>
                                             <li><strong>{{ __('Floor') }} : </strong> {{ $order->floor }}</li>
                                             <li><strong>{{ __('Door Bell') }} : </strong> {{ $order->door_bell }}</li>
                                             <li><strong>{{ __('Google Map') }} : </strong> <a href="https://maps.google.com?q={{ $order->address }}" target="_blank">Address Link</a></li>

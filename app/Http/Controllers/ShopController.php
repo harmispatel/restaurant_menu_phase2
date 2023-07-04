@@ -2072,6 +2072,7 @@ class ShopController extends Controller
                 'email' => 'required|email',
                 'phone' => 'required|max:10|min:10',
                 'address' => 'required',
+                'street_number' => 'required',
             ]);
         }
 
@@ -2219,6 +2220,7 @@ class ShopController extends Controller
                 $floor = isset($request->floor) ? $request->floor : '';
                 $door_bell = isset($request->door_bell) ? $request->door_bell : '';
                 $instructions = isset($request->instructions) ? $request->instructions : '';
+                $street_number = isset($request->street_number) ? $request->street_number : '';
 
                 $delivey_avaialbility = checkDeliveryAvilability($shop_id,$latitude,$longitude);
 
@@ -2237,6 +2239,7 @@ class ShopController extends Controller
                     $order->longitude = $longitude;
                     $order->floor = $floor;
                     $order->door_bell = $door_bell;
+                    $order->street_number = $street_number;
                     $order->instructions = $instructions;
                     $order->checkout_type = $checkout_type;
                     $order->payment_method = $payment_method;

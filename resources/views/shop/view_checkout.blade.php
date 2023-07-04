@@ -166,7 +166,7 @@
                                     <code>Ex:- 9:30-10:00</code>
                                 </div>
                             @elseif ($checkout_type == 'delivery')
-                                <div class="col-md-12 mb-2">
+                                <div class="col-md-6 mb-2">
                                     <label for="address" class="form-label">{{ __('Address') }} <span class="text-danger">*</span></label>
                                     <input type="hidden" name="latitude" id="latitude" value="{{ $cust_lat }}">
                                     <input type="hidden" name="longitude" id="longitude" value="{{ $cust_lng }}">
@@ -174,6 +174,15 @@
                                     @if($errors->has('address'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('address') }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="street_number" class="form-label">{{ __('Street Number') }} <span class="text-danger">*</span></label>
+                                    <input type="text" name="street_number" id="street_number" class="form-control {{ ($errors->has('street_number')) ? 'is-invalid' : '' }}" value="{{ old('street_number') }}">
+                                    @if($errors->has('street_number'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('street_number') }}
                                         </div>
                                     @endif
                                 </div>

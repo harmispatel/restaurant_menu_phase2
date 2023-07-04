@@ -43,6 +43,7 @@ class CreateOrdersTable extends Migration
             $table->string('tip')->default(0);
             $table->string('order_total')->nullable();
             $table->string('order_total_text')->nullable();
+            $table->string('street_number')->nullable();
             $table->timestamps();
         });
     }

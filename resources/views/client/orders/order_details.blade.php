@@ -233,6 +233,18 @@
                                                         <td class="text-muted">
                                                             <div class="client-order-info">
                                                                 <div class="">
+                                                                    <i class="bi bi-map"></i>&nbsp;{{ __('Street Number') }}
+                                                                </div>
+                                                                <div class="fw-bold">
+                                                                    {{ $order->street_number }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted">
+                                                            <div class="client-order-info">
+                                                                <div class="">
                                                                     <i class="bi bi-building"></i>&nbsp;{{ __('Floor') }}
                                                                 </div>
                                                                 <div class="fw-bold">

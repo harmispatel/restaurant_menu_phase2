@@ -468,5 +468,7 @@
 
     "Sorry you can't order!" : "Sorry you can't order!",
     "The store is closed during these hours." : "The store is closed during these hours.",
-    "Sorry, your order has been declined. Reason:" : "Sorry, your order has been declined. Reason:"
+    "Sorry, your order has been declined. Reason:" : "Sorry, your order has been declined. Reason:",
+
+    "Street Number": "Street Number"
 }

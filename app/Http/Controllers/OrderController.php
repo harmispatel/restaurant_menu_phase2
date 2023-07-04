@@ -124,6 +124,7 @@ class OrderController extends Controller
                                 $html .= '<li><strong>'.__('Email').' : </strong> '.$order->email.'</li>';
                                 $html .= '<li><strong>'.__('Address').' : </strong> '.$order->address.'</li>';
                                 $html .= '<li><strong>'.__('Floor').' : </strong> '.$order->floor.'</li>';
+                                $html .= '<li><strong>'.__('Street Number').' : </strong> '.$order->street_number.'</li>';
                                 $html .= '<li><strong>'.__('Door Bell').' : </strong> '.$order->door_bell.'</li>';
                                 $html .= '<li><strong>'.__('Google Map').' : </strong> <a href="https://maps.google.com?q='.$order->address.'" target="_blank">Address Link</a></li>';
                                 $html .= '<li><strong>'.__('Comments').' : </strong> '.$order->instructions.'</li>';
@@ -912,6 +913,7 @@ class OrderController extends Controller
             $room_no = (isset($order->room)) ? $order->room : '';
             $delivery_time = (isset($order->delivery_time)) ? $order->delivery_time : '';
             $door_bell = (isset($order->door_bell)) ? $order->door_bell : '';
+            $street_number = (isset($order->street_number)) ? $order->street_number : '';
             $items = (isset($order->order_items)) ? $order->order_items : [];
             $order_total_text = (isset($order->order_total_text)) ? $order->order_total_text : '';
 
@@ -933,6 +935,7 @@ class OrderController extends Controller
                                         }
                                         if($checkout_type == 'delivery')
                                         {
+                                            $html .= '<li><b>Street Number : </b> '.$street_number.'</li>';
                                             $html .= '<li><b>Bell : </b> '.$door_bell.'</li>';
                                             $html .= '<li><b>Floor No. : </b> '.$floor.'</li>';
                                             $html .= '<li><b>Address : </b> '.$address.'</li>';

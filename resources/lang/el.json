@@ -432,5 +432,7 @@
 
     "Sorry you can't order!" : "Λυπούμαστε δεν μπορείτε να παραγγείλετε!",
     "The store is closed during these hours." : "Tο κατάστημα είναι κλειστό αυτές τις ώρες.",
-    "Sorry, your order has been declined. Reason:" : "Λυπούμαστε, η παραγγελία σας απορρίφθηκε. Αιτία:"
+    "Sorry, your order has been declined. Reason:" : "Λυπούμαστε, η παραγγελία σας απορρίφθηκε. Αιτία:",
+
+    "Street Number": "Αριθμός δρόμου"
 }
