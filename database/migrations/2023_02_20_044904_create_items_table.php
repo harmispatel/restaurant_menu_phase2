@@ -76,6 +76,7 @@ class CreateItemsTable extends Migration
             $table->tinyInteger('day_special')->default(0);
             $table->tinyInteger('published')->default(0);
             $table->tinyInteger('review')->default(1);
+            $table->tinyInteger('delivery')->default(1);
             $table->timestamps();
         });
     }

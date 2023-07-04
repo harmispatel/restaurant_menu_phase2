@@ -208,14 +208,23 @@
                                             @foreach ($categories as $cat)
                                                 @php
                                                     $check_cat_type_permission = checkCatTypePermission($cat->category_type,$shop_id);
+                                                    $cat_image = isset($cat->categoryImages[0]['image']) ? $cat->categoryImages[0]['image'] : '';
                                                 @endphp
                                                 @if($check_cat_type_permission == 1)
                                                     <tr>
                                                         <th scope="row">
-                                                            @if(!empty($cat['image']))
-                                                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat['image']) }}" width="35">
+                                                            @if($cat->category_type == 'page' || $cat->category_type == 'gallery' || $cat->category_type == 'link' || $cat->category_type == 'check_in' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_page')
+                                                                @if(!empty($cat->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover))
+                                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat['cover']) }}" width="35">
+                                                                @else
+                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35">
+                                                                @endif
                                                             @else
-                                                                <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35">
+                                                                @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
+                                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" width="35">
+                                                                @else
+                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35">
+                                                                @endif
                                                             @endif
                                                         </th>
                                                         <td>

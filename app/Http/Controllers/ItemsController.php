@@ -83,6 +83,7 @@ class ItemsController extends Controller
         $is_new = isset($request->is_new) ? $request->is_new : 0;
         $as_sign = isset($request->is_sign) ? $request->is_sign : 0;
         $published = isset($request->published) ? $request->published : 0;
+        $delivery = isset($request->delivery) ? $request->delivery : 0;
         $review_rating = isset($request->review_rating) ? $request->review_rating : 0;
         $day_special = isset($request->day_special) ? $request->day_special : 0;
         $ingredients = (isset($request->ingredients) && count($request->ingredients) > 0) ? serialize($request->ingredients) : '';
@@ -125,6 +126,7 @@ class ItemsController extends Controller
             $item->ingredients = $ingredients;
             $item->options = $options;
             $item->is_new = $is_new;
+            $item->delivery = $delivery;
             $item->as_sign = $as_sign;
             $item->review = $review_rating;
             $item->day_special = $day_special;
@@ -467,6 +469,7 @@ class ItemsController extends Controller
             $review_rating = (isset($item['review']) && $item['review'] == 1) ? 'checked' : '';
             $item_is_new = (isset($item['is_new']) && $item['is_new'] == 1) ? 'checked' : '';
             $item_as_sign = (isset($item['as_sign']) && $item['as_sign'] == 1) ? 'checked' : '';
+            $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? 'checked' : '';
             $item_day_special = (isset($item['day_special']) && $item['day_special'] == 1) ? 'checked' : '';
             $discount = (isset($item['discount']) && !empty($item['discount'])) ? $item['discount'] : 0;
 
@@ -801,17 +804,6 @@ class ItemsController extends Controller
                                             $html .= '<label for="day_special" class="form-label">'.__('Day Special').'</label>';
                                         $html .= '</div>';
 
-                                        $html .= '<div class="col-md-6 mb-3">';
-                                            $html .= '<label class="switch me-2">';
-                                                $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
-                                                $html .= '<span class="slider round">';
-                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                $html .= '</span>';
-                                            $html .= '</label>';
-                                            $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
-                                        $html .= '</div>';
-
                                         $html .= '<div class="col-md-6 review_rating mb-3">';
                                             $html .= '<label class="switch me-2">';
                                                 $html .= '<input type="checkbox" id="review_rating" name="review_rating" value="1" '.$review_rating.'>';
@@ -821,6 +813,28 @@ class ItemsController extends Controller
                                                 $html .= '</span>';
                                             $html .= '</label>';
                                             $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="col-md-6 delivery mb-3">';
+                                            $html .= '<label class="switch me-2">';
+                                                $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                                $html .= '<span class="slider round">';
+                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                $html .= '</span>';
+                                            $html .= '</label>';
+                                            $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="col-md-6 mb-3">';
+                                            $html .= '<label class="switch me-2">';
+                                                $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
+                                                $html .= '<span class="slider round">';
+                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                $html .= '</span>';
+                                            $html .= '</label>';
+                                            $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
                                         $html .= '</div>';
 
                                     $html .= '</div>';
@@ -1137,17 +1151,6 @@ class ItemsController extends Controller
                                             $html .= '<label for="day_special" class="form-label">'.__('Day Special').'</label>';
                                         $html .= '</div>';
 
-                                        $html .= '<div class="col-md-6 mb-3">';
-                                            $html .= '<label class="switch me-2">';
-                                                $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
-                                                $html .= '<span class="slider round">';
-                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                $html .= '</span>';
-                                            $html .= '</label>';
-                                            $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
-                                        $html .= '</div>';
-
                                         $html .= '<div class="col-md-6 review_rating mb-3">';
                                             $html .= '<label class="switch me-2">';
                                                 $html .= '<input type="checkbox" id="review_rating" name="review_rating" value="1" '.$review_rating.'>';
@@ -1157,6 +1160,28 @@ class ItemsController extends Controller
                                                 $html .= '</span>';
                                             $html .= '</label>';
                                             $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="col-md-6 delivery mb-3">';
+                                            $html .= '<label class="switch me-2">';
+                                                $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                                $html .= '<span class="slider round">';
+                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                $html .= '</span>';
+                                            $html .= '</label>';
+                                            $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                                        $html .= '</div>';
+
+                                        $html .= '<div class="col-md-6 mb-3">';
+                                            $html .= '<label class="switch me-2">';
+                                                $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
+                                                $html .= '<span class="slider round">';
+                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                                $html .= '</span>';
+                                            $html .= '</label>';
+                                            $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
                                         $html .= '</div>';
 
                                     $html .= '</div>';
@@ -1210,6 +1235,7 @@ class ItemsController extends Controller
         $item_calories = $request->calories;
         $is_new = isset($request->is_new) ? $request->is_new : 0;
         $is_sign = isset($request->is_sign) ? $request->is_sign : 0;
+        $delivery = isset($request->delivery) ? $request->delivery : 0;
         $day_special = isset($request->day_special) ? $request->day_special : 0;
         $published = isset($request->published) ? $request->published : 0;
         $review_rating = isset($request->review_rating) ? $request->review_rating : 0;
@@ -1249,6 +1275,7 @@ class ItemsController extends Controller
                 $item->published = $published;
                 $item->is_new = $is_new;
                 $item->as_sign = $is_sign;
+                $item->delivery = $delivery;
                 $item->day_special = $day_special;
                 $item->review = $review_rating;
                 $item->ingredients = $ingredients;
@@ -1401,6 +1428,7 @@ class ItemsController extends Controller
         $discount_type = $request->discount_type;
         $discount = $request->discount;
         $is_new = isset($request->is_new) ? $request->is_new : 0;
+        $delivery = isset($request->delivery) ? $request->delivery : 0;
         $is_sign = isset($request->is_sign) ? $request->is_sign : 0;
         $day_special = isset($request->day_special) ? $request->day_special : 0;
         $published = isset($request->published) ? $request->published : 0;
@@ -1447,6 +1475,7 @@ class ItemsController extends Controller
                 $item->is_new = $is_new;
                 $item->as_sign = $is_sign;
                 $item->day_special = $day_special;
+                $item->delivery = $delivery;
                 $item->review = $review_rating;
                 $item->ingredients = $ingredients;
                 $item->options = $options;
@@ -1660,6 +1689,7 @@ class ItemsController extends Controller
         $review_rating = (isset($item['review']) && $item['review'] == 1) ? 'checked' : '';
         $item_is_new = (isset($item['is_new']) && $item['is_new'] == 1) ? 'checked' : '';
         $item_as_sign = (isset($item['as_sign']) && $item['as_sign'] == 1) ? 'checked' : '';
+        $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? 'checked' : '';
         $item_day_special = (isset($item['day_special']) && $item['day_special'] == 1) ? 'checked' : '';
         $discount = (isset($item['discount']) && !empty($item['discount'])) ? $item['discount'] : 0;
 
@@ -1997,17 +2027,6 @@ class ItemsController extends Controller
                                         $html .= '<label for="day_special" class="form-label">'.__('Day Special').'</label>';
                                     $html .= '</div>';
 
-                                    $html .= '<div class="col-md-6 mb-3">';
-                                        $html .= '<label class="switch me-2">';
-                                            $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
-                                            $html .= '<span class="slider round">';
-                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                            $html .= '</span>';
-                                        $html .= '</label>';
-                                        $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
-                                    $html .= '</div>';
-
                                     $html .= '<div class="col-md-6 review_rating mb-3">';
                                         $html .= '<label class="switch me-2">';
                                             $html .= '<input type="checkbox" id="review_rating" name="review_rating" value="1" '.$review_rating.'>';
@@ -2017,6 +2036,28 @@ class ItemsController extends Controller
                                             $html .= '</span>';
                                         $html .= '</label>';
                                         $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="col-md-6 delivery mb-3">';
+                                        $html .= '<label class="switch me-2">';
+                                            $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                            $html .= '<span class="slider round">';
+                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                            $html .= '</span>';
+                                        $html .= '</label>';
+                                        $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="col-md-6 mb-3">';
+                                        $html .= '<label class="switch me-2">';
+                                            $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
+                                            $html .= '<span class="slider round">';
+                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                            $html .= '</span>';
+                                        $html .= '</label>';
+                                        $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
                                     $html .= '</div>';
 
                                 $html .= '</div>';
@@ -2332,17 +2373,6 @@ class ItemsController extends Controller
                                         $html .= '<label for="day_special" class="form-label">'.__('Day Special').'</label>';
                                     $html .= '</div>';
 
-                                    $html .= '<div class="col-md-6 mb-3">';
-                                        $html .= '<label class="switch me-2">';
-                                            $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
-                                            $html .= '<span class="slider round">';
-                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                            $html .= '</span>';
-                                        $html .= '</label>';
-                                        $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
-                                    $html .= '</div>';
-
                                     $html .= '<div class="col-md-6 review_rating mb-3">';
                                         $html .= '<label class="switch me-2">';
                                             $html .= '<input type="checkbox" id="review_rating" name="review_rating" value="1" '.$review_rating.'>';
@@ -2352,6 +2382,28 @@ class ItemsController extends Controller
                                             $html .= '</span>';
                                         $html .= '</label>';
                                         $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="col-md-6 delivery mb-3">';
+                                        $html .= '<label class="switch me-2">';
+                                            $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                            $html .= '<span class="slider round">';
+                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                            $html .= '</span>';
+                                        $html .= '</label>';
+                                        $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                                    $html .= '</div>';
+
+                                    $html .= '<div class="col-md-6 mb-3">';
+                                        $html .= '<label class="switch me-2">';
+                                            $html .= '<input type="checkbox" id="publish" name="published" value="1" '.$item_published.'>';
+                                            $html .= '<span class="slider round">';
+                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                            $html .= '</span>';
+                                        $html .= '</label>';
+                                        $html .= '<label for="publish" class="form-label">'.__('Published').'</label>';
                                     $html .= '</div>';
 
                                 $html .= '</div>';

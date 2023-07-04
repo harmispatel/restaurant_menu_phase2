@@ -1966,6 +1966,35 @@ class ShopController extends Controller
             {
                 return redirect()->back();
             }
+
+
+            if(count($data['cart']) > 0)
+            {
+                $not_deliver = [];
+                foreach($data['cart'] as $cart_key => $cart_data)
+                {
+                    foreach ($cart_data as $cart_val)
+                    {
+                        foreach ($cart_val as $cart_item_key => $cart_item)
+                        {
+                            $item_dt = itemDetails($cart_item['item_id']);
+
+                            if($item_dt['delivery'] == 0)
+                            {
+                                $not_deliver[] = $item_dt['en_name'];
+                            }
+                        }
+                    }
+                }
+
+                if(count($not_deliver) > 0)
+                {
+                    $not_deliver = implode(', ',$not_deliver);
+                    return redirect()->route('restaurant',$shop_slug)->with('error',"$not_deliver Items delivery not Available!");
+                }
+
+            }
+
         }
 
         $delivery_schedule = checkDeliverySchedule($shop_id);

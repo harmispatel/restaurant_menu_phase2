@@ -263,18 +263,6 @@
                                         <label for="day_special" class="form-label">{{ __('Day Special')}}</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mt-2">
-                                    <div class="form-group">
-                                        <label class="switch me-2">
-                                            <input type="checkbox" id="publish" name="published" value="1">
-                                            <span class="slider round">
-                                                <i class="fa-solid fa-circle-check check_icon"></i>
-                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                            </span>
-                                        </label>
-                                        <label for="publish" class="form-label">{{ __('Published')}}</label>
-                                    </div>
-                                </div>
                                 <div class="col-md-6 mt-2 review_rating">
                                     <div class="form-group">
                                         <label class="switch me-2">
@@ -285,6 +273,30 @@
                                             </span>
                                         </label>
                                         <label for="review_rating" class="form-label">{{ __('Review & Rating')}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-2 delivery">
+                                    <div class="form-group">
+                                        <label class="switch me-2">
+                                            <input type="checkbox" id="delivery" name="delivery" value="1" checked>
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="delivery" class="form-label">{{ __('Delivery')}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <div class="form-group">
+                                        <label class="switch me-2">
+                                            <input type="checkbox" id="publish" name="published" value="1" checked>
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="publish" class="form-label">{{ __('Published')}}</label>
                                     </div>
                                 </div>
                             </div>
@@ -1015,6 +1027,7 @@
                             $('#editItemModal .mark_sign').hide();
                             $('#editItemModal .mark_new').hide();
                             $('#editItemModal .review_rating').hide();
+                            $('#editItemModal .delivery').hide();
                         }
                         else
                         {
@@ -1024,6 +1037,7 @@
                             $('#editItemModal .mark_sign').show();
                             $('#editItemModal .mark_new').show();
                             $('#editItemModal .review_rating').show();
+                            $('#editItemModal .delivery').show();
                         }
 
                         // Intialized Ingredients SelectBox
@@ -1191,6 +1205,7 @@
                             $('#editItemModal .mark_sign').hide();
                             $('#editItemModal .mark_new').hide();
                             $('#editItemModal .review_rating').hide();
+                            $('#editItemModal .delivery').hide();
                         }
                         else
                         {
@@ -1200,6 +1215,7 @@
                             $('#editItemModal .mark_sign').show();
                             $('#editItemModal .mark_new').show();
                             $('#editItemModal .review_rating').show();
+                            $('#editItemModal .delivery').show();
                         }
 
                         // Intialized Ingredients SelectBox
@@ -1403,6 +1419,7 @@
                 $("#"+ModalName+" .mark_sign").hide();
                 $("#"+ModalName+" .mark_new").hide();
                 $("#"+ModalName+" .review_rating").hide();
+                $("#"+ModalName+" .delivery").hide();
             }
             else
             {
@@ -1412,6 +1429,7 @@
                 $("#"+ModalName+" .mark_sign").show();
                 $("#"+ModalName+" .mark_new").show();
                 $("#"+ModalName+" .review_rating").show();
+                $("#"+ModalName+" .delivery").show();
             }
         }
 
