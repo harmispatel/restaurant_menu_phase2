@@ -113,39 +113,38 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <table class="table">
+                                                @php
+                                                    $total_amount = $order->order_total;
+                                                @endphp
+                                                <tr>
+                                                    <td><b>{{ __('Sub Total') }}</b></td>
+                                                    <td class="text-end">{{ Currency::currency($currency)->format($total_amount) }}</td>
+                                                </tr>
                                                 @if($order->discount_per > 0)
+                                                    <td><b>{{ __('Discount') }}</b></td>
+                                                    @if($discount_type == 'fixed')
+                                                        @php $discount_amount = $order->discount_per; @endphp
+                                                        <td class="text-end">- {{ Currency::currency($currency)->format($order->discount_per) }}</td>
+                                                    @else
+                                                        @php $discount_amount = ($total_amount * $order->discount_per) / 100; @endphp
+                                                        <td class="text-end">- {{ $order->discount_per }}%</td>
+                                                    @endif
+                                                    @php
+                                                        $total_amount = $total_amount - $discount_amount;
+                                                    @endphp
+                                                @endif
+                                                @if($order->tip > 0)
+                                                    @php
+                                                        $total_amount = $total_amount + $order->tip;
+                                                    @endphp
                                                     <tr>
-                                                        <td><b>{{ __('Sub Total') }}</b></td>
-                                                        <td class="text-end">{{ $order->order_total_text }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>{{ __('Discount') }}</b></td>
-                                                        @if($discount_type == 'fixed')
-                                                            <td class="text-end">- {{ Currency::currency($currency)->format($order->discount_per) }}</td>
-                                                        @else
-                                                            <td class="text-end">- {{ $order->discount_per }}%</td>
-                                                        @endif
-                                                    </tr>
-                                                    <tr class="text-end">
-                                                        @php
-                                                            if($discount_type == 'fixed')
-                                                            {
-                                                                $discount_amount = $order->discount_per;
-                                                            }
-                                                            else
-                                                            {
-                                                                $discount_amount = ($order->order_total * $order->discount_per) / 100;
-                                                            }
-                                                            $discount_amount = $order->order_total - $discount_amount;
-                                                        @endphp
-                                                        <td colspan="2"><strong>{{ Currency::currency($currency)->format($discount_amount) }}</strong></td>
-                                                    </tr>
-                                                @else
-                                                    <tr>
-                                                        <td><b>{{ __('Total') }}</b></td>
-                                                        <td class="text-end">{{ $order->order_total_text }}</td>
+                                                        <td><b>{{ __('Tip') }}</b></td>
+                                                        <td class="text-end">+ {{ Currency::currency($currency)->format($order->tip) }}</td>
                                                     </tr>
                                                 @endif
+                                                <tr class="text-end">
+                                                    <td colspan="2"><strong>{{ Currency::currency($currency)->format($total_amount) }}</strong></td>
+                                                </tr>
                                             </table>
                                         </div>
                                     </div>

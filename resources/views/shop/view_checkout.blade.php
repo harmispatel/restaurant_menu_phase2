@@ -51,7 +51,6 @@
     $cust_lat = session()->get('cust_lat');
     $cust_lng = session()->get('cust_long');
     $cust_address = session()->get('cust_address');
-
 @endphp
 
 @extends('shop.shop-layout')
@@ -85,8 +84,8 @@
                         <h3>{{ __('Checkout') }}</h3>
                     </div>
                     <div class="card-body">
-                        @if($checkout_type == 'takeaway')
-                            <div class="row">
+                        <div class="row">
+                            @if($checkout_type == 'takeaway')
                                 <div class="col-md-6 mb-2">
                                     <label for="firstname" class="form-label">{{ __('First Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="firstname" id="firstname" class="form-control {{ ($errors->has('firstname')) ? 'is-invalid' : '' }}" value="{{ old('firstname') }}">
@@ -123,26 +122,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
-                                    <select name="payment_method" id="payment_method" class="form-select">
-                                        @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
-                                            <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
-                                        @endif
-                                        @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
-                                            <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
-                                        @endif
-                                        @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
-                                            <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
-                                        @endif
-                                        @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                        @elseif($checkout_type == 'table_service')
-                            <div class="row">
+                            @elseif($checkout_type == 'table_service')
                                 <div class="col-md-6 mb-2">
                                     <label for="table" class="form-label">{{ __('Table No.') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="table" id="table" class="form-control {{ ($errors->has('table')) ? 'is-invalid' : '' }}">
@@ -152,26 +132,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
-                                    <select name="payment_method" id="payment_method" class="form-select">
-                                        @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
-                                            <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
-                                        @endif
-                                        @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
-                                            <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
-                                        @endif
-                                        @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
-                                            <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
-                                        @endif
-                                        @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                        @elseif($checkout_type == 'room_delivery')
-                            <div class="row">
+                            @elseif($checkout_type == 'room_delivery')
                                 <div class="col-md-6 mb-2">
                                     <label for="firstname" class="form-label">{{ __('First Name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="firstname" id="firstname" class="form-control {{ ($errors->has('firstname')) ? 'is-invalid' : '' }}" value="{{ old('firstname') }}">
@@ -204,26 +165,7 @@
                                     <input type="text" name="delivery_time" id="delivery_time" class="form-control" value="{{ old('delivery_time') }}">
                                     <code>Ex:- 9:30-10:00</code>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
-                                    <select name="payment_method" id="payment_method" class="form-select">
-                                        @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
-                                            <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
-                                        @endif
-                                        @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
-                                            <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
-                                        @endif
-                                        @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
-                                            <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
-                                        @endif
-                                        @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                        @elseif ($checkout_type == 'delivery')
-                            <div class="row">
+                            @elseif ($checkout_type == 'delivery')
                                 <div class="col-md-12 mb-2">
                                     <label for="address" class="form-label">{{ __('Address') }} <span class="text-danger">*</span></label>
                                     <input type="hidden" name="latitude" id="latitude" value="{{ $cust_lat }}">
@@ -286,25 +228,29 @@
                                     <label for="instructions" class="form-label">{{ __('Instructions') }}</label>
                                     <textarea name="instructions" id="instructions" rows="3" class="form-control">{{ old('instructions') }}</textarea>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
-                                    <select name="payment_method" id="payment_method" class="form-select">
-                                        @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
-                                            <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
-                                        @endif
-                                        @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
-                                            <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
-                                        @endif
-                                        @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
-                                            <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
-                                        @endif
-                                        @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
-                                            <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
-                                        @endif
-                                    </select>
-                                </div>
+                            @endif
+                            <div class="col-md-6 mb-2">
+                                <label for="tip" class="form-label">{{ __('Tip') }}</label>
+                                <input type="text" id="tip" name="tip" value="" class="form-control" placeholder="Enter Tip Price">
                             </div>
-                        @endif
+                            <div class="col-md-6">
+                                <label for="payment_method" class="form-label">{{ __('Payment Method') }}</label>
+                                <select name="payment_method" id="payment_method" class="form-select">
+                                    @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
+                                        <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>Cash</option>
+                                    @endif
+                                    @if(isset($payment_settings['cash_pos']) && $payment_settings['cash_pos'] == 1)
+                                        <option value="cash_pos" {{ (old('payment_method') == 'cash_pos') ? 'selected' : '' }}>Cash POS</option>
+                                    @endif
+                                    @if(isset($payment_settings['paypal']) && $payment_settings['paypal'] == 1)
+                                        <option value="paypal" {{ (old('payment_method') == 'paypal') ? 'selected' : '' }}>PayPal</option>
+                                    @endif
+                                    @if(isset($payment_settings['every_pay']) && $payment_settings['every_pay'] == 1)
+                                        <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>Credit/Debit Card</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-12">
@@ -420,14 +366,19 @@
                                                 {
                                                     $discount_amount = ($total_amount * $discount_per) / 100;
                                                 }
-                                                $discount_amount = $total_amount - $discount_amount;
+                                                $total_amount = $total_amount - $discount_amount;
                                             @endphp
-                                            <td colspan="2"><strong>{{ Currency::currency($currency)->format($discount_amount) }}</strong></td>
+                                            <td colspan="2"><strong class="final-amount-div">{{ Currency::currency($currency)->format($total_amount) }}</strong></td>
+                                        </tr>
+                                    @else
+                                        <tr class="text-end">
+                                            <td colspan="2"><strong class="final-amount-div">{{ Currency::currency($currency)->format($total_amount) }}</strong></td>
                                         </tr>
                                     @endif
                                 </table>
                             </div>
                         </div>
+                        <input type="hidden" name="t_amount" id="t_amount" value="{{ $total_amount }}">
                         <div class="row">
                             <div class="col-md-12 text-center">
                                 <button class="btn btn-success">{{ __('Continue') }}</button>
@@ -648,7 +599,6 @@
                 });
             }
         }
-
         // End Map Functionality
 
 
@@ -667,6 +617,31 @@
         @if (Session::has('error'))
             toastr.error('{{ Session::get('error') }}')
         @endif
+
+        $('#tip').on('change',function()
+        {
+            const tip = $(this).val();
+            var total_text = '';
+            var amount = 0;
+            var curr_symbol = @json(Currency::currency($currency)->currencyOptions['symbol']);
+
+            if(tip != '' && tip > 0)
+            {
+                var tamount = $('#t_amount').val();
+                amount = parseFloat(tamount) + parseFloat(tip);
+                total_text += curr_symbol+" "+parseFloat(amount).toFixed(2);
+                $('.final-amount-div').html('');
+                $('.final-amount-div').append(total_text)
+            }
+            else
+            {
+                var tamount = $('#t_amount').val();
+                amount = parseFloat(tamount) + parseFloat(0);
+                total_text += curr_symbol+" "+parseFloat(amount).toFixed(2);
+                $('.final-amount-div').html('');
+                $('.final-amount-div').append(total_text)
+            }
+        });
 
     </script>
 

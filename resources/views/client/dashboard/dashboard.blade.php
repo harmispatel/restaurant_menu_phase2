@@ -260,9 +260,9 @@
                                                 <tr>
                                                     <th scope="row">
                                                         @if(!empty($val['image']))
-                                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$val['image']) }}" width="35">
+                                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$val['image']) }}" width="35" height="35">
                                                         @else
-                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35">
+                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35" height="35">
                                                         @endif
                                                     </th>
                                                     <td>{{ isset($val->category[$name_key]) ? $val->category[$name_key] :  "" }}</td>

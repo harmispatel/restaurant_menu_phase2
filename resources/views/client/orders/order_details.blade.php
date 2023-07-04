@@ -325,11 +325,14 @@
                                                     </tr>
                                                 @endforeach
                                             @endif
+                                            @php
+                                                $total_amount =  $order->order_total;
+                                            @endphp
                                             <tr>
                                                 <td colspan="2" class="text-dark fs-5 text-end">
                                                     {{ __('Total') }}
                                                 </td>
-                                                <td class="text-dark fs-5 text-end">{{ $order->order_total_text }}</td>
+                                                <td class="text-dark fs-5 text-end">{{ Currency::currency($currency)->format($total_amount) }}</td>
                                             </tr>
                                             @if($order->discount_per > 0)
                                                 <tr>
@@ -337,17 +340,33 @@
                                                         {{ __('Discount') }}
                                                     </td>
                                                     @if($discount_type == 'fixed')
+                                                        @php $discount_amount = $order->discount_per; @endphp
                                                         <td class="text-dark fs-5 text-end">- {{ Currency::currency($currency)->format($order->discount_per) }}</td>
                                                     @else
+                                                        @php $discount_amount = ($total_amount * $order->discount_per) / 100; @endphp
                                                         <td class="text-dark fs-5 text-end">- {{ $order->discount_per }}%</td>
                                                     @endif
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" class="text-dark fs-5 fw-bold text-end">
-                                                        {{ Currency::currency($currency)->format($order->discount_value) }}
-                                                    </td>
+                                                    @php
+                                                        $total_amount = $total_amount - $discount_amount;
+                                                    @endphp
                                                 </tr>
                                             @endif
+                                            @if($order->tip > 0)
+                                                @php
+                                                    $total_amount = $total_amount + $order->tip;
+                                                @endphp
+                                                <tr>
+                                                    <td colspan="2" class="text-dark fs-5 text-end">
+                                                        {{ __('Tip') }}
+                                                    </td>
+                                                    <td class="text-dark fs-5 text-end">+ {{ Currency::currency($currency)->format($order->tip) }}</td>
+                                                </tr>
+                                            @endif
+                                            <tr>
+                                                <td colspan="3" class="text-dark fs-5 fw-bold text-end">
+                                                    {{ Currency::currency($currency)->format($total_amount) }}
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

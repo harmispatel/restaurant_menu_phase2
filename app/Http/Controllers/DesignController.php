@@ -361,12 +361,6 @@ class DesignController extends Controller
     }
 
 
-    // Mail Forms View
-    public function MailForms()
-    {
-        return view('client.design.mail_forms');
-    }
-
 
     // Update General General Info Settings
     public function generalInfoUpdate(Request $request)

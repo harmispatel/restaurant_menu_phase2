@@ -19,6 +19,7 @@ use App\Models\Items;
 use App\Models\ItemsVisit;
 use App\Models\Languages;
 use App\Models\LanguageSettings;
+use App\Models\MailForm;
 use App\Models\Option;
 use App\Models\OptionPrice;
 use App\Models\Order;
@@ -388,6 +389,25 @@ class UserController extends Controller
             }
 
 
+            // Insert Mail Forms
+            $mail_formates_key = ['orders_mail_form_client','orders_mail_form_customer','check_in_mail_form'];
+            $mail_formates_val = [
+                'orders_mail_form_client' => '<h2 style="text-align:center;"><strong>{shop_logo}</strong></h2><h2 style="text-align:center;"><span style="color:hsl(30,75%,60%);"><strong>{shop_name}</strong></span></h2><p>Hi {firstname} {lastname},</p><p><strong>Order ID #:</strong> &nbsp;{order_id}</p><p><strong>Order Type :</strong> {order_type}</p><p><strong>Payment Method :</strong> {payment_method}</p><p>{items}</p><p>{total}</p><p>New Order has Arrived.</p><p>Powered by [Yan Studio](https://www.yanstudio.gr/)™</p>',
+                'orders_mail_form_customer' => '<h2 style="text-align:center;"><strong>{shop_logo}</strong></h2><h2 style="text-align:center;"><span style="color:hsl(30,75%,60%);"><strong>{shop_name}</strong></span></h2><p>Hi {firstname} {lastname},</p><p><strong>Order ID #:</strong> &nbsp;{order_id}</p><p><strong>Order Type :</strong> {order_type}</p><p><strong>Payment Method :</strong> {payment_method}</p><p><strong>Order Status : </strong>{order_status}</p><p>{items}</p><p>{total}</p><p>We will reply as soon as possible.</p><p>Your Order Will be at Your Location in <strong>{estimated_time}</strong> Minutes.</p><p>Powered by [Yan Studio](https://www.yanstudio.gr/)™</p>',
+                'check_in_mail_form' => '<h2 style="text-align:center;"><strong>{shop_logo}</strong></h2><h2 style="text-align:center;"><span style="color:hsl(0,75%,60%);">{shop_name}</span></h2><p><strong>Customer -:</strong> {firstname} {lastname}</p><p><strong>Phone No. -:</strong> {phone}</p><p><strong>Passport No. -:</strong> {passport_no}</p><p><strong>Room No. -:</strong> {room_no}</p><p><strong>Nationality -:</strong> {nationality}</p><p><strong>Age -:</strong> {age} Years</p><p><strong>Residental Address -:</strong> {address}</p><p><strong>Arrival Date -:</strong> {arrival_date}</p><p><strong>Departure Date -:</strong> {departure_date}</p><p>{message}</p>'
+            ];
+
+            foreach($mail_formates_key as $val)
+            {
+                $mail_form = new MailForm();
+                $mail_form->shop_id = $shop->id;
+                $mail_form->form = $mail_formates_val[$val];
+                $mail_form->en_form = $mail_formates_val[$val];
+                $mail_form->mail_form_key = $val;
+                $mail_form->save();
+            }
+
+
             // Add Client Default Language
             $primary_lang = new LanguageSettings();
             $primary_lang->shop_id = $shop->id;
@@ -662,6 +682,9 @@ class UserController extends Controller
 
                 // Delete Client Ingredients
                 Ingredient::where('shop_id',$shop_id)->delete();
+
+                // Delete Shops Mail Forms
+                MailForm::where('shop_id',$shop_id)->delete();
 
             }
 

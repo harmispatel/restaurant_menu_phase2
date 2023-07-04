@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdditionalLanguage;
 use App\Models\ItemPrice;
 use App\Models\Items;
+use App\Models\MailForm;
 use App\Models\OptionPrice;
 use App\Models\Order;
 use App\Models\OrderItems;
@@ -23,7 +24,11 @@ class EveryPayController extends Controller
     {
         $checkout_type = session()->get('checkout_type');
         $discount_per = session()->get('discount_per');
+        $discount_type = session()->get('discount_type');
         $final_amount = 0.00;
+        $order_details = session()->get('order_details');
+
+        $tip = (isset($order_details['tip']) && !empty($order_details['tip'])) ? $order_details['tip'] : 0;
 
         if(empty($checkout_type))
         {
@@ -59,8 +64,20 @@ class EveryPayController extends Controller
 
         if($discount_per > 0)
         {
-            $discount_amount = ($final_amount * $discount_per) / 100;
+            if($discount_type == 'fixed')
+            {
+                $discount_amount = $discount_per;
+            }
+            else
+            {
+                $discount_amount = ($final_amount * $discount_per) / 100;
+            }
             $final_amount = $final_amount - $discount_amount;
+        }
+
+        if($tip > 0)
+        {
+            $final_amount = $final_amount + $tip;
         }
 
         $every_pay_data['shop_slug'] = $shop_slug;
@@ -103,6 +120,9 @@ class EveryPayController extends Controller
         // Order Settings
         $order_settings = getOrderSettings($shop_id);
 
+        // Current Languge Code
+        $current_lang_code = (session()->has('locale')) ? session()->get('locale') : 'en';
+
         if(isset($order_settings['auto_order_approval']) && $order_settings['auto_order_approval'] == 1)
         {
             $order_status = 'accepted';
@@ -139,9 +159,12 @@ class EveryPayController extends Controller
 
                 $shop_settings = getClientSettings($shop_id);
 
+                // Form Key
+                $form_key = $current_lang_code."_form";
+
                 // Order Mail Template
-                $orders_mail_form_client = (isset($shop_settings['orders_mail_form_client'])) ? $shop_settings['orders_mail_form_client'] : '';
-                $orders_mail_form_customer = (isset($shop_settings['orders_mail_form_customer'])) ? $shop_settings['orders_mail_form_customer'] : '';
+                $mail_forms = MailForm::where('shop_id',$shop_id)->where('mail_form_key','orders_mail_form_client')->first();
+                $orders_mail_form_client = (isset($mail_forms[$form_key])) ? $mail_forms[$form_key] : $mail_forms['en_form'];
 
                 $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
                 $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
@@ -174,6 +197,8 @@ class EveryPayController extends Controller
                 $label_key = $current_lang_code."_label";
 
                 $order_details = session()->get('order_details');
+
+                $tip = (isset($order_details['tip']) && !empty($order_details['tip'])) ? $order_details['tip'] : 0;
 
                 $checkout_type = $order_details['checkout_type'];
                 $payment_method = $order_details['payment_method'];
@@ -348,6 +373,8 @@ class EveryPayController extends Controller
                     }
 
                     $update_order = Order::find($order->id);
+                    $update_order->tip = $tip;
+
                     if($discount_per > 0)
                     {
                         if($discount_type == 'fixed')
@@ -473,41 +500,56 @@ class EveryPayController extends Controller
                                 $message = str_replace('{items}',$order_html,$message);
 
                                 // Order Total
+                                $order_tot_amount = $order_dt->order_total;
                                 $order_total_html = "";
                                 $order_total_html .= '<div>';
                                     $order_total_html .= '<table style="width:50%; border:1px solid gray;border-collapse: collapse;">';
-                                        $order_total_html .= '<tbody style="font-weight: 700!important;">';
-                                            $order_total_html .= '<tr>';
-                                                $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Sub Total : </td>';
-                                                $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">'.$order_dt->order_total_text.'</td>';
-                                            $order_total_html .= '</tr>';
-
-                                            if($order_dt->discount_per > 0)
-                                            {
+                                            $order_total_html .= '<tbody style="font-weight: 700!important;">';
                                                 $order_total_html .= '<tr>';
-                                                    $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
-                                                    if($discount_type == 'fixed')
-                                                    {
-                                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($order_dt->discount_per).'</td>';
-                                                    }
-                                                    else
-                                                    {
-                                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
-                                                    }
+                                                    $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Sub Total : </td>';
+                                                    $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">'.Currency::currency($currency)->format($order_tot_amount).'</td>';
                                                 $order_total_html .= '</tr>';
+
+                                                if($order_dt->discount_per > 0)
+                                                {
+                                                    $order_total_html .= '<tr>';
+                                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
+                                                        if($discount_type == 'fixed')
+                                                        {
+                                                            $discount_amount = $order_dt->discount_per;
+                                                            $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($order_dt->discount_per).'</td>';
+                                                        }
+                                                        else
+                                                        {
+                                                            $discount_amount = ($order_tot_amount * $order_dt->discount_per) / 100;
+                                                            $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
+                                                        }
+                                                        $order_tot_amount = $order_tot_amount - $discount_amount;
+                                                    $order_total_html .= '</tr>';
+                                                }
+
+                                                if($order_dt->tip > 0)
+                                                {
+                                                    $order_tot_amount = $order_tot_amount + $order_dt->tip;
+                                                    $order_total_html .= '<tr>';
+                                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Tip : </td>';
+                                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">+ '.Currency::currency($currency)->format($order_dt->tip).'</td>';
+                                                    $order_total_html .= '</tr>';
+                                                }
 
                                                 $order_total_html .= '<tr>';
                                                     $order_total_html .= '<td style="padding:10px;">Total : </td>';
                                                     $order_total_html .= '<td style="padding:10px;">';
-                                                        $order_total_html .= Currency::currency($currency)->format($order_dt->discount_value);
+                                                        $order_total_html .= Currency::currency($currency)->format($order_tot_amount);
                                                     $order_total_html .= '</td>';
                                                 $order_total_html .= '</tr>';
-                                            }
 
-                                        $order_total_html .= '</tbody>';
+                                            $order_total_html .= '</tbody>';
                                     $order_total_html .= '</table>';
                                 $order_total_html .= '</div>';
+
                                 $message = str_replace('{total}',$order_total_html,$message);
+
 
                                 $headers = "MIME-Version: 1.0" . "\r\n";
                                 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -519,138 +561,6 @@ class EveryPayController extends Controller
 
                             }
                         }
-
-                        // // Sent Mail to Customer
-                        // if(!empty($from_email) && count($contact_emails) > 0 && !empty($orders_mail_form_customer))
-                        // {
-                        //     $to = $from_email;
-                        //     $from = $contact_emails[0];
-                        //     $subject = "Order Placed";
-                        //     $fname = (isset($order_details['firstname'])) ? $order_details['firstname'] : '';
-                        //     $lname = (isset($order_details['lastname'])) ? $order_details['lastname'] : '';
-
-                        //     $message = $orders_mail_form_customer;
-                        //     $message = str_replace('{shop_logo}',$shop_logo,$message);
-                        //     $message = str_replace('{shop_name}',$shop_name,$message);
-                        //     $message = str_replace('{firstname}',$fname,$message);
-                        //     $message = str_replace('{lastname}',$lname,$message);
-                        //     $message = str_replace('{order_id}',$order->id,$message);
-                        //     $message = str_replace('{order_type}',$checkout_type,$message);
-                        //     $message = str_replace('{payment_method}',$payment_method,$message);
-                        //     $message = str_replace('{order_status}',$order_status,$message);
-
-                        //     // Order Items
-                        //     $order_html  = "";
-                        //     $order_html .= '<div>';
-                        //         $order_html .= '<table style="width:100%; border:1px solid gray;border-collapse: collapse;">';
-                        //             $order_html .= '<thead style="background:lightgray; color:white">';
-                        //                 $order_html .= '<tr style="text-transform: uppercase!important;    font-weight: 700!important;">';
-                        //                     $order_html .= '<th style="text-align: left!important;width: 60%;padding:10px">Item</th>';
-                        //                     $order_html .= '<th style="text-align: center!important;padding:10px">Qty.</th>';
-                        //                     $order_html .= '<th style="text-align: right!important;padding:10px">Item Total</th>';
-                        //                 $order_html .= '</tr>';
-                        //             $order_html .= '</thead>';
-                        //             $order_html .= '<tbody style="font-weight: 600!important;">';
-
-                        //                 if(count($order_items) > 0)
-                        //                 {
-                        //                     foreach($order_items as $order_item)
-                        //                     {
-                        //                         $item_dt = itemDetails($order_item['item_id']);
-                        //                         $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
-                        //                         $options_array = (isset($order_item['options']) && !empty($order_item['options'])) ? unserialize($order_item['options']) : '';
-                        //                         if(count($options_array) > 0)
-                        //                         {
-                        //                             $options_array = implode(', ',$options_array);
-                        //                         }
-
-                        //                         $order_html .= '<tr>';
-
-                        //                             $order_html .= '<td style="text-align: left!important;padding:10px; border-bottom:1px solid gray;">';
-                        //                                 $order_html .= '<div style="align-items: center!important;display: flex!important;">';
-                        //                                     $order_html .= '<a style="display: inline-block;
-                        //                                     flex-shrink: 0;position: relative;border-radius: 0.75rem;">';
-                        //                                         $order_html .= '<span style="width: 50px;
-                        //                                         height: 50px;display: flex;
-                        //                                         align-items: center;
-                        //                                         justify-content: center;
-                        //                                         font-weight: 500;background-repeat: no-repeat;
-                        //                                         background-position: center center;
-                        //                                         background-size: cover;
-                        //                                         border-radius: 0.75rem; background-image:url('.$item_image.')"></span>';
-                        //                                     $order_html .= '</a>';
-                        //                                     $order_html .= '<div style="display: block;    margin-left: 3rem!important;">';
-                        //                                         $order_html .= '<a style="font-weight: 700!important;color: #7e8299;
-                        //                                         ">'.$order_item->item_name.'</a>';
-
-                        //                                         if(!empty($options_array))
-                        //                                         {
-                        //                                             $order_html .= '<div style="color: #a19e9e;display: block;">'.$options_array.'</div>';
-                        //                                         }
-                        //                                         else
-                        //                                         {
-                        //                                             $order_html .= '<div style="color: #a19e9e;display: block;"></div>';
-                        //                                         }
-
-                        //                                     $order_html .= '</div>';
-                        //                                 $order_html .= '</div>';
-                        //                             $order_html .= '</td>';
-
-                        //                             $order_html .= '<td style="text-align: center!important;padding:10px; border-bottom:1px solid gray;">';
-                        //                                 $order_html .= $order_item['item_qty'];
-                        //                             $order_html .= '</td>';
-
-                        //                             $order_html .= '<td style="text-align: right!important;padding:10px; border-bottom:1px solid gray;">';
-                        //                                 $order_html .= $order_item['sub_total_text'];
-                        //                             $order_html .= '</td>';
-
-                        //                         $order_html .= '</tr>';
-                        //                     }
-                        //                 }
-
-                        //             $order_html .= '</tbody>';
-                        //         $order_html .= '</table>';
-                        //     $order_html .= '</div>';
-                        //     $message = str_replace('{items}',$order_html,$message);
-
-                        //     // Order Total
-                        //     $order_total_html = "";
-                        //     $order_total_html .= '<div>';
-                        //         $order_total_html .= '<table style="width:50%; border:1px solid gray;border-collapse: collapse;">';
-                        //             $order_total_html .= '<tbody style="font-weight: 700!important;">';
-                        //                 $order_total_html .= '<tr>';
-                        //                     $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Sub Total : </td>';
-                        //                     $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">'.$order_dt->order_total_text.'</td>';
-                        //                 $order_total_html .= '</tr>';
-
-                        //                 if($order_dt->discount_per > 0)
-                        //                 {
-                        //                     $order_total_html .= '<tr>';
-                        //                         $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
-                        //                         $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order_dt->discount_per.'%</td>';
-                        //                     $order_total_html .= '</tr>';
-
-                        //                     $order_total_html .= '<tr>';
-                        //                         $order_total_html .= '<td style="padding:10px;">Total : </td>';
-                        //                         $order_total_html .= '<td style="padding:10px;">';
-                        //                             $order_total_html .= Currency::currency($currency)->format($order_dt->discount_value);
-                        //                         $order_total_html .= '</td>';
-                        //                     $order_total_html .= '</tr>';
-                        //                 }
-
-                        //             $order_total_html .= '</tbody>';
-                        //         $order_total_html .= '</table>';
-                        //     $order_total_html .= '</div>';
-                        //     $message = str_replace('{total}',$order_total_html,$message);
-
-                        //     $headers = "MIME-Version: 1.0" . "\r\n";
-                        //     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-                        //     // More headers
-                        //     $headers .= 'From: <'.$from.'>' . "\r\n";
-
-                        //     mail($to,$subject,$message,$headers);
-                        // }
                     }
 
                 }

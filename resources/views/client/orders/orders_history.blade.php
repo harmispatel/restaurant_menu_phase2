@@ -91,6 +91,7 @@
                                         <th>{{ __('Customer') }}</th>
                                         <th>{{ __('Mobile No.') }}</th>
                                         <th>{{ __('Total Price') }}</th>
+                                        <th>{{ __('Tip') }}</th>
                                         <th>{{ __('Created At') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
@@ -124,8 +125,12 @@
                                                 @if($order->discount_per > 0)
                                                     {{ Currency::currency($currency)->format($order->discount_value) }}
                                                 @else
-                                                    {{ $order->order_total_text }}</td>
+                                                    {{ $order->order_total_text }}
                                                 @endif
+                                            </td>
+                                            <td>
+                                                {{ Currency::currency($currency)->format($order->tip) }}
+                                            </td>
                                             <td>
                                                 {{ date('d-m-Y h:i:s',strtotime($order->created_at)) }}
                                             </td>
@@ -141,7 +146,9 @@
                         <div class="row">
                             <div class="mt-3">
                                 <div class="col-md-12">
-                                    <h5><strong>{{ $total_text }}</strong> : {{ Currency::currency($currency)->format($total) }}</h5>
+                                    <h5><strong>{{ __('Amount') }}</strong> : {{ Currency::currency($currency)->format($total) }}</h5>
+                                    <h5><strong>{{ __('Tip Amount') }}</strong> : {{ Currency::currency($currency)->format($tip_amount) }}</h5>
+                                    <h5><strong>{{ __('Total Amount') }}</strong> : {{ Currency::currency($currency)->format($total + $tip_amount) }}</h5>
                                 </div>
                             </div>
                         </div>

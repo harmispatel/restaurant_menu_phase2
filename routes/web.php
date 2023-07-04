@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController, ItemsReviewsController, LanguageController,LanguagesController,OptionController,OrderController,PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController};
+use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController, ItemsReviewsController, LanguageController,LanguagesController, MailFormController, OptionController,OrderController,PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use Magarrent\LaravelCurrencyFormatter\Facades\Currency;
 
 /*
@@ -27,7 +28,8 @@ Route::get('config-clear', function () {
 
 
 Route::get('/', function () {
-    return view('frontend.index');
+    // return view('frontend.index');
+    return redirect()->to('https://www.thesmartqr.gr');
 })->name('home');
 
 
@@ -182,7 +184,6 @@ Route::group(['prefix' => 'client'], function()
         Route::post('update-banners-by-lang',[ShopBannerController::class,'updateByLangCode'])->name('banners.update-by-lang');
 
         Route::get('/design-general-info', [DesignController::class,'generalInfo'])->name('design.general-info');
-        Route::get('/design-mail-forms', [DesignController::class,'MailForms'])->name('design.mail.forms');
         Route::post('/design-generalInfoUpdate', [DesignController::class,'generalInfoUpdate'])->name('design.generalInfoUpdate');
         Route::post('/design-mailFormUpdate', [DesignController::class,'mailFormUpdate'])->name('design.mailFormUpdate');
 
@@ -287,6 +288,12 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/items-reviews-destroy',[ItemsReviewsController::class,'destroy'])->name('items.reviews.destroy');
 
         Route::post('/verify/client/password',[UserController::class,'verifyClientPassword'])->name('verify.client.password');
+
+        // MailForms
+        Route::get('/mail-forms', [MailFormController::class,'index'])->name('design.mail.forms');
+        Route::post('/mail-forms-edit', [MailFormController::class,'edit'])->name('mail.forms.edit');
+        Route::post('/mail-forms-update-by-lang', [MailFormController::class,'updateByLangCode'])->name('mail.forms.update.by.lang');
+        Route::post('/mail-forms-update', [MailFormController::class,'update'])->name('mail.forms.update');
 
     });
 });

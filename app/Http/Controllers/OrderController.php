@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeliveryAreas;
+use App\Models\MailForm;
 use App\Models\Order;
 use App\Models\OrderSetting;
 use App\Models\UserShop;
@@ -137,46 +138,41 @@ class OrderController extends Controller
                         $html .= '<div class="row">';
                             $html .= '<div class="col-md-3">';
                                 $html .= '<table class="table">';
+
+                                    $total_amount = $order->order_total;
+
+                                    $html .= '<tr>';
+                                        $html .= '<td><b>'. __('Sub Total') .'</b></td>';
+                                        $html .= '<td class="text-end">'. Currency::currency($currency)->format($total_amount) .'</td>';
+                                    $html .= '</tr>';
+
                                     if($order->discount_per > 0)
                                     {
-                                        $html .= '<tr>';
-                                            $html .= '<td><b>'.__('Sub Total').'</b></td>';
-                                            $html .= '<td class="text-end">'.$order->order_total_text.'</td>';
-                                        $html .= '</tr>';
-
-                                        $html .= '<tr>';
-                                            $html .= '<td><b>'.__('Discount').'</b></td>';
-                                            if($discount_type == 'fixed')
-                                            {
-                                                $html .= '<td class="text-end">- '.Currency::currency($currency)->format($order->discount_per).'</td>';
-                                            }
-                                            else
-                                            {
-                                                $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
-                                            }
-                                        $html .= '</tr>';
-
+                                        $html .= '<td><b>'. __('Discount') .'</b></td>';
                                         if($discount_type == 'fixed')
                                         {
                                             $discount_amount = $order->discount_per;
+                                            $html .= '<td class="text-end">- '. Currency::currency($currency)->format($order->discount_per) .'</td>';
                                         }
                                         else
                                         {
-                                            $discount_amount = ($order->order_total * $order->discount_per) / 100;
+                                            $discount_amount = ($total_amount * $order->discount_per) / 100;
+                                            $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
                                         }
-                                        $discount_amount = $order->order_total - $discount_amount;
+                                        $total_amount = $total_amount - $discount_amount;
+                                    }
 
-                                        $html .= '<tr class="text-end">';
-                                            $html .= '<td colspan="2"><strong>'.Currency::currency($currency)->format($discount_amount).'</strong></td>';
-                                        $html .= '</tr>';
-                                    }
-                                    else
+                                    if($order->tip > 0)
                                     {
+                                        $total_amount = $total_amount + $order->tip;
                                         $html .= '<tr>';
-                                            $html .= '<td><b>'.__('Total').'</b></td>';
-                                            $html .= '<td class="text-end">'.$order->order_total_text.'</td>';
+                                            $html .= '<td><b>'. __('Tip') .'</b></td>';
+                                            $html .= '<td class="text-end">+ '.Currency::currency($currency)->format($order->tip).'</td>';
                                         $html .= '</tr>';
                                     }
+
+                                    $html .= '<tr class="text-end"><td colspan="2"><strong>'.Currency::currency($currency)->format($total_amount).'</strong></td></tr>';
+
                                 $html .= '</table>';
                             $html .= '</div>';
                         $html .= '</div>';
@@ -241,6 +237,7 @@ class OrderController extends Controller
         $data['day_filter'] = '';
         $data['total_text'] = 'Total Amount';
         $data['total'] = 0.00;
+        $data['tip_amount'] = 0.00;
         $data['start_date'] = Carbon::now();
         $data['end_date'] = Carbon::now();
         $data['StartDate'] = '';
@@ -250,6 +247,7 @@ class OrderController extends Controller
         {
             $data['orders'] = Order::where('shop_id',$shop_id)->get();
             $data['total'] = Order::sum('discount_value');
+            $data['tip_amount'] = Order::sum('tip');
         }
         else
         {
@@ -264,10 +262,12 @@ class OrderController extends Controller
             {
                 $orders = $orders->where('payment_method',$data['payment_method']);
                 $data['total'] = $orders->sum('discount_value');
+                $data['tip_amount'] = $orders->sum('tip');
             }
             else
             {
                 $data['total'] = $orders->sum('discount_value');
+                $data['tip_amount'] = $orders->sum('tip');
             }
 
             // Status Filter
@@ -275,10 +275,12 @@ class OrderController extends Controller
             {
                 $orders = $orders->where('order_status',$data['status_filter']);
                 $data['total'] = $orders->sum('discount_value');
+                $data['tip_amount'] = $orders->sum('tip');
             }
             else
             {
                 $data['total'] = $orders->sum('discount_value');
+                $data['tip_amount'] = $orders->sum('tip');
             }
 
             if(!empty($start_date) && !empty($end_date))
@@ -290,6 +292,7 @@ class OrderController extends Controller
 
                 $orders = $orders->whereBetween('created_at', [$data['start_date'], $data['end_date']]);
                 $data['total'] = $orders->sum('discount_value');
+                $data['tip_amount'] = $orders->sum('tip');
                 $data['orders'] = $orders->get();
             }
             else
@@ -305,6 +308,7 @@ class OrderController extends Controller
                         $orders = $orders->whereDate('created_at', $today);
                         $data['total_text'] = "Today's Total Amount";
                         $data['total'] = $orders->sum('discount_value');
+                        $data['tip_amount'] = $orders->sum('tip');
                     }
                     elseif($data['day_filter'] == 'this_week')
                     {
@@ -313,6 +317,7 @@ class OrderController extends Controller
                         $orders = $orders->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
                         $data['total_text'] = "This Week Total Amount";
                         $data['total'] = $orders->sum('discount_value');
+                        $data['tip_amount'] = $orders->sum('tip');
                     }
                     elseif($data['day_filter'] == 'last_week')
                     {
@@ -321,6 +326,7 @@ class OrderController extends Controller
                         $orders = $orders->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
                         $data['total_text'] = "Last Week Total Amount";
                         $data['total'] = $orders->sum('discount_value');
+                        $data['tip_amount'] = $orders->sum('tip');
                     }
                     elseif($data['day_filter'] == 'this_month')
                     {
@@ -328,6 +334,7 @@ class OrderController extends Controller
                         $orders = $orders->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$currentMonth]);
                         $data['total_text'] = "This Month Total Amount";
                         $data['total'] = $orders->sum('discount_value');
+                        $data['tip_amount'] = $orders->sum('tip');
                     }
                     elseif($data['day_filter'] == 'last_month')
                     {
@@ -336,6 +343,7 @@ class OrderController extends Controller
                         $orders = $orders->whereBetween('created_at', [$startDate, $endDate]);
                         $data['total_text'] = "Last Month Total Amount";
                         $data['total'] = $orders->sum('discount_value');
+                        $data['tip_amount'] = $orders->sum('tip');
                     }
                     elseif($data['day_filter'] == 'last_six_month')
                     {
@@ -344,6 +352,7 @@ class OrderController extends Controller
                         $orders = $orders->whereBetween('created_at', [$startDate, $endDate]);
                         $data['total_text'] = "Last Six Months Total Amount";
                         $data['total'] = $orders->sum('discount_value');
+                        $data['tip_amount'] = $orders->sum('tip');
                     }
                     elseif($data['day_filter'] == 'this_year')
                     {
@@ -352,6 +361,7 @@ class OrderController extends Controller
                         $orders = $orders->whereBetween('created_at', [$startOfYear, $endOfYear]);
                         $data['total_text'] = "This Year Total Amount";
                         $data['total'] = $orders->sum('discount_value');
+                        $data['tip_amount'] = $orders->sum('tip');
                     }
                     elseif($data['day_filter'] == 'last_year')
                     {
@@ -360,6 +370,7 @@ class OrderController extends Controller
                         $orders = $orders->whereBetween('created_at', [$startOfYear, $endOfYear]);
                         $data['total_text'] = "Last Year Total Amount";
                         $data['total'] = $orders->sum('discount_value');
+                        $data['tip_amount'] = $orders->sum('tip');
                     }
                 }
             }
@@ -545,7 +556,17 @@ class OrderController extends Controller
 
             // Get Shop Settings
             $shop_settings = getClientSettings($shop_id);
-            $orders_mail_form_customer = (isset($shop_settings['orders_mail_form_customer'])) ? $shop_settings['orders_mail_form_customer'] : '';
+
+            $primary_lang_details = clientLanguageSettings($shop_id);
+            $language = getLangDetails(isset($primary_lang_details['primary_language']) ? $primary_lang_details['primary_language'] : '');
+            $language_code = isset($language['code']) ? $language['code'] : '';
+
+            // Form Key
+            $form_key = $language_code."_form";
+
+            // Mail Form
+            $mail_forms = MailForm::where('shop_id',$shop_id)->where('mail_form_key','orders_mail_form_customer')->first();
+            $orders_mail_form_customer = (isset($mail_forms[$form_key])) ? $mail_forms[$form_key] : $mail_forms['en_form'];
 
             // Shop Currency
             $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
@@ -662,13 +683,14 @@ class OrderController extends Controller
                         $message = str_replace('{items}',$order_html,$message);
 
                         // Order Total
+                        $order_tot_amount = $order->order_total;
                         $order_total_html = "";
                         $order_total_html .= '<div>';
                             $order_total_html .= '<table style="width:50%; border:1px solid gray;border-collapse: collapse;">';
                                 $order_total_html .= '<tbody style="font-weight: 700!important;">';
                                     $order_total_html .= '<tr>';
                                         $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Sub Total : </td>';
-                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">'.$order->order_total_text.'</td>';
+                                        $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">'.Currency::currency($currency)->format($order_tot_amount).'</td>';
                                     $order_total_html .= '</tr>';
 
                                     if($order->discount_per > 0)
@@ -677,25 +699,38 @@ class OrderController extends Controller
                                             $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
                                             if($discount_type == 'fixed')
                                             {
+                                                $discount_amount = $order->discount_per;
                                                 $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($order->discount_per).'</td>';
                                             }
                                             else
                                             {
+                                                $discount_amount = ($order_tot_amount * $order->discount_per) / 100;
                                                 $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$order->discount_per.'%</td>';
                                             }
-                                        $order_total_html .= '</tr>';
-
-                                        $order_total_html .= '<tr>';
-                                            $order_total_html .= '<td style="padding:10px;">Total : </td>';
-                                            $order_total_html .= '<td style="padding:10px;">';
-                                                $order_total_html .= Currency::currency($currency)->format($order->discount_value);
-                                            $order_total_html .= '</td>';
+                                            $order_tot_amount = $order_tot_amount - $discount_amount;
                                         $order_total_html .= '</tr>';
                                     }
+
+                                    if($order->tip > 0)
+                                    {
+                                        $order_tot_amount = $order_tot_amount + $order->tip;
+                                        $order_total_html .= '<tr>';
+                                            $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">Tip : </td>';
+                                            $order_total_html .= '<td style="padding:10px; border-bottom:1px solid gray">+ '.Currency::currency($currency)->format($order->tip).'</td>';
+                                        $order_total_html .= '</tr>';
+                                    }
+
+                                    $order_total_html .= '<tr>';
+                                        $order_total_html .= '<td style="padding:10px;">Total : </td>';
+                                        $order_total_html .= '<td style="padding:10px;">';
+                                            $order_total_html .= Currency::currency($currency)->format($order_tot_amount);
+                                        $order_total_html .= '</td>';
+                                    $order_total_html .= '</tr>';
 
                                 $order_total_html .= '</tbody>';
                             $order_total_html .= '</table>';
                         $order_total_html .= '</div>';
+
                         $message = str_replace('{total}',$order_total_html,$message);
 
                         $headers = "MIME-Version: 1.0" . "\r\n";
@@ -959,42 +994,41 @@ class OrderController extends Controller
                                 $html .= '</div>';
                                 $html .= '<div class="col-md-3 mt-2 ord-rec-body">';
                                     $html .= '<table class="table">';
+
+                                        $total_amount = $order->order_total;
+
+                                        $html .= '<tr>';
+                                            $html .= '<td><b>'. __('Sub Total') .'</b></td>';
+                                            $html .= '<td class="text-end">'. Currency::currency($currency)->format($total_amount) .'</td>';
+                                        $html .= '</tr>';
+
                                         if($order->discount_per > 0)
                                         {
+                                            $html .= '<td><b>'. __('Discount') .'</b></td>';
                                             if($discount_type == 'fixed')
                                             {
                                                 $discount_amount = $order->discount_per;
+                                                $html .= '<td class="text-end">- '. Currency::currency($currency)->format($order->discount_per) .'</td>';
                                             }
                                             else
                                             {
-                                                $discount_amount = ($order->order_total * $order->discount_per) / 100;
+                                                $discount_amount = ($total_amount * $order->discount_per) / 100;
+                                                $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
                                             }
-                                            $discount_amount = $order->order_total - $discount_amount;
-                                            $discount_amount = Currency::currency($currency)->format($discount_amount);
+                                            $total_amount = $total_amount - $discount_amount;
+                                        }
 
-                                            $html .= '<tr>';
-                                                $html .= '<td><strong>Sub Total : </strong></td><td class="text-end">'.$order_total_text.'</td>';
-                                            $html .= '</tr>';
-                                            $html .= '<tr>';
-                                                if($discount_type == 'fixed')
-                                                {
-                                                    $html .= '<td><strong>Discount : </strong></td><td class="text-end">-'.Currency::currency($currency)->format($order->discount_per).'</td>';
-                                                }
-                                                else
-                                                {
-                                                    $html .= '<td><strong>Discount : </strong></td><td class="text-end">-'.$order->discount_per.'%</td>';
-                                                }
-                                            $html .= '</tr>';
-                                            $html .= '<tr>';
-                                                $html .= '<td><strong>Total : </strong></td><td class="text-end">'.$discount_amount.'</td>';
-                                            $html .= '</tr>';
-                                        }
-                                        else
+                                        if($order->tip > 0)
                                         {
+                                            $total_amount = $total_amount + $order->tip;
                                             $html .= '<tr>';
-                                                $html .= '<td><strong>Sub Total : </strong></td><td class="text-end">'.$order_total_text.'</td>';
+                                                $html .= '<td><b>'. __('Tip') .'</b></td>';
+                                                $html .= '<td class="text-end">+ '.Currency::currency($currency)->format($order->tip).'</td>';
                                             $html .= '</tr>';
                                         }
+
+                                        $html .= '<tr class="text-end"><td colspan="2"><strong>'.Currency::currency($currency)->format($total_amount).'</strong></td></tr>';
+
                                     $html .= '</table>';
                                 $html .= '</div>';
                             $html .= '</div>';
