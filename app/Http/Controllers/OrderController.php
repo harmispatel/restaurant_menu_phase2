@@ -123,8 +123,8 @@ class OrderController extends Controller
                                 $html .= '<li><strong>'.__('Telephone').' : </strong> '.$order->phone.'</li>';
                                 $html .= '<li><strong>'.__('Email').' : </strong> '.$order->email.'</li>';
                                 $html .= '<li><strong>'.__('Address').' : </strong> '.$order->address.'</li>';
-                                $html .= '<li><strong>'.__('Floor').' : </strong> '.$order->floor.'</li>';
                                 $html .= '<li><strong>'.__('Street Number').' : </strong> '.$order->street_number.'</li>';
+                                $html .= '<li><strong>'.__('Floor').' : </strong> '.$order->floor.'</li>';
                                 $html .= '<li><strong>'.__('Door Bell').' : </strong> '.$order->door_bell.'</li>';
                                 $html .= '<li><strong>'.__('Google Map').' : </strong> <a href="https://maps.google.com?q='.$order->address.'" target="_blank">Address Link</a></li>';
                                 $html .= '<li><strong>'.__('Comments').' : </strong> '.$order->instructions.'</li>';
@@ -163,7 +163,7 @@ class OrderController extends Controller
                                         $total_amount = $total_amount - $discount_amount;
                                     }
 
-                                    if($order->tip > 0)
+                                    if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
                                     {
                                         $total_amount = $total_amount + $order->tip;
                                         $html .= '<tr>';
@@ -712,7 +712,7 @@ class OrderController extends Controller
                                         $order_total_html .= '</tr>';
                                     }
 
-                                    if($order->tip > 0)
+                                    if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
                                     {
                                         $order_tot_amount = $order_tot_amount + $order->tip;
                                         $order_total_html .= '<tr>';
@@ -1021,7 +1021,7 @@ class OrderController extends Controller
                                             $total_amount = $total_amount - $discount_amount;
                                         }
 
-                                        if($order->tip > 0)
+                                        if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
                                         {
                                             $total_amount = $total_amount + $order->tip;
                                             $html .= '<tr>';

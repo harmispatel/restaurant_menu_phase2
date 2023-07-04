@@ -2354,7 +2354,7 @@ class ShopController extends Controller
                 }
 
                 $update_order = Order::find($order->id);
-                $update_order->tip = $tip;
+                $update_order->tip = 0;
 
                 if($discount_per > 0)
                 {
@@ -2507,7 +2507,7 @@ class ShopController extends Controller
                                                 $order_total_html .= '</tr>';
                                             }
 
-                                            if($order_details->tip > 0)
+                                            if(($order_details->payment_method == 'paypal' || $order_details->payment_method == 'every_pay') && $order_details->tip > 0)
                                             {
                                                 $order_tot_amount = $order_tot_amount + $order_details->tip;
                                                 $order_total_html .= '<tr>';

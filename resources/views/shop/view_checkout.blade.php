@@ -238,7 +238,7 @@
                                     <textarea name="instructions" id="instructions" rows="3" class="form-control">{{ old('instructions') }}</textarea>
                                 </div>
                             @endif
-                            <div class="col-md-6 mb-2">
+                            <div class="col-md-6 mb-2 tip-div" style="display: none;">
                                 <label for="tip" class="form-label">{{ __('Tip') }}</label>
                                 <input type="text" id="tip" name="tip" value="" class="form-control" placeholder="Enter Tip Price">
                             </div>
@@ -507,6 +507,35 @@
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key={{ $google_map_api }}&libraries=places"></script>
 
     <script type="text/javascript">
+
+        $(document).ready(function ()
+        {
+            const payment_method = $('#payment_method :selected').val();
+            if(payment_method == 'paypal' || payment_method == 'every_pay')
+            {
+                $('.tip-div').show();
+            }
+            else
+            {
+                $('.tip-div').hide();
+            }
+        });
+
+
+        // Toggle Tip Div
+        $('#payment_method').on('change',function()
+        {
+            const payment_method = $('#payment_method :selected').val();
+            if(payment_method == 'paypal' || payment_method == 'every_pay')
+            {
+                $('.tip-div').show();
+            }
+            else
+            {
+                $('.tip-div').hide();
+            }
+        });
+
 
         // Map Functionality
         var lat = "{{ $cust_lat }}";

@@ -529,7 +529,7 @@ class EveryPayController extends Controller
                                                     $order_total_html .= '</tr>';
                                                 }
 
-                                                if($order_dt->tip > 0)
+                                                if(($order_dt->payment_method == 'paypal' || $order_dt->payment_method == 'every_pay') && $order_dt->tip > 0)
                                                 {
                                                     $order_tot_amount = $order_tot_amount + $order_dt->tip;
                                                     $order_total_html .= '<tr>';

@@ -363,7 +363,7 @@
                                                     @endphp
                                                 </tr>
                                             @endif
-                                            @if($order->tip > 0)
+                                            @if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
                                                 @php
                                                     $total_amount = $total_amount + $order->tip;
                                                 @endphp
