@@ -125,6 +125,28 @@
                                 </div>
                             </div>
 
+                            @php
+                                $login_logo = isset($settings['login_form_logo']) ? $settings['login_form_logo'] : '';
+                            @endphp
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Login Form Logo')}}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="file" name="login_form_logo" class="form-control {{ ($errors->has('login_form_logo')) ? 'is-invalid' : '' }}">
+                                    @if($errors->has('login_form_logo'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('login_form_logo') }}
+                                        </div>
+                                    @endif
+                                    @if(!empty($login_logo))
+                                        <div class="mt-3">
+                                            <img src="{{ $login_logo }}" alt="" width="100">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
                             {{-- Default Light Theme Image --}}
                             @php
                                 $light_img = isset($settings['default_light_theme_image']) ? $settings['default_light_theme_image'] : '';

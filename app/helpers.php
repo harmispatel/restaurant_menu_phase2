@@ -12,6 +12,7 @@
             'favourite_client_limit',
             'copyright_text',
             'logo',
+            'login_form_logo',
             'login_form_background',
             'default_light_theme_image',
             'default_dark_theme_image',

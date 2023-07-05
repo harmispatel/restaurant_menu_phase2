@@ -15,6 +15,7 @@ class AdminSettingsController extends Controller
             'favourite_client_limit',
             'copyright_text',
             'logo',
+            'login_form_logo',
             'login_form_background',
             'default_light_theme_image',
             'default_dark_theme_image',
@@ -54,6 +55,7 @@ class AdminSettingsController extends Controller
             'copyright_text'                =>          'required',
             'logo'                          =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'login_form_background'         =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'login_form_logo'         =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'default_light_theme_image'     =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'default_dark_theme_image'      =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'theme_main_screen_demo'        =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
@@ -89,6 +91,14 @@ class AdminSettingsController extends Controller
             $request->file('login_form_background')->move(public_path('admin_uploads/login_backgrounds/'), $bgName);
             $loginbgUrl = asset('/').'public/admin_uploads/login_backgrounds/'.$bgName;
             $all_data['login_form_background'] = $loginbgUrl;
+        }
+
+        if($request->hasFile('login_form_logo'))
+        {
+            $logoName = "login_logo_".time().".". $request->file('login_form_logo')->getClientOriginalExtension();
+            $request->file('login_form_logo')->move(public_path('admin_uploads/login_backgrounds/'), $logoName);
+            $loginLogoUrl = asset('/').'public/admin_uploads/login_backgrounds/'.$logoName;
+            $all_data['login_form_logo'] = $loginLogoUrl;
         }
 
         if($request->hasFile('default_light_theme_image'))
