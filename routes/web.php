@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController, ItemsReviewsController, LanguageController,LanguagesController, MailFormController, OptionController,OrderController,PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController};
+use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController, ItemsReviewsController, LanguageController,LanguagesController, MailFormController, OptionController,OrderController, OtherSettingController, PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -294,6 +294,11 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/mail-forms-edit', [MailFormController::class,'edit'])->name('mail.forms.edit');
         Route::post('/mail-forms-update-by-lang', [MailFormController::class,'updateByLangCode'])->name('mail.forms.update.by.lang');
         Route::post('/mail-forms-update', [MailFormController::class,'update'])->name('mail.forms.update');
+
+        // Other Settings
+        Route::post('/other-settings-edit', [OtherSettingController::class,'edit'])->name('other.settings.edit');
+        Route::post('/other-settings-update-by-lang', [OtherSettingController::class,'updateByLangCode'])->name('other.settings.update.by.lang');
+        Route::post('/other-settings-update', [OtherSettingController::class,'update'])->name('other.settings.update');
 
     });
 });

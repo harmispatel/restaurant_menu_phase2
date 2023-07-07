@@ -42,9 +42,6 @@
     // Item Devider
     $item_devider = (isset($theme_settings['item_divider']) && !empty($theme_settings['item_divider'])) ? $theme_settings['item_divider'] : 0;
 
-    // Today Special Icon
-    $today_special_icon = isset($theme_settings['today_special_icon']) ? $theme_settings['today_special_icon'] : '';
-
     // Admin Settings
     $admin_settings = getAdminSettings();
     $default_special_image = (isset($admin_settings['default_special_item_image'])) ? $admin_settings['default_special_item_image'] : '';

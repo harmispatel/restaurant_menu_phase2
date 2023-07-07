@@ -40,13 +40,15 @@
     $theme_settings = themeSettings($shop_theme_id);
 
     // Read More Label
-    $read_more_label = (isset($theme_settings['read_more_link_label']) && !empty($theme_settings['read_more_link_label'])) ? $theme_settings['read_more_link_label'] : 'Read More';
+    $read_more_label = moreTranslations($shop_details['id'],'read_more_link_label');
+    $read_more_label = (isset($read_more_label[$current_lang_code."_value"]) && !empty($read_more_label[$current_lang_code."_value"])) ? $read_more_label[$current_lang_code."_value"] : 'Read More';
 
     // Item Devider
     $item_devider = (isset($theme_settings['item_divider']) && !empty($theme_settings['item_divider'])) ? $theme_settings['item_divider'] : 0;
 
     // Today Special Icon
-    $today_special_icon = isset($theme_settings['today_special_icon']) ? $theme_settings['today_special_icon'] : '';
+    $today_special_icon = moreTranslations($shop_details['id'],'today_special_icon');
+    $today_special_icon = (isset($today_special_icon[$current_lang_code."_value"]) && !empty($today_special_icon[$current_lang_code."_value"])) ? $today_special_icon[$current_lang_code."_value"] : '';
 
     // Admin Settings
     $admin_settings = getAdminSettings();

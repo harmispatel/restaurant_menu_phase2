@@ -492,36 +492,6 @@
                                                             </div>
                                                         </div>
                                                         <div class="row align-items-center mb-4">
-                                                            <div class="col-md-8">
-                                                                <span>{{ __('Read More Link Label')}}</span>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="form-group">
-                                                                    <input type="text" name="read_more_link_label" id="read_more_link_label" class="form-control" value="{{ isset($settings['read_more_link_label']) ? $settings['read_more_link_label'] : '' }}" >
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row align-items-center mb-4">
-                                                            <div class="col-md-4">
-                                                                <span>{{ __('Today Special Icon')}}</span>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <div class="form-group align-items-center">
-                                                                    <input type="file" name="today_special_icon" id="today_special_icon" class="form-control {{ ($errors->has('today_special_icon')) ? 'is-invalid' : '' }}">
-                                                                    @if($errors->has('today_special_icon'))
-                                                                        <div class="invalid-feedback">
-                                                                            {{ $errors->first('today_special_icon') }}
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="form-group mt-2">
-                                                                    @if(isset($settings['today_special_icon']) && !empty($settings['today_special_icon']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/today_special_icon/'.$settings['today_special_icon']))
-                                                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/today_special_icon/'.$settings['today_special_icon']) }}" width="100">
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row align-items-center mb-4">
                                                             <div class="col-md-4">
                                                                 <span>{{ __('Theme Preview Image')}}</span>
                                                             </div>

@@ -56,7 +56,7 @@
                         @if(!empty($form_logo))
                             <div class="d-flex justify-content-center py-4">
                                 <a class="">
-                                    <img src="{{ $form_logo }}" alt="Logo" width="150">
+                                    <img src="{{ $form_logo }}" alt="Logo" style="max-width: 300px;">
                                 </a>
                             </div>
                         @endif

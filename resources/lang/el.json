@@ -434,5 +434,9 @@
     "The store is closed during these hours." : "Tο κατάστημα είναι κλειστό αυτές τις ώρες.",
     "Sorry, your order has been declined. Reason:" : "Λυπούμαστε, η παραγγελία σας απορρίφθηκε. Αιτία:",
 
-    "Street Number": "Αριθμός δρόμου"
+    "Street Number": "Αριθμός δρόμου",
+    "More Trasnlations": "Περισσότερες μεταφράσεις",
+    "Edit More Trasnlations": "Επεξεργασία περισσότερων μεταφράσεων",
+    "Login Form Logo": "Λογότυπο φόρμας σύνδεσης",
+    "Read More Link Label": "Διαβάστε περισσότερα Ετικέτα συνδέσμου"
 }

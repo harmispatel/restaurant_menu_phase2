@@ -8,6 +8,7 @@ use App\Models\ItemPrice;
 use App\Models\Items;
 use App\Models\Languages;
 use App\Models\LanguageSettings;
+use App\Models\OtherSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,9 @@ class LanguageController extends Controller
         // Language Details
         $language_detail = Languages::where('id',$primary_lang_id)->first();
         $data['lang_code'] = isset($language_detail->code) ? $language_detail->code : '';
+
+        // Other Settings
+        $data['other_settings'] = OtherSetting::where('shop_id',$shop_id)->get();
 
         $data['categories'] = Category::with(['items'])->where('shop_id',$shop_id)->get();
         $data['languages'] = Languages::get();

@@ -25,7 +25,8 @@
     $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 
     // Delivery Message
-    $delivery_message = (isset($shop_settings['delivery_message']) && !empty($shop_settings['delivery_message'])) ? $shop_settings['delivery_message'] : 'Sorry your address is out of our delivery range.';
+    $delivery_message = moreTranslations($shop_details['id'],'delivery_message');
+    $delivery_message = (isset($delivery_message[$current_lang_code."_value"]) && !empty($delivery_message[$current_lang_code."_value"])) ? $delivery_message[$current_lang_code."_value"] : 'Sorry your address is out of our delivery range.';
 
     // Name Key
     $name_key = $current_lang_code."_name";

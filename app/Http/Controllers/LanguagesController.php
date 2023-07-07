@@ -23,6 +23,7 @@ class LanguagesController extends Controller
             $lang_title_column = $lang_code."_title";
             $lang_image_column = $lang_code."_image";
             $lang_form_column = $lang_code."_form";
+            $lang_value_column = $lang_code."_value";
 
             // Check Language Exists or Not
             $check_lang_name = Languages::where('name', $lang_name)->exists();
@@ -97,7 +98,14 @@ class LanguagesController extends Controller
                 // Add new Column in Mail Forms Table
                 if(!Schema::hasColumns('mail_forms', [$lang_form_column]))
                 {
-                    $query = "ALTER TABLE `mail_forms` ADD COLUMN $lang_form_column VARCHAR(255) DEFAULT NULL AFTER `form`";
+                    $query = "ALTER TABLE `mail_forms` ADD COLUMN $lang_form_column TEXT DEFAULT NULL AFTER `form`";
+                    DB::statement($query);
+                }
+
+                // Add new Column in Other Settings
+                if(!Schema::hasColumns('other_settings', [$lang_value_column]))
+                {
+                    $query = "ALTER TABLE `other_settings` ADD COLUMN $lang_value_column TEXT DEFAULT NULL AFTER `form`";
                     DB::statement($query);
                 }
             }

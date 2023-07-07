@@ -15,6 +15,23 @@
 
 @section('content')
 
+    {{-- Edit Other Settings Modal --}}
+    <div class="modal fade" id="editOtherSettingsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editOtherSettingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editOtherSettingsModalLabel">{{ __('Edit More Trasnlations')}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="other_setting_lang_div">
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-success" onclick="updateOtherSetting()">{{ __('Update') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <input type="hidden" name="shopID" id="shopID" value="{{ $userShopId }}">
 
     <section class="lang_main">
@@ -139,6 +156,42 @@
                 </div>
             </div>
         </div>
+        <hr>
+        <div class="row">
+            <h3>{{ __('More Trasnlations') }}</h3>
+            <div class="col-md-12">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%">Sr.</th>
+                            <th>{{ __('Name') }}</th>
+                            <th style="width: 20%">{{ __('Actions') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(count($other_settings) > 0)
+                            @foreach ($other_settings as $other_setting)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>
+                                        @if($other_setting->key == 'read_more_link_label')
+                                            {{ __('Read More Link Label') }}
+                                        @elseif($other_setting->key == 'delivery_message')
+                                            {{ __('Delivery out of range Message') }}
+                                        @elseif ($other_setting->key == 'today_special_icon')
+                                            {{ __('Today Special Icon') }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a onclick="editOtherSetting({{ $other_setting->id }},'{{ $other_setting->key }}')" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
 
 @endsection
@@ -148,9 +201,10 @@
 
     <script type="text/javascript">
 
+        var deliveryMessageEditor;
+
         // Select2 for Primary Language
         var primarySelect = $('#primary_language').select2();
-
 
         // Function for Set User's Primary Language
         function setPrimaryLanguage(shopID)
@@ -556,6 +610,341 @@
             });
 
         });
+
+
+        // Function for Edit Other Settings
+        function editOtherSetting(settingID,settingKey)
+        {
+            // Clear Modal
+            $('#editOtherSettingsModal #other_setting_lang_div').html('');
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $('.ck-editor').remove();
+            deliveryMessageEditor = "";
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('other.settings.edit') }}",
+                dataType: "JSON",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'id': settingID,
+                    'setting_key': settingKey,
+                },
+                success: function(response)
+                {
+                    if (response.success == 1)
+                    {
+                        $('#editOtherSettingsModal #other_setting_lang_div').html('');
+                        $('#editOtherSettingsModal #other_setting_lang_div').append(response.data);
+
+                        if(settingKey == 'delivery_message')
+                        {
+                            // Description Text Editor
+                            $('.ck-editor').remove();
+                            deliveryMessageEditor = "";
+                            var message_textarea = $('#delivery_message')[0];
+                            CKEDITOR.ClassicEditor.create(message_textarea,
+                            {
+                                toolbar: {
+                                    items: [
+                                        'heading', '|',
+                                        'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                                        'bulletedList', 'numberedList', 'todoList', '|',
+                                        'outdent', 'indent', '|',
+                                        'undo', 'redo',
+                                        '-',
+                                        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                                        'alignment', '|',
+                                        'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                                        'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                                        'sourceEditing'
+                                    ],
+                                    shouldNotGroupWhenFull: true
+                                },
+                                list: {
+                                    properties: {
+                                        styles: true,
+                                        startIndex: true,
+                                        reversed: true
+                                    }
+                                },
+                                'height':500,
+                                fontSize: {
+                                    options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                                    supportAllValues: true
+                                },
+                                htmlSupport: {
+                                    allow: [
+                                        {
+                                            name: /.*/,
+                                            attributes: true,
+                                            classes: true,
+                                            styles: true
+                                        }
+                                    ]
+                                },
+                                htmlEmbed: {
+                                    showPreviews: true
+                                },
+                                link: {
+                                    decorators: {
+                                        addTargetToExternalLinks: true,
+                                        defaultProtocol: 'https://',
+                                        toggleDownloadable: {
+                                            mode: 'manual',
+                                            label: 'Downloadable',
+                                            attributes: {
+                                                download: 'file'
+                                            }
+                                        }
+                                    }
+                                },
+                                mention: {
+                                    feeds: [
+                                        {
+                                            marker: '@',
+                                            feed: [
+                                                '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                                '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                                '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                                '@sugar', '@sweet', '@topping', '@wafer'
+                                            ],
+                                            minimumCharacters: 1
+                                        }
+                                    ]
+                                },
+                                removePlugins: [
+                                    'CKBox',
+                                    'CKFinder',
+                                    'EasyImage',
+                                    'RealTimeCollaborativeComments',
+                                    'RealTimeCollaborativeTrackChanges',
+                                    'RealTimeCollaborativeRevisionHistory',
+                                    'PresenceList',
+                                    'Comments',
+                                    'TrackChanges',
+                                    'TrackChangesData',
+                                    'RevisionHistory',
+                                    'Pagination',
+                                    'WProofreader',
+                                    'MathType'
+                                ]
+                            }).then( editor => {
+                                deliveryMessageEditor = editor;
+                            });
+                        }
+
+                        $('#editOtherSettingsModal').modal('show');
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        }
+
+
+        // Update Other Settings By Language Code
+        function updateByCode(next_lang_code)
+        {
+            var formID = "otherSettingsForm";
+            var setting_key = $('#otherSettingsForm #setting_key').val();
+            var myFormData = new FormData(document.getElementById(formID));
+            if(setting_key == 'delivery_message')
+            {
+                myFormData.set('delivery_message',deliveryMessageEditor.getData());
+            }
+            myFormData.append('next_lang_code',next_lang_code);
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('other.settings.update.by.lang') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        $('#editOtherSettingsModal #other_setting_lang_div').html('');
+                        $('#editOtherSettingsModal #other_setting_lang_div').append(response.data);
+
+                        if(setting_key == 'delivery_message')
+                        {
+                            // Description Text Editor
+                            $('.ck-editor').remove();
+                            deliveryMessageEditor = "";
+                            var message_textarea = $('#delivery_message')[0];
+                            CKEDITOR.ClassicEditor.create(message_textarea,
+                            {
+                                toolbar: {
+                                    items: [
+                                        'heading', '|',
+                                        'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                                        'bulletedList', 'numberedList', 'todoList', '|',
+                                        'outdent', 'indent', '|',
+                                        'undo', 'redo',
+                                        '-',
+                                        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                                        'alignment', '|',
+                                        'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                                        'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                                        'sourceEditing'
+                                    ],
+                                    shouldNotGroupWhenFull: true
+                                },
+                                list: {
+                                    properties: {
+                                        styles: true,
+                                        startIndex: true,
+                                        reversed: true
+                                    }
+                                },
+                                'height':500,
+                                fontSize: {
+                                    options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                                    supportAllValues: true
+                                },
+                                htmlSupport: {
+                                    allow: [
+                                        {
+                                            name: /.*/,
+                                            attributes: true,
+                                            classes: true,
+                                            styles: true
+                                        }
+                                    ]
+                                },
+                                htmlEmbed: {
+                                    showPreviews: true
+                                },
+                                link: {
+                                    decorators: {
+                                        addTargetToExternalLinks: true,
+                                        defaultProtocol: 'https://',
+                                        toggleDownloadable: {
+                                            mode: 'manual',
+                                            label: 'Downloadable',
+                                            attributes: {
+                                                download: 'file'
+                                            }
+                                        }
+                                    }
+                                },
+                                mention: {
+                                    feeds: [
+                                        {
+                                            marker: '@',
+                                            feed: [
+                                                '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                                '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                                '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                                '@sugar', '@sweet', '@topping', '@wafer'
+                                            ],
+                                            minimumCharacters: 1
+                                        }
+                                    ]
+                                },
+                                removePlugins: [
+                                    'CKBox',
+                                    'CKFinder',
+                                    'EasyImage',
+                                    'RealTimeCollaborativeComments',
+                                    'RealTimeCollaborativeTrackChanges',
+                                    'RealTimeCollaborativeRevisionHistory',
+                                    'PresenceList',
+                                    'Comments',
+                                    'TrackChanges',
+                                    'TrackChangesData',
+                                    'RevisionHistory',
+                                    'Pagination',
+                                    'WProofreader',
+                                    'MathType'
+                                ]
+                            }).then( editor => {
+                                deliveryMessageEditor = editor;
+                            });
+                        }
+                    }
+                    else
+                    {
+                        $('#editOtherSettingsModal').modal('hide');
+                        $('#editOtherSettingsModal #other_setting_lang_div').html('');
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(response)
+                {
+                    if(response.responseJSON.errors)
+                    {
+                        $.each(response.responseJSON.errors, function (i, error) {
+                            toastr.error(error);
+                        });
+                    }
+                }
+            });
+        }
+
+
+        // Function for Update Other Settings
+        function updateOtherSetting()
+        {
+            var formID = "otherSettingsForm";
+            var setting_key = $('#otherSettingsForm #setting_key').val();
+            var myFormData = new FormData(document.getElementById(formID));
+            if(setting_key == 'delivery_message')
+            {
+                myFormData.set('delivery_message',deliveryMessageEditor.getData());
+            }
+
+            // Clear all Toastr Messages
+            toastr.clear();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('other.settings.update') }}",
+                data: myFormData,
+                dataType: "JSON",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (response)
+                {
+                    if(response.success == 1)
+                    {
+                        // $('#editOtherSettingsModal').modal('hide');
+                        toastr.success(response.message);
+                    }
+                    else
+                    {
+                        $('#editOtherSettingsModal').modal('hide');
+                        toastr.error(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                },
+                error: function(response)
+                {
+                    if(response.responseJSON.errors)
+                    {
+                        $.each(response.responseJSON.errors, function (i, error) {
+                            toastr.error(error);
+                        });
+                    }
+                }
+            });
+
+        }
 
     </script>
 

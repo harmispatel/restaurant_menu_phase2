@@ -69,11 +69,9 @@ class ThemeController extends Controller
             'tag_font_color',
             'tag_label_color',
             'category_bar_type',
-            'today_special_icon',
             'theme_preview_image',
             'search_box_icon_color',
             'read_more_link_color',
-            'read_more_link_label',
             'banner_height',
             'label_color_transparency',
             'item_box_background_color',
@@ -117,7 +115,6 @@ class ThemeController extends Controller
     {
         $request->validate([
             'theme_name' => 'required',
-            'today_special_icon' => 'mimes:png,jpg,svg,gif,jpeg,PNG,SVG,JPG,JPEG,GIF',
             'theme_preview_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
         ]);
 
@@ -166,20 +163,12 @@ class ThemeController extends Controller
             'category_bar_type' => $request->category_bar_type,
             'search_box_icon_color' => $request->search_box_icon_color,
             'read_more_link_color' => $request->read_more_link_color,
-            'read_more_link_label' => $request->read_more_link_label,
             'banner_height' => $request->banner_height,
             'label_color_transparency' => $request->label_color_transparency,
             'item_box_background_color' => $request->item_box_background_color,
             'item_title_color' => $request->item_title_color,
             'item_description_color' => $request->item_description_color,
         ];
-
-        if($request->hasFile('today_special_icon'))
-        {
-            $imgname = "today_special_icon_".time().".". $request->file('today_special_icon')->getClientOriginalExtension();
-            $request->file('today_special_icon')->move(public_path('client_uploads/shops/'.$shop_slug.'/today_special_icon/'), $imgname);
-            $setting_keys['today_special_icon'] = $imgname;
-        }
 
         if($request->hasFile('theme_preview_image'))
         {
@@ -259,7 +248,6 @@ class ThemeController extends Controller
 
         $request->validate([
             'theme_name' => 'required',
-            'today_special_icon' => 'mimes:png,jpg,svg,gif,jpeg,PNG,SVG,JPG,JPEG,GIF',
             'theme_preview_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
         ]);
 
@@ -303,20 +291,12 @@ class ThemeController extends Controller
             'category_bar_type' => $request->category_bar_type,
             'search_box_icon_color' => $request->search_box_icon_color,
             'read_more_link_color' => $request->read_more_link_color,
-            'read_more_link_label' => $request->read_more_link_label,
             'banner_height' => $request->banner_height,
             'label_color_transparency' => $request->label_color_transparency,
             'item_box_background_color' => $request->item_box_background_color,
             'item_title_color' => $request->item_title_color,
             'item_description_color' => $request->item_description_color,
         ];
-
-        if($request->hasFile('today_special_icon'))
-        {
-            $imgname = "today_special_icon_".time().".". $request->file('today_special_icon')->getClientOriginalExtension();
-            $request->file('today_special_icon')->move(public_path('client_uploads/shops/'.$shop_slug.'/today_special_icon/'), $imgname);
-            $setting_keys['today_special_icon'] = $imgname;
-        }
 
         if($request->hasFile('theme_preview_image'))
         {
@@ -414,11 +394,9 @@ class ThemeController extends Controller
             'tag_font_color',
             'tag_label_color',
             'category_bar_type',
-            'today_special_icon',
             'theme_preview_image',
             'search_box_icon_color',
             'read_more_link_color',
-            'read_more_link_label',
             'banner_height',
             'label_color_transparency',
             'item_box_background_color',

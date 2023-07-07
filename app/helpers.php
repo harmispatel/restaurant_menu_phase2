@@ -1,6 +1,6 @@
 <?php
 
-    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings, DeliveryAreas, Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop};
+    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings, DeliveryAreas, Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, OtherSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop};
     use Carbon\Carbon;
     use Illuminate\Support\Facades\Auth;
 
@@ -72,7 +72,6 @@
             'map_url',
             'website_url',
             'shop_active_theme',
-            'delivery_message',
             'orders_mail_form_client',
             'orders_mail_form_customer',
             'check_in_mail_form',
@@ -234,11 +233,9 @@
             'tag_font_color',
             'tag_label_color',
             'category_bar_type',
-            'today_special_icon',
             'theme_preview_image',
             'search_box_icon_color',
             'read_more_link_color',
-            'read_more_link_label',
             'banner_height',
             'label_color_transparency',
             'item_box_background_color',
@@ -723,6 +720,14 @@
         }
 
         return $permission;
+    }
+
+
+    // Function for get More Translations
+    function moreTranslations($shop_id,$key)
+    {
+        $more_translations = OtherSetting::where('shop_id',$shop_id)->where('key',$key)->first();
+        return $more_translations;
     }
 
 ?>

@@ -272,8 +272,17 @@ class ShopController extends Controller
         // Theme Settings
         $theme_settings = themeSettings($shop_theme_id);
 
+        // Today Special Icon
+        $today_special_icon = moreTranslations($shop_id,'today_special_icon');
+        $today_special_icon = (isset($today_special_icon[$current_lang_code."_value"]) && !empty($today_special_icon[$current_lang_code."_value"])) ? $today_special_icon[$current_lang_code."_value"] : '';
+
+        // Admin Settings
+        $admin_settings = getAdminSettings();
+        $default_special_image = (isset($admin_settings['default_special_item_image'])) ? $admin_settings['default_special_item_image'] : '';
+
         // Read More Label
-        $read_more_label = (isset($theme_settings['read_more_link_label']) && !empty($theme_settings['read_more_link_label'])) ? $theme_settings['read_more_link_label'] : 'Read More';
+        $read_more_label = moreTranslations($shop_id,'read_more_link_label');
+        $read_more_label = (isset($read_more_label[$current_lang_code."_value"]) && !empty($read_more_label[$current_lang_code."_value"])) ? $read_more_label[$current_lang_code."_value"] : 'Read More';
 
         $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 
@@ -574,10 +583,12 @@ class ShopController extends Controller
         $theme_settings = themeSettings($shop_theme_id);
 
         // Read More Label
-        $read_more_label = (isset($theme_settings['read_more_link_label']) && !empty($theme_settings['read_more_link_label'])) ? $theme_settings['read_more_link_label'] : 'Read More';
+        $read_more_label = moreTranslations($shop_id,'read_more_link_label');
+        $read_more_label = (isset($read_more_label[$current_lang_code."_value"]) && !empty($read_more_label[$current_lang_code."_value"])) ? $read_more_label[$current_lang_code."_value"] : 'Read More';
 
         // Today Special Icon
-        $today_special_icon = isset($theme_settings['today_special_icon']) ? $theme_settings['today_special_icon'] : '';
+        $today_special_icon = moreTranslations($shop_id,'today_special_icon');
+        $today_special_icon = (isset($today_special_icon[$current_lang_code."_value"]) && !empty($today_special_icon[$current_lang_code."_value"])) ? $today_special_icon[$current_lang_code."_value"] : '';
 
         // Admin Settings
         $admin_settings = getAdminSettings();
@@ -597,14 +608,14 @@ class ShopController extends Controller
 
                 if($keyword == '')
                 {
-                    $items = Items::where("$name_key",'LIKE','%'.$keyword.'%')->where('category_id',$category_id)->where('published',1)->get();
+                    $items = Items::where("$name_key",'LIKE','%'.$keyword.'%')->where('category_id',$category_id)->where('published',1)->orderBy('order_key','ASC')->get();
                 }
                 else
                 {
                     $items = Items::whereHas('category', function($q) use ($parent_id)
                     {
                         $q->where('parent_id',$parent_id);
-                    })->where("$name_key",'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->where('published',1)->get();
+                    })->where("$name_key",'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->where('published',1)->orderBy('order_key','ASC')->get();
                 }
 
                 if(count($items) > 0)
