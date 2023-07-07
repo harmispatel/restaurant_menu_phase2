@@ -33,16 +33,22 @@
     <!-- Template Main CSS File -->
     <link href="{{ asset('public/admin/assets/vendor/css/style.css') }}" rel="stylesheet">
 
-    @if(!empty($form_background))
-        <style>
+    <style>
+        @if(!empty($form_background))
             .bg_login {
                 background: url({{ $form_background }});
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
             }
-        </style>
-    @endif
+         @endif
+
+        @media (max-width:767px){
+             .admin_login_logo img{
+                 padding-bottom:25px;
+             }
+         }
+    </style>
 
 
 </head>
@@ -53,16 +59,22 @@
             <div class="container">
                 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                     <div class="container">
-                        @if(!empty($form_logo))
+                        {{-- @if(!empty($form_logo))
                             <div class="d-flex justify-content-center py-4">
                                 <a class="">
-                                    <img src="{{ $form_logo }}" alt="Logo" style="max-width: 300px;">
+                                    <img src="{{ $form_logo }}" alt="Logo">
                                 </a>
                             </div>
-                        @endif
+                        @endif --}}
                         <div class="row justify-content-center">
                             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-
+                                @if(!empty($form_logo))
+                                    <div class="d-flex justify-content-center py-4 admin_login_logo">
+                                        <a class="">
+                                            <img src="{{ $form_logo }}" alt="Logo" class="w-100">
+                                        </a>
+                                    </div>
+                                @endif
                                 @if (session()->has('error'))
                                     <div class="col-md-12 mt-2">
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
