@@ -1536,6 +1536,9 @@ input:checked + .slider .check_icon{
       .cover-img img {
         width: 100% !important;
     }
+    .cover-img{
+        height: 100vh !important;
+    }
   }
 
   @media (max-width:767px) {

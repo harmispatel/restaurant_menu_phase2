@@ -193,7 +193,8 @@
             }
 
             .shop-main{
-                margin-top: 90px;
+                margin-top: 70px;
+                padding-top: 0;
             }
         @endif
 

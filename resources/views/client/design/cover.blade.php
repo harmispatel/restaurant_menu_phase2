@@ -30,8 +30,8 @@
                     <div class="add_logo_sec_body">
                         <form id="introIconForm" method="POST" action="javascript:void(0)" enctype="multipart/form-data">
                             @csrf
-                            <code>Intro image will appear before your digital menu for the duration specified image Specs : File size < 2MB, Recommended image size : (500 x 1100) pixels.</code>
-                            <div class="add_logo_sec_body_inr">
+                            <code> Intro will appear before menu for the specified duration! Image/Video File Size < 2MB, Recommended Dimensions: 500 X 900px.</code>
+                            <div class="add_logo_sec_body_inr mt-3">
                                 <div>
                                     <label for="shop_intro_icon" class="position-relative" style="cursor: pointer;">
                                         @if(!empty($shop_intro_icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/intro_icons/'.$shop_intro_icon))
@@ -41,10 +41,10 @@
                                             @if($file_ext == 'mp4' || $file_ext == 'mov')
                                                 <video src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/intro_icons/'.$shop_intro_icon) }}" width="200px" autoplay muted loop>
                                                 </video>
-                                                <a href="{{ route('design.cover.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
+                                                <a href="{{ route('design.cover.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: 0; right: -35px;"><i class="bi bi-trash"></i></a>
                                             @else
                                                 <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/intro_icons/'.$shop_intro_icon) }}" width="200px"/>
-                                                <a href="{{ route('design.cover.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
+                                                <a href="{{ route('design.cover.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: 0; right: -35px;"><i class="bi bi-trash"></i></a>
                                             @endif
                                         @else
                                             <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
