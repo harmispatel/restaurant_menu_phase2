@@ -31,7 +31,7 @@
     $theme_settings = themeSettings($shop_theme_id);
     $slider_buttons = (isset($theme_settings['banner_slide_button']) && !empty($theme_settings['banner_slide_button'])) ? $theme_settings['banner_slide_button'] : 0;
     $slider_delay_time = (isset($theme_settings['banner_delay_time']) && !empty($theme_settings['banner_delay_time'])) ? $theme_settings['banner_delay_time'] : 3000;
-    $banner_height = (isset($theme_settings['banner_height']) && !empty($theme_settings['banner_height'])) ? $theme_settings['banner_height'] : 0;
+    $banner_height = (isset($theme_settings['banner_height']) && !empty($theme_settings['banner_height'])) ? $theme_settings['banner_height'] : 250;
 
     // Get Subscription ID
     $subscription_id = getClientSubscriptionID($shop_details['id']);

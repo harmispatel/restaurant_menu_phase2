@@ -456,11 +456,17 @@
                                             <div class="item_info">
                                                 <div class="item_name">
                                                     <h3>{{ isset($item[$name_key]) ? $item[$name_key] : '' }}</h3>
-                                                    <div class="form-check form-switch">
+                                                    <div class="form-check form-switch me-2" data-bs-toggle="tooltip" title="Status">
                                                         @php
                                                             $newStatus = ($item->published == 1) ? 0 : 1;
                                                         @endphp
                                                         <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeStatus({{ $item->id }},{{ $newStatus }})" value="1" {{ ($item->published == 1) ? 'checked' : '' }}>
+                                                    </div>
+                                                    <div class="form-check form-switch" data-bs-toggle="tooltip" title="Delivery">
+                                                        @php
+                                                            $newDelivery = ($item->delivery == 1) ? 0 : 1;
+                                                        @endphp
+                                                        <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeItemDelivery({{ $item->id }},{{ $newDelivery }})" value="1" {{ ($item->delivery == 1) ? 'checked' : '' }}>
                                                     </div>
                                                 </div>
                                                 @if($item->type == 1)
@@ -1960,6 +1966,39 @@
                 $(formId+' #more_dt_btn i').attr('class','bi bi-eye-slash');
             }
             $(formId+' #more_details').toggle();
+        }
+
+
+        // Function for Change Item Delivery
+        function changeItemDelivery(itemID, status)
+        {
+            $.ajax({
+                type: "POST",
+                url: '{{ route("items.delivery.status") }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'delivery':status,
+                    'id':itemID
+                },
+                dataType: 'JSON',
+                success: function(response)
+                {
+                    if (response.success == 1)
+                    {
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+                    }
+                }
+            });
         }
 
     </script>

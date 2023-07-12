@@ -159,6 +159,7 @@
                                                         @php
                                                             $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
                                                             $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
+                                                            $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
                                                         @endphp
                                                         @if($item['type'] == 1)
                                                             <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
@@ -277,7 +278,7 @@
                                                                         @endif
                                                                     @endif
 
-                                                                    @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0))
+                                                                    @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0) && $item_delivery == 1)
                                                                         <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                                     @endif
                                                                 </div>
@@ -348,6 +349,7 @@
                                                             @php
                                                                 $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
                                                                 $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
+                                                                $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
                                                             @endphp
                                                             @if($item['type'] == 1)
                                                                 <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
@@ -466,7 +468,7 @@
                                                                             @endif
                                                                         @endif
 
-                                                                        @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0))
+                                                                        @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0) && $item_delivery == 1)
                                                                             <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                                         @endif
                                                                     </div>
@@ -531,6 +533,7 @@
                                                 @php
                                                     $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
                                                     $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
+                                                    $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
                                                 @endphp
                                                 @if($item['type'] == 1)
                                                     <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
@@ -649,7 +652,7 @@
                                                                 @endif
                                                             @endif
 
-                                                            @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0))
+                                                            @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0) && $item_delivery == 1)
                                                                 <div class="cart-symbol"><i class="bi bi-cart4"></i></div>
                                                             @endif
                                                         </div>

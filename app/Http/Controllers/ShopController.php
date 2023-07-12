@@ -374,6 +374,7 @@ class ShopController extends Controller
                                 $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
                                 $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
                                 $active_cat = checkCategorySchedule($item->category_id,$item->shop_id);
+                                $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
 
                                 if($active_cat == 1)
                                 {
@@ -514,7 +515,7 @@ class ShopController extends Controller
                                                 }
                                             $html .= '</ul>';
 
-                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0)
+                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
                                             {
                                                 $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
                                             }
@@ -628,6 +629,7 @@ class ShopController extends Controller
                                 $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
                                 $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
                                 $active_cat = checkCategorySchedule($item->category_id,$item->shop_id);
+                                $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
 
                                 if($active_cat == 1)
                                 {
@@ -768,7 +770,7 @@ class ShopController extends Controller
                                                 }
                                             $html .= '</ul>';
 
-                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0)
+                                            if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
                                             {
                                                 $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
                                             }
@@ -818,6 +820,7 @@ class ShopController extends Controller
                             {
                                 $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
                                 $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
+                                $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
 
                                 if($item['type'] == 2)
                                 {
@@ -957,7 +960,7 @@ class ShopController extends Controller
                                             }
                                         $html .= '</ul>';
 
-                                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0)
+                                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
                                         {
                                             $html .= '<div class="cart-symbol"><i class="bi bi-cart4"></i></div>';
                                         }
@@ -1132,6 +1135,7 @@ class ShopController extends Controller
                 $price_arr = getItemPrice($item['id']);
                 $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
                 $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
+                $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
 
                 $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
                 $html .= '<input type="hidden" name="shop_id" id="shop_id" value="'.$request->shop_id.'">';
@@ -1300,7 +1304,7 @@ class ShopController extends Controller
                             $html .= '</div>';
                         }
 
-                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && $item_delivery == 1)
                         {
                             // Options
                             $option_ids = (isset($item['options']) && !empty($item['options'])) ? unserialize($item['options']) : [];
@@ -1372,7 +1376,7 @@ class ShopController extends Controller
                             }
                         }
 
-                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && $item_delivery == 1)
                         {
                             $html .= '<div class="col-md-12 cart-price">';
                                 $html .= '<div class="row p-3">';
@@ -1977,35 +1981,6 @@ class ShopController extends Controller
             {
                 return redirect()->back();
             }
-
-
-            if(count($data['cart']) > 0)
-            {
-                $not_deliver = [];
-                foreach($data['cart'] as $cart_key => $cart_data)
-                {
-                    foreach ($cart_data as $cart_val)
-                    {
-                        foreach ($cart_val as $cart_item_key => $cart_item)
-                        {
-                            $item_dt = itemDetails($cart_item['item_id']);
-
-                            if($item_dt['delivery'] == 0)
-                            {
-                                $not_deliver[] = $item_dt['en_name'];
-                            }
-                        }
-                    }
-                }
-
-                if(count($not_deliver) > 0)
-                {
-                    $not_deliver = implode(', ',$not_deliver);
-                    return redirect()->route('restaurant',$shop_slug)->with('error',"$not_deliver Items delivery not Available!");
-                }
-
-            }
-
         }
 
         $delivery_schedule = checkDeliverySchedule($shop_id);

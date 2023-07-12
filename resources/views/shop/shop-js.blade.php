@@ -63,6 +63,8 @@
         $("#closeSearchBox").addClass("d-none");
         $('#openSearchBox').removeClass("d-none");
         $(".search_input").removeClass("d-block");
+        $('#search').val('');
+        $('#search').trigger('keyup');
     });
 
     // Open & Close Language Sidebar

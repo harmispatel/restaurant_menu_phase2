@@ -146,6 +146,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('store-items',[ItemsController::class,'store'])->name('items.store');
         Route::post('delete-items',[ItemsController::class,'destroy'])->name('items.delete');
         Route::post('status-items',[ItemsController::class,'status'])->name('items.status');
+        Route::post('delivery-status-items',[ItemsController::class,'itemDeliveryStatus'])->name('items.delivery.status');
         Route::post('search-items',[ItemsController::class,'searchItems'])->name('items.search');
         Route::post('edit-items',[ItemsController::class,'edit'])->name('items.edit');
         Route::post('update-items',[ItemsController::class,'update'])->name('items.update');

@@ -305,6 +305,35 @@ class ItemsController extends Controller
 
 
 
+    // Function for Change Item Status
+    public function itemDeliveryStatus(Request $request)
+    {
+        try
+        {
+            $id = $request->id;
+            $delivery = $request->delivery;
+
+            $item = Items::find($id);
+            $item->delivery = $delivery;
+            $item->update();
+
+            return response()->json([
+                'success' => 1,
+                'message' => "Item Delivery Status has been Changed Successfully..",
+            ]);
+
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => "Internal Server Error!",
+            ]);
+        }
+    }
+
+
+
     // Function for Filtered Items
     public function searchItems(Request $request)
     {
@@ -518,6 +547,20 @@ class ItemsController extends Controller
                             $html .= '<input type="hidden" name="active_lang_code" id="active_lang_code" value="'.$primary_lang_code.'">';
                             $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
 
+                            // Dlivery
+                            $html .= '<div class="row mb-3">';
+                                $html .= '<div class="col-md-12 text-end delivery">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+
                             // Item Type
                             $html .= '<div class="row mb-3">';
                                 $html .= '<div class="col-md-12">';
@@ -813,17 +856,6 @@ class ItemsController extends Controller
                                                 $html .= '</span>';
                                             $html .= '</label>';
                                             $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
-                                        $html .= '</div>';
-
-                                        $html .= '<div class="col-md-6 delivery mb-3">';
-                                            $html .= '<label class="switch me-2">';
-                                                $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
-                                                $html .= '<span class="slider round">';
-                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                $html .= '</span>';
-                                            $html .= '</label>';
-                                            $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
                                         $html .= '</div>';
 
                                         $html .= '<div class="col-md-6 mb-3">';
@@ -865,6 +897,20 @@ class ItemsController extends Controller
                             $html .= '<input type="hidden" name="active_lang_code" id="active_lang_code" value="'.$primary_lang_code.'">';
                             $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
 
+                            // Dlivery
+                            $html .= '<div class="row mb-3">';
+                                $html .= '<div class="col-md-12 text-end delivery">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                                $html .= '</div>';
+                            $html .= '</div>';
+
                             // Item Type
                             $html .= '<div class="row mb-3">';
                                 $html .= '<div class="col-md-12">';
@@ -1160,17 +1206,6 @@ class ItemsController extends Controller
                                                 $html .= '</span>';
                                             $html .= '</label>';
                                             $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
-                                        $html .= '</div>';
-
-                                        $html .= '<div class="col-md-6 delivery mb-3">';
-                                            $html .= '<label class="switch me-2">';
-                                                $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
-                                                $html .= '<span class="slider round">';
-                                                    $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                    $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                                $html .= '</span>';
-                                            $html .= '</label>';
-                                            $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
                                         $html .= '</div>';
 
                                         $html .= '<div class="col-md-6 mb-3">';
@@ -1741,6 +1776,20 @@ class ItemsController extends Controller
                         $html .= '<input type="hidden" name="active_lang_code" id="active_lang_code" value="'.$current_lang_code.'">';
                         $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
 
+                        // Dlivery
+                        $html .= '<div class="row mb-3">';
+                            $html .= '<div class="col-md-12 text-end delivery">';
+                                $html .= '<label class="switch me-2">';
+                                    $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                    $html .= '<span class="slider round">';
+                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                    $html .= '</span>';
+                                $html .= '</label>';
+                                $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
                         // Item Type
                         $html .= '<div class="row mb-3">';
                             $html .= '<div class="col-md-12">';
@@ -2036,17 +2085,6 @@ class ItemsController extends Controller
                                             $html .= '</span>';
                                         $html .= '</label>';
                                         $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
-                                    $html .= '</div>';
-
-                                    $html .= '<div class="col-md-6 delivery mb-3">';
-                                        $html .= '<label class="switch me-2">';
-                                            $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
-                                            $html .= '<span class="slider round">';
-                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                            $html .= '</span>';
-                                        $html .= '</label>';
-                                        $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
                                     $html .= '</div>';
 
                                     $html .= '<div class="col-md-6 mb-3">';
@@ -2087,6 +2125,20 @@ class ItemsController extends Controller
                         $html .= '<input type="hidden" name="active_lang_code" id="active_lang_code" value="'.$primary_lang_code.'">';
                         $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
 
+                        // Dlivery
+                        $html .= '<div class="row mb-3">';
+                            $html .= '<div class="col-md-12 text-end delivery">';
+                                $html .= '<label class="switch me-2">';
+                                    $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                    $html .= '<span class="slider round">';
+                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                    $html .= '</span>';
+                                $html .= '</label>';
+                                $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                            $html .= '</div>';
+                        $html .= '</div>';
+
                         // Item Type
                         $html .= '<div class="row mb-3">';
                             $html .= '<div class="col-md-12">';
@@ -2382,17 +2434,6 @@ class ItemsController extends Controller
                                             $html .= '</span>';
                                         $html .= '</label>';
                                         $html .= '<label for="review_rating" class="form-label">'.__('Review & Rating').'</label>';
-                                    $html .= '</div>';
-
-                                    $html .= '<div class="col-md-6 delivery mb-3">';
-                                        $html .= '<label class="switch me-2">';
-                                            $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
-                                            $html .= '<span class="slider round">';
-                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                            $html .= '</span>';
-                                        $html .= '</label>';
-                                        $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
                                     $html .= '</div>';
 
                                     $html .= '<div class="col-md-6 mb-3">';
