@@ -180,6 +180,10 @@
                                             {{ __('Delivery out of range Message') }}
                                         @elseif ($other_setting->key == 'today_special_icon')
                                             {{ __('Today Special Icon') }}
+                                        @elseif ($other_setting->key == 'distance_message')
+                                            {{ __('Distance Message') }}
+                                        @elseif ($other_setting->key == 'distance_alert_message')
+                                            {{ __('Distance Alert Message') }}
                                         @endif
                                     </td>
                                     <td>

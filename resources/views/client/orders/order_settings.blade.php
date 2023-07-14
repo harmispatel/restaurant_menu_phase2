@@ -111,10 +111,63 @@
                                     <label for="auto_order_approval" class="form-label">{{ __('Auto Order Approval') }}</label>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mt-3">
-                                    <label for="min_amount_for_delivery" class="form-label">{{ __('Minimum amount needed for delivery, if left null any amount is acceptable.') }}</label>
-                                    <input type="number" name="min_amount_for_delivery" id="min_amount_for_delivery" class="form-control ord-setting" value="{{ (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '' }}">
+                            <div class="row mt-4">
+                                @php
+                                    $min_amount_delivery = (isset($order_settings['min_amount_for_delivery']) && !empty($order_settings['min_amount_for_delivery'])) ? unserialize($order_settings['min_amount_for_delivery']) : [];
+                                @endphp
+                                <label for="min_amount_for_delivery" class="form-label">{{ __('Minimum amount needed for delivery, if left null any amount is acceptable.') }}</label>
+                                <div class="col-md-6 min-amount-div">
+                                    @if(count($min_amount_delivery) > 0)
+                                        @foreach ($min_amount_delivery as $amt_key => $min_amount_del)
+                                            <div class="row mb-2 min_amount_{{ $amt_key }}">
+                                                <div class="col-md-3">
+                                                    @if($amt_key == 1)
+                                                        <label class="form-label">From KM.</label>
+                                                    @endif
+                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][from]" class="form-control" value="{{ isset($min_amount_del['from']) ? $min_amount_del['from'] : '' }}">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    @if($amt_key == 1)
+                                                        <label class="form-label">To KM.</label>
+                                                    @endif
+                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][to]" class="form-control" value="{{ isset($min_amount_del['to']) ? $min_amount_del['to'] : '' }}">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    @if($amt_key == 1)
+                                                        <label class="form-label">Amount</label>
+                                                    @endif
+                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][amount]" class="form-control" placeholder="Enter Amount" value="{{ isset($min_amount_del['amount']) ? $min_amount_del['amount'] : '' }}">
+                                                </div>
+                                                @if($amt_key != 1)
+                                                    <div class="col-md-2">
+                                                        <a class="btn btn-sm btn-danger" onclick="$('.min_amount_{{ $amt_key }}').remove();  $('#update-btn').removeAttr('disabled',true);"><i class="bi bi-trash"></i></a>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="row mb-2 min_amount_1">
+                                            <div class="col-md-3">
+                                                <label class="form-label">From KM.</label>
+                                                <input type="number" name="min_amount_for_delivery[1][from]" class="form-control">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">To KM.</label>
+                                                <input type="number" name="min_amount_for_delivery[1][to]" class="form-control">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Amount</label>
+                                                <input type="number" name="min_amount_for_delivery[1][amount]" class="form-control" placeholder="Enter Amount">
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            {{-- <label for="min_amount_for_delivery" class="form-label">{{ __('Minimum amount needed for delivery, if left null any amount is acceptable.') }}</label>
+                            <input type="number" name="min_amount_for_delivery" id="min_amount_for_delivery" class="form-control ord-setting" value="{{ (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '' }}"> --}}
+                            <div class="row mt-2 mb-2">
+                                <div class="col-md-6">
+                                    <a class="btn btn-sm btn-primary" id="new-min-amt" onclick="newMinAmount()">NEW <i class="bi bi-plus"></i></a>
                                 </div>
                             </div>
                             <div class="row">
@@ -396,6 +449,25 @@
                             @endif
                             <hr>
 
+                            <div class="row">
+                                <div class="col-md-6"><h3>{{ __('Shop Address') }}</h3></div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="shop_address">{{ __('Address') }}</label>
+                                    <input type="text" name="shop_address" id="shop_address" class="form-control" value="{{ isset($order_settings['shop_address']) ? $order_settings['shop_address'] : '' }}">
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <label for="shop_latitude">{{ __('Latitude') }}</label>
+                                    <input type="text" name="shop_latitude" id="shop_latitude" class="form-control" value="{{ isset($order_settings['shop_latitude']) ? $order_settings['shop_latitude'] : '' }}" readonly>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <label for="shop_longitude">{{ __('Longitude') }}</label>
+                                    <input type="text" name="shop_longitude" id="shop_longitude" class="form-control" value="{{ isset($order_settings['shop_longitude']) ? $order_settings['shop_longitude'] : '' }}" readonly>
+                                </div>
+                            </div>
+                            <hr>
+
                             {{-- Delivery Range Settings --}}
                             <div class="row">
                                 <div class="col-md-6">
@@ -434,7 +506,7 @@
     <script src="{{ asset('public/admin/assets/js/jsprintmanager.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script async defer src='https://maps.googleapis.com/maps/api/js?key={{ $google_map_api }}&callback=initMap&libraries=drawing'></script>
+    <script async defer src='https://maps.googleapis.com/maps/api/js?key={{ $google_map_api }}&callback=initMap&libraries=drawing,places'></script>
 
     <script type="text/javascript">
 
@@ -445,20 +517,40 @@
         var clientPrinters = null;
         var _this = this;
         var enablePrint = "{{ $enable_print }}";
+        var curr_lat = parseFloat($('#shop_latitude').val());
+        var curr_lng = parseFloat($('#shop_longitude').val());
+        var enablePrint = "{{ $enable_print }}";
 
-        $(document).ready(function ()
+        if(curr_lat == '' || curr_lat == null || isNaN(curr_lat) || curr_lng == '' || curr_lng == null || isNaN(curr_lng))
         {
             // Get Curren Address
             navigator.geolocation.getCurrentPosition(
-            function (position)
+                function (position)
                 {
-                    initMap(position.coords.latitude, position.coords.longitude)
+                    curr_lat = position.coords.latitude;
+                    curr_lng = position.coords.longitude;
+                    initMap(curr_lat, curr_lng)
                 },
                 function errorCallback(error)
                 {
                     console.log(error)
                 }
             );
+        }
+
+        $(document).ready(function ()
+        {
+            // Get Curren Address
+            // navigator.geolocation.getCurrentPosition(
+            //     function (position)
+            //     {
+            //         initMap(curr_lat, curr_lng)
+            //     },
+            //     function errorCallback(error)
+            //     {
+            //         console.log(error)
+            //     }
+            // );
         });
 
 
@@ -555,11 +647,11 @@
         }
 
         // Enabled Update Btn
-        $('input, #default_printer, #printer_paper, #printer_tray, #notification_sound, #discount_type').on('change',function(){
+        $('input, #default_printer, #printer_paper, #printer_tray, #notification_sound, #discount_type, #shop_address').on('change',function(){
             $('#update-btn').removeAttr('disabled',true);
         });
 
-        $('#map').on('click',function(){
+        $('#map, #new-min-amt').on('click',function(){
             $('#update-btn').removeAttr('disabled',true);
         });
 
@@ -634,7 +726,7 @@
 
 
         // Function for Map
-        function initMap(lat=39.0742,long=21.8243)
+        function initMap(lat=curr_lat,long=curr_lng)
         {
             // Set the center point of the map
             var center = {lat: lat, lng: long};
@@ -645,8 +737,19 @@
                 center: center
             });
 
+            const svgMarker = {
+                path: "M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+                fillColor: "blue",
+                fillOpacity: 0.6,
+                strokeWeight: 0,
+                rotation: 0,
+                scale: 2,
+                anchor: new google.maps.Point(0, 20),
+            };
+
             new google.maps.Marker({
                 position: center,
+                icon: svgMarker,
                 map,
             });
 
@@ -662,6 +765,9 @@
                 });
                 polygon{{ $deliveryArea->id }}.setMap(map);
             @endforeach
+
+
+            google.maps.event.addDomListener(window, 'load', initialize);
 
             // Create a drawing manager
             drawingManager = new google.maps.drawing.DrawingManager({
@@ -690,7 +796,32 @@
                 selectedShape = polygon;
                 $('#new_coordinates').val(getPolygonCoords());
             });
+        }
 
+        function initialize()
+        {
+            var input = document.getElementById('shop_address');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+
+            $('#shop_address').keydown(function (e)
+                {
+                    if (e.keyCode == 13)
+                    {
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+
+            autocomplete.addListener('place_changed', function ()
+            {
+                var place = autocomplete.getPlace();
+                if(place != '')
+                {
+                    initMap(place.geometry['location'].lat(),place.geometry['location'].lng());
+                    $('#shop_latitude').val(place.geometry['location'].lat());
+                    $('#shop_longitude').val(place.geometry['location'].lng());
+                }
+            });
         }
 
         // Function to get the polygon coordinates
@@ -741,6 +872,41 @@
         @if (Session::has('success'))
             toastr.success('{{ Session::get('success') }}')
         @endif
+
+
+        // Function For Add New Min Amount Delivery
+        function newMinAmount()
+        {
+            toastr.clear();
+            var total = $('.min-amount-div').children('div').length;
+
+            if(total >= 3)
+            {
+                toastr.error("Max Limit Reached!");
+                return false;
+            }
+            else
+            {
+                total++;
+                var html = '';
+                html += '<div class="row mb-2 min_amount_'+total+'">';
+                    html += '<div class="col-md-3">';
+                        html += '<input type="number" name="min_amount_for_delivery['+total+'][from]" class="form-control">';
+                    html += '</div>';
+                    html += '<div class="col-md-3">';
+                        html += '<input type="number" name="min_amount_for_delivery['+total+'][to]" class="form-control">';
+                    html += '</div>';
+                    html += '<div class="col-md-4">';
+                        html += '<input type="number" name="min_amount_for_delivery['+total+'][amount]" class="form-control" placeholder="Enter Amount">';
+                    html += '</div>';
+                    html += '<div class="col-md-2">';
+                        html += '<a class="btn btn-sm btn-danger del-min-amt" onclick="$(\'.min_amount_'+total+'\').remove();"><i class="bi bi-trash"></i></a>';
+                    html += '</div>';
+                html += '</div>';
+
+                $('.min-amount-div').append(html);
+            }
+        }
 
     </script>
 @endsection

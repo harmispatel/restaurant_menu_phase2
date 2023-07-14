@@ -37,6 +37,24 @@
                 <div class="modal-body">
                     <form id="addItemForm" enctype="multipart/form-data">
                         @csrf
+
+                        @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                            <div class="row mb-3">
+                                <div class="col-md-12 text-end delivery">
+                                    <div class="form-group">
+                                        <label class="switch me-2">
+                                            <input type="checkbox" id="delivery" name="delivery" value="1" checked>
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="delivery" class="form-label">{{ __('Ordering')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         {{-- Product Type --}}
                         <div class="row mb-3">
                             <div class="col-md-12">
@@ -275,18 +293,6 @@
                                         <label for="review_rating" class="form-label">{{ __('Review & Rating')}}</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mt-2 delivery">
-                                    <div class="form-group">
-                                        <label class="switch me-2">
-                                            <input type="checkbox" id="delivery" name="delivery" value="1" checked>
-                                            <span class="slider round">
-                                                <i class="fa-solid fa-circle-check check_icon"></i>
-                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                            </span>
-                                        </label>
-                                        <label for="delivery" class="form-label">{{ __('Delivery')}}</label>
-                                    </div>
-                                </div>
                                 <div class="col-md-6 mt-2">
                                     <div class="form-group">
                                         <label class="switch me-2">
@@ -455,18 +461,20 @@
                                             </div>
                                             <div class="item_info">
                                                 <div class="item_name">
-                                                    <h3>{{ isset($item[$name_key]) ? $item[$name_key] : '' }}</h3>
-                                                    <div class="form-check form-switch me-2" data-bs-toggle="tooltip" title="Status">
+                                                    <h3 class="text-center">{{ isset($item[$name_key]) ? $item[$name_key] : '' }}</h3>
+                                                    @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1) && $item['type'] == 1)
+                                                        <div class="form-check form-switch me-2" data-bs-toggle="tooltip" title="Ordering">
+                                                            @php
+                                                                $newDelivery = ($item->delivery == 1) ? 0 : 1;
+                                                            @endphp
+                                                            <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeItemDelivery({{ $item->id }},{{ $newDelivery }})" value="1" {{ ($item->delivery == 1) ? 'checked' : '' }}>
+                                                        </div>
+                                                    @endif
+                                                    <div class="form-check form-switch" data-bs-toggle="tooltip" title="Status">
                                                         @php
                                                             $newStatus = ($item->published == 1) ? 0 : 1;
                                                         @endphp
                                                         <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeStatus({{ $item->id }},{{ $newStatus }})" value="1" {{ ($item->published == 1) ? 'checked' : '' }}>
-                                                    </div>
-                                                    <div class="form-check form-switch" data-bs-toggle="tooltip" title="Delivery">
-                                                        @php
-                                                            $newDelivery = ($item->delivery == 1) ? 0 : 1;
-                                                        @endphp
-                                                        <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeItemDelivery({{ $item->id }},{{ $newDelivery }})" value="1" {{ ($item->delivery == 1) ? 'checked' : '' }}>
                                                     </div>
                                                 </div>
                                                 @if($item->type == 1)

@@ -548,18 +548,21 @@ class ItemsController extends Controller
                             $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
 
                             // Dlivery
-                            $html .= '<div class="row mb-3">';
-                                $html .= '<div class="col-md-12 text-end delivery">';
-                                    $html .= '<label class="switch me-2">';
-                                        $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
-                                        $html .= '<span class="slider round">';
-                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                        $html .= '</span>';
-                                    $html .= '</label>';
-                                    $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                            if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                            {
+                                $html .= '<div class="row mb-3">';
+                                    $html .= '<div class="col-md-12 text-end delivery">';
+                                        $html .= '<label class="switch me-2">';
+                                            $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                            $html .= '<span class="slider round">';
+                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                            $html .= '</span>';
+                                        $html .= '</label>';
+                                        $html .= '<label for="delivery" class="form-label">'.__('Ordering').'</label>';
+                                    $html .= '</div>';
                                 $html .= '</div>';
-                            $html .= '</div>';
+                            }
 
                             // Item Type
                             $html .= '<div class="row mb-3">';
@@ -897,19 +900,22 @@ class ItemsController extends Controller
                             $html .= '<input type="hidden" name="active_lang_code" id="active_lang_code" value="'.$primary_lang_code.'">';
                             $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
 
-                            // Dlivery
-                            $html .= '<div class="row mb-3">';
-                                $html .= '<div class="col-md-12 text-end delivery">';
-                                    $html .= '<label class="switch me-2">';
-                                        $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
-                                        $html .= '<span class="slider round">';
-                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                        $html .= '</span>';
-                                    $html .= '</label>';
-                                    $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                            if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                            {
+                                // Dlivery
+                                $html .= '<div class="row mb-3">';
+                                    $html .= '<div class="col-md-12 text-end delivery">';
+                                        $html .= '<label class="switch me-2">';
+                                            $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                            $html .= '<span class="slider round">';
+                                                $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                                $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                            $html .= '</span>';
+                                        $html .= '</label>';
+                                        $html .= '<label for="delivery" class="form-label">'.__('Ordering').'</label>';
+                                    $html .= '</div>';
                                 $html .= '</div>';
-                            $html .= '</div>';
+                            }
 
                             // Item Type
                             $html .= '<div class="row mb-3">';
@@ -1777,18 +1783,21 @@ class ItemsController extends Controller
                         $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
 
                         // Dlivery
-                        $html .= '<div class="row mb-3">';
-                            $html .= '<div class="col-md-12 text-end delivery">';
-                                $html .= '<label class="switch me-2">';
-                                    $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
-                                    $html .= '<span class="slider round">';
-                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                    $html .= '</span>';
-                                $html .= '</label>';
-                                $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                        if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                        {
+                            $html .= '<div class="row mb-3">';
+                                $html .= '<div class="col-md-12 text-end delivery">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="delivery" class="form-label">'.__('Ordering').'</label>';
+                                $html .= '</div>';
                             $html .= '</div>';
-                        $html .= '</div>';
+                        }
 
                         // Item Type
                         $html .= '<div class="row mb-3">';
@@ -2126,18 +2135,21 @@ class ItemsController extends Controller
                         $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
 
                         // Dlivery
-                        $html .= '<div class="row mb-3">';
-                            $html .= '<div class="col-md-12 text-end delivery">';
-                                $html .= '<label class="switch me-2">';
-                                    $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
-                                    $html .= '<span class="slider round">';
-                                        $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
-                                        $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
-                                    $html .= '</span>';
-                                $html .= '</label>';
-                                $html .= '<label for="delivery" class="form-label">'.__('Delivery').'</label>';
+                        if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
+                        {
+                            $html .= '<div class="row mb-3">';
+                                $html .= '<div class="col-md-12 text-end delivery">';
+                                    $html .= '<label class="switch me-2">';
+                                        $html .= '<input type="checkbox" id="delivery" name="delivery" value="1" '.$item_delivery.'>';
+                                        $html .= '<span class="slider round">';
+                                            $html .= '<i class="fa-solid fa-circle-check check_icon"></i>';
+                                            $html .= '<i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>';
+                                        $html .= '</span>';
+                                    $html .= '</label>';
+                                    $html .= '<label for="delivery" class="form-label">'.__('Ordering').'</label>';
+                                $html .= '</div>';
                             $html .= '</div>';
-                        $html .= '</div>';
+                        }
 
                         // Item Type
                         $html .= '<div class="row mb-3">';

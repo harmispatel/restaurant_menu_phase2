@@ -33,7 +33,7 @@
     // Order Settings
     $order_settings = getOrderSettings($shop_details['id']);
 
-    $min_amount_for_delivery = (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '';
+    $min_amount_for_delivery = (isset($order_settings['min_amount_for_delivery']) && !empty($order_settings['min_amount_for_delivery'])) ? unserialize($order_settings['min_amount_for_delivery']) : [];
 
     $remain_amount = 0;
 
@@ -62,7 +62,6 @@
 @section('content')
 
     <input type="hidden" name="def_currency" id="def_currency" value="{{ $currency }}">
-    <input type="hidden" name="min_amount_for_delivery" id="min_amount_for_delivery" value="{{ $min_amount_for_delivery }}">
 
     <section class="mt-5 mb-5">
         <div class="container px-3 my-5 clearfix">
@@ -243,16 +242,25 @@
                         </div>
                     </div>
 
-                    @php
-                        if(!empty($min_amount_for_delivery))
-                        {
-                            $remain_amount = Currency::currency($currency)->format($min_amount_for_delivery - $total_amount);
-                        }
-                    @endphp
-
                     @if($is_checkout == 1 && $delivery_schedule == 1)
                         <div class="row">
-                            <div class="col-md-12 mb-2" style="display: none;" id="min-amount-msg"></div>
+                            <div class="col-md-12 mb-2">
+                                @if(count($min_amount_for_delivery) > 0 && $current_check_type == 'delivery')
+                                    <code>{{ __('Notes:') }}</code><br>
+                                    @foreach ($min_amount_for_delivery as $min_key => $min_amount)
+                                        @php
+                                            // Distance Message
+                                            $distance_message = moreTranslations($shop_details['id'],'distance_message');
+                                            $distance_message = (isset($distance_message[$current_lang_code."_value"]) && !empty($distance_message[$current_lang_code."_value"])) ? $distance_message[$current_lang_code."_value"] : 'Distance from our store up ({from}) to ({to}) Km The lowest order price is ({amount}).';
+                                            $distance_message = str_replace('{from}',$min_amount['from'],$distance_message);
+                                            $distance_message = str_replace('{to}',$min_amount['to'],$distance_message);
+                                            $distance_message = str_replace('{amount}',Currency::currency($currency)->format($min_amount['amount']),$distance_message);
+                                        @endphp
+                                        <code> - {{ $distance_message }}</code> <br>
+                                    @endforeach
+                                    </div>
+                                @endif
+                            </div>
                             <div class="col-md-12">
                                 <button type="button" id="check-btn" class="btn btn-lg btn-primary mt-2">{{ __('Checkout') }}</button>
                             </div>
@@ -534,21 +542,11 @@
                 window.location.href = "";
             }
 
-            var check_type = $('#checkout_type :selected').val();
-            if(check_type == 'delivery')
+            var checkout_type = "{{ $current_check_type }}";
+
+            if(checkout_type == '' || checkout_type == null)
             {
-                var total_amount = parseFloat($('#total_cart_amount').val());
-                var min_amount_for_delivery = parseFloat($('#min_amount_for_delivery').val());
-                var remain_amount = "{{ $remain_amount }}";
-
-                if((total_amount < min_amount_for_delivery))
-                {
-                    $('#check-btn').attr('disabled',true);
-                    $('#min-amount-msg').html('');
-                    $('#min-amount-msg').append('<code class="fs-6">'+remain_amount+' {{ __("Left for the minimum order") }}.</code>');
-                    $('#min-amount-msg').show();
-                }
-
+                $('#checkout_type').trigger('change');
             }
         });
 

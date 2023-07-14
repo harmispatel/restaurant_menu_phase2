@@ -419,7 +419,7 @@ class OrderController extends Controller
         $all_data['only_cart'] = (isset($request->only_cart)) ? $request->only_cart : 0;
         $all_data['auto_order_approval'] = (isset($request->auto_order_approval)) ? $request->auto_order_approval : 0;
         $all_data['scheduler_active'] = (isset($request->scheduler_active)) ? $request->scheduler_active : 0;
-        $all_data['min_amount_for_delivery'] = (isset($request->min_amount_for_delivery)) ? $request->min_amount_for_delivery : '';
+        $all_data['min_amount_for_delivery'] = (isset($request->min_amount_for_delivery)) ? serialize($request->min_amount_for_delivery) : '';
         $all_data['discount_percentage'] = (isset($request->discount_percentage)) ? $request->discount_percentage : '';
         $all_data['order_arrival_minutes'] = (isset($request->order_arrival_minutes)) ? $request->order_arrival_minutes : 30;
         $all_data['schedule_array'] = $request->schedule_array;
@@ -433,6 +433,9 @@ class OrderController extends Controller
         $all_data['printer_tray'] = (isset($request->printer_tray)) ? $request->printer_tray : '';
         $all_data['print_font_size'] = (isset($request->print_font_size)) ? $request->print_font_size : '';
         $all_data['notification_sound'] = (isset($request->notification_sound)) ? $request->notification_sound : 'buzzer-01.mp3';
+        $all_data['shop_address'] = (isset($request->shop_address)) ? $request->shop_address : '';
+        $all_data['shop_latitude'] = (isset($request->shop_latitude)) ? $request->shop_latitude : '';
+        $all_data['shop_longitude'] = (isset($request->shop_longitude)) ? $request->shop_longitude : '';
 
         try
         {
@@ -853,6 +856,81 @@ class OrderController extends Controller
                 'message' => 'Address has been set successfully...',
                 'available' => $delivey_avaialbility,
             ]);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
+
+    }
+
+
+    // Function for Check Min Amount for Delivery
+    public function checkMinAmountforDelivery(Request $request)
+    {
+        $user_lat = $request->latitude;
+        $user_lng = $request->longitude;
+        $address = $request->address;
+        $shop_id = $request->shop_id;
+        $currency = $request->currency;
+        $total_amount = number_format($request->total_amount,2);
+
+        // Current Languge Code
+        $current_lang_code = (session()->has('locale')) ? session()->get('locale') : 'en';
+
+        try
+        {
+            // Order Settings
+            $order_settings = getOrderSettings($shop_id);
+            $shop_latitude = (isset($order_settings['shop_latitude'])) ? $order_settings['shop_latitude'] : "";
+            $shop_longitude = (isset($order_settings['shop_longitude'])) ? $order_settings['shop_longitude'] : "";
+            $min_amount_for_delivery = (isset($order_settings['min_amount_for_delivery']) && !empty($order_settings['min_amount_for_delivery'])) ? unserialize($order_settings['min_amount_for_delivery']) : [];
+
+            // Distance Alert Message
+            $distance_alert_message = moreTranslations($shop_id,'distance_alert_message');
+            $distance_alert_message = (isset($distance_alert_message[$current_lang_code."_value"]) && !empty($distance_alert_message[$current_lang_code."_value"])) ? $distance_alert_message[$current_lang_code."_value"] : 'Left for the minimum order';
+
+            // Distance in Kilometers
+            $distance = getDistance($shop_latitude,$shop_longitude,$user_lat,$user_lng);
+
+            if(count($min_amount_for_delivery) > 0)
+            {
+                foreach ($min_amount_for_delivery as $min_amt_key => $min_amount)
+                {
+                    $from = $min_amount['from'];
+                    $to = $min_amount['to'];
+                    $amount = $min_amount['amount'];
+
+                    if($distance >= $from && $distance <= $to)
+                    {
+                        if($total_amount >= $amount)
+                        {
+                            return response()->json([
+                                'success' => 1,
+                            ]);
+                        }
+                        else
+                        {
+                            $remain_amount = Currency::currency($currency)->format($amount - $total_amount);
+                            $message = "<code class='fs-6'>$remain_amount ".$distance_alert_message."</code>";
+
+                            return response()->json([
+                                'success' => 0,
+                                'message' => $message,
+                            ]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return response()->json([
+                    'success' => 1,
+                ]);
+            }
         }
         catch (\Throwable $th)
         {

@@ -346,6 +346,7 @@ Route::post('set-checkout-type',[ShopController::class,'setCheckoutType'])->name
 Route::post('check-order-status',[ShopController::class,'checkOrderStatus'])->name('check.order.status');
 Route::post('send-item-review',[ShopController::class,'sendItemReview'])->name('send.item.review');
 Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
+Route::post('/check-min-amount-for-delivery',[OrderController::class,'checkMinAmountforDelivery'])->name('check.min_amount_for_delivery');
 
 // Paypal Payment
 Route::get('{my_shop_slug}/paypal/payment/',[PaypalController::class,'payWithpaypal'])->name('paypal.payment');

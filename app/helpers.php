@@ -115,6 +115,9 @@
             'enable_print',
             'print_font_size',
             'discount_type',
+            'shop_address',
+            'shop_latitude',
+            'shop_longitude',
         ]);
 
         $settings = [];
@@ -277,7 +280,7 @@
         if(!empty($tagID) && !empty($catID))
         {
             // $items = CategoryProductTags::with(['product'])->where('tag_id',$tagID)->where('category_id',$catID)->get();
-            $items = CategoryProductTags::join('items','items.id','category_product_tags.item_id')->where('tag_id',$tagID)->where('category_product_tags.category_id',$catID)->orderBy('items.order_key')->get();
+            $items = CategoryProductTags::join('items','items.id','category_product_tags.item_id')->where('tag_id',$tagID)->where('category_product_tags.category_id',$catID)->orderBy('items.order_key')->where('published',1)->get();
         }
         else
         {
@@ -728,6 +731,55 @@
     {
         $more_translations = OtherSetting::where('shop_id',$shop_id)->where('key',$key)->first();
         return $more_translations;
+    }
+
+
+    // Function for get Distance
+    function getDistance($lat1,$long1,$lat2,$long2,$unit='KM')
+    {
+        $distanceUnit = strtoupper($unit);
+        $theta = $long1 - $long2;
+        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+        $dist = acos($dist);
+        $dist = rad2deg($dist);
+
+        $miles = $dist * 60 * 1.1515;
+        $kilometers = $miles * 1.609344;
+        $meters = $kilometers * 1000;
+        $feets = $miles * 5280;
+        $yards = $feets / 3;
+        $nauticalmiles = $miles * 0.8684;
+
+        if($distanceUnit == 'ML') // Miles
+        {
+            // return number_format($miles,2).' ML.';
+            return number_format($miles,2);
+        }
+        elseif($distanceUnit == 'KM') // Kilometers
+        {
+            // return number_format($kilometers,2).' KM.';
+            return number_format($kilometers,2);
+        }
+        elseif($distanceUnit == 'MT') // Meters
+        {
+            // return number_format($meters,2).' MT.';
+            return number_format($meters,2);
+        }
+        elseif($distanceUnit == 'FT') // Feets
+        {
+            // return number_format($feets,2).' FT.';
+            return number_format($feets,2);
+        }
+        elseif($distanceUnit == 'YD') // Yards
+        {
+            // return number_format($yards,2).' YD.';
+            return number_format($yards,2);
+        }
+        elseif($distanceUnit == 'NM') // NauticalMiles
+        {
+            // return number_format($nauticalmiles,2).' NM.';
+            return number_format($nauticalmiles,2);
+        }
     }
 
 ?>

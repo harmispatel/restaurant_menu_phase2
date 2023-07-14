@@ -17,6 +17,6 @@ class CategoryProductTags extends Model
 
     public function product()
     {
-        return $this->hasOne(Items::class,'id','item_id');
+        return $this->hasOne(Items::class,'id','item_id')->where('published',1);
     }
 }

@@ -145,9 +145,15 @@
                                     </li>
 
                                     @foreach ($cat_tags as $tag)
-                                        <li class="nav-item" role="presentation">
-                                            <button onclick="setTabKey('{{ $tag['id'] }}','{{ $tag['tag_id'] }}')" class="nav-link tags-btn" id="{{ $tag['id'] }}-tab" data-bs-toggle="tab" data-bs-target="#tag{{ $tag['id'] }}" type="button" role="tab" aria-controls="tag{{ $tag['id'] }}" aria-selected="false">{{ (isset($tag[$name_key])) ? $tag[$name_key] : "" }}</button>
-                                        </li>
+                                        @php
+                                            $tag_items = getTagsProducts($tag['tag_id'],$cat_details['id']);
+                                        @endphp
+
+                                        @if(count($tag_items) > 0)
+                                            <li class="nav-item" role="presentation">
+                                                <button onclick="setTabKey('{{ $tag['id'] }}','{{ $tag['tag_id'] }}')" class="nav-link tags-btn" id="{{ $tag['id'] }}-tab" data-bs-toggle="tab" data-bs-target="#tag{{ $tag['id'] }}" type="button" role="tab" aria-controls="tag{{ $tag['id'] }}" aria-selected="false">{{ (isset($tag[$name_key])) ? $tag[$name_key] : "" }}</button>
+                                            </li>
+                                        @endif
                                     @endforeach
                                 </ul>
                                 <div class="tab-content" id="myTabContent">

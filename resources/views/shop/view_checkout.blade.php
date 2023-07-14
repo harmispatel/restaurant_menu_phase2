@@ -60,6 +60,7 @@
 
 @section('content')
 
+    {{-- Delivery Message Modal --}}
     <div class="modal fade" id="deliveyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deliveyModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -68,6 +69,20 @@
                 </div>
                 <div class="modal-body">
                     {!! $delivery_message !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Distance Message Modal --}}
+    <div class="modal fade" id="distanceMessageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="distanceMessageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+
                 </div>
             </div>
         </div>
@@ -624,8 +639,32 @@
                                     {
                                         $('#deliveyModal').modal('show');
                                     }
-
-                                    console.log(response.message);
+                                    else
+                                    {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "{{ route('check.min_amount_for_delivery') }}",
+                                            data: {
+                                                "_token" : "{{ csrf_token() }}",
+                                                "latitude" : place.geometry['location'].lat(),
+                                                "longitude" : place.geometry['location'].lng(),
+                                                "address" : $('#address').val(),
+                                                "shop_id" : "{{ $shop_details['id'] }}",
+                                                "total_amount" : $('#t_amount').val(),
+                                                "currency" : "{{ $currency }}",
+                                            },
+                                            dataType: "JSON",
+                                            success: function (response)
+                                            {
+                                                if (response.success == 0)
+                                                {
+                                                    $('#distanceMessageModal .modal-body').html('');
+                                                    $('#distanceMessageModal .modal-body').append(response.message);
+                                                    $('#distanceMessageModal').modal('show');
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                                 else
                                 {

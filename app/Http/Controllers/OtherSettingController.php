@@ -97,6 +97,17 @@ class OtherSettingController extends Controller
                                             $html .= '<img class="mt-3" src="'.$today_special_icon.'" width="100">';
                                         }
                                     }
+                                    elseif($setting_details['key'] == 'distance_message')
+                                    {
+                                        $html .= '<label for="distance_message" class="form-label">'. __('Distance Message') .'</label>';
+                                        $html .= '<textarea name="distance_message" id="distance_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                        $html .= '<code>Tags : ({from}, {to}, {amount}).</code>';
+                                    }
+                                    elseif($setting_details['key'] == 'distance_alert_message')
+                                    {
+                                        $html .= '<label for="distance_alert_message" class="form-label">'. __('Distance Alert Message') .'</label>';
+                                        $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                    }
 
                                 $html .= '</div>';
                             $html .= '</div>';
@@ -154,6 +165,17 @@ class OtherSettingController extends Controller
                                             $today_special_icon = asset('public/client_images/not-found/no_image_1.jpg');
                                             $html .= '<img class="mt-3" src="'.$today_special_icon.'" width="100">';
                                         }
+                                    }
+                                    elseif($setting_details['key'] == 'distance_message')
+                                    {
+                                        $html .= '<label for="distance_message" class="form-label">'. __('Distance Message') .'</label>';
+                                        $html .= '<textarea name="distance_message" id="distance_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                        $html .= '<code>Tags : ({from}, {to}, {amount}).</code>';
+                                    }
+                                    elseif($setting_details['key'] == 'distance_alert_message')
+                                    {
+                                        $html .= '<label for="distance_alert_message" class="form-label">'. __('Distance Alert Message') .'</label>';
+                                        $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                     }
 
                                 $html .= '</div>';
@@ -233,6 +255,16 @@ class OtherSettingController extends Controller
                 $other_setting->$value_key = $request->delivery_message;
                 $other_setting->update();
             }
+            elseif($setting_key == 'distance_message')
+            {
+                $other_setting->$value_key = $request->distance_message;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'distance_alert_message')
+            {
+                $other_setting->$value_key = $request->distance_alert_message;
+                $other_setting->update();
+            }
 
             $html_data = $this->getEditOtherSettingData($next_lang_code,$setting_id);
 
@@ -304,6 +336,16 @@ class OtherSettingController extends Controller
             elseif($setting_key == 'delivery_message')
             {
                 $other_setting->$value_key = $request->delivery_message;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'distance_message')
+            {
+                $other_setting->$value_key = $request->distance_message;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'distance_alert_message')
+            {
+                $other_setting->$value_key = $request->distance_alert_message;
                 $other_setting->update();
             }
 
@@ -412,6 +454,17 @@ class OtherSettingController extends Controller
                                         $html .= '<img class="mt-3" src="'.$today_special_icon.'" width="100">';
                                     }
                                 }
+                                elseif($setting_details['key'] == 'distance_message')
+                                {
+                                    $html .= '<label for="distance_message" class="form-label">'. __('Distance Message') .'</label>';
+                                    $html .= '<textarea name="distance_message" id="distance_message" class="form-control" rows="5">'.$setting_details[$current_lang_code."_value"].'</textarea>';
+                                    $html .= '<code>Tags : ({from}, {to}, {amount}).</code>';
+                                }
+                                elseif($setting_details['key'] == 'distance_alert_message')
+                                {
+                                    $html .= '<label for="distance_alert_message" class="form-label">'. __('Distance Alert Message') .'</label>';
+                                    $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$current_lang_code."_value"].'" class="form-control">';
+                                }
 
                             $html .= '</div>';
                         $html .= '</div>';
@@ -469,6 +522,17 @@ class OtherSettingController extends Controller
                                         $today_special_icon = asset('public/client_images/not-found/no_image_1.jpg');
                                         $html .= '<img class="mt-3" src="'.$today_special_icon.'" width="100">';
                                     }
+                                }
+                                elseif($setting_details['key'] == 'distance_message')
+                                {
+                                    $html .= '<label for="distance_message" class="form-label">'. __('Distance Message') .'</label>';
+                                    $html .= '<textarea name="distance_message" id="distance_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                    $html .= '<code>Tags : ({from}, {to}, {amount}).</code>';
+                                }
+                                elseif($setting_details['key'] == 'distance_alert_message')
+                                {
+                                    $html .= '<label for="distance_alert_message" class="form-label">'. __('Distance Alert Message') .'</label>';
+                                    $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                 }
 
                             $html .= '</div>';

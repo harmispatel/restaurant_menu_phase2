@@ -407,11 +407,13 @@ class UserController extends Controller
 
 
             // Insert More Translations
-            $more_translations_key = ['read_more_link_label','today_special_icon','delivery_message'];
+            $more_translations_key = ['read_more_link_label','today_special_icon','delivery_message','distance_message','distance_alert_message'];
             $more_translations_val = [
                 'read_more_link_label' => 'Read More',
                 'today_special_icon' => null,
                 'delivery_message' => null,
+                'distance_message' => 'Distance from our store up {from} to {to} Km The lowest order price is ({amount}).',
+                'distance_alert_message' => 'Left for the minimum order',
             ];
             foreach($more_translations_key as $val)
             {
