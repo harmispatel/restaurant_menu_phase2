@@ -804,7 +804,7 @@ class ShopController extends Controller
                 $html = '';
                 if($keyword == '')
                 {
-                    $items = CategoryProductTags::join('items','items.id','category_product_tags.item_id')->where("items.$name_key",'LIKE','%'.$keyword.'%')->where('tag_id',$tag_id)->where('category_product_tags.category_id',$category_id)->orderBy('items.order_key')->get();
+                    $items = CategoryProductTags::join('items','items.id','category_product_tags.item_id')->where("items.$name_key",'LIKE','%'.$keyword.'%')->where('tag_id',$tag_id)->where('category_product_tags.category_id',$category_id)->where('items.published',1)->orderBy('items.order_key')->get();
                 }
                 else
                 {

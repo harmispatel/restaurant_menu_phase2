@@ -259,6 +259,7 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/orders-settings',[OrderController::class,'OrderSettings'])->name('order.settings');
         Route::post('/orders-settings-update',[OrderController::class,'UpdateOrderSettings'])->name('update.order.settings');
         Route::get('/orders',[OrderController::class,'index'])->name('client.orders');
+        Route::get('/orders-map',[OrderController::class,'ordersMap'])->name('client.orders.map');
         Route::match(['get','post'],'orders-history',[OrderController::class,'ordersHistory'])->name('client.orders.history');
         Route::post('/orders-change-estimate',[OrderController::class,'changeOrderEstimate'])->name('change.order.estimate');
         Route::post('/accept-order',[OrderController::class,'acceptOrder'])->name('accept.order');
@@ -266,6 +267,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/finalized-order',[OrderController::class,'finalizedOrder'])->name('finalized.order');
         Route::get('/order-view/{id}',[OrderController::class,'viewOrder'])->name('view.order');
         Route::get('/clear-delivey-range',[OrderController::class,'clearDeliveryRangeSettings'])->name('remove.delivery.range');
+        Route::post('/map_view-order_setting',[OrderController::class,'mapViewOrderSetting'])->name('map.view.order.setting');
         Route::post('/get-order-receipt',[OrderController::class,'getOrderReceipt'])->name('order.receipt');
         Route::post('/order-notification',[OrderController::class,'orderNotification'])->name('order.notification');
         Route::get('/new-orders',[OrderController::class,'getNewOrders'])->name('new.orders');

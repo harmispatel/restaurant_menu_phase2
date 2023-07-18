@@ -438,9 +438,12 @@
     "More Trasnlations": "Περισσότερες μεταφράσεις",
     "Edit More Trasnlations": "Επεξεργασία περισσότερων μεταφράσεων",
     "Login Form Logo": "Λογότυπο φόρμας σύνδεσης",
-    "Read More Link Label": "Διαβάστε περισσότερα Ετικέτα συνδέσμου",
+    "TITLE: For \"Read More\"": "ΟΝΟΜΑΣΙΑ: Για το \"Περισσότερα\"",
 
     "Notes:":"Υπενθύμιση:",
-    "Distance Message":"Μήνυμα απόστασης",
-    "Distance Alert Message":"Μήνυμα ειδοποίησης εξ αποστάσεως"
+    "NOTICE: Minimum Order Per Distance ":"ΕΙΔΟΠΟΙΗΣΗ: Ελάχιστης Παραγγελίας Ανά Απόσταση",
+    "ALERT: Minimum Order Per Distance":"ΠΡΟΣΟΧΗ: Ελάχιστης Παραγγελίας Ανά Απόσταση",
+
+    "IMAGE: For \"Today's Special\"" : "ΕΙΚΟΝΑ: Για το \"Πιάτο Ημέρας\"",
+    "ALERT: Address Outside Delivery Zone" : "ΠΡΟΣΟΧΗ: Διεύθυνση Εκτός Ζώνης Παράδοσης"
 }

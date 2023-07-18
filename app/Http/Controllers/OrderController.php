@@ -19,6 +19,29 @@ class OrderController extends Controller
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $data['orders'] = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->orderBy('id','DESC')->get();
+        $delivery_orders = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->where('checkout_type','delivery')->get();
+
+        $shop_settings = getClientSettings($shop_id);
+        // Shop Currency
+        $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
+
+        $data['location_array'] = [];
+
+        if(count($delivery_orders) > 0)
+        {
+            foreach($delivery_orders as $order)
+            {
+                $ord_data = [];
+                $ord_data[] = $order->address;
+                $ord_data[] = $order->latitude;
+                $ord_data[] = $order->longitude;
+                $ord_data[] = $order->order_status;
+                $ord_data[] = $order->id;
+                $ord_data[] = Currency::currency($currency)->format($order->discount_value);
+
+                $data['location_array'][] = $ord_data;
+            }
+        }
 
         // Subscrption ID
         $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
@@ -29,6 +52,52 @@ class OrderController extends Controller
         if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
         {
             return view('client.orders.orders',$data);
+        }
+        else
+        {
+            return redirect()->route('client.dashboard')->with('error','Unauthorized Action!');
+        }
+    }
+
+
+
+    // Function for Get Orders with Map
+    public function ordersMap()
+    {
+        $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
+        $delivery_orders = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->where('checkout_type','delivery')->get();
+
+        $shop_settings = getClientSettings($shop_id);
+        // Shop Currency
+        $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
+
+        $data['location_array'] = [];
+
+        if(count($delivery_orders) > 0)
+        {
+            foreach($delivery_orders as $order)
+            {
+                $ord_data = [];
+                $ord_data[] = $order->address;
+                $ord_data[] = $order->latitude;
+                $ord_data[] = $order->longitude;
+                $ord_data[] = $order->order_status;
+                $ord_data[] = $order->id;
+                $ord_data[] = Currency::currency($currency)->format($order->discount_value);
+
+                $data['location_array'][] = $ord_data;
+            }
+        }
+
+        // Subscrption ID
+        $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
+
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
+
+        if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+        {
+            return view('client.orders.orders_map',$data);
         }
         else
         {
@@ -222,9 +291,32 @@ class OrderController extends Controller
             $html .= '</div>';
         }
 
+        // New Order Locations
+        $delivery_orders = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->where('checkout_type','delivery')->get();
+
+        $location_array = [];
+
+        if(count($delivery_orders) > 0)
+        {
+            foreach($delivery_orders as $order)
+            {
+                $ord_data = [];
+                $ord_data[] = $order->address;
+                $ord_data[] = $order->latitude;
+                $ord_data[] = $order->longitude;
+                $ord_data[] = $order->order_status;
+                $ord_data[] = $order->id;
+                $ord_data[] = Currency::currency($currency)->format($order->discount_value);
+
+                $location_array[] = $ord_data;
+            }
+        }
+
+
         return response()->json([
             'success' => 1,
             'data' => $html,
+            'location_array' => $location_array,
         ]);
     }
 
@@ -489,6 +581,50 @@ class OrderController extends Controller
                 'message' => 'Internal Server Error!',
             ]);
         }
+    }
+
+
+    // Function for Enable/Disable Map View Order
+    public function mapViewOrderSetting(Request $request)
+    {
+        $status = $request->status;
+        $status_message = ($request->status == 1) ? 'Map View has been Enabled SuccessFully...' : 'Map View has been Disabled SuccessFully...';
+        $key = 'google_map_order_view';
+        $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
+
+        try
+        {
+            $query = OrderSetting::where('shop_id',$shop_id)->where('key',$key)->first();
+            $setting_id = isset($query->id) ? $query->id : '';
+
+            if (!empty($setting_id) || $setting_id != '')  // Update
+            {
+                $settings = OrderSetting::find($setting_id);
+                $settings->value = $status;
+                $settings->update();
+            }
+            else // Insert
+            {
+                $settings = new OrderSetting();
+                $settings->shop_id = $shop_id;
+                $settings->key = $key;
+                $settings->value = $status;
+                $settings->save();
+            }
+
+            return response()->json([
+                'success' => 1,
+                'message' => $status_message,
+            ]);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
+
     }
 
 

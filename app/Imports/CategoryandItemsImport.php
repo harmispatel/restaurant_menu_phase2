@@ -40,7 +40,7 @@ class CategoryandItemsImport implements ToCollection
             $parent_cat_name = (isset($cat_setting_arr[2])) ? $cat_setting_arr[2] : '';
 
             // Parent Cat Details
-            $parent_cat_details = Category::where('name',$parent_cat_name)->orWhere('en_name',$parent_cat_name)->where('shop_id',$this->shop_id)->first();
+            $parent_cat_details = Category::where('en_name',$parent_cat_name)->where('shop_id',$this->shop_id)->first();
             $parent_cat_id = (isset($parent_cat_details['id'])) ? $parent_cat_details['id'] : '';
 
             // Link URL

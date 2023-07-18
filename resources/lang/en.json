@@ -474,9 +474,12 @@
     "More Trasnlations": "More Trasnlations",
     "Edit More Trasnlations": "Edit More Trasnlations",
     "Login Form Logo": "Login Form Logo",
-    "Read More Link Label": "Read More Link Label",
+    "TITLE: For \"Read More\"": "TITLE: For \"Read More\"",
 
     "Notes:":"Notes:",
-    "Distance Message":"Distance Message",
-    "Distance Alert Message":"Distance Alert Message"
+    "NOTICE: Minimum Order Per Distance ":"NOTICE: Minimum Order Per Distance ",
+    "ALERT: Minimum Order Per Distance":"ALERT: Minimum Order Per Distance",
+
+    "IMAGE: For \"Today's Special\"" : "IMAGE: For \"Today's Special\"",
+    "ALERT: Address Outside Delivery Zone" : "ALERT: Address Outside Delivery Zone"
 }

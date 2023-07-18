@@ -6,6 +6,9 @@
 
     // Order Settings
     $order_setting = getOrderSettings($shop_id);
+    $shop_latitude = (isset($order_setting['shop_latitude'])) ? $order_setting['shop_latitude'] : '';
+    $shop_longitude = (isset($order_setting['shop_longitude'])) ? $order_setting['shop_longitude'] : '';
+    $google_map_order_view = (isset($order_setting['google_map_order_view']) && $order_setting['google_map_order_view'] == 1) ? $order_setting['google_map_order_view'] : 0;
 
     // Default Printer
     $default_printer = (isset($order_setting['default_printer']) && !empty($order_setting['default_printer'])) ? $order_setting['default_printer'] : 'Microsoft Print to PDF';
@@ -22,6 +25,9 @@
 
     // Shop Currency
     $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
+
+    $admin_settings = getAdminSettings();
+    $google_map_api = (isset($admin_settings['google_map_api'])) ? $admin_settings['google_map_api'] : '';
 @endphp
 
 @extends('client.layouts.client-layout')
@@ -34,6 +40,8 @@
     <input type="hidden" name="printer_paper" id="printer_paper" value="{{ $printer_paper }}">
     <input type="hidden" name="printer_tray" id="printer_tray" value="{{ $printer_tray }}">
     <input type="hidden" name="auto_print" id="auto_print" value="{{ $auto_print }}">
+    <input type="hidden" name="shop_latitude" id="shop_latitude" value="{{ $shop_latitude }}">
+    <input type="hidden" name="shop_longitude" id="shop_longitude" value="{{ $shop_longitude }}">
 
     {{-- Page Title --}}
     <div class="pagetitle">
@@ -55,6 +63,28 @@
         <div class="row">
 
             <div class="col-md-12 mb-3" id="print-data" style="display: none;"></div>
+
+            <div class="col-md-12 mb-3 text-end">
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="form-check form-switch">
+                        @php
+                            $newStatus = ($google_map_order_view == 1) ? 0 : 1;
+                        @endphp
+                        <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeMapView({{ $newStatus }})" value="1" {{ ($google_map_order_view == 1) ? 'checked' : '' }}  data-bs-toggle="tooltip" title="Enabled/Disable Map View Orders">
+                    </div>
+                    <a class="btn btn-sm btn-primary ms-3" target="_blank" href="{{ route('client.orders.map') }}">Full Screen</a>
+                </div>
+            </div>
+
+            @if($google_map_order_view == 1)
+                <div class="col-md-12 mb-3">
+                    <svg style=" fill: #0d6efd;" xmlns="http://www.w3.org/2000/svg" height="30px" width="30px" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg> Accepted
+                    <svg class="ms-2" style="fill: #fabe09" xmlns="http://www.w3.org/2000/svg" height="30px" width="30px" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg> Pending
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div id="gmap" style="height: 500px;"></div>
+                </div>
+            @endif
 
             <div class="col-md-12">
                 <div class="card">
@@ -200,11 +230,118 @@
     <script src="{{ asset('public/admin/assets/js/jsprintmanager.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?key={{ $google_map_api }}&libraries=places"></script>
 
     <script type="text/javascript">
 
+        var map;
         var enablePrint = "{{ $enable_print }}";
         var printFontSize = "{{ $printFontSize }}";
+        var locations = @json($location_array);
+        var shop_latitude = $('#shop_latitude').val();
+        var shop_longitude =  $('#shop_longitude').val();
+        var markersArray = [];
+
+        if(shop_latitude == '' || isNaN(shop_latitude) || shop_longitude == '' || isNaN(shop_longitude))
+        {
+            navigator.geolocation.getCurrentPosition(
+                function (position)
+                {
+                    $('#shop_latitude').val(position.coords.latitude);
+                    $('#shop_longitude').val(position.coords.longitude);
+                },
+                function errorCallback(error)
+                {
+                    console.log(error)
+                }
+            );
+        }
+
+        var lat_center = $('#shop_latitude').val();
+        var long_center = $('#shop_longitude').val();
+
+        // Initialize Map
+        initMap(lat_center,long_center);
+        function initMap(lat,long)
+        {
+            const myLatLng = { lat: parseFloat(lat), lng: parseFloat(long) };
+            map = new google.maps.Map(document.getElementById("gmap"), {
+                zoom: 12,
+                center: myLatLng,
+            });
+
+            setMarker(locations);
+        }
+
+
+        // Function For Add Marker
+        function setMarker(orderLocations)
+        {
+            var marker, i, text;
+
+            for (i = 0; i < orderLocations.length; i++)
+            {
+
+                var newLatlng = { lat: parseFloat(orderLocations[i][1]), lng: parseFloat(orderLocations[i][2]) };
+                var fillColor = '#f00';
+                var contentString = "<div class='infowindow-container'>" +
+                    "<div class='inner'><ul><li class='text-capitalize'><strong>Order Status : </strong>"+orderLocations[i][3]+"</li><li><strong>Order Number : </strong>"+orderLocations[i][4]+"</li><li><strong>Total Amount : </strong>"+orderLocations[i][5]+"</li></ul></div></div>";
+
+                if(orderLocations[i][3] == 'pending')
+                {
+                    fillColor = '#ffc107';
+                }
+                else if(orderLocations[i][3] == 'accepted')
+                {
+                    fillColor = '#0d6efd';
+                }
+
+                marker = new google.maps.Marker({
+                    position: newLatlng,
+                    map: map,
+                    animation: google.maps.Animation.BOUNCE,
+                    icon: {
+                        path: "M7.8,1.3L7.8,1.3C6-0.4,3.1-0.4,1.3,1.3c-1.8,1.7-1.8,4.6-0.1,6.3c0,0,0,0,0.1,0.1" +
+                                "l3.2,3.2l3.2-3.2C9.6,6,9.6,3.2,7.8,1.3C7.9,1.4,7.9,1.4,7.8,1.3z M4.6,5.8c-0.7,0-1.3-0.6-1.3-1.4c0-0.7,0.6-1.3,1.4-1.3" +
+                                "c0.7,0,1.3,0.6,1.3,1.3C5.9,5.3,5.3,5.9,4.6,5.8z",
+                        strokeColor: '#00000',
+                        fillColor: fillColor,
+                        fillOpacity: 2.0,
+                        scale: 3
+                    },
+                });
+
+                let infowindow = new google.maps.InfoWindow({
+                    content: contentString,
+                });
+
+                marker.addListener('mouseover', function()
+                {
+                    infowindow.open(map, this);
+                });
+
+                marker.addListener("mouseout", function() {
+                    infowindow.close();
+                });
+
+                markersArray.push(marker);
+            }
+        }
+
+
+        // Function for Remove Markers
+        function clearOverlays()
+        {
+            if (markersArray)
+            {
+                for (i in markersArray)
+                {
+                    markersArray[i].setMap(null);
+                }
+            }
+            markersArray = [];
+        }
+
 
         if(enablePrint == 1)
         {
@@ -498,10 +635,11 @@
         setInterval(() =>
         {
             getNewOrders();
-        }, 5000);
+        }, 10000);
 
 
-        function getNewOrders(){
+        function getNewOrders()
+        {
             $.ajax({
                 type: "GET",
                 url: "{{ route('new.orders') }}",
@@ -512,6 +650,39 @@
                     {
                         $('#order').html('');
                         $('#order').append(response.data);
+                        clearOverlays();
+                        setMarker(response.location_array);
+                    }
+                }
+            });
+        }
+
+        // Function for Change Map View
+        function changeMapView(status)
+        {
+            $.ajax({
+                type: "POST",
+                url: '{{ route("map.view.order.setting") }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'status':status,
+                },
+                dataType: 'JSON',
+                success: function(response)
+                {
+                    if (response.success == 1)
+                    {
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
                     }
                 }
             });

@@ -175,15 +175,15 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         @if($other_setting->key == 'read_more_link_label')
-                                            {{ __('Read More Link Label') }}
+                                            {{ __('TITLE: For "Read More"') }}
                                         @elseif($other_setting->key == 'delivery_message')
-                                            {{ __('Delivery out of range Message') }}
+                                            {{ __('ALERT: Address Outside Delivery Zone') }}
                                         @elseif ($other_setting->key == 'today_special_icon')
-                                            {{ __('Today Special Icon') }}
+                                            {{ __('IMAGE: For "Today\'s Special"') }}
                                         @elseif ($other_setting->key == 'distance_message')
-                                            {{ __('Distance Message') }}
+                                            {{ __('NOTICE: Minimum Order Per Distance') }}
                                         @elseif ($other_setting->key == 'distance_alert_message')
-                                            {{ __('Distance Alert Message') }}
+                                            {{ __('ALERT: Minimum Order Per Distance') }}
                                         @endif
                                     </td>
                                     <td>

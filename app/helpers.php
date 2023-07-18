@@ -118,6 +118,7 @@
             'shop_address',
             'shop_latitude',
             'shop_longitude',
+            'google_map_order_view',
         ]);
 
         $settings = [];
@@ -280,7 +281,7 @@
         if(!empty($tagID) && !empty($catID))
         {
             // $items = CategoryProductTags::with(['product'])->where('tag_id',$tagID)->where('category_id',$catID)->get();
-            $items = CategoryProductTags::join('items','items.id','category_product_tags.item_id')->where('tag_id',$tagID)->where('category_product_tags.category_id',$catID)->orderBy('items.order_key')->where('published',1)->get();
+            $items = CategoryProductTags::join('items','items.id','category_product_tags.item_id')->where('tag_id',$tagID)->where('category_product_tags.category_id',$catID)->orderBy('items.order_key')->where('items.published',1)->get();
         }
         else
         {

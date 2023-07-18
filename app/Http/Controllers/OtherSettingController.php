@@ -71,17 +71,17 @@ class OtherSettingController extends Controller
 
                                     if($setting_details['key'] == 'read_more_link_label')
                                     {
-                                        $html .= '<label for="read_more_link_label" class="form-label">'. __('Read More Link Label') .'</label>';
+                                        $html .= '<label for="read_more_link_label" class="form-label">'. __('TITLE: For "Read More"') .'</label>';
                                         $html .= '<input type="text" name="read_more_link_label" id="read_more_link_label" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                     }
                                     elseif($setting_details['key'] == 'delivery_message')
                                     {
-                                        $html .= '<label for="delivery_message" class="form-label">'. __('Delivery out of range Message') .'</label>';
+                                        $html .= '<label for="delivery_message" class="form-label">'. __('ALERT: Address Outside Delivery Zone') .'</label>';
                                         $html .= '<textarea name="delivery_message" id="delivery_message" class="form-control">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                     }
                                     elseif($setting_details['key'] == 'today_special_icon')
                                     {
-                                        $html .= '<label for="today_special_icon" class="form-label">'. __('Today Special Icon') .'</label>';
+                                        $html .= '<label for="today_special_icon" class="form-label">'. __('IMAGE: For "Today\'s Special"') .'</label>';
                                         $html .= '<input type="file" name="today_special_icon" id="today_special_icon" class="form-control">';
 
                                         $today_special_icon = (isset($setting_details[$primary_lang_code."_value"])) ? $setting_details[$primary_lang_code."_value"] : '';
@@ -99,13 +99,13 @@ class OtherSettingController extends Controller
                                     }
                                     elseif($setting_details['key'] == 'distance_message')
                                     {
-                                        $html .= '<label for="distance_message" class="form-label">'. __('Distance Message') .'</label>';
+                                        $html .= '<label for="distance_message" class="form-label">'. __('NOTICE: Minimum Order Per Distance') .'</label>';
                                         $html .= '<textarea name="distance_message" id="distance_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                         $html .= '<code>Tags : ({from}, {to}, {amount}).</code>';
                                     }
                                     elseif($setting_details['key'] == 'distance_alert_message')
                                     {
-                                        $html .= '<label for="distance_alert_message" class="form-label">'. __('Distance Alert Message') .'</label>';
+                                        $html .= '<label for="distance_alert_message" class="form-label">'.  __('ALERT: Minimum Order Per Distance') .'</label>';
                                         $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                     }
 
@@ -140,17 +140,17 @@ class OtherSettingController extends Controller
 
                                     if($setting_details['key'] == 'read_more_link_label')
                                     {
-                                        $html .= '<label for="read_more_link_label" class="form-label">'. __('Read More Link Label') .'</label>';
+                                        $html .= '<label for="read_more_link_label" class="form-label">'. __('TITLE: For "Read More"') .'</label>';
                                         $html .= '<input type="text" name="read_more_link_label" id="read_more_link_label" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                     }
                                     elseif($setting_details['key'] == 'delivery_message')
                                     {
-                                        $html .= '<label for="delivery_message" class="form-label">'. __('Delivery out of range Message') .'</label>';
+                                        $html .= '<label for="delivery_message" class="form-label">'. __('ALERT: Address Outside Delivery Zone') .'</label>';
                                         $html .= '<textarea name="delivery_message" id="delivery_message" class="form-control">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                     }
                                     elseif($setting_details['key'] == 'today_special_icon')
                                     {
-                                        $html .= '<label for="today_special_icon" class="form-label">'. __('Today Special Icon') .'</label>';
+                                        $html .= '<label for="today_special_icon" class="form-label">'. __('IMAGE: For "Today\'s Special"') .'</label>';
                                         $html .= '<input type="file" name="today_special_icon" id="today_special_icon" class="form-control">';
 
                                         $today_special_icon = (isset($setting_details[$primary_lang_code."_value"])) ? $setting_details[$primary_lang_code."_value"] : '';
@@ -168,13 +168,13 @@ class OtherSettingController extends Controller
                                     }
                                     elseif($setting_details['key'] == 'distance_message')
                                     {
-                                        $html .= '<label for="distance_message" class="form-label">'. __('Distance Message') .'</label>';
+                                        $html .= '<label for="distance_message" class="form-label">'. __('NOTICE: Minimum Order Per Distance') .'</label>';
                                         $html .= '<textarea name="distance_message" id="distance_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                         $html .= '<code>Tags : ({from}, {to}, {amount}).</code>';
                                     }
                                     elseif($setting_details['key'] == 'distance_alert_message')
                                     {
-                                        $html .= '<label for="distance_alert_message" class="form-label">'. __('Distance Alert Message') .'</label>';
+                                        $html .= '<label for="distance_alert_message" class="form-label">'.  __('ALERT: Minimum Order Per Distance') .'</label>';
                                         $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                     }
 
@@ -428,17 +428,17 @@ class OtherSettingController extends Controller
 
                                 if($setting_details['key'] == 'read_more_link_label')
                                 {
-                                    $html .= '<label for="read_more_link_label" class="form-label">'. __('Read More Link Label') .'</label>';
+                                    $html .= '<label for="read_more_link_label" class="form-label">'. __('TITLE: For "Read More"') .'</label>';
                                     $html .= '<input type="text" name="read_more_link_label" id="read_more_link_label" value="'.$setting_details[$current_lang_code."_value"].'" class="form-control">';
                                 }
                                 elseif($setting_details['key'] == 'delivery_message')
                                 {
-                                    $html .= '<label for="delivery_message" class="form-label">'. __('Delivery out of range Message') .'</label>';
+                                    $html .= '<label for="delivery_message" class="form-label">'. __('ALERT: Address Outside Delivery Zone') .'</label>';
                                     $html .= '<textarea name="delivery_message" id="delivery_message" class="form-control">'.$setting_details[$current_lang_code."_value"].'</textarea>';
                                 }
                                 elseif($setting_details['key'] == 'today_special_icon')
                                 {
-                                    $html .= '<label for="today_special_icon" class="form-label">'. __('Today Special Icon') .'</label>';
+                                    $html .= '<label for="today_special_icon" class="form-label">'. __('IMAGE: For "Today\'s Special"') .'</label>';
                                     $html .= '<input type="file" name="today_special_icon" id="today_special_icon" class="form-control">';
 
                                     $today_special_icon = (isset($setting_details[$current_lang_code."_value"])) ? $setting_details[$current_lang_code."_value"] : '';
@@ -456,13 +456,13 @@ class OtherSettingController extends Controller
                                 }
                                 elseif($setting_details['key'] == 'distance_message')
                                 {
-                                    $html .= '<label for="distance_message" class="form-label">'. __('Distance Message') .'</label>';
+                                    $html .= '<label for="distance_message" class="form-label">'. __('NOTICE: Minimum Order Per Distance') .'</label>';
                                     $html .= '<textarea name="distance_message" id="distance_message" class="form-control" rows="5">'.$setting_details[$current_lang_code."_value"].'</textarea>';
                                     $html .= '<code>Tags : ({from}, {to}, {amount}).</code>';
                                 }
                                 elseif($setting_details['key'] == 'distance_alert_message')
                                 {
-                                    $html .= '<label for="distance_alert_message" class="form-label">'. __('Distance Alert Message') .'</label>';
+                                    $html .= '<label for="distance_alert_message" class="form-label">'.  __('ALERT: Minimum Order Per Distance') .'</label>';
                                     $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$current_lang_code."_value"].'" class="form-control">';
                                 }
 
@@ -497,17 +497,17 @@ class OtherSettingController extends Controller
 
                                 if($setting_details['key'] == 'read_more_link_label')
                                 {
-                                    $html .= '<label for="read_more_link_label" class="form-label">'. __('Read More Link Label') .'</label>';
+                                    $html .= '<label for="read_more_link_label" class="form-label">'. __('TITLE: For "Read More"') .'</label>';
                                     $html .= '<input type="text" name="read_more_link_label" id="read_more_link_label" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                 }
                                 elseif($setting_details['key'] == 'delivery_message')
                                 {
-                                    $html .= '<label for="delivery_message" class="form-label">'. __('Delivery out of range Message') .'</label>';
+                                    $html .= '<label for="delivery_message" class="form-label">'. __('ALERT: Address Outside Delivery Zone') .'</label>';
                                     $html .= '<textarea name="delivery_message" id="delivery_message" class="form-control">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                 }
                                 elseif($setting_details['key'] == 'today_special_icon')
                                 {
-                                    $html .= '<label for="today_special_icon" class="form-label">'. __('Today Special Icon') .'</label>';
+                                    $html .= '<label for="today_special_icon" class="form-label">'. __('IMAGE: For "Today\'s Special"') .'</label>';
                                     $html .= '<input type="file" name="today_special_icon" id="today_special_icon" class="form-control">';
 
                                     $today_special_icon = (isset($setting_details[$primary_lang_code."_value"])) ? $setting_details[$primary_lang_code."_value"] : '';
@@ -525,13 +525,13 @@ class OtherSettingController extends Controller
                                 }
                                 elseif($setting_details['key'] == 'distance_message')
                                 {
-                                    $html .= '<label for="distance_message" class="form-label">'. __('Distance Message') .'</label>';
+                                    $html .= '<label for="distance_message" class="form-label">'. __('NOTICE: Minimum Order Per Distance') .'</label>';
                                     $html .= '<textarea name="distance_message" id="distance_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                     $html .= '<code>Tags : ({from}, {to}, {amount}).</code>';
                                 }
                                 elseif($setting_details['key'] == 'distance_alert_message')
                                 {
-                                    $html .= '<label for="distance_alert_message" class="form-label">'. __('Distance Alert Message') .'</label>';
+                                    $html .= '<label for="distance_alert_message" class="form-label">'.  __('ALERT: Minimum Order Per Distance') .'</label>';
                                     $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                 }
 
