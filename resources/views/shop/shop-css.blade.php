@@ -122,8 +122,15 @@
 
         /* Price Color */
         @if(isset($theme_settings['price_color']) && !empty($theme_settings['price_color']))
-            .price_ul li span{
+            .price_ul li p{
                 color : {{ $theme_settings['price_color'] }}!important;
+            }
+        @endif
+
+        /* Cart Icon Color */
+        @if(isset($theme_settings['cart_icon_color']) && !empty($theme_settings['cart_icon_color']))
+        .cart-symbol i{
+                color : {{ $theme_settings['cart_icon_color'] }}!important;
             }
         @endif
 
@@ -195,6 +202,10 @@
             .shop-main{
                 margin-top: 70px;
                 padding-top: 0;
+            }
+
+            .home_main_slider{
+                padding-top:15px;
             }
         @endif
 

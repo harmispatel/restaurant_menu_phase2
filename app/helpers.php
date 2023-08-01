@@ -225,6 +225,7 @@
             'menu_bar_font_color',
             'category_title_and_description_color',
             'price_color',
+            'cart_icon_color',
             'item_box_shadow',
             'item_box_shadow_color',
             'item_box_shadow_thickness',

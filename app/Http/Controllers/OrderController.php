@@ -686,7 +686,7 @@ class OrderController extends Controller
             $shop_url = asset($shop_url);
             $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
             $shop_logo = (isset(Auth::user()->hasOneShop->shop['logo'])) ? Auth::user()->hasOneShop->shop['logo'] : '';
-            $shop_logo = '<img src="'.$shop_logo.'" width="100">';
+            $shop_logo = '<img src="'.$shop_logo.'" width="200">';
 
             // Update Order Status
             $order = Order::find($order_id);

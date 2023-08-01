@@ -314,6 +314,17 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
+                                                                <span>{{ __('Cart Icon Color')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="cart_icon_color" name="cart_icon_color" class="form-control me-2 p-0" value="{{ isset($settings['cart_icon_color']) ? $settings['cart_icon_color'] : '' }}" onchange="changeVal('cart_icon_color','cart_icon_color_input')">
+                                                                    <input id="cart_icon_color_input" type="text" class="form-control" value="{{ isset($settings['cart_icon_color']) ? $settings['cart_icon_color'] : '' }}" onkeyup="changeColor('cart_icon_color_input','cart_icon_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
                                                                 <span>{{ __('Item Box Background Color')}}</span>
                                                             </div>
                                                             <div class="col-md-4">

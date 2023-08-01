@@ -99,7 +99,7 @@ class EveryPayController extends Controller
         $shop_url = asset($shop_url);
         $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
         $shop_logo = (isset($shop_details->logo)) ? $shop_details->logo : '';
-        $shop_logo = '<img src="'.$shop_logo.'" width="100">';
+        $shop_logo = '<img src="'.$shop_logo.'" width="200">';
 
         $discount_per = session()->get('discount_per');
         $discount_type = session()->get('discount_type');

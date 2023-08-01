@@ -285,7 +285,7 @@ class PaypalController extends Controller
         $shop_url = asset($shop_url);
         $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
         $shop_logo = (isset($data['shop_details']->logo)) ? $data['shop_details']->logo : '';
-        $shop_logo = '<img src="'.$shop_logo.'" width="100">';
+        $shop_logo = '<img src="'.$shop_logo.'" width="200">';
 
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
         $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
