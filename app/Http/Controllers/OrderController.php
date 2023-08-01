@@ -1067,6 +1067,10 @@ class OrderController extends Controller
                     'success' => 1,
                 ]);
             }
+
+            return response()->json([
+                'success' => 1,
+            ]);
         }
         catch (\Throwable $th)
         {

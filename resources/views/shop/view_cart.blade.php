@@ -244,19 +244,22 @@
 
                     @if($is_checkout == 1 && $delivery_schedule == 1)
                         <div class="row">
-                            <div class="col-md-12 mb-2">
+                            <div class="col-md-12 mb-2" id="del-notes" style="display: none;">
                                 @if(count($min_amount_for_delivery) > 0 && $current_check_type == 'delivery')
                                     <code>{{ __('Notes:') }}</code><br>
                                     @foreach ($min_amount_for_delivery as $min_key => $min_amount)
                                         @php
+                                            $minAmount = (isset($min_amount['amount']) && !empty($min_amount['amount'])) ? $min_amount['amount'] : 0;
                                             // Distance Message
                                             $distance_message = moreTranslations($shop_details['id'],'distance_message');
                                             $distance_message = (isset($distance_message[$current_lang_code."_value"]) && !empty($distance_message[$current_lang_code."_value"])) ? $distance_message[$current_lang_code."_value"] : 'Distance from our store up ({from}) to ({to}) Km The lowest order price is ({amount}).';
                                             $distance_message = str_replace('{from}',$min_amount['from'],$distance_message);
                                             $distance_message = str_replace('{to}',$min_amount['to'],$distance_message);
-                                            $distance_message = str_replace('{amount}',Currency::currency($currency)->format($min_amount['amount']),$distance_message);
+                                            $distance_message = str_replace('{amount}',Currency::currency($currency)->format($minAmount),$distance_message);
                                         @endphp
-                                        <code> - {{ $distance_message }}</code> <br>
+                                        @if($minAmount > 0)
+                                            <code class="notes-del"> - {{ $distance_message }}</code> <br>
+                                        @endif
                                     @endforeach
                                     </div>
                                 @endif
@@ -548,6 +551,17 @@
             {
                 $('#checkout_type').trigger('change');
             }
+
+            var delNotes = $('.notes-del').length;
+            if(delNotes == 0)
+            {
+                $('#del-notes').hide();
+            }
+            else
+            {
+                $('#del-notes').show();
+            }
+
         });
 
     </script>
