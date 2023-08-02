@@ -339,8 +339,8 @@ class OrderController extends Controller
         if($request->isMethod('get'))
         {
             $data['orders'] = Order::where('shop_id',$shop_id)->get();
-            $data['total'] = Order::sum('discount_value');
-            $data['tip_amount'] = Order::sum('tip');
+            $data['total'] = Order::where('shop_id',$shop_id)->sum('discount_value');
+            $data['tip_amount'] = Order::where('shop_id',$shop_id)->sum('tip');
         }
         else
         {
