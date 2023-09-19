@@ -218,6 +218,8 @@
                                         <option value="buzzer-03.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-03.mp3') ? 'selected' : '' }}>Buzzer 3</option>
                                         <option value="buzzer-04.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-04.mp3') ? 'selected' : '' }}>Buzzer 4</option>
                                         <option value="buzzer-05.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-05.mp3') ? 'selected' : '' }}>Buzzer 5</option>
+                                        <option value="male.mp3" {{ ($order_settings['notification_sound'] == 'male.mp3') ? 'selected' : '' }}>Male Gr</option>
+                                        <option value="female.mp3" {{ ($order_settings['notification_sound'] == 'female.mp3') ? 'selected' : '' }}>Female Gr</option>
                                     </select>
                                 </div>
                             </div>

@@ -1414,38 +1414,49 @@ class ShopController extends Controller
                     if($item['review'] == 1)
                     {
                         $html .= '<div class="col-md-12 mt-3">';
-                            $html .= '<div class="row">';
-                                $html .= '<form method="POST" id="reviewForm" enctype="multipart/form-data">';
-                                    $html .= csrf_field();
-                                    $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
-                                    $html .= '<div class="col-md-12">';
-                                        $html .= '<div class="rate">';
-                                            $html .= '<input type="radio" id="star5" class="rate" name="rating" value="5"/>';
-                                            $html .= '<label for="star5" title="text">5 stars</label>';
-                                            $html .= '<input type="radio" id="star4" class="rate" name="rating" value="4"/>';
-                                            $html .= '<label for="star4" title="text">4 stars</label>';
-                                            $html .= '<input type="radio" id="star3" class="rate" name="rating" value="3" checked />';
-                                            $html .= '<label for="star3" title="text">3 stars</label>';
-                                            $html .= '<input type="radio" id="star2" class="rate" name="rating" value="2">';
-                                            $html .= '<label for="star2" title="text">2 stars</label>';
-                                            $html .= '<input type="radio" id="star1" class="rate" name="rating" value="1"/>';
-                                            $html .= '<label for="star1" title="text">1 star</label>';
-                                        $html .= '</div>';
+                            $html .= '<div class="accordion accordion-flush" id="reviewAccordion">';
+                                $html .= '<div class="accordion-item">';
+                                    $html .= "<h2 class='accordion-header' id='flush-headingOne'>";
+                                        $html .= "<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#flush-collapseOne' aria-expanded='false' aria-controls='flush-collapseOne'>Item Review</button>";
+                                    $html .= "</h2>";
+                                    $html .= '<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#reviewAccordion">';
+                                        $html .= "<div class='accordion-body'>";
+                                            $html .= '<div class="row">';
+                                                $html .= '<form method="POST" id="reviewForm" enctype="multipart/form-data">';
+                                                    $html .= csrf_field();
+                                                    $html .= '<input type="hidden" name="item_id" id="item_id" value="'.$item['id'].'">';
+                                                    $html .= '<div class="col-md-12">';
+                                                        $html .= '<div class="rate">';
+                                                            $html .= '<input type="radio" id="star5" class="rate" name="rating" value="5"/>';
+                                                            $html .= '<label for="star5" title="text">5 stars</label>';
+                                                            $html .= '<input type="radio" id="star4" class="rate" name="rating" value="4"/>';
+                                                            $html .= '<label for="star4" title="text">4 stars</label>';
+                                                            $html .= '<input type="radio" id="star3" class="rate" name="rating" value="3" checked />';
+                                                            $html .= '<label for="star3" title="text">3 stars</label>';
+                                                            $html .= '<input type="radio" id="star2" class="rate" name="rating" value="2">';
+                                                            $html .= '<label for="star2" title="text">2 stars</label>';
+                                                            $html .= '<input type="radio" id="star1" class="rate" name="rating" value="1"/>';
+                                                            $html .= '<label for="star1" title="text">1 star</label>';
+                                                        $html .= '</div>';
+                                                    $html .= '</div>';
+                                                    $html .= '<div class="col-md-12 mt-2">';
+                                                        $html .= '<input type="text" name="email_id" id="email_id" class="form-control" placeholder="Enter Your Email">';
+                                                    $html .= '</div>';
+                                                    $html .= '<div class="col-md-12 mt-2">';
+                                                        $html .= '<textarea class="form-control" name="item_review" id="item_review" rows="4" placeholder="Comment"></textarea>';
+                                                    $html .= '</div>';
+                                                    $html .= '<div class="col-md-12 mb-2 mt-2 text-center">';
+                                                        $html .= '<a class="btn btn-success" onclick="submitItemReview()" id="btn-review"><i class="bi bi-send"></i> Submit</a>';
+                                                        $html .= '<button class="btn btn-success" type="button" disabled style="display:none;" id="load-btn-review">
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Please Wait...
+                                                    </button>';
+                                                    $html .= '</div>';
+                                                $html .= '</form>';
+                                            $html .= '</div>';
+                                        $html .= "</div>";
                                     $html .= '</div>';
-                                    $html .= '<div class="col-md-12 mt-2">';
-                                        $html .= '<input type="text" name="email_id" id="email_id" class="form-control" placeholder="Enter Your Email">';
-                                    $html .= '</div>';
-                                    $html .= '<div class="col-md-12 mt-2">';
-                                        $html .= '<textarea class="form-control" name="item_review" id="item_review" rows="4" placeholder="Comment"></textarea>';
-                                    $html .= '</div>';
-                                    $html .= '<div class="col-md-12 mb-2 mt-2 text-center">';
-                                        $html .= '<a class="btn btn-success" onclick="submitItemReview()" id="btn-review"><i class="bi bi-send"></i> Submit</a>';
-                                        $html .= '<button class="btn btn-success" type="button" disabled style="display:none;" id="load-btn-review">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        Please Wait...
-                                    </button>';
-                                    $html .= '</div>';
-                                $html .= '</form>';
+                                $html .= '</div>';
                             $html .= '</div>';
                         $html .= '</div>';
                     }

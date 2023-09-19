@@ -2224,3 +2224,11 @@ header .cart-btn
 button.gm-ui-hover-effect {
     visibility: hidden;
 }
+
+#itemDetailsModal .accordion-button::after{
+    display: block;
+}
+
+#itemDetailsModal .accordion-button{
+    background-color: #f1f3f7 !important;
+}
