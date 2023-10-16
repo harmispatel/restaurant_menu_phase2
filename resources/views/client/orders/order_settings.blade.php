@@ -236,7 +236,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-6 mb-2">
+                                <div class="col-md-4 mb-2">
                                     <label class="switch me-2">
                                         <input type="checkbox" value="1" name="enable_print" id="enable_print" class="ord-setting" {{ (isset($order_settings['enable_print']) && $order_settings['enable_print'] == 1) ? 'checked' : '' }}>
                                         <span class="slider round">
@@ -246,7 +246,7 @@
                                     </label>
                                     <label for="enable_print" class="form-label">{{ __('Enable/Disable Print') }}</label>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="switch me-2">
                                         <input type="checkbox" value="1" name="auto_print" id="auto_print" class="ord-setting" {{ (isset($order_settings['auto_print']) && $order_settings['auto_print'] == 1) ? 'checked' : '' }}>
                                         <span class="slider round">
@@ -255,6 +255,16 @@
                                         </span>
                                     </label>
                                     <label for="auto_print" class="form-label">{{ __('Auto Print') }}</label>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="switch me-2">
+                                        <input type="checkbox" value="1" name="raw_printing" id="raw_printing" class="ord-setting" {{ (isset($order_settings['raw_printing']) && $order_settings['raw_printing'] == 1) ? 'checked' : '' }}>
+                                        <span class="slider round">
+                                            <i class="fa-solid fa-circle-check check_icon"></i>
+                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                        </span>
+                                    </label>
+                                    <label for="raw_printing" class="form-label">{{ __('Raw Printing') }}</label>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="printer_tray" class="form-label">{{ __('Printer Trays') }}</label>

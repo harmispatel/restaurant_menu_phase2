@@ -519,6 +519,7 @@ class OrderController extends Controller
         $all_data['receipt_intro'] = $request->receipt_intro;
         $all_data['discount_type'] = $request->discount_type;
         $all_data['auto_print'] = (isset($request->auto_print)) ? $request->auto_print : 0;
+        $all_data['raw_printing'] = (isset($request->raw_printing)) ? $request->raw_printing : 0;
         $all_data['play_sound'] = (isset($request->play_sound)) ? $request->play_sound : 0;
         $all_data['enable_print'] = (isset($request->enable_print)) ? $request->enable_print : 0;
         $all_data['printer_paper'] = (isset($request->printer_paper)) ? $request->printer_paper : '';
@@ -1102,166 +1103,289 @@ class OrderController extends Controller
     // Function for Get Order Receipt
     public function getOrderReceipt(Request $request)
     {
-        $order_id = $request->order_id;
+        $data['order_id'] = $request->order_id;
+        $user_details = Auth::user();
+        $data['shop_address'] = (isset($user_details['address'])) ? $user_details['address'] : '';
+        $data['shop_telephone'] = (isset($user_details['telephone'])) ? $user_details['telephone'] : '';
+        $data['shop_mobile'] = (isset($user_details['mobile'])) ? $user_details['mobile'] : '';
+        $data['shop_city'] = (isset($user_details['city'])) ? $user_details['city'] : '';
         $html = '';
 
         try
         {
-            $order = Order::with(['order_items','shop'])->where('id',$order_id)->first();
+            $order = Order::with(['order_items','shop'])->where('id',$data['order_id'])->first();
             $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
-            $shop_id = (isset($order->shop['id'])) ? $order->shop['id'] : '';
+            $data['shop_id'] = (isset($order->shop['id'])) ? $order->shop['id'] : '';
+            $shop_name = (isset(Auth::user()->hasOneShop->shop['name'])) ? Auth::user()->hasOneShop->shop['name'] : '';
 
-            $shop_settings = getClientSettings($shop_id);
+            $data['shop_settings'] = getClientSettings($data['shop_id']);
+            $business_telephone = (isset($data['shop_settings']['business_telephone'])) ? $data['shop_settings']['business_telephone'] : '';
 
-            $order_setting = getOrderSettings($shop_id);
-            $receipt_intro = (isset($order_setting['receipt_intro']) && !empty($order_setting['receipt_intro'])) ? $order_setting['receipt_intro'] : 'INVOICE';
+            $data['order_setting'] = getOrderSettings($data['shop_id']);
+            $data['receipt_intro'] = (isset($data['order_setting']['receipt_intro']) && !empty($data['order_setting']['receipt_intro'])) ? $data['order_setting']['receipt_intro'] : 'INVOICE';
+            $data['raw_printing'] = (isset($data['order_setting']['raw_printing']) && !empty($data['order_setting']['raw_printing'])) ? $data['order_setting']['raw_printing'] : 0;
 
             // Shop Currency
-            $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
+            $currency = (isset($data['shop_settings']['default_currency']) && !empty($data['shop_settings']['default_currency'])) ? $data['shop_settings']['default_currency'] : 'EUR';
 
-            $order_date = (isset($order->created_at)) ? $order->created_at : '';
-            $payment_method = (isset($order->payment_method)) ? str_replace('_',' ',$order->payment_method) : '';
-            $checkout_type = (isset($order->checkout_type)) ? $order->checkout_type : '';
-            $customer = $order->firstname." ".$order->lastname;
-            $phone = (isset($order->phone)) ? $order->phone : '';
-            $email = (isset($order->email)) ? $order->email : '';
-            $address = (isset($order->address)) ? $order->address : '';
-            $floor = (isset($order->floor)) ? $order->floor : '';
-            $table_no = (isset($order->table)) ? $order->table : '';
-            $room_no = (isset($order->room)) ? $order->room : '';
-            $delivery_time = (isset($order->delivery_time)) ? $order->delivery_time : '';
-            $door_bell = (isset($order->door_bell)) ? $order->door_bell : '';
-            $street_number = (isset($order->street_number)) ? $order->street_number : '';
+            $data['order_date'] = (isset($order->created_at)) ? date('d-m-Y h:i:s',strtotime($order->created_at)): '';
+            $data['payment_method'] = (isset($order->payment_method)) ? str_replace('_',' ',$order->payment_method) : '';
+            $data['checkout_type'] = (isset($order->checkout_type)) ? $order->checkout_type : '';
+            $data['customer'] = $order->firstname." ".$order->lastname;
+            $data['phone'] = (isset($order->phone)) ? $order->phone : '';
+            $data['email'] = (isset($order->email)) ? $order->email : '';
+            $data['instructions'] = (isset($order->instructions)) ? $order->instructions : '';
+            $data['address'] = (isset($order->address)) ? $order->address : '';
+            $data['floor'] = (isset($order->floor)) ? $order->floor : '';
+            $data['table_no'] = (isset($order->table)) ? $order->table : '';
+            $data['room_no'] = (isset($order->room)) ? $order->room : '';
+            $data['delivery_time'] = (isset($order->delivery_time)) ? $order->delivery_time : '';
+            $data['door_bell'] = (isset($order->door_bell)) ? $order->door_bell : '';
+            $data['street_number'] = (isset($order->street_number)) ? $order->street_number : '';
             $items = (isset($order->order_items)) ? $order->order_items : [];
-            $order_total_text = (isset($order->order_total_text)) ? $order->order_total_text : '';
+            $data['order_total_text'] = (isset($order->order_total_text)) ? $order->order_total_text : '';
 
-            $html .= '<div class="row">';
-                $html .= '<div class="col-md-12">';
-                    $html .= '<div class="card">';
-                        $html .= '<div class="card-body ord-rec-body">';
-                            $html .= '<div class="row mb-3">';
-                                $html .= '<div class="col-md-12 text-center">';
-                                    $html .= '<h3>'.$receipt_intro.' - #'.$order_id.'</h3>';
-                                $html .= '</div>';
-                                $html .= '<div class="col-md-5">';
-                                    $html .= '<ul class="p-0 m-0 list-unstyled">';
-                                        if($checkout_type == 'takeaway' || $checkout_type == 'delivery')
-                                        {
-                                            $html .= '<li><b>Customer : </b> '.$customer.'</li>';
-                                            $html .= '<li><b>Phone : </b> '.$phone.'</li>';
-                                            $html .= '<li><b>Email ID : </b> '.$email.'</li>';
-                                        }
-                                        if($checkout_type == 'delivery')
-                                        {
-                                            $html .= '<li><b>Street Number : </b> '.$street_number.'</li>';
-                                            $html .= '<li><b>Bell : </b> '.$door_bell.'</li>';
-                                            $html .= '<li><b>Floor No. : </b> '.$floor.'</li>';
-                                            $html .= '<li><b>Address : </b> '.$address.'</li>';
-                                        }
-                                        if($checkout_type == 'room_delivery')
-                                        {
-                                            $html .= '<li><b>Customer : </b> '.$customer.'</li>';
-                                            $html .= '<li><b>Room No. : </b> '.$room_no.'</li>';
-                                            $html .= '<li><b>Delivery Time : </b> '.$delivery_time.'</li>';
-                                        }
-                                    $html .= '</ul>';
-                                $html .= '</div>';
-                                $html .= '<div class="col-md-3">';
-                                $html .= '</div>';
-                                $html .= '<div class="col-md-4 text-end">';
-                                    $html .= '<ul class="p-0 m-0 list-unstyled">';
-                                        $html .= '<li><b>Order Date : </b> '.date('d-m-Y h:i:s',strtotime($order_date)).'</li>';
-                                        $html .= '<li><b>Payment Method : </b> '.ucfirst($payment_method).'</li>';
-                                        $html .= '<li><b>Checkout Type : </b> '.ucfirst(str_replace('_',' ',$checkout_type)).'</li>';
-                                        if($checkout_type == 'table_service')
-                                        {
-                                            $html .= '<li><b>Table No : </b> '.$table_no.'</li>';
-                                        }
-                                    $html .= '</ul>';
-                                $html .= '</div>';
-                            $html .= '</div>';
-                            $html .= '<div class="row">';
-                                $html .= '<div class="col-md-12">';
-                                    $html .= '<table class="table table-bordered">';
-                                        $html .= '<thead>';
-                                            $html .= '<tr><th>Item Name</th><th width="10%">Qty.</th><th width="15%" class="text-end">Amount</th></tr>';
-                                        $html .= '</thead>';
-                                        $html .= '<tbody>';
-                                            if(count($items) > 0)
+            $items_arr = [];
+            if(count($items) > 0)
+            {
+                foreach($items as $item_dt)
+                {
+                    $item = [];
+                    $item['item_name'] = (isset($item_dt['item_name'])) ? $item_dt['item_name'] : '';
+                    $item['item_qty'] = (isset($item_dt['item_qty'])) ? $item_dt['item_qty'] : 0;
+                    $item['sub_total_text'] = (isset($item_dt['sub_total'])) ? Currency::currency($currency)->format($item_dt['sub_total']) : Currency::currency($currency)->format(0);
+
+                    $option = unserialize($item_dt['options']);
+                    if(!empty($option))
+                    {
+                        $item['options'] = implode(', ',$option);
+                    }
+                    else
+                    {
+                        $item['options'] = '';
+                    }
+
+                    $items_arr[] = $item;
+                }
+            }
+
+            $total_amount = $order->order_total;
+
+            // SubTotal
+            $data['subtotal'] = Currency::currency($currency)->format($total_amount);
+
+            // Discount
+            if($order->discount_per > 0)
+            {
+                if($discount_type == 'fixed')
+                {
+                    $discount_amount = $order->discount_per;
+                    $discount_text = "- " . Currency::currency($currency)->format($order->discount_per);
+                }
+                else
+                {
+                    $discount_amount = ($total_amount * $order->discount_per) / 100;
+                    $discount_text = "- " . $order->discount_per . "%";
+                }
+                $total_amount = $total_amount - $discount_amount;
+            }
+            else
+            {
+                $discount_text = 0;
+            }
+            $data['discount'] = $discount_text;
+
+            // Tip
+            if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
+            {
+                $total_amount = $total_amount + $order->tip;
+                $tip_text = "+" . Currency::currency($currency)->format($order->tip);
+            }
+            else
+            {
+                $tip_text = 0;
+            }
+            $data['tip'] = $tip_text;
+            $data['total_amount'] = Currency::currency($currency)->format($total_amount);
+            $data['items'] = $items_arr;
+
+
+            if($data['raw_printing'] == 1)
+            {
+                $res_data = $data;
+            }
+            else
+            {
+                $html .= '<div class="row justify-content-center">';
+                    $html .= '<div class="col-md-10">';
+                        $html .= '<div class="card">';
+                            $html .= '<div class="card-body" style="font-size:38px!important;">';
+                                $html .= '<div class="row">';
+                                    $html .= '<div class="col-md-12 text-center mb-3">';
+                                        $html .= '<p class="m-0"><strong>'.$data['receipt_intro'].'</strong></p>';
+                                    $html .= '</div>';
+                                    $html .= '<div class="col-md-12">';
+                                        $html .= '<ul class="p-2 m-0 list-unstyled" style="border-bottom:2px solid #000 !important; border-top: 2px dotted #ccc;">';
+
+                                            $html .= '<li><b>'.__('Order').' '.__('Id').' : </b>'.$data['order_id'].'</li>';
+                                            $html .= '<li><b>'.__('Order Type').' : </b> '.ucfirst(str_replace('_',' ',$data['checkout_type'])).'</li>';
+                                            $html .= '<li><b>'.__('Payment Method').' : </b> '.ucfirst($data['payment_method']).'</li>';
+                                            $html .= '<li><b>'.__('Order Date').' : </b> '.date('d-m-Y h:i:s',strtotime($data['order_date'])).'</li>';
+
+                                            if($data['checkout_type'] == 'takeaway' || $data['checkout_type'] == 'delivery' || $data['checkout_type'] == 'room_delivery')
                                             {
-                                                foreach($items as $item)
-                                                {
-                                                    $item_name = (isset($item['item_name'])) ? $item['item_name'] : '';
-                                                    $item_qty = (isset($item['item_qty'])) ? $item['item_qty'] : 0;
-                                                    $sub_total_text = (isset($item['sub_total_text'])) ? $item['sub_total_text'] : 0;
-                                                    $option = unserialize($item['options']);
+                                                $html .= '<li><b>'.__('Customer').' : </b> '.$data['customer'].'</li>';
+                                            }
 
-                                                    $html .= '<tr>';
-                                                        $html .= '<td><strong>'.$item_name.'</strong>';
-                                                        if(!empty($option))
-                                                        {
-                                                            $html .= '<br>'.implode(', ',$option);
-                                                        }
-                                                        $html .= '</td>';
-                                                        $html .= '<td>'.$item_qty.'</td>';
-                                                        $html .= '<td class="text-end">'.$sub_total_text.'</td>';
-                                                    $html .= '</tr>';
+                                            if($data['checkout_type'] == 'delivery')
+                                            {
+                                                $html .= '<li><b>'.__('Address').' : </b> '.$data['address'].'</li>';
+                                                $html .= '<li><b>'.__('Street Number').' : </b> '.$data['street_number'].'</li>';
+                                                $html .= '<li><b>'.__('Floor').' : </b> '.$data['floor'].'</li>';
+                                                $html .= '<li><b>'.__('Door Bell').' : </b> '.$data['door_bell'].'</li>';
+                                            }
+
+                                            if($data['checkout_type'] == 'room_delivery')
+                                            {
+                                                $html .= '<li><b>'.__('Room No.').' : </b> '.$data['room_no'].'</li>';
+                                                if(!empty($delivery_time))
+                                                {
+                                                    $html .= '<li><b>'.__('Delivery Time').' : </b> '.$delivery_time.'</li>';
                                                 }
                                             }
-                                        $html .= '</tbody>';
-                                    $html .= '</table>';
-                                $html .= '</div>';
-                                $html .= '<div class="col-md-9 mt-2">';
-                                $html .= '</div>';
-                                $html .= '<div class="col-md-3 mt-2 ord-rec-body">';
-                                    $html .= '<table class="table">';
 
-                                        $total_amount = $order->order_total;
-
-                                        $html .= '<tr>';
-                                            $html .= '<td><b>'. __('Sub Total') .'</b></td>';
-                                            $html .= '<td class="text-end">'. Currency::currency($currency)->format($total_amount) .'</td>';
-                                        $html .= '</tr>';
-
-                                        if($order->discount_per > 0)
-                                        {
-                                            $html .= '<td><b>'. __('Discount') .'</b></td>';
-                                            if($discount_type == 'fixed')
+                                            if($data['checkout_type'] == 'table_service')
                                             {
-                                                $discount_amount = $order->discount_per;
-                                                $html .= '<td class="text-end">- '. Currency::currency($currency)->format($order->discount_per) .'</td>';
+                                                $html .= '<li><b>'.__('Table No.').' : </b> '.$data['table_no'].'</li>';
                                             }
-                                            else
-                                            {
-                                                $discount_amount = ($total_amount * $order->discount_per) / 100;
-                                                $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
-                                            }
-                                            $total_amount = $total_amount - $discount_amount;
-                                        }
 
-                                        if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
-                                        {
-                                            $total_amount = $total_amount + $order->tip;
+                                            if($data['checkout_type'] == 'takeaway' || $data['checkout_type'] == 'delivery')
+                                            {
+                                                $html .= '<li><b>'.__('Telephone').' : </b> '.$data['phone'].'</li>';
+                                                $html .= '<li><b>'.__('Email').' : </b> '.$data['email'].'</li>';
+                                            }
+
+                                        $html .= '</ul>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+                                $html .= '<div class="row">';
+                                    $html .= '<div class="col-md-12">';
+                                        $html .= '<table class="table border-0 m-0" style="border-bottom:2px solid #000 !important">';
+                                            $html .= '<thead style="border-bottom: 2px solid #000;">';
+                                                $html .= '<tr><th class="border-0" width="10%">'.__('S.No').'</th><th class="border-0">'.__('Item').'</th><th class="border-0" width="10%">'.__('Qty.').'</th><th width="25%" class="text-end border-0">'.__('Price').'</th></tr>';
+                                            $html .= '</thead>';
+                                            $html .= '<tbody>';
+                                                if(count($items) > 0)
+                                                {
+                                                    $i=1;
+                                                    foreach($items as $item)
+                                                    {
+                                                        $item_name = (isset($item['item_name'])) ? $item['item_name'] : '';
+                                                        $item_qty = (isset($item['item_qty'])) ? $item['item_qty'] : 0;
+                                                        $sub_total_text = (isset($item['sub_total_text'])) ? $item['sub_total_text'] : 0;
+                                                        $option = unserialize($item['options']);
+
+                                                        $html .= '<tr>';
+                                                            $html .= '<td class="border-0">'.$i.'</td>';
+                                                            $html .= '<td class="border-0">'.$item_name;
+                                                            if(!empty($option))
+                                                            {
+                                                                $html .= '<br>'.implode(', ',$option);
+                                                            }
+                                                            $html .= '</td>';
+                                                            $html .= '<td class="border-0">'.$item_qty.'</td>';
+                                                            $html .= '<td class="text-end border-0">'.$sub_total_text.'</td>';
+                                                        $html .= '</tr>';
+                                                        $i++;
+                                                    }
+                                                }
+                                            $html .= '</tbody>';
+                                        $html .= '</table>';
+                                    $html .= '</div>';
+                                    $html .= '<div class="col-md-12 ord-rec-body">';
+                                        $html .= '<table class="table m-0 border-0" style="border-bottom:2px solid #000 !important">';
+
+                                            $total_amount = $order->order_total;
+
                                             $html .= '<tr>';
-                                                $html .= '<td><b>'. __('Tip') .'</b></td>';
-                                                $html .= '<td class="text-end">+ '.Currency::currency($currency)->format($order->tip).'</td>';
+                                                $html .= '<td width="25%"><strong>'.__('Comments').' : </strong></td>';
+                                                $html .= '<td class="text-end">'.$data['instructions'].'</td>';
                                             $html .= '</tr>';
-                                        }
 
-                                        $html .= '<tr class="text-end"><td colspan="2"><strong>'.Currency::currency($currency)->format($total_amount).'</strong></td></tr>';
+                                            $html .= '<tr>';
+                                                $html .= '<td><strong>'.__('Sub Total').' : </strong></td>';
+                                                $html .= '<td class="text-end">'.Currency::currency($currency)->format($total_amount).'</td>';
+                                            $html .= '</tr>';
 
-                                    $html .= '</table>';
+                                            if($order->discount_per > 0)
+                                            {
+                                                $html .= '<tr>';
+                                                    $html .= '<td><strong>'.__('Discount').' : </strong></td>';
+                                                    if($order->discount_per == 'fixed')
+                                                    {
+                                                        $discount_amount = $order->discount_per;
+                                                        $html .= '<td class="text-end">- '.Currency::currency($currency)->format($order->discount_per).'</td>';
+                                                    }
+                                                    else
+                                                    {
+                                                        $discount_amount = ($total_amount * $order->discount_per) / 100;
+                                                        $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
+                                                    }
+                                                $html .= '</tr>';
+                                                $total_amount = $total_amount - $discount_amount;
+                                            }
+
+                                            if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
+                                            {
+                                                $total_amount = $total_amount + $order->tip;
+                                                $html .= '<tr>';
+                                                    $html .= '<td><strong>'. __('Tip') .'</strong></td>';
+                                                    $html .= '<td class="text-end">+ '.Currency::currency($currency)->format($order->tip).'</td>';
+                                                $html .= '</tr>';
+                                            }
+
+                                            $html .= '<tr class="text-end">';
+                                                $html .= '<td colspan="2"><strong>'.Currency::currency($currency)->format($total_amount).'</strong></td>';
+                                            $html .= '</tr>';
+
+                                        $html .= '</table>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+                                $html .= '<div class="row">';
+                                    $html .= '<div class="col-md-12 text-center mt-2">';
+                                        $html .= '<p class="m-0 p=0">';
+                                            if(!empty($data['shop_telephone'])){
+                                                $html .= 'T:'.$data['shop_telephone'];
+                                            }
+
+                                            if(!empty($data['shop_mobile'])){
+                                                $html .= '&nbsp;&nbsp;M:'.$data['shop_mobile'];
+                                            }
+
+                                            if(!empty($data['shop_address'])){
+                                                $html .= '&nbsp;&nbsp;'.$data['shop_address'];
+                                            }
+
+                                            if(!empty($data['shop_city'])){
+                                                $html .= ',&nbsp;&nbsp;'.$data['shop_city'];
+                                            }
+                                        $html .= '</p>';
+                                        $html .= '<p class="p-0 m-0 ord-rec-body-start">Thank You.</p>';
+                                    $html .= '</div>';
                                 $html .= '</div>';
                             $html .= '</div>';
                         $html .= '</div>';
                     $html .= '</div>';
                 $html .= '</div>';
-            $html .= '</div>';
+
+                $res_data = $html;
+            }
 
             return response()->json([
                 'success' => 1,
                 'message' => "Receipt Generated",
-                'data' => $html,
+                'data' => $res_data,
+                'raw_printing' =>  $data['raw_printing'],
             ]);
 
         }

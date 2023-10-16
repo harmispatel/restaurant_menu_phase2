@@ -108,6 +108,7 @@
             'default_printer',
             'receipt_intro',
             'auto_print',
+            'raw_printing',
             'printer_paper',
             'printer_tray',
             'play_sound',

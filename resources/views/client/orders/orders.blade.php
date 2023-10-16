@@ -231,6 +231,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key={{ $google_map_api }}&libraries=places"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/SheetJS/js-codepage/dist/cptable.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/SheetJS/js-codepage/dist/cputils.js"></script>
+    <script src="https://jsprintmanager.azurewebsites.net/scripts/JSESCPOSBuilder.js"></script>
+    <script src="https://jsprintmanager.azurewebsites.net/scripts/zip.js"></script>
+    <script src="https://jsprintmanager.azurewebsites.net/scripts/zip-ext.js"></script>
+    <script src="https://jsprintmanager.azurewebsites.net/scripts/deflate.js"></script>
 
     <script type="text/javascript">
 
@@ -241,6 +247,7 @@
         var shop_latitude = $('#shop_latitude').val();
         var shop_longitude =  $('#shop_longitude').val();
         var markersArray = [];
+        var google_map_order_view = @json($google_map_order_view)
 
         if(shop_latitude == '' || isNaN(shop_latitude) || shop_longitude == '' || isNaN(shop_longitude))
         {
@@ -261,7 +268,9 @@
         var long_center = $('#shop_longitude').val();
 
         // Initialize Map
-        initMap(lat_center,long_center);
+        if(google_map_order_view == 1){
+            initMap(lat_center,long_center);
+        }
         function initMap(lat,long)
         {
             const myLatLng = { lat: parseFloat(lat), lng: parseFloat(long) };
@@ -369,36 +378,160 @@
                         {
                             if (jspmWSStatus())
                             {
-                                $('#print-data').html('');
-                                $('#print-data').append(response.data);
-                                $('#print-data').show();
-                                $('.ord-rec-body').attr('style','font-size:'+printFontSize+'px;')
+                                const raw_printing = response?.raw_printing;
 
-                                html2canvas(document.getElementById('print-data'), { scale: 5 }).then(function (canvas)
+                                //Create a ClientPrintJob
+                                var cpj = new JSPM.ClientPrintJob();
+
+                                //Set Printer info
+                                var myPrinter = new JSPM.InstalledPrinter($('#default_printer').val());
+                                myPrinter.paperName = $('#printer_paper').val();
+                                myPrinter.trayName = $('#printer_tray').val();
+                                cpj.clientPrinter = myPrinter;
+
+                                if(raw_printing == 1)
                                 {
-                                    //Create a ClientPrintJob
-                                    var cpj = new JSPM.ClientPrintJob();
+                                    const print_data = response.data;
+                                    var escpos = Neodynamic.JSESCPOSBuilder;
+                                    var doc = new escpos.Document();
 
-                                    //Set Printer info
-                                    var myPrinter = new JSPM.InstalledPrinter($('#default_printer').val());
-                                    myPrinter.paperName = $('#printer_paper').val();
-                                    myPrinter.trayName = $('#printer_tray').val();
-                                    cpj.clientPrinter = myPrinter;
+                                    var escposCommands = doc
+                                    .font(escpos.FontFamily.A)
+                                    .align(escpos.TextAlignment.LeftJustification)
+                                    .style([escpos.FontStyle.Bold])
+                                    .size(2)
+                                    .setCharacterCodeTable(14)
+                                    .text(print_data.receipt_intro, 737)
+                                    .drawLine(1);
 
-                                    //Set content to print...
-                                    var b64Prefix = "data:image/png;base64,";
-                                    var imgBase64DataUri = canvas.toDataURL("image/png");
-                                    var imgBase64Content = imgBase64DataUri.substring(b64Prefix.length, imgBase64DataUri.length);
+                                    escposCommands = escposCommands
+                                    .feed(1)
+                                    .font(escpos.FontFamily.A)
+                                    .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_id, 737)
+                                    .text(@json(__('Order Type'))+" : "+print_data.checkout_type, 737)
+                                    .text(@json(__('Payment Method'))+" : "+print_data.payment_method, 737)
+                                    .text(@json(__('Order Date'))+" : "+print_data.order_date, 737);
 
-                                    var myImageFile = new JSPM.PrintFile(imgBase64Content, JSPM.FileSourceType.Base64, 'ORD-INVOICE.PNG', 1);
+                                    if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery' || print_data.checkout_type == 'room_delivery'){
+                                        escposCommands  = escposCommands
+                                        .text(@json(__('Customer'))+" : "+print_data.customer, 737);
+                                    }
 
-                                    //add file to print job
-                                    cpj.files.push(myImageFile);
+                                    if(print_data.checkout_type == 'delivery'){
+                                        escposCommands = escposCommands
+                                        .text(@json(__('Address'))+" : "+print_data.address, 737)
+                                        .text(@json(__('Street Number'))+" : "+print_data.street_number, 737)
+                                        .text(@json(__('Floor'))+" : "+print_data.floor, 737)
+                                        .text(@json(__('Door Bell'))+" : "+print_data.door_bell, 737);
+                                    }
+
+                                    if(print_data.checkout_type == 'room_delivery'){
+                                        escposCommands = escposCommands
+                                        .text(@json(__('Room No.'))+" : "+print_data.room_no, 737)
+                                        .text(@json(__('Delivery Time'))+" : "+print_data.delivery_time, 737);
+                                    }
+
+                                    if(print_data.checkout_type == 'table_service'){
+                                        escposCommands = escposCommands
+                                        .text(@json(__('Table No.'))+" : "+print_data.table_no, 737);
+                                    }
+
+                                    if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery'){
+                                        escposCommands = escposCommands
+                                        .text(@json(__('Telephone'))+" : "+print_data.phone, 737)
+                                        .text(@json(__('Email'))+" : "+print_data.email, 737);
+                                    }
+
+                                    escposCommands = escposCommands
+                                    .drawLine(1)
+                                    .font(escpos.FontFamily.A)
+                                    .size(2);
+
+                                    escposCommands = escposCommands
+                                    .feed(1);
+
+                                    if(print_data.items.length > 0){
+                                        print_data.items.forEach(item => {
+                                            escposCommands = escposCommands
+                                            .text(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name,737)
+                                            .text(@json(__('Qty.'))+" : " + item.item_qty,737);
+
+                                            if(item.options != ''){
+                                                escposCommands = escposCommands
+                                                .text(@json(__('Options'))+": " + item.options,737)
+                                            }
+
+                                            escposCommands = escposCommands
+                                            .text(@json(__('Price'))+" : " + item.sub_total_text + "\u20AC",737).feed(1);
+                                        });
+                                    }
+
+                                    escposCommands = escposCommands
+                                    .drawLine(1);
+
+                                    escposCommands = escposCommands
+                                    .text(@json(__('Comments'))+" : "+ print_data.instructions, 737);
+
+                                    escposCommands = escposCommands
+                                    .drawLine(1)
+                                    .text(@json(__('Sub Total'))+" : " + print_data.subtotal + "\u20AC",737);
+
+                                    if(print_data.discount != 0){
+                                        escposCommands = escposCommands
+                                        .feed(1)
+                                        .text(@json(__('Discount'))+" : " + print_data.discount ,737);
+                                    }
+
+                                    if(print_data.tip != 0){
+                                        escposCommands = escposCommands
+                                        .feed(1)
+                                        .text(@json(__('Tip'))+" : " + print_data.tip + "\u20AC",737);
+                                    }
+
+                                    escposCommands = escposCommands
+                                    .text(@json(__('Total Amount'))+" : " + print_data.total_amount + "\u20AC",737);
+
+                                    escposCommands = escposCommands
+                                    .drawLine(1)
+                                    .text("T:"+print_data.shop_telephone+" "+"M:"+print_data.shop_mobile+" "+print_data.shop_address+", "+print_data.shop_city, 737)
+                                    .text("Thank You", 737)
+                                    .drawLine(1);
+
+                                    escposCommands = escposCommands
+                                    .feed(5)
+                                    .cut()
+                                    .generateUInt8Array();
+
+                                    // Set the ESC/POS commands
+                                    cpj.binaryPrinterCommands = escposCommands;
 
                                     // Send print job to printer!
                                     cpj.sendToClient();
-                                });
-                                $('#print-data').hide();
+                                }
+                                else
+                                {
+                                    $('#print-data').html('');
+                                    $('#print-data').append(response.data);
+                                    $('#print-data').show();
+                                    $('#print-data .card-body').attr('style','font-size:'+printFontSize+'px;')
+
+                                    html2canvas(document.getElementById('print-data'), { scale: 5 }).then(function (canvas)
+                                    {
+                                        //Set content to print...
+                                        var b64Prefix = "data:image/png;base64,";
+                                        var imgBase64DataUri = canvas.toDataURL("image/png");
+                                        var imgBase64Content = imgBase64DataUri.substring(b64Prefix.length, imgBase64DataUri.length);
+
+                                        var myImageFile = new JSPM.PrintFile(imgBase64Content, JSPM.FileSourceType.Base64, 'ORD-INVOICE.PNG', 1);
+
+                                        //add file to print job
+                                        cpj.files.push(myImageFile);
+
+                                        // Send print job to printer!
+                                        cpj.sendToClient();
+                                    });
+                                    $('#print-data').hide();
+                                }
                             }
                         }
                         else
