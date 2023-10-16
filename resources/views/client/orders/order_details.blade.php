@@ -511,8 +511,8 @@
 
                                     if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery'){
                                         escposCommands = escposCommands
-                                        .text(@json(__('Telephone'))+" : "+print_data.phone, 737)
-                                        .text(@json(__('Email'))+" : "+print_data.email, 737);
+                                        .text(@json(__('Telephone'))+" : "+print_data.phone, 737);
+                                        // .text(@json(__('Email'))+" : "+print_data.email, 737);
                                     }
 
                                     escposCommands = escposCommands

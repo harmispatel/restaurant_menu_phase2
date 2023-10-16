@@ -1262,7 +1262,7 @@ class OrderController extends Controller
                                             if($data['checkout_type'] == 'takeaway' || $data['checkout_type'] == 'delivery')
                                             {
                                                 $html .= '<li><b>'.__('Telephone').' : </b> '.$data['phone'].'</li>';
-                                                $html .= '<li><b>'.__('Email').' : </b> '.$data['email'].'</li>';
+                                                // $html .= '<li><b>'.__('Email').' : </b> '.$data['email'].'</li>';
                                             }
 
                                         $html .= '</ul>';

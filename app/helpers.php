@@ -357,6 +357,7 @@
     // Check Schedule
     function checkCategorySchedule($catID,$shop_id)
     {
+        date_default_timezone_set('Europe/Athens');
         $current_date = Carbon::now();
         $today = strtolower($current_date->format('l'));
         $current_time = strtotime($current_date->format('G:i'));
