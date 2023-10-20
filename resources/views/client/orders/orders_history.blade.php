@@ -92,7 +92,8 @@
                                         <th>{{ __('Mobile No.') }}</th>
                                         <th>{{ __('Total Price') }}</th>
                                         <th>{{ __('Tip') }}</th>
-                                        <th>{{ __('Created At') }}</th>
+                                        <th>{{ __('Date') }}</th>
+                                        <th>{{ __('Time') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
@@ -132,7 +133,10 @@
                                                 {{ Currency::currency($currency)->format($order->tip) }}
                                             </td>
                                             <td>
-                                                {{ date('d-m-Y h:i:s',strtotime($order->created_at)) }}
+                                                {{ date('d-m-Y',strtotime($order->created_at)) }}
+                                            </td>
+                                            <td>
+                                                {{ date('h:i:s',strtotime($order->created_at)) }}
                                             </td>
                                             <td>
                                                 <a href="{{ route('view.order',encrypt($order->id)) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="View Order"><i class="bi bi-eye"></i></a>
