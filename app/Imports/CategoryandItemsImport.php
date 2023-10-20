@@ -54,7 +54,7 @@ class CategoryandItemsImport implements ToCollection
                 try
                 {
                     // Import Category
-                    $max_category_order_key = Category::max('order_key');
+                    $max_category_order_key = Category::where('shop_id',$this->shop_id)->max('order_key');
                     $category_order = (isset($max_category_order_key) && !empty($max_category_order_key)) ? ($max_category_order_key + 1) : 1;
 
                     $category = new Category();

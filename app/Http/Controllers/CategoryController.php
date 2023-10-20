@@ -121,7 +121,7 @@ class CategoryController extends Controller
         $published = isset($request->published) ? $request->published : 0;
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
 
-        $max_category_order_key = Category::max('order_key');
+        $max_category_order_key = Category::where('shop_id',$shop_id)->max('order_key');
         $category_order = (isset($max_category_order_key) && !empty($max_category_order_key)) ? ($max_category_order_key + 1) : 1;
 
         $schedule_arr = $request->schedule_array;
