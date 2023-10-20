@@ -15,7 +15,7 @@ class TagsController extends Controller
     public function index()
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
-        $data['tags'] = Tags::where('shop_id',$shop_id)->get();
+        $data['tags'] = Tags::where('shop_id',$shop_id)->orderBy('order','ASC')->get();
         return view('client.tags.tags',$data);
     }
 
@@ -48,7 +48,7 @@ class TagsController extends Controller
             'tag_name' => 'required|unique:tags,'.$tag_name_key.',NULL,id,shop_id,'.$shop_id,
         ]);
 
-        $max_tag_order_key = Tags::max('order');
+        $max_tag_order_key = Tags::where('shop_id',$shop_id)->max('order');
         $tag_order = (isset($max_tag_order_key) && !empty($max_tag_order_key)) ? ($max_tag_order_key + 1) : 1;
 
         try

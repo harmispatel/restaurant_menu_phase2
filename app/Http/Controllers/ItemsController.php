@@ -187,7 +187,7 @@ class ItemsController extends Controller
                     }
                     else
                     {
-                        $max_order = Tags::max('order');
+                        $max_order = Tags::where('shop_id',$shop_id)->max('order');
                         $order = (isset($max_order) && !empty($max_order)) ? ($max_order + 1) : 1;
 
                         $tag = new Tags();
@@ -1422,7 +1422,7 @@ class ItemsController extends Controller
                         }
                         else
                         {
-                            $max_order = Tags::max('order');
+                            $max_order = Tags::where('shop_id',$shop_id)->max('order');
                             $order = (isset($max_order) && !empty($max_order)) ? ($max_order + 1) : 1;
 
                             $tag = new Tags();
@@ -1621,7 +1621,7 @@ class ItemsController extends Controller
                         }
                         else
                         {
-                            $max_order = Tags::max('order');
+                            $max_order = Tags::where('shop_id',$shop_id)->max('order');
                             $order = (isset($max_order) && !empty($max_order)) ? ($max_order + 1) : 1;
 
                             $tag = new Tags();

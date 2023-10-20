@@ -251,7 +251,7 @@ class CategoryandItemsImport implements ToCollection
                                                         }
                                                         else
                                                         {
-                                                            $tag_max_order = Tags::max('order');
+                                                            $tag_max_order = Tags::where('shop_id',$this->shop_id)->max('order');
                                                             $tag_order = (isset($tag_max_order) && !empty($tag_max_order)) ? ($tag_max_order + 1) : 1;
 
                                                             $new_tag = new Tags();
