@@ -185,9 +185,9 @@
                                         @elseif ($other_setting->key == 'distance_alert_message')
                                             {{ __('ALERT: Minimum Order Per Distance') }}
                                         @elseif ($other_setting->key == 'homepage_intro')
-                                            {{ __('TEXT: Footer Text HTML') }}
+                                            {{ __('FOOTER: Alternative Text') }}
                                         @elseif ($other_setting->key == 'seo_message')
-                                            {{ __('TITLE: SEO Message') }}
+                                            {{ __('SEO: Page Title') }}
                                         @elseif ($other_setting->key == 'service_closed_message')
                                             {{ __('NOTICE: Service Is Closed') }}
                                         @endif
