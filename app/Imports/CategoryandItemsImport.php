@@ -119,7 +119,7 @@ class CategoryandItemsImport implements ToCollection
                                         $def_price_key = 0;
                                         foreach($rows as $item)
                                         {
-                                            $max_item_order_key = Items::max('order_key');
+                                            $max_item_order_key = Items::where('shop_id',$this->shop_id)->max('order_key');
                                             $item_order = (isset($max_item_order_key) && !empty($max_item_order_key)) ? ($max_item_order_key + 1) : 1;
 
                                             $item_price_arr = [];
