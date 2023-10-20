@@ -178,6 +178,49 @@
             </li>
         @endif
 
+        {{-- Settings Nav --}}
+        <li class="nav-item">
+            <a class="nav-link {{ (($routeName != 'billing.info') && ($routeName != 'billing.info.edit') && ($routeName != 'design.general-info') && ($routeName != 'client.subscription') && ($routeName != 'design.mail.forms') && ($routeName != 'languages') && ($routeName != 'payment.settings') && ($routeName != 'order.settings')) ? 'collapsed' : '' }} {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'active-tab' : '' }}" data-bs-target="#settings-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'true' : 'false' }}">
+                <i class="fa-solid fa-gear  {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'icon-tab' : '' }}"></i><span>{{ __('Settings') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'icon-tab' : '' }}"></i>
+            </a>
+            <ul id="settings-nav" class="nav-content sidebar-ul collapse  {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('design.general-info') }}" class="{{ ($routeName == 'design.general-info') ? 'active-link' : '' }}">
+                        <span>{{ __('General') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('order.settings') }}" class="{{ (($routeName == 'order.settings') &&  count($routeParams) == 0) ? 'active-link' : '' }}">
+                        <span>{{ __('Order Rules') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('payment.settings') }}" class="{{ (($routeName == 'payment.settings')) ? 'active-link' : '' }}">
+                        <span>{{ __('Payment Methods') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('languages') }}" class="{{ ($routeName == 'languages') ? 'active-link' : '' }}">
+                        <span>{{ __('Languages') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('design.mail.forms') }}" class="{{ ($routeName == 'design.mail.forms') ? 'active-link' : '' }}">
+                        <span>{{ __('Mail Forms') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('client.subscription',$userID) }}" class="{{ ($routeName == 'client.subscription') ? 'active-link' : '' }}">
+                        <span>{{ __('Subscription') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('billing.info') }}" class="{{ ($routeName == 'billing.info' || $routeName == 'billing.info.edit') ? 'active-link' : '' }}">
+                        <span>{{ __('Billing Info') }}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
         {{-- Preview Nav --}}
         <li class="nav-item">
@@ -228,49 +271,6 @@
             </a>
         </li>
 
-        {{-- Settings Nav --}}
-        <li class="nav-item">
-            <a class="nav-link {{ (($routeName != 'billing.info') && ($routeName != 'billing.info.edit') && ($routeName != 'design.general-info') && ($routeName != 'client.subscription') && ($routeName != 'design.mail.forms') && ($routeName != 'languages') && ($routeName != 'payment.settings') && ($routeName != 'order.settings')) ? 'collapsed' : '' }} {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'active-tab' : '' }}" data-bs-target="#settings-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'true' : 'false' }}">
-                <i class="fa-solid fa-gear  {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'icon-tab' : '' }}"></i><span>{{ __('Settings') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'icon-tab' : '' }}"></i>
-            </a>
-            <ul id="settings-nav" class="nav-content sidebar-ul collapse  {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('design.general-info') }}" class="{{ ($routeName == 'design.general-info') ? 'active-link' : '' }}">
-                        <span>{{ __('General') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('order.settings') }}" class="{{ (($routeName == 'order.settings') &&  count($routeParams) == 0) ? 'active-link' : '' }}">
-                        <span>{{ __('Order Rules') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('payment.settings') }}" class="{{ (($routeName == 'payment.settings')) ? 'active-link' : '' }}">
-                        <span>{{ __('Payment Methods') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('languages') }}" class="{{ ($routeName == 'languages') ? 'active-link' : '' }}">
-                        <span>{{ __('Languages') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('design.mail.forms') }}" class="{{ ($routeName == 'design.mail.forms') ? 'active-link' : '' }}">
-                        <span>{{ __('Mail Forms') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('client.subscription',$userID) }}" class="{{ ($routeName == 'client.subscription') ? 'active-link' : '' }}">
-                        <span>{{ __('Subscription') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('billing.info') }}" class="{{ ($routeName == 'billing.info' || $routeName == 'billing.info.edit') ? 'active-link' : '' }}">
-                        <span>{{ __('Billing Info') }}</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
 
         {{-- Logout Nav --}}
         <li class="nav-item">
