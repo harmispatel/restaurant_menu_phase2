@@ -252,6 +252,7 @@ class ShopController extends Controller
 
         $name_key = $current_lang_code."_name";
         $description_key = $current_lang_code."_description";
+        $calories_key = $current_lang_code."_calories";
         $price_label_key = $current_lang_code."_label";
 
         // Shop Details
@@ -372,6 +373,7 @@ class ShopController extends Controller
                             foreach($items as $item)
                             {
                                 $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
+                                $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
                                 $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
                                 $active_cat = checkCategorySchedule($item->category_id,$item->shop_id);
                                 $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
@@ -454,6 +456,10 @@ class ShopController extends Controller
                                             }
 
                                             $html .= '<h3>'.$item_name.'</h3>';
+
+                                            if(!empty($item_calories)){
+                                                $html .= '<p class="m-0 p-0"><strong>Calories : '.$item_calories.'</strong></p>';
+                                            }
 
                                             if($item['is_new'] == 1)
                                             {
@@ -567,6 +573,7 @@ class ShopController extends Controller
         $current_lang_code = (session()->has('locale')) ? session()->get('locale') : 'en';
         $name_key = $current_lang_code."_name";
         $description_key = $current_lang_code."_description";
+        $calories_key = $current_lang_code."_calories";
         $price_label_key = $current_lang_code."_label";
 
         // Shop Details
@@ -627,6 +634,7 @@ class ShopController extends Controller
                             foreach($items as $item)
                             {
                                 $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
+                                $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
                                 $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
                                 $active_cat = checkCategorySchedule($item->category_id,$item->shop_id);
                                 $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
@@ -709,6 +717,10 @@ class ShopController extends Controller
                                             }
 
                                             $html .= '<h3>'.$item_name.'</h3>';
+
+                                            if(!empty($item_calories)){
+                                                $html .= '<p><strong>Calories : </strong>'.$item_calories.'</p>';
+                                            }
 
                                             if($item['is_new'] == 1)
                                             {
@@ -819,6 +831,7 @@ class ShopController extends Controller
                             foreach($items as $item)
                             {
                                 $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
+                                $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
                                 $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
                                 $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
 
@@ -899,6 +912,10 @@ class ShopController extends Controller
                                         }
 
                                         $html .= '<h3>'.$item_name.'</h3>';
+
+                                        if(!empty($item_calories)){
+                                            $html .= '<p><strong>Calories : </strong>'.$item_calories.'</p>';
+                                        }
 
                                         if($item['is_new'] == 1)
                                         {
@@ -1068,14 +1085,13 @@ class ShopController extends Controller
         // Default Today Special Image
         $default_special_image = (isset($admin_settings['default_special_item_image'])) ? $admin_settings['default_special_item_image'] : '';
 
-        // Name Key
+        // Column Keys
         $name_key = $current_lang_code."_name";
-        // Title Key
         $title_key = $current_lang_code."_title";
-        // Description Key
         $description_key = $current_lang_code."_description";
-        // Price Label Key
+        $calories_key = $current_lang_code."_calories";
         $price_label_key = $current_lang_code."_label";
+
         // Item ID
         $item_id = $request->item_id;
 
@@ -1130,6 +1146,7 @@ class ShopController extends Controller
             {
                 $item_image = (isset($item['image']) && !empty($item['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item['image']) : '';
                 $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : $item['name'];
+                $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : $item['calories'];
                 $item_desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : $item['description'];
                 $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
                 $price_arr = getItemPrice($item['id']);
@@ -1223,6 +1240,12 @@ class ShopController extends Controller
                     {
                         $html .= '<div class="col-md-12 text-center mt-2 mb-2">';
                             $html .= $item_desc;
+                        $html .= '</div>';
+                    }
+
+                    if(!empty($item_calories)){
+                        $html .= '<div class="col-md-12 text-center mt-1 mb-1">';
+                            $html .= '<strong>Calories : </strong>'.$item_calories;
                         $html .= '</div>';
                     }
 
@@ -2084,6 +2107,10 @@ class ShopController extends Controller
         $shop_logo = '<img src="'.$shop_logo.'" width="200">';
         $shop_settings = getClientSettings($shop_id);
 
+        // Get Shop Max ID
+        $order_max = Order::where('shop_id',$shop_id)->max('order_id');
+        $order_max = (isset($order_max) && !empty($order_max)) ? $order_max + 1 : 1;
+
         // Shop Currency
         $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 
@@ -2194,6 +2221,7 @@ class ShopController extends Controller
             {
                 // New Order
                 $order = new Order();
+                $order->order_id = $order_max;
                 $order->shop_id = $shop_id;
                 $order->ip_address = $user_ip;
                 $order->firstname = $request->firstname;
@@ -2211,6 +2239,7 @@ class ShopController extends Controller
             {
                 // New Order
                 $order = new Order();
+                $order->order_id = $order_max;
                 $order->shop_id = $shop_id;
                 $order->ip_address = $user_ip;
                 $order->checkout_type = $checkout_type;
@@ -2225,6 +2254,7 @@ class ShopController extends Controller
             {
                 // New Order
                 $order = new Order();
+                $order->order_id = $order_max;
                 $order->shop_id = $shop_id;
                 $order->ip_address = $user_ip;
                 $order->firstname = $request->firstname;
@@ -2250,6 +2280,7 @@ class ShopController extends Controller
 
                 // New Order
                 $order = new Order();
+                $order->order_id = $order_max;
                 $order->shop_id = $shop_id;
                 $order->ip_address = $user_ip;
                 $order->firstname = $request->firstname;
@@ -2416,7 +2447,7 @@ class ShopController extends Controller
                             $message = str_replace('{shop_name}',$shop_name,$message);
                             $message = str_replace('{firstname}',$fname,$message);
                             $message = str_replace('{lastname}',$lname,$message);
-                            $message = str_replace('{order_id}',$order->id,$message);
+                            $message = str_replace('{order_id}',$order->order_id,$message);
                             $message = str_replace('{order_type}',$checkout_type,$message);
                             $message = str_replace('{payment_method}',$payment_method,$message);
 

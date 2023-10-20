@@ -162,7 +162,7 @@ class OrderController extends Controller
 
                     $html .= '<div class="order-info">';
                         $html .= '<ul>';
-                            $html .= '<li><strong>#'.$order->id.'</strong></li>';
+                            $html .= '<li><strong>#'.$order->order_id.'</strong></li>';
                             $html .= '<li><strong>'.__('Order Date').' : </strong>'.date('d-m-Y h:i:s',strtotime($order->created_at)).'</li>';
                             $html .= '<li><strong>'.__('Order Type').' : </strong>'.$order->checkout_type.'</li>';
                             $html .= '<li><strong>'.__('Payment Method').' : </strong>'.$order->payment_method.'</li>';
@@ -1128,6 +1128,7 @@ class OrderController extends Controller
             // Shop Currency
             $currency = (isset($data['shop_settings']['default_currency']) && !empty($data['shop_settings']['default_currency'])) ? $data['shop_settings']['default_currency'] : 'EUR';
 
+            $data['order_inv'] = (isset($order->order_id)) ? $order->order_id : '';
             $data['order_date'] = (isset($order->created_at)) ? date('d-m-Y h:i:s',strtotime($order->created_at)): '';
             $data['payment_method'] = (isset($order->payment_method)) ? str_replace('_',' ',$order->payment_method) : '';
             $data['checkout_type'] = (isset($order->checkout_type)) ? $order->checkout_type : '';
@@ -1227,7 +1228,7 @@ class OrderController extends Controller
                                     $html .= '<div class="col-md-12">';
                                         $html .= '<ul class="p-2 m-0 list-unstyled" style="border-bottom:2px solid #000 !important; border-top: 2px dotted #ccc;">';
 
-                                            $html .= '<li><b>'.__('Order').' '.__('Id').' : </b>'.$data['order_id'].'</li>';
+                                            $html .= '<li><b>'.__('Order').' '.__('Id').' : </b>'.$order->order_id.'</li>';
                                             $html .= '<li><b>'.__('Order Type').' : </b> '.ucfirst(str_replace('_',' ',$data['checkout_type'])).'</li>';
                                             $html .= '<li><b>'.__('Payment Method').' : </b> '.ucfirst($data['payment_method']).'</li>';
                                             $html .= '<li><b>'.__('Order Date').' : </b> '.date('d-m-Y h:i:s',strtotime($data['order_date'])).'</li>';

@@ -36,10 +36,19 @@
     // Get Subscription ID
     $subscription_id = getClientSubscriptionID($shop_details['id']);
 
+    // Home Page Intro
+    $homepage_intro = moreTranslations($shop_details['id'],'homepage_intro');
+    $homepage_intro = (isset($homepage_intro[$current_lang_code."_value"]) && !empty($homepage_intro[$current_lang_code."_value"])) ? $homepage_intro[$current_lang_code."_value"] : '';
+
+    // Home Page Intro
+    $seo_message = moreTranslations($shop_details['id'],'seo_message');
+    $seo_message = (isset($seo_message[$current_lang_code."_value"]) && !empty($seo_message[$current_lang_code."_value"])) ? $seo_message[$current_lang_code."_value"] : '';
+
     // Get Package Permissions
     $package_permissions = getPackagePermission($subscription_id);
-    $shop_desc= html_entity_decode($shop_desc);
-    $shop_title = "$shop_name | $shop_desc";
+
+    // $shop_desc= html_entity_decode($shop_desc);
+    $shop_title = "$shop_name | $seo_message";
 
 @endphp
 
@@ -249,8 +258,8 @@
                     </ul>
                 </div>
 
-                @if(isset($shop_settings['homepage_intro']) && !empty($shop_settings['homepage_intro']))
-                    <p>{!! $shop_settings['homepage_intro'] !!}</p>
+                @if(isset($homepage_intro) && !empty($homepage_intro))
+                    <p>{!! $homepage_intro !!}</p>
                 @else
                     @php
                         $current_year = \Carbon\Carbon::now()->format('Y');

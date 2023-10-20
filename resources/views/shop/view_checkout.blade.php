@@ -28,6 +28,10 @@
     $delivery_message = moreTranslations($shop_details['id'],'delivery_message');
     $delivery_message = (isset($delivery_message[$current_lang_code."_value"]) && !empty($delivery_message[$current_lang_code."_value"])) ? $delivery_message[$current_lang_code."_value"] : 'Sorry your address is out of our delivery range.';
 
+    // Home Page Intro
+    $homepage_intro = moreTranslations($shop_details['id'],'homepage_intro');
+    $homepage_intro = (isset($homepage_intro[$current_lang_code."_value"]) && !empty($homepage_intro[$current_lang_code."_value"])) ? $homepage_intro[$current_lang_code."_value"] : '';
+
     // Name Key
     $name_key = $current_lang_code."_name";
 
@@ -497,8 +501,8 @@
                     </ul>
                 </div>
 
-                @if (isset($shop_settings['homepage_intro']) && !empty($shop_settings['homepage_intro']))
-                    <p>{!! $shop_settings['homepage_intro'] !!}</p>
+                @if (isset($homepage_intro) && !empty($homepage_intro))
+                    <p>{!! $homepage_intro !!}</p>
                 @else
                     @php
                         $current_year = \Carbon\Carbon::now()->format('Y');

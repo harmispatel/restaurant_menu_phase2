@@ -119,15 +119,6 @@
                     </div>
                 </div>
                 <div class="row mb-4">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="form-label" for="homepage_intro">{{ __('Footer Text HTML')}}</label>
-                            {{-- please text editor use --}}
-                            <textarea class="form-control" placeholder="Write Your Shop Intro Here." id="homepage_intro" name="homepage_intro">{{ (isset($client_settings['homepage_intro']) && !empty($client_settings['homepage_intro'])) ? $client_settings['homepage_intro'] : '' }}</textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-4">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="map_url">{{ __('Map')}}</label>
@@ -176,95 +167,6 @@
         @if (Session::has('success'))
             toastr.success('{{ Session::get('success') }}')
         @endif
-
-        // Text Editor for Footer Text
-        CKEDITOR.ClassicEditor.create(document.getElementById("homepage_intro"),
-        {
-            toolbar: {
-                items: [
-                    'heading', '|',
-                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                    'bulletedList', 'numberedList', 'todoList', '|',
-                    'outdent', 'indent', '|',
-                    'undo', 'redo',
-                    '-',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-                    'alignment', '|',
-                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                    'sourceEditing'
-                ],
-                shouldNotGroupWhenFull: true
-            },
-            list: {
-                properties: {
-                    styles: true,
-                    startIndex: true,
-                    reversed: true
-                }
-            },
-            'height':500,
-            fontSize: {
-                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
-                supportAllValues: true
-            },
-            htmlSupport: {
-                allow: [
-                    {
-                        name: /.*/,
-                        attributes: true,
-                        classes: true,
-                        styles: true
-                    }
-                ]
-            },
-            htmlEmbed: {
-                showPreviews: true
-            },
-            link: {
-                decorators: {
-                    addTargetToExternalLinks: true,
-                    defaultProtocol: 'https://',
-                    toggleDownloadable: {
-                        mode: 'manual',
-                        label: 'Downloadable',
-                        attributes: {
-                            download: 'file'
-                        }
-                    }
-                }
-            },
-            mention: {
-                feeds: [
-                    {
-                        marker: '@',
-                        feed: [
-                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
-                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
-                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
-                            '@sugar', '@sweet', '@topping', '@wafer'
-                        ],
-                        minimumCharacters: 1
-                    }
-                ]
-            },
-            removePlugins: [
-                'CKBox',
-                'CKFinder',
-                'EasyImage',
-                'RealTimeCollaborativeComments',
-                'RealTimeCollaborativeTrackChanges',
-                'RealTimeCollaborativeRevisionHistory',
-                'PresenceList',
-                'Comments',
-                'TrackChanges',
-                'TrackChangesData',
-                'RevisionHistory',
-                'Pagination',
-                'WProofreader',
-                'MathType'
-            ]
-        });
 
     </script>
 

@@ -381,7 +381,6 @@ class DesignController extends Controller
         $all_data['facebook_link'] = $request->facebook_link;
         $all_data['foursquare_link'] = $request->foursquare_link;
         $all_data['tripadvisor_link'] = $request->tripadvisor_link;
-        $all_data['homepage_intro'] = $request->homepage_intro;
         $all_data['map_url'] = $request->map_url;
         $all_data['website_url'] = $request->website_url;
         $all_data['pinterest_link'] = $request->pinterest_link;

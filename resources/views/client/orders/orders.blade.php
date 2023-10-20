@@ -110,7 +110,7 @@
                                 </div>
                                 <div class="order-info">
                                     <ul>
-                                        <li><strong>#{{ $order->id }}</strong></li>
+                                        <li><strong>#{{ $order->order_id }}</strong></li>
                                         <li><strong>{{ __('Order Date') }} : </strong>{{ date('d-m-Y h:i:s',strtotime($order->created_at)) }}</li>
                                         <li><strong>{{ __('Order Type') }} : </strong>{{ $order->checkout_type }}</li>
                                         <li><strong>{{ __('Payment Method') }} : </strong>{{ $order->payment_method }}</li>
@@ -407,7 +407,7 @@
                                     escposCommands = escposCommands
                                     .feed(1)
                                     .font(escpos.FontFamily.A)
-                                    .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_id, 737)
+                                    .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv, 737)
                                     .text(@json(__('Order Type'))+" : "+print_data.checkout_type, 737)
                                     .text(@json(__('Payment Method'))+" : "+print_data.payment_method, 737)
                                     .text(@json(__('Order Date'))+" : "+print_data.order_date, 737);

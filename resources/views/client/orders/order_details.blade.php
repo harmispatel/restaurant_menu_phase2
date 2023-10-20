@@ -66,7 +66,7 @@
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-6 mb-2">
-                                <h3>{{ __('Order') }} : #{{ $order->id }}</h3>
+                                <h3>{{ __('Order') }} : #{{ $order->order_id }}</h3>
                             </div>
                             <div class="col-md-6 mb-2 text-end">
                                 @if($enable_print == 1)
@@ -480,7 +480,7 @@
                                     escposCommands = escposCommands
                                     .feed(1)
                                     .font(escpos.FontFamily.A)
-                                    .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_id, 737)
+                                    .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv, 737)
                                     .text(@json(__('Order Type'))+" : "+print_data.checkout_type, 737)
                                     .text(@json(__('Payment Method'))+" : "+print_data.payment_method, 737)
                                     .text(@json(__('Order Date'))+" : "+print_data.order_date, 737);

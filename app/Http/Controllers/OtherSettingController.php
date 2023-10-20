@@ -108,6 +108,21 @@ class OtherSettingController extends Controller
                                         $html .= '<label for="distance_alert_message" class="form-label">'.  __('ALERT: Minimum Order Per Distance') .'</label>';
                                         $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
                                     }
+                                    elseif($setting_details['key'] == 'homepage_intro')
+                                    {
+                                        $html .= '<label for="homepage_intro" class="form-label">'. __('TEXT: Footer Text HTML') .'</label>';
+                                        $html .= '<textarea name="homepage_intro" id="homepage_intro" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                    }
+                                    elseif($setting_details['key'] == 'seo_message')
+                                    {
+                                        $html .= '<label for="seo_message" class="form-label">'. __('TITLE: SEO Message') .'</label>';
+                                        $html .= '<textarea name="seo_message" id="seo_message" class="form-control">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                    }
+                                    elseif($setting_details['key'] == 'service_closed_message')
+                                    {
+                                        $html .= '<label for="service_closed_message" class="form-label">'. __('NOTICE: Service Is Closed') .'</label>';
+                                        $html .= '<textarea name="service_closed_message" id="service_closed_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                    }
 
                                 $html .= '</div>';
                             $html .= '</div>';
@@ -176,6 +191,21 @@ class OtherSettingController extends Controller
                                     {
                                         $html .= '<label for="distance_alert_message" class="form-label">'.  __('ALERT: Minimum Order Per Distance') .'</label>';
                                         $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                    }
+                                    elseif($setting_details['key'] == 'homepage_intro')
+                                    {
+                                        $html .= '<label for="homepage_intro" class="form-label">'. __('TEXT: Footer Text HTML') .'</label>';
+                                        $html .= '<textarea name="homepage_intro" id="homepage_intro" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                    }
+                                    elseif($setting_details['key'] == 'seo_message')
+                                    {
+                                        $html .= '<label for="seo_message" class="form-label">'. __('TITLE: SEO Message') .'</label>';
+                                        $html .= '<textarea name="seo_message" id="seo_message" class="form-control">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                    }
+                                    elseif($setting_details['key'] == 'service_closed_message')
+                                    {
+                                        $html .= '<label for="service_closed_message" class="form-label">'. __('NOTICE: Service Is Closed') .'</label>';
+                                        $html .= '<textarea name="service_closed_message" id="service_closed_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                     }
 
                                 $html .= '</div>';
@@ -265,6 +295,21 @@ class OtherSettingController extends Controller
                 $other_setting->$value_key = $request->distance_alert_message;
                 $other_setting->update();
             }
+            elseif($setting_key == 'homepage_intro')
+            {
+                $other_setting->$value_key = $request->homepage_intro;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'seo_message')
+            {
+                $other_setting->$value_key = $request->seo_message;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'service_closed_message')
+            {
+                $other_setting->$value_key = $request->service_closed_message;
+                $other_setting->update();
+            }
 
             $html_data = $this->getEditOtherSettingData($next_lang_code,$setting_id);
 
@@ -346,6 +391,21 @@ class OtherSettingController extends Controller
             elseif($setting_key == 'distance_alert_message')
             {
                 $other_setting->$value_key = $request->distance_alert_message;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'homepage_intro')
+            {
+                $other_setting->$value_key = $request->homepage_intro;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'seo_message')
+            {
+                $other_setting->$value_key = $request->seo_message;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'service_closed_message')
+            {
+                $other_setting->$value_key = $request->service_closed_message;
                 $other_setting->update();
             }
 
@@ -465,6 +525,21 @@ class OtherSettingController extends Controller
                                     $html .= '<label for="distance_alert_message" class="form-label">'.  __('ALERT: Minimum Order Per Distance') .'</label>';
                                     $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$current_lang_code."_value"].'" class="form-control">';
                                 }
+                                elseif($setting_details['key'] == 'homepage_intro')
+                                {
+                                    $html .= '<label for="homepage_intro" class="form-label">'. __('TEXT: Footer Text HTML') .'</label>';
+                                    $html .= '<textarea name="homepage_intro" id="homepage_intro" class="form-control" rows="5">'.$setting_details[$current_lang_code."_value"].'</textarea>';
+                                }
+                                elseif($setting_details['key'] == 'seo_message')
+                                {
+                                    $html .= '<label for="seo_message" class="form-label">'. __('TITLE: SEO Message') .'</label>';
+                                    $html .= '<textarea name="seo_message" id="seo_message" class="form-control">'.$setting_details[$current_lang_code."_value"].'</textarea>';
+                                }
+                                elseif($setting_details['key'] == 'service_closed_message')
+                                {
+                                    $html .= '<label for="service_closed_message" class="form-label">'. __('NOTICE: Service Is Closed') .'</label>';
+                                    $html .= '<textarea name="service_closed_message" id="service_closed_message" class="form-control" rows="5">'.$setting_details[$current_lang_code."_value"].'</textarea>';
+                                }
 
                             $html .= '</div>';
                         $html .= '</div>';
@@ -533,6 +608,21 @@ class OtherSettingController extends Controller
                                 {
                                     $html .= '<label for="distance_alert_message" class="form-label">'.  __('ALERT: Minimum Order Per Distance') .'</label>';
                                     $html .= '<input type="text" name="distance_alert_message" id="distance_alert_message" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                }
+                                elseif($setting_details['key'] == 'homepage_intro')
+                                {
+                                    $html .= '<label for="homepage_intro" class="form-label">'. __('TEXT: Footer Text HTML') .'</label>';
+                                    $html .= '<textarea name="homepage_intro" id="homepage_intro" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                }
+                                elseif($setting_details['key'] == 'seo_message')
+                                {
+                                    $html .= '<label for="seo_message" class="form-label">'. __('TITLE: SEO Message') .'</label>';
+                                    $html .= '<textarea name="seo_message" id="seo_message" class="form-control">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                }
+                                elseif($setting_details['key'] == 'service_closed_message')
+                                {
+                                    $html .= '<label for="service_closed_message" class="form-label">'. __('NOTICE: Service Is Closed') .'</label>';
+                                    $html .= '<textarea name="service_closed_message" id="service_closed_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                 }
 
                             $html .= '</div>';

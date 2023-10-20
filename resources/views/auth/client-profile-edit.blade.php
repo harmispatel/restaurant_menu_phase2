@@ -166,7 +166,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    {{-- <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="shop_logo" class="form-label">{{ __('Shop Logo')}}</label>
                                             <input type="file" name="shop_logo" id="shop_logo" class="form-control {{ ($errors->has('shop_logo')) ? 'is-invalid' : '' }}">
@@ -192,13 +192,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <div class="form-group">
-                                            <label for="shop_description" class="form-label">{{ __('Shop Description')}}</label>
-                                            <textarea name="shop_description" id="shop_description" rows="5" class="form-control text-editor">{{ isset($user->hasOneShop->shop['description']) ? $user->hasOneShop->shop['description'] : '' }}</textarea>
-                                        </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -216,99 +210,6 @@
 {{-- Custom JS --}}
 @section('page-js')
     <script type="text/javascript">
-
-$(document).ready(function ()
-{
-    // Text Editor
-    CKEDITOR.ClassicEditor.create(document.getElementById("shop_description"),
-    {
-        toolbar: {
-            items: [
-                'heading', '|',
-                'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                'bulletedList', 'numberedList', 'todoList', '|',
-                'outdent', 'indent', '|',
-                'undo', 'redo',
-                '-',
-                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-                'alignment', '|',
-                'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-                'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                'sourceEditing'
-            ],
-            shouldNotGroupWhenFull: true
-        },
-        list: {
-            properties: {
-                styles: true,
-                startIndex: true,
-                reversed: true
-            }
-        },
-        'height':500,
-        fontSize: {
-            options: [ 10, 12, 14, 'default', 18, 20, 22 ],
-            supportAllValues: true
-        },
-        htmlSupport: {
-            allow: [
-                {
-                    name: /.*/,
-                    attributes: true,
-                    classes: true,
-                    styles: true
-                }
-            ]
-        },
-        htmlEmbed: {
-            showPreviews: true
-        },
-        link: {
-            decorators: {
-                addTargetToExternalLinks: true,
-                defaultProtocol: 'https://',
-                toggleDownloadable: {
-                    mode: 'manual',
-                    label: 'Downloadable',
-                    attributes: {
-                        download: 'file'
-                    }
-                }
-            }
-        },
-        mention: {
-            feeds: [
-                {
-                    marker: '@',
-                    feed: [
-                        '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
-                        '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
-                        '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
-                        '@sugar', '@sweet', '@topping', '@wafer'
-                    ],
-                    minimumCharacters: 1
-                }
-            ]
-        },
-        removePlugins: [
-            'CKBox',
-            'CKFinder',
-            'EasyImage',
-            'RealTimeCollaborativeComments',
-            'RealTimeCollaborativeTrackChanges',
-            'RealTimeCollaborativeRevisionHistory',
-            'PresenceList',
-            'Comments',
-            'TrackChanges',
-            'TrackChangesData',
-            'RevisionHistory',
-            'Pagination',
-            'WProofreader',
-            'MathType'
-        ]
-    });
-});
-
 
     </script>
 @endsection

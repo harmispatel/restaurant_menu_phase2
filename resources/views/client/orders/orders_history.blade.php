@@ -99,7 +99,7 @@
                                 <tbody>
                                     @foreach ($orders as $order)
                                         <tr>
-                                            <td>{{ $order->id }}</td>
+                                            <td>{{ $order->order_id }}</td>
                                             <td>
                                                 @if($order->order_status == 'completed')
                                                     <span class="badge bg-success">Completed</span>

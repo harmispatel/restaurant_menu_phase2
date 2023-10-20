@@ -68,7 +68,6 @@
             'facebook_link',
             'foursquare_link',
             'tripadvisor_link',
-            'homepage_intro',
             'map_url',
             'website_url',
             'shop_active_theme',

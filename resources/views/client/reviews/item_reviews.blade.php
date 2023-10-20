@@ -44,7 +44,7 @@
                                 <tbody>
                                     @forelse ($item_reviews as $review)
                                         <tr>
-                                            <td>{{ $review->id }}</td>
+                                            <td>{{ $loop->iteration }}</td>
                                             {{-- <td>{{ (isset($review->item->category['en_name'])) ? $review->item->category['en_name'] : '' }}</td> --}}
                                             <td>{{ (isset($review->item['en_name'])) ? $review->item['en_name'] : '' }}</td>
                                             <td>

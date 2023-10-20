@@ -401,7 +401,7 @@
                                     <option value="">Filter By Category</option>
                                     @if(count($categories) > 0)
                                         @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}" {{ ($cat_id == $category->id) ? 'selected' : '' }}>{{ $category->en_name }}</option>
+                                            <option value="{{ $category->id }}" {{ ($cat_id == $category->id) ? 'selected' : '' }}>{{ (isset($category->$name_key)) ? $category->$name_key : '' }}</option>
                                         @endforeach
                                     @endif
                                 </select>

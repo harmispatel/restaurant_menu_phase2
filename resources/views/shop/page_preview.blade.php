@@ -39,6 +39,10 @@
     // Theme Settings
     $theme_settings = themeSettings($shop_theme_id);
 
+    // Home Page Intro
+    $homepage_intro = moreTranslations($shop_details['id'],'homepage_intro');
+    $homepage_intro = (isset($homepage_intro[$current_lang_code."_value"]) && !empty($homepage_intro[$current_lang_code."_value"])) ? $homepage_intro[$current_lang_code."_value"] : '';
+
     // Item Devider
     $item_devider = (isset($theme_settings['item_divider']) && !empty($theme_settings['item_divider'])) ? $theme_settings['item_divider'] : 0;
 
@@ -390,8 +394,8 @@
                     </ul>
                 </div>
 
-                @if(isset($shop_settings['homepage_intro']) && !empty($shop_settings['homepage_intro']))
-                    <p>{!! $shop_settings['homepage_intro'] !!}</p>
+                @if(isset($homepage_intro) && !empty($homepage_intro))
+                    <p>{!! $homepage_intro !!}</p>
                 @else
                     @php
                         $current_year = \Carbon\Carbon::now()->format('Y');

@@ -342,25 +342,33 @@ class ItemsController extends Controller
         $keyword = $request->keywords;
         $cat_id = $request->id;
 
-        if(session()->has('lang_code'))
-        {
-            $curr_lang_code = session()->get('lang_code');
-        }
-        else
-        {
-            $curr_lang_code = 'en';
-        }
+        // Get Language Settings
+        $language_settings = clientLanguageSettings($shop_id);
+        $primary_lang_id = isset($language_settings['primary_language']) ? $language_settings['primary_language'] : '';
+
+        // Primary Language Details
+        $primary_language_detail = Languages::where('id',$primary_lang_id)->first();
+        $curr_lang_code = isset($primary_language_detail->code) ? $primary_language_detail->code : 'en';
+
+        // if(session()->has('lang_code'))
+        // {
+        //     $curr_lang_code = session()->get('lang_code');
+        // }
+        // else
+        // {
+        //     $curr_lang_code = 'en';
+        // }
 
         try
         {
             $name_key = $curr_lang_code."_name";
             if(!empty($cat_id))
             {
-                $items = Items::where($name_key,'LIKE','%'.$keyword.'%')->where('category_id',$cat_id)->where('shop_id',$shop_id)->get();
+                $items = Items::where($name_key,'LIKE','%'.$keyword.'%')->where('category_id',$cat_id)->where('shop_id',$shop_id)->orderBy('order_key','ASC')->get();
             }
             else
             {
-                $items = Items::where($name_key,'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->get();
+                $items = Items::where($name_key,'LIKE','%'.$keyword.'%')->where('shop_id',$shop_id)->orderBy('order_key','ASC')->get();
             }
             $html = '';
 
@@ -385,16 +393,19 @@ class ItemsController extends Controller
                             $html .= '<div class="item_img">';
                                 $html .= '<a><img src="'.$image.'" class="w-100"></a>';
                                 $html .= '<div class="edit_item_bt">';
-                                    $html .= '<button class="btn edit_category" onclick="editCategory('.$item->id.')">EDIT ITEM.</button>';
+                                    $html .= '<button class="btn edit_category" onclick="editItem('.$item->id.')">EDIT ITEM.</button>';
                                 $html .= '</div>';
                                 $html .= '<a class="delet_bt" onclick="deleteItem('.$item->id.')" style="cursor: pointer;"><i class="fa-solid fa-trash"></i></a>';
                                 $html .= '<a class="cat_edit_bt" onclick="editItem('.$item->id.')">
                                 <i class="fa-solid fa-edit"></i>
                             </a>';
                             $html .= '</div>';
+
+                            $item_name = (isset($item->$name_key)) ? $item->$name_key : '';
+
                             $html .= '<div class="item_info">';
                                 $html .= '<div class="item_name">';
-                                    $html .= '<h3>'.$item->en_name.'</h3>';
+                                    $html .= '<h3>'.$item_name.'</h3>';
                                     $html .= '<div class="form-check form-switch"><input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeStatus('.$item->id.','.$newStatus.')" value="1" '.$checked.'></div>';
                                 $html .= '</div>';
                                 $html .= '<h2>Product</h2>';

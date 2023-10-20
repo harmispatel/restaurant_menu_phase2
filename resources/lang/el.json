@@ -92,7 +92,7 @@
     "Logout":"Αποσύνδεση",
     "Manage Account":"Διαχείριση Λογαριασμού",
 
-    "Billing Info":"Πληροφορίες Χρέωσης",
+    "Billing Info":"Στοιχεία Χρέωσης",
     "Design":"Σχέδιο",
     "General Info":"Γενικές Πληροφορίες",
     "Cover":"Εξώφυλλο",
@@ -264,7 +264,7 @@
     "Client Shop" : "Επιχείρηση Συνδρομητή",
     "Export CSV" : "Εξαγωγή CSV",
     "Delete Category & Items" : "Διαγραφή Κατηγοριών & Προϊόντων",
-	"Payment Methods" : "Μέθοδοι Πληρωμής",
+	"Payment Methods" : "Τρόπου Πληρωμής",
     "Select Your Payment Method" : "Επιλέξτε τρόπο πληρωμής",
     "For bank transfer subscriptions contact" : "Για πληρωμές μέσω τραπέζης επικοινωνήστε",
     "Banner Dimensions (1140X300)" : "Διαστάσεις Φωτογραφίας (1140X300)",
@@ -445,5 +445,11 @@
     "ALERT: Minimum Order Per Distance":"ΠΡΟΣΟΧΗ: Ελάχιστης Παραγγελίας Ανά Απόσταση",
 
     "IMAGE: For \"Today's Special\"" : "ΕΙΚΟΝΑ: Για το \"Πιάτο Ημέρας\"",
-    "ALERT: Address Outside Delivery Zone" : "ΠΡΟΣΟΧΗ: Διεύθυνση Εκτός Ζώνης Παράδοσης"
+    "ALERT: Address Outside Delivery Zone" : "ΠΡΟΣΟΧΗ: Διεύθυνση Εκτός Ζώνης Παράδοσης",
+
+    "General" : "Γενικά",
+
+    "TEXT: Footer Text HTML" : "ΚΕΙΜΕΝΟ: Κείμενο υποσέλιδου HTML",
+    "TITLE: SEO Message" : "ΤΙΤΛΟΣ: Μήνυμα SEO",
+    "NOTICE: Service Is Closed" : "ΕΙΔΟΠΟΙΗΣΗ: Η Υπηρεσία Έκλεισε"
 }

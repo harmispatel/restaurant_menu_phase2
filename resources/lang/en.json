@@ -481,5 +481,11 @@
     "ALERT: Minimum Order Per Distance":"ALERT: Minimum Order Per Distance",
 
     "IMAGE: For \"Today's Special\"" : "IMAGE: For \"Today's Special\"",
-    "ALERT: Address Outside Delivery Zone" : "ALERT: Address Outside Delivery Zone"
+    "ALERT: Address Outside Delivery Zone" : "ALERT: Address Outside Delivery Zone",
+
+    "General" : "General",
+
+    "TEXT: Footer Text HTML" : "TEXT: Footer Text HTML",
+    "TITLE: SEO Message" : "TITLE: SEO Message",
+    "NOTICE: Service Is Closed" : "NOTICE: Service Is Closed"
 }

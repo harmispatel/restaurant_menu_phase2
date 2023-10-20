@@ -2454,14 +2454,22 @@ class CategoryController extends Controller
         $keyword = $request->keywords;
         $parent_category_id = $request->par_cat_id;
 
-        if(session()->has('lang_code'))
-        {
-            $curr_lang_code = session()->get('lang_code');
-        }
-        else
-        {
-            $curr_lang_code = 'en';
-        }
+        // Get Language Settings
+        $language_settings = clientLanguageSettings($shop_id);
+        $primary_lang_id = isset($language_settings['primary_language']) ? $language_settings['primary_language'] : '';
+
+        // Primary Language Details
+        $primary_language_detail = Languages::where('id',$primary_lang_id)->first();
+        $curr_lang_code = isset($primary_language_detail->code) ? $primary_language_detail->code : 'en';
+
+        // if(session()->has('lang_code'))
+        // {
+        //     $curr_lang_code = session()->get('lang_code');
+        // }
+        // else
+        // {
+        //     $curr_lang_code = 'en';
+        // }
 
         try
         {
@@ -2573,9 +2581,12 @@ class CategoryController extends Controller
                                 }
 
                             $html .= '</div>';
+
+                            $cat_name = (isset($category->$name_key)) ? $category->$name_key : '';
+
                             $html .= '<div class="item_info">';
                                 $html .= '<div class="item_name">';
-                                    $html .= '<h3>'.$category->en_name.'</h3>';
+                                    $html .= '<h3>'.$cat_name.'</h3>';
                                     $html .= '<div class="form-check form-switch"><input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeStatus('.$category->id.','.$newStatus.')" value="1" '.$checked.'></div>';
                                 $html .= '</div>';
                                 $html .= '<h2>'.$category_type.'</h2>';

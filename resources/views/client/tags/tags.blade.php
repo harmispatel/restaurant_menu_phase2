@@ -118,7 +118,7 @@
                                         $tag_name = (isset($tag->$name_key) && !empty($tag->$name_key)) ? $tag->$name_key : "";
                                     @endphp
                                     <tr>
-                                        <td>{{ $tag->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $tag_name }}</td>
                                         <td>
                                             <a class="btn btn-sm btn-primary" onclick="editTag({{ $tag->id }})">

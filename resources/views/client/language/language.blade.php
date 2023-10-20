@@ -184,6 +184,12 @@
                                             {{ __('NOTICE: Minimum Order Per Distance') }}
                                         @elseif ($other_setting->key == 'distance_alert_message')
                                             {{ __('ALERT: Minimum Order Per Distance') }}
+                                        @elseif ($other_setting->key == 'homepage_intro')
+                                            {{ __('TEXT: Footer Text HTML') }}
+                                        @elseif ($other_setting->key == 'seo_message')
+                                            {{ __('TITLE: SEO Message') }}
+                                        @elseif ($other_setting->key == 'service_closed_message')
+                                            {{ __('NOTICE: Service Is Closed') }}
                                         @endif
                                     </td>
                                     <td>
@@ -644,12 +650,12 @@
                         $('#editOtherSettingsModal #other_setting_lang_div').html('');
                         $('#editOtherSettingsModal #other_setting_lang_div').append(response.data);
 
-                        if(settingKey == 'delivery_message')
+                        if(settingKey == 'delivery_message' || settingKey == 'homepage_intro' || settingKey == 'service_closed_message')
                         {
                             // Description Text Editor
                             $('.ck-editor').remove();
                             deliveryMessageEditor = "";
-                            var message_textarea = $('#delivery_message')[0];
+                            var message_textarea = $('#'+settingKey)[0];
                             CKEDITOR.ClassicEditor.create(message_textarea,
                             {
                                 toolbar: {
@@ -758,9 +764,12 @@
             var formID = "otherSettingsForm";
             var setting_key = $('#otherSettingsForm #setting_key').val();
             var myFormData = new FormData(document.getElementById(formID));
-            if(setting_key == 'delivery_message')
-            {
+            if(setting_key == 'delivery_message'){
                 myFormData.set('delivery_message',deliveryMessageEditor.getData());
+            }else if(setting_key == 'homepage_intro'){
+                myFormData.set('homepage_intro',deliveryMessageEditor.getData());
+            }else if(setting_key == 'service_closed_message'){
+                myFormData.set('service_closed_message',deliveryMessageEditor.getData());
             }
             myFormData.append('next_lang_code',next_lang_code);
 
@@ -782,12 +791,12 @@
                         $('#editOtherSettingsModal #other_setting_lang_div').html('');
                         $('#editOtherSettingsModal #other_setting_lang_div').append(response.data);
 
-                        if(setting_key == 'delivery_message')
+                        if(setting_key == 'delivery_message' || setting_key == 'homepage_intro' || setting_key == 'service_closed_message')
                         {
                             // Description Text Editor
                             $('.ck-editor').remove();
                             deliveryMessageEditor = "";
-                            var message_textarea = $('#delivery_message')[0];
+                            var message_textarea = $('#'+setting_key)[0];
                             CKEDITOR.ClassicEditor.create(message_textarea,
                             {
                                 toolbar: {
@@ -908,6 +917,10 @@
             if(setting_key == 'delivery_message')
             {
                 myFormData.set('delivery_message',deliveryMessageEditor.getData());
+            }else if(setting_key == 'homepage_intro'){
+                myFormData.set('homepage_intro',deliveryMessageEditor.getData());
+            }else if(setting_key == 'service_closed_message'){
+                myFormData.set('service_closed_message',deliveryMessageEditor.getData());
             }
 
             // Clear all Toastr Messages

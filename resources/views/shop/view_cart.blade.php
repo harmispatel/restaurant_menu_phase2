@@ -33,6 +33,10 @@
     // Order Settings
     $order_settings = getOrderSettings($shop_details['id']);
 
+    // Home Page Intro
+    $homepage_intro = moreTranslations($shop_details['id'],'homepage_intro');
+    $homepage_intro = (isset($homepage_intro[$current_lang_code."_value"]) && !empty($homepage_intro[$current_lang_code."_value"])) ? $homepage_intro[$current_lang_code."_value"] : '';
+
     $min_amount_for_delivery = (isset($order_settings['min_amount_for_delivery']) && !empty($order_settings['min_amount_for_delivery'])) ? unserialize($order_settings['min_amount_for_delivery']) : [];
 
     $remain_amount = 0;
@@ -52,6 +56,10 @@
     $current_check_type = session()->get('checkout_type');
 
     $total_cart_qty = getCartQuantity();
+
+    // Home Page Intro
+    $service_closed_message = moreTranslations($shop_details['id'],'service_closed_message');
+    $service_closed_message = (isset($service_closed_message[$current_lang_code."_value"]) && !empty($service_closed_message[$current_lang_code."_value"])) ? $service_closed_message[$current_lang_code."_value"] : "Sorry you can't order! The store is closed during these hours.";
 
 @endphp
 
@@ -271,8 +279,9 @@
                     @else
                         <div class="row">
                             <div class="col-md-12 text-danger" style="font-size:20px;">
-                                {{ __("Sorry you can't order!") }} <br>
-                                {{ __("The store is closed during these hours.") }}
+                                {{-- {{ __("Sorry you can't order!") }} <br>
+                                {{ __("The store is closed during these hours.") }} --}}
+                                {!! $service_closed_message !!}
                             </div>
                         </div>
                     @endif
@@ -363,8 +372,8 @@
                     </ul>
                 </div>
 
-                @if (isset($shop_settings['homepage_intro']) && !empty($shop_settings['homepage_intro']))
-                    <p>{!! $shop_settings['homepage_intro'] !!}</p>
+                @if (isset($homepage_intro) && !empty($homepage_intro))
+                    <p>{!! $homepage_intro !!}</p>
                 @else
                     @php
                         $current_year = \Carbon\Carbon::now()->format('Y');

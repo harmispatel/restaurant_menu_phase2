@@ -84,7 +84,7 @@
                                         @endphp
                                         @if((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_id != NULL)
                                             <tr>
-                                                <td>{{ $specialIcon->id }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $specialIcon->name }}</td>
                                                 <td>
                                                     @if(!empty($specialIcon->icon) && file_exists('public/client_uploads/shops/'.$shop_slug.'/ingredients/'.$specialIcon->icon))

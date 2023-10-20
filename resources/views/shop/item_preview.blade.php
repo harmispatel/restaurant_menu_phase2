@@ -24,13 +24,10 @@
     // Language Details
     $language_details = getLangDetailsbyCode($current_lang_code);
 
-    // Name Key
+    // Column Keys
     $name_key = $current_lang_code."_name";
-
-    // Description Key
     $description_key = $current_lang_code."_description";
-
-    // Price Key
+    $calories_key = $current_lang_code."_calories";
     $price_label_key = $current_lang_code."_label";
 
     // Current Category
@@ -42,6 +39,10 @@
     // Read More Label
     $read_more_label = moreTranslations($shop_details['id'],'read_more_link_label');
     $read_more_label = (isset($read_more_label[$current_lang_code."_value"]) && !empty($read_more_label[$current_lang_code."_value"])) ? $read_more_label[$current_lang_code."_value"] : 'Read More';
+
+    // Home Page Intro
+    $homepage_intro = moreTranslations($shop_details['id'],'homepage_intro');
+    $homepage_intro = (isset($homepage_intro[$current_lang_code."_value"]) && !empty($homepage_intro[$current_lang_code."_value"])) ? $homepage_intro[$current_lang_code."_value"] : '';
 
     // Item Devider
     $item_devider = (isset($theme_settings['item_divider']) && !empty($theme_settings['item_divider'])) ? $theme_settings['item_divider'] : 0;
@@ -180,6 +181,11 @@
 
                                                                     {{-- Name Section --}}
                                                                     <h3>{{ (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "" }}</h3>
+
+                                                                    {{-- Calories Section --}}
+                                                                    @if(isset($item[$calories_key]) && !empty($item[$calories_key]))
+                                                                        <p class="m-0 p-0"><strong>Calories : </strong>{{ (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "" }}</p>
+                                                                    @endif
 
                                                                     {{-- New Product Image --}}
                                                                     @if($item['is_new'] == 1)
@@ -371,6 +377,11 @@
                                                                         {{-- Name Section --}}
                                                                         <h3>{{ (isset($item->product[$name_key]) && !empty($item->product[$name_key])) ? $item->product[$name_key] : "" }}</h3>
 
+                                                                        {{-- Calories Section --}}
+                                                                        @if(isset($item->product[$calories_key]) && !empty($item->product[$calories_key]))
+                                                                            <p class="m-0 p-0"><strong>Calories : </strong>{{ (isset($item->product[$calories_key]) && !empty($item->product[$calories_key])) ? $item->product[$calories_key] : "" }}</p>
+                                                                        @endif
+
                                                                         {{-- New Product Image --}}
                                                                         @if($item->product['is_new'] == 1)
                                                                             <img class="is_new tag-img" src="{{ asset('public/client_images/bs-icon/new.png') }}">
@@ -554,6 +565,11 @@
 
                                                             {{-- Name Section --}}
                                                             <h3>{{  (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "" }}</h3>
+
+                                                            {{-- Calories Section --}}
+                                                            @if(isset($item[$calories_key]) && !empty($item[$calories_key]))
+                                                            <p class="m-0 p-0"><strong>Calories : </strong>{{ (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "" }}</p>
+                                                        @endif
 
                                                             {{-- New Product Image --}}
                                                             @if($item['is_new'] == 1)
@@ -792,8 +808,8 @@
                     </ul>
                 </div>
 
-                @if(isset($shop_settings['homepage_intro']) && !empty($shop_settings['homepage_intro']))
-                    <p>{!! $shop_settings['homepage_intro'] !!}</p>
+                @if(isset($homepage_intro) && !empty($homepage_intro))
+                    <p>{!! $homepage_intro !!}</p>
                 @else
                     @php
                         $current_year = \Carbon\Carbon::now()->format('Y');

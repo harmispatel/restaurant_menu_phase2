@@ -13,7 +13,8 @@
         $userImage = '';
     }
 
-    $logo = (isset(Auth::user()->hasOneShop->shop['logo']) && !empty(Auth::user()->hasOneShop->shop['logo'])) ? Auth::user()->hasOneShop->shop['logo'] : '';
+    $client_settings = getClientSettings();
+    $logo = isset($client_settings['shop_view_header_logo']) ? $client_settings['shop_view_header_logo'] : '';
 
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
 
@@ -23,8 +24,8 @@
 
     <div class="d-flex align-items-center justify-content-between text-center">
         <a href="{{ route('restaurant',$shop_slug) }}" target="_blank" class="logo d-flex align-items-center justify-content-center">
-            @if(!empty($logo))
-                <img class="w-100" src="{{ $logo }}" alt="Logo">
+            @if(!empty($logo) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo))
+                <img class="w-100" src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo) }}" alt="Logo">
             @else
                 <span class="d-none d-lg-block">My Logo</span>
             @endif

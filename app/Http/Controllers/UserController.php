@@ -122,7 +122,7 @@ class UserController extends Controller
         $status = (isset($request->status)) ? $request->status : 0;
         $shop_name = $request->shop_name;
         $shop_slug = $request->shop_url;
-        $shop_description = $request->shop_description;
+        // $shop_description = $request->shop_description;
 
         // Insert New Client
         $client = new User();
@@ -141,7 +141,7 @@ class UserController extends Controller
             $shop = new Shop();
             $shop->name = $shop_name;
             $shop->shop_slug = $shop_slug;
-            $shop->description = $shop_description;
+            // $shop->description = $shop_description;
 
             // Make Shop Directory
             mkdir(public_path('client_uploads/shops/'.$shop_slug));
@@ -407,13 +407,25 @@ class UserController extends Controller
 
 
             // Insert More Translations
-            $more_translations_key = ['read_more_link_label','today_special_icon','delivery_message','distance_message','distance_alert_message'];
+            $more_translations_key = [
+                'read_more_link_label',
+                'today_special_icon',
+                'delivery_message',
+                'distance_message',
+                'distance_alert_message',
+                'homepage_intro',
+                'seo_message',
+                'service_closed_message',
+            ];
             $more_translations_val = [
                 'read_more_link_label' => 'Read More',
                 'today_special_icon' => null,
                 'delivery_message' => null,
                 'distance_message' => 'Distance from our store up {from} to {to} Km The lowest order price is ({amount}).',
                 'distance_alert_message' => 'Left for the minimum order',
+                'homepage_intro' => null,
+                'seo_message' => null,
+                'service_closed_message' => null,
             ];
             foreach($more_translations_key as $val)
             {
@@ -506,7 +518,7 @@ class UserController extends Controller
         $status = isset($request->status) ? $request->status : 0;
         $shop_id = $request->shop_id;
         $shop_name = $request->shop_name;
-        $shop_description = $request->shop_description;
+        // $shop_description = $request->shop_description;
 
         // Update New Client
         $client = User::find($request->client_id);
@@ -539,7 +551,7 @@ class UserController extends Controller
         // Update Client Shop
         $shop = Shop::find($shop_id);
         $shop->name = $shop_name;
-        $shop->description = $shop_description;
+        // $shop->description = $shop_description;
 
         if($request->hasFile('shop_logo'))
         {
@@ -900,7 +912,6 @@ class UserController extends Controller
             {
                 $shop = Shop::find($shop_id);
                 $shop->name = $request->shop_name;
-                $shop->description = $request->shop_description;
 
                 if($request->hasFile('shop_logo'))
                 {

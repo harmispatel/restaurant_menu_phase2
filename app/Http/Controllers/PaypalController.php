@@ -292,6 +292,10 @@ class PaypalController extends Controller
 
         $shop_settings = getClientSettings($shop_id);
 
+        // Get Shop Max ID
+        $order_max = Order::where('shop_id',$shop_id)->max('order_id');
+        $order_max = (isset($order_max) && !empty($order_max)) ? $order_max + 1 : 1;
+
         // Form Key
         $form_key = $current_lang_code."_form";
 
@@ -383,6 +387,7 @@ class PaypalController extends Controller
                 // New Order
                 $order = new Order();
                 $order->shop_id = $shop_id;
+                $order->order_id = $order_max;
                 $order->ip_address = $user_ip;
                 $order->firstname =  $order_details['firstname'];
                 $order->lastname =  $order_details['lastname'];
@@ -399,6 +404,7 @@ class PaypalController extends Controller
             {
                 // New Order
                 $order = new Order();
+                $order->order_id = $order_max;
                 $order->shop_id = $shop_id;
                 $order->ip_address = $user_ip;
                 $order->checkout_type = $checkout_type;
@@ -413,6 +419,7 @@ class PaypalController extends Controller
             {
                 // New Order
                 $order = new Order();
+                $order->order_id = $order_max;
                 $order->shop_id = $shop_id;
                 $order->ip_address = $user_ip;
                 $order->firstname = $order_details['firstname'];
@@ -430,6 +437,7 @@ class PaypalController extends Controller
             {
                 // New Order
                 $order = new Order();
+                $order->order_id = $order_max;
                 $order->shop_id = $shop_id;
                 $order->ip_address = $user_ip;
                 $order->firstname = $order_details['firstname'];
@@ -596,7 +604,7 @@ class PaypalController extends Controller
                             $message = str_replace('{shop_name}',$shop_name,$message);
                             $message = str_replace('{firstname}',$fname,$message);
                             $message = str_replace('{lastname}',$lname,$message);
-                            $message = str_replace('{order_id}',$order->id,$message);
+                            $message = str_replace('{order_id}',$order->order_id,$message);
                             $message = str_replace('{order_type}',$checkout_type,$message);
                             $message = str_replace('{payment_method}',$payment_method,$message);
 

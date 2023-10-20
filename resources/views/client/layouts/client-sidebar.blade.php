@@ -43,36 +43,13 @@
             </a>
         </li>
 
-        {{-- Shop Details Nav --}}
-        <li class="nav-item">
-            <a class="nav-link {{ (($routeName != 'client.subscription') && ($routeName != 'billing.info') && ($routeName != 'billing.info.edit')) ? 'collapsed' : '' }} {{ (($routeName == 'client.subscription') || ($routeName == 'billing.info') || ($routeName == 'billing.info.edit')) ? 'active-tab' : '' }}" data-bs-target="#shop-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'client.subscription') || ($routeName == 'billing.info') || ($routeName == 'billing.info.edit')) ? 'true' : 'false' }}">
-                <i class="ri-restaurant-2-line  {{ (($routeName == 'client.subscription') || ($routeName == 'billing.info') || ($routeName == 'billing.info.edit')) ? 'icon-tab' : '' }}"></i><span>{{ $shop_name }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'client.subscription') || ($routeName == 'billing.info') || ($routeName == 'billing.info.edit')) ? 'icon-tab' : '' }}"></i>
-            </a>
-            <ul id="shop-nav" class="nav-content sidebar-ul collapse  {{ (($routeName == 'client.subscription') || ($routeName == 'billing.info') || ($routeName == 'billing.info.edit')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('billing.info') }}" class="{{ ($routeName == 'billing.info' || $routeName == 'billing.info.edit') ? 'active-link' : '' }}">
-                        <span>{{ __('Billing Info') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('client.subscription',$userID) }}" class="{{ ($routeName == 'client.subscription') ? 'active-link' : '' }}">
-                        <span>{{ __('Subscription') }}</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
 
         {{-- Design Nav --}}
         <li class="nav-item">
-            <a class="nav-link {{ (($routeName != 'design.general-info') && ($routeName != 'design.logo') && ($routeName != 'design.cover') && ($routeName != 'banners') && ($routeName != 'design.theme') && ($routeName != 'design.mail.forms') && $routeName != 'design.theme-preview' && $routeName != 'theme.clone') ? 'collapsed' : '' }} {{ (($routeName == 'design.general-info') || ($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || ($routeName == 'design.mail.forms') || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'active-tab' : '' }}" data-bs-target="#design-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'design.general-info') || ($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || ($routeName == 'design.mail.forms') || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'true' : 'false' }}">
-                <i class="fa-solid fa-pen-nib {{ (($routeName == 'design.general-info') || ($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || ($routeName == 'design.mail.forms' || $routeName == 'design.theme-preview' || $routeName == 'theme.clone')) ? 'icon-tab' : '' }}"></i><span>{{ __('Design') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'design.general-info') || ($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || ($routeName == 'design.mail.forms') || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'icon-tab' : '' }}"></i>
+            <a class="nav-link {{ (($routeName != 'design.logo') && ($routeName != 'design.cover') && ($routeName != 'banners') && ($routeName != 'design.theme') && $routeName != 'design.theme-preview' && $routeName != 'theme.clone') ? 'collapsed' : '' }} {{ (($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'active-tab' : '' }}" data-bs-target="#design-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'true' : 'false' }}">
+                <i class="fa-solid fa-pen-nib {{ (($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || ($routeName == 'design.mail.forms' || $routeName == 'design.theme-preview' || $routeName == 'theme.clone')) ? 'icon-tab' : '' }}"></i><span>{{ __('Design') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'icon-tab' : '' }}"></i>
             </a>
-            <ul id="design-nav" class="nav-content sidebar-ul collapse {{ (($routeName == 'design.general-info') || ($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || ($routeName == 'design.mail.forms') || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('design.general-info') }}" class="{{ ($routeName == 'design.general-info') ? 'active-link' : '' }}">
-                        <span>{{ __('General Info') }}</span>
-                    </a>
-                </li>
+            <ul id="design-nav" class="nav-content sidebar-ul collapse {{ (($routeName == 'design.logo') || ($routeName == 'design.cover') || ($routeName == 'banners') || ($routeName == 'design.theme') || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="{{ route('design.logo') }}" class="{{ ($routeName == 'design.logo') ? 'active-link' : '' }}">
                         <span>{{ __('Logo') }}</span>
@@ -96,11 +73,6 @@
                 <li>
                     <a href="{{ route('design.theme') }}" class="{{ ($routeName == 'design.theme' || $routeName == 'design.theme-preview' || $routeName == 'theme.clone') ? 'active-link' : '' }}">
                         <span>{{ __('Themes') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('design.mail.forms') }}" class="{{ ($routeName == 'design.mail.forms') ? 'active-link' : '' }}">
-                        <span>{{ __('Mail Forms') }}</span>
                     </a>
                 </li>
             </ul>
@@ -183,10 +155,10 @@
         {{-- Orders Nav --}}
         @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
             <li class="nav-item">
-                <a class="nav-link {{ (($routeName != 'order.settings') && ($routeName != 'client.orders') && ($routeName != 'client.orders.history') && ($routeName != 'view.order') && ($routeName != 'payment.settings')) ? 'collapsed' : '' }} {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'active-tab' : '' }}" data-bs-target="#orders-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'true' : 'false' }}">
-                    <i class="bi bi-cart-check {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'icon-tab' : '' }}"></i><span>{{ __('Orders') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'icon-tab' : '' }}"></i>
+                <a class="nav-link {{ (($routeName != 'client.orders') && ($routeName != 'client.orders.history') && ($routeName != 'view.order')) ? 'collapsed' : '' }} {{ (($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'client.orders.history')) ? 'active-tab' : '' }}" data-bs-target="#orders-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'client.orders.history')) ? 'true' : 'false' }}">
+                    <i class="bi bi-cart-check {{ (($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'client.orders.history')) ? 'icon-tab' : '' }}"></i><span>{{ __('Orders') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'client.orders') || ($routeName == 'client.orders.history')) ? 'icon-tab' : '' }}"></i>
                 </a>
-                <ul id="orders-nav" class="nav-content sidebar-ul collapse {{ (($routeName == 'order.settings') || ($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'payment.settings') || ($routeName == 'client.orders.history')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+                <ul id="orders-nav" class="nav-content sidebar-ul collapse {{ (($routeName == 'client.orders') || ($routeName == 'view.order') || ($routeName == 'client.orders.history')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="{{ route('client.orders') }}" class="{{ (($routeName == 'client.orders')) ? 'active-link' : '' }}">
                             <span>{{ __('Pending Orders') }}</span>
@@ -197,37 +169,9 @@
                             <span>{{ __('Orders History') }}</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('order.settings') }}" class="{{ (($routeName == 'order.settings') &&  count($routeParams) == 0) ? 'active-link' : '' }}">
-                            <span>{{ __('Order Settings') }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('payment.settings') }}" class="{{ (($routeName == 'payment.settings')) ? 'active-link' : '' }}">
-                            <span>{{ __('Payment Settings') }}</span>
-                        </a>
-                    </li>
                 </ul>
             </li>
         @endif
-
-
-        {{-- Languages Nav --}}
-        <li class="nav-item">
-            <a class="nav-link {{ ($routeName == 'languages') ? 'active-tab' : '' }}" href="{{ route('languages') }}">
-                <i class="bi bi-translate {{ ($routeName == 'languages') ? 'icon-tab' : '' }}"></i>
-            <span>{{ __('Languages') }}</span>
-            </a>
-        </li>
-
-
-        {{-- Special Icons Nav --}}
-        <li class="nav-item">
-            <a class="nav-link {{ ($routeName == 'special.icons' || $routeName == 'special.icons.add' || $routeName == 'special.icons.edit') ? 'active-tab' : '' }}" href="{{ route('special.icons') }}">
-                <i class="fas fa-seedling {{ ($routeName == 'special.icons' || $routeName == 'special.icons.add' || $routeName == 'special.icons.edit') ? 'icon-tab' : '' }}"></i>
-            <span>{{ __('Special Icons') }}</span>
-            </a>
-        </li>
 
 
         {{-- Preview Nav --}}
@@ -279,6 +223,55 @@
             </a>
         </li>
 
+        {{-- Settings Nav --}}
+        <li class="nav-item">
+            <a class="nav-link {{ (($routeName != 'billing.info') && ($routeName != 'billing.info.edit') && ($routeName != 'design.general-info') && ($routeName != 'client.subscription') && ($routeName != 'special.icons') && ($routeName != 'special.icons.add') && ($routeName != 'special.icons.edit') && ($routeName != 'design.mail.forms') && ($routeName != 'languages') && ($routeName != 'payment.settings') && ($routeName != 'order.settings')) ? 'collapsed' : '' }} {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'special.icons') || ($routeName == 'special.icons.add') || ($routeName == 'special.icons.edit') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'active-tab' : '' }}" data-bs-target="#settings-nav" data-bs-toggle="collapse" href="#" aria-expanded="{{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'special.icons') || ($routeName == 'special.icons.add') || ($routeName == 'special.icons.edit') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'true' : 'false' }}">
+                <i class="fa-solid fa-gear  {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'special.icons') || ($routeName == 'special.icons.add') || ($routeName == 'special.icons.edit') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'icon-tab' : '' }}"></i><span>{{ __('Settings') }}</span><i class="bi bi-chevron-down ms-auto {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'special.icons') || ($routeName == 'special.icons.add') || ($routeName == 'special.icons.edit') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'icon-tab' : '' }}"></i>
+            </a>
+            <ul id="settings-nav" class="nav-content sidebar-ul collapse  {{ (($routeName == 'billing.info') || ($routeName == 'billing.info.edit') || ($routeName == 'design.general-info') || ($routeName == 'client.subscription') || ($routeName == 'special.icons') || ($routeName == 'special.icons.add') || ($routeName == 'special.icons.edit') || ($routeName == 'design.mail.forms') || ($routeName == 'languages') || ($routeName == 'payment.settings') || ($routeName == 'order.settings')) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('design.general-info') }}" class="{{ ($routeName == 'design.general-info') ? 'active-link' : '' }}">
+                        <span>{{ __('General') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('order.settings') }}" class="{{ (($routeName == 'order.settings') &&  count($routeParams) == 0) ? 'active-link' : '' }}">
+                        <span>{{ __('Order Rules') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('payment.settings') }}" class="{{ (($routeName == 'payment.settings')) ? 'active-link' : '' }}">
+                        <span>{{ __('Payment Methods') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('languages') }}" class="{{ ($routeName == 'languages') ? 'active-link' : '' }}">
+                        <span>{{ __('Languages') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('design.mail.forms') }}" class="{{ ($routeName == 'design.mail.forms') ? 'active-link' : '' }}">
+                        <span>{{ __('Mail Forms') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('special.icons') }}" class="{{ ($routeName == 'special.icons' || $routeName == 'special.icons.add' || $routeName == 'special.icons.edit') ? 'active-link' : '' }}">
+                        <span>{{ __('Special Icons') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('client.subscription',$userID) }}" class="{{ ($routeName == 'client.subscription') ? 'active-link' : '' }}">
+                        <span>{{ __('Subscription') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('billing.info') }}" class="{{ ($routeName == 'billing.info' || $routeName == 'billing.info.edit') ? 'active-link' : '' }}">
+                        <span>{{ __('Billing Info') }}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         {{-- Logout Nav --}}
         <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}">
@@ -286,14 +279,6 @@
             <span>{{ __('Logout') }}</span>
             </a>
         </li>
-
-        {{-- Design Nav --}}
-        {{-- <li class="nav-item">
-            <a class="nav-link {{ ($routeName == 'menu') ? 'active-tab' : '' }}" href="{{ route('menu') }}">
-                <i class="fa-solid fa-pen-nib {{ ($routeName == 'menu') ? 'icon-tab' : '' }}"></i>
-                <span>Design</span>
-            </a>
-        </li> --}}
 
     </ul>
 </aside>

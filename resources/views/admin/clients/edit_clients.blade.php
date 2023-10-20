@@ -163,12 +163,12 @@
                                             <img width="70" src="{{ $client->hasOneShop->shop['logo'] }}" alt="">
                                         </div>
                                     </div>
-                                    <div class="col-md-12 mb-3">
+                                    {{-- <div class="col-md-12 mb-3">
                                         <div class="form-group">
                                             <label for="shop_description" class="form-label">{{ __('Shop Description')}}</label>
                                             <textarea name="shop_description" id="shop_description" rows="5" class="form-control">{{ $client->hasOneShop->shop['description'] }}</textarea>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <hr>
                                 <div class="row mt-3">
