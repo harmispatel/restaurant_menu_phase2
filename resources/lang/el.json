@@ -441,7 +441,7 @@
     "TITLE: For \"Read More\"": "ΟΝΟΜΑΣΙΑ: Για το \"Περισσότερα\"",
 
     "Notes:":"Υπενθύμιση:",
-    "NOTICE: Minimum Order Per Distance ":"ΕΙΔΟΠΟΙΗΣΗ: Ελάχιστης Παραγγελίας",
+    "NOTICE: Minimum Order Per Distance":"ΕΙΔΟΠΟΙΗΣΗ: Ελάχιστης Παραγγελίας",
     "ALERT: Minimum Order Per Distance":"ΠΡΟΣΟΧΗ: Ελάχιστης Παραγγελίας Ανά Απόσταση",
 
     "IMAGE: For \"Today's Special\"" : "ΕΙΚΟΝΑ: Για το \"Πιάτο Ημέρας\"",
@@ -451,6 +451,6 @@
     "Order Rules" : "Παραγγελίας",
 
     "FOOTER: Alternative Text" : "ΥΠΟΣΕΛΙΔΟ: Εναλλακτικό Κείμενο",
-    "TITLE: SEO Message" : "SEO: Τίτλος Σελίδας",
+    "SEO: Page Title" : "SEO: Τίτλος Σελίδας",
     "NOTICE: Service Is Closed" : "ΕΙΔΟΠΟΙΗΣΗ: Η Υπηρεσία Έκλεισε"
 }
