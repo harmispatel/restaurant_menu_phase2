@@ -499,6 +499,16 @@ class OrderController extends Controller
     }
 
 
+    // Function for View Printer Settings
+    public function PrinterSettings()
+    {
+        $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
+        $data['printer_settings'] = getOrderSettings($shop_id);
+
+        return view('client.orders.printer_settings',$data);
+    }
+
+
     // Function for Update Order Settings
     public function UpdateOrderSettings(Request $request)
     {
@@ -515,16 +525,8 @@ class OrderController extends Controller
         $all_data['discount_percentage'] = (isset($request->discount_percentage)) ? $request->discount_percentage : '';
         $all_data['order_arrival_minutes'] = (isset($request->order_arrival_minutes)) ? $request->order_arrival_minutes : 30;
         $all_data['schedule_array'] = $request->schedule_array;
-        $all_data['default_printer'] = (isset($request->default_printer)) ? $request->default_printer : '';
-        $all_data['receipt_intro'] = $request->receipt_intro;
         $all_data['discount_type'] = $request->discount_type;
-        $all_data['auto_print'] = (isset($request->auto_print)) ? $request->auto_print : 0;
-        $all_data['raw_printing'] = (isset($request->raw_printing)) ? $request->raw_printing : 0;
         $all_data['play_sound'] = (isset($request->play_sound)) ? $request->play_sound : 0;
-        $all_data['enable_print'] = (isset($request->enable_print)) ? $request->enable_print : 0;
-        $all_data['printer_paper'] = (isset($request->printer_paper)) ? $request->printer_paper : '';
-        $all_data['printer_tray'] = (isset($request->printer_tray)) ? $request->printer_tray : '';
-        $all_data['print_font_size'] = (isset($request->print_font_size)) ? $request->print_font_size : '';
         $all_data['notification_sound'] = (isset($request->notification_sound)) ? $request->notification_sound : 'buzzer-01.mp3';
         $all_data['shop_address'] = (isset($request->shop_address)) ? $request->shop_address : '';
         $all_data['shop_latitude'] = (isset($request->shop_latitude)) ? $request->shop_latitude : '';
@@ -581,6 +583,53 @@ class OrderController extends Controller
                 'success' => 0,
                 'message' => 'Internal Server Error!',
             ]);
+        }
+    }
+
+
+    // Function for Update Printer Settings
+    public function UpdatePrinterSettings(Request $request)
+    {
+        $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
+
+        $all_data['enable_print'] = (isset($request->enable_print)) ? $request->enable_print : 0;
+        $all_data['auto_print'] = (isset($request->auto_print)) ? $request->auto_print : 0;
+        $all_data['raw_printing'] = (isset($request->raw_printing)) ? $request->raw_printing : 0;
+        $all_data['printer_paper'] = (isset($request->printer_paper)) ? $request->printer_paper : '';
+        $all_data['default_printer'] = (isset($request->default_printer)) ? $request->default_printer : '';
+        $all_data['receipt_intro'] = $request->receipt_intro;
+        $all_data['print_font_size'] = (isset($request->print_font_size)) ? $request->print_font_size : '';
+        $all_data['printer_tray'] = (isset($request->printer_tray)) ? $request->printer_tray : '';
+
+        try
+        {
+            // Insert or Update Settings
+            foreach($all_data as $key => $value)
+            {
+                $query = OrderSetting::where('shop_id',$shop_id)->where('key',$key)->first();
+                $setting_id = isset($query->id) ? $query->id : '';
+
+                if (!empty($setting_id) || $setting_id != '')  // Update
+                {
+                    $settings = OrderSetting::find($setting_id);
+                    $settings->value = $value;
+                    $settings->update();
+                }
+                else // Insert
+                {
+                    $settings = new OrderSetting();
+                    $settings->shop_id = $shop_id;
+                    $settings->key = $key;
+                    $settings->value = $value;
+                    $settings->save();
+                }
+            }
+
+            return redirect()->route('printer.settings')->with('success', 'Setting has been Updated SuccessFully...');
+        }
+        catch (\Throwable $th)
+        {
+            return redirect()->route('printer.settings')->with('error', 'Internal Server Error!');
         }
     }
 

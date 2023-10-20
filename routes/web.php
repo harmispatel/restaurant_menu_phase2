@@ -257,7 +257,9 @@ Route::group(['prefix' => 'client'], function()
 
         // Orders
         Route::get('/orders-settings',[OrderController::class,'OrderSettings'])->name('order.settings');
+        Route::get('/printer-settings',[OrderController::class,'PrinterSettings'])->name('printer.settings');
         Route::post('/orders-settings-update',[OrderController::class,'UpdateOrderSettings'])->name('update.order.settings');
+        Route::post('/printer-settings-update',[OrderController::class,'UpdatePrinterSettings'])->name('update.printer.settings');
         Route::get('/orders',[OrderController::class,'index'])->name('client.orders');
         Route::get('/orders-map',[OrderController::class,'ordersMap'])->name('client.orders.map');
         Route::match(['get','post'],'orders-history',[OrderController::class,'ordersHistory'])->name('client.orders.history');
