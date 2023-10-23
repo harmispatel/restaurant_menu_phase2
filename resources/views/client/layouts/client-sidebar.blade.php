@@ -189,31 +189,39 @@
                         <span>{{ __('General') }}</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('order.settings') }}" class="{{ (($routeName == 'order.settings') &&  count($routeParams) == 0) ? 'active-link' : '' }}">
-                        <span>{{ __('Order Rules') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('payment.settings') }}" class="{{ (($routeName == 'payment.settings')) ? 'active-link' : '' }}">
-                        <span>{{ __('Payment Methods') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('printer.settings') }}" class="{{ (($routeName == 'printer.settings')) ? 'active-link' : '' }}">
-                        <span>{{ __('Print Settings') }}</span>
-                    </a>
-                </li>
+
+                @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                    <li>
+                        <a href="{{ route('order.settings') }}" class="{{ (($routeName == 'order.settings') &&  count($routeParams) == 0) ? 'active-link' : '' }}">
+                            <span>{{ __('Order Rules') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('payment.settings') }}" class="{{ (($routeName == 'payment.settings')) ? 'active-link' : '' }}">
+                            <span>{{ __('Payment Methods') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('printer.settings') }}" class="{{ (($routeName == 'printer.settings')) ? 'active-link' : '' }}">
+                            <span>{{ __('Print Settings') }}</span>
+                        </a>
+                    </li>
+                @endif
+
                 <li>
                     <a href="{{ route('languages') }}" class="{{ ($routeName == 'languages') ? 'active-link' : '' }}">
                         <span>{{ __('Languages') }}</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('design.mail.forms') }}" class="{{ ($routeName == 'design.mail.forms') ? 'active-link' : '' }}">
-                        <span>{{ __('Mail Forms') }}</span>
-                    </a>
-                </li>
+
+                @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                    <li>
+                        <a href="{{ route('design.mail.forms') }}" class="{{ ($routeName == 'design.mail.forms') ? 'active-link' : '' }}">
+                            <span>{{ __('Mail Forms') }}</span>
+                        </a>
+                    </li>
+                @endif
+
                 <li>
                     <a href="{{ route('client.subscription',$userID) }}" class="{{ ($routeName == 'client.subscription') ? 'active-link' : '' }}">
                         <span>{{ __('Subscription') }}</span>
