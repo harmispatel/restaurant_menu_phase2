@@ -37,7 +37,7 @@ class OrderController extends Controller
                 $ord_data[] = $order->latitude;
                 $ord_data[] = $order->longitude;
                 $ord_data[] = $order->order_status;
-                $ord_data[] = $order->id;
+                $ord_data[] = $order->order_id;
                 $ord_data[] = Currency::currency($currency)->format($order->discount_value);
 
                 $data['location_array'][] = $ord_data;
@@ -163,8 +163,9 @@ class OrderController extends Controller
 
                     $html .= '<div class="order-info">';
                         $html .= '<ul>';
-                            $html .= '<li><strong>#'.$order->order_id.'</strong></li>';
-                            $html .= '<li><strong>'.__('Order Date').' : </strong>'.date('d-m-Y h:i:s',strtotime($order->created_at)).'</li>';
+                            $html .= '<li><strong>'.__('Order No.').' : #'.$order->order_id.'</strong></li>';
+                            $html .= '<li><strong>'.__('Order Date').' : </strong>'.date('d-m-Y',strtotime($order->created_at)).'</li>';
+                            $html .= '<li><strong>'.__('Order Time').' : </strong>'.date('h:i:s',strtotime($order->created_at)).'</li>';
                             $html .= '<li><strong>'.__('Order Type').' : </strong>'.$order->checkout_type.'</li>';
                             $html .= '<li><strong>'.__('Payment Method').' : </strong>'.$order->payment_method.'</li>';
 
@@ -306,7 +307,7 @@ class OrderController extends Controller
                 $ord_data[] = $order->latitude;
                 $ord_data[] = $order->longitude;
                 $ord_data[] = $order->order_status;
-                $ord_data[] = $order->id;
+                $ord_data[] = $order->order_id;
                 $ord_data[] = Currency::currency($currency)->format($order->discount_value);
 
                 $location_array[] = $ord_data;
@@ -1181,7 +1182,8 @@ class OrderController extends Controller
             $currency = (isset($data['shop_settings']['default_currency']) && !empty($data['shop_settings']['default_currency'])) ? $data['shop_settings']['default_currency'] : 'EUR';
 
             $data['order_inv'] = (isset($order->order_id)) ? $order->order_id : '';
-            $data['order_date'] = (isset($order->created_at)) ? date('d-m-Y h:i:s',strtotime($order->created_at)): '';
+            $data['order_date'] = (isset($order->created_at)) ? date('d-m-Y',strtotime($order->created_at)): '';
+            $data['order_time'] = (isset($order->created_at)) ? date('h:i:s',strtotime($order->created_at)): '';
             $data['payment_method'] = (isset($order->payment_method)) ? str_replace('_',' ',$order->payment_method) : '';
             $data['checkout_type'] = (isset($order->checkout_type)) ? $order->checkout_type : '';
             $data['customer'] = $order->firstname." ".$order->lastname;
@@ -1283,7 +1285,8 @@ class OrderController extends Controller
                                             $html .= '<li><b>'.__('Order').' '.__('Id').' : </b>'.$order->order_id.'</li>';
                                             $html .= '<li><b>'.__('Order Type').' : </b> '.ucfirst(str_replace('_',' ',$data['checkout_type'])).'</li>';
                                             $html .= '<li><b>'.__('Payment Method').' : </b> '.ucfirst($data['payment_method']).'</li>';
-                                            $html .= '<li><b>'.__('Order Date').' : </b> '.date('d-m-Y h:i:s',strtotime($data['order_date'])).'</li>';
+                                            $html .= '<li><b>'.__('Order Date').' : </b> '.$data['order_date'].'</li>';
+                                            $html .= '<li><b>'.__('Order Time').' : </b> '.$data['order_time'].'</li>';
 
                                             if($data['checkout_type'] == 'takeaway' || $data['checkout_type'] == 'delivery' || $data['checkout_type'] == 'room_delivery')
                                             {

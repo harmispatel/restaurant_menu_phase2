@@ -90,7 +90,19 @@
                                                                 <i class="bi bi-calendar-date"></i>&nbsp;{{ __('Order Date') }}
                                                             </div>
                                                             <div class="fw-bold">
-                                                                {{ date('d-m-Y h:i:s',strtotime($order->created_at)) }}
+                                                                {{ date('d-m-Y',strtotime($order->created_at)) }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">
+                                                        <div class="client-order-info">
+                                                            <div class="">
+                                                                <i class="bi bi-clock"></i>&nbsp;{{ __('Order Time') }}
+                                                            </div>
+                                                            <div class="fw-bold">
+                                                                {{ date('h:i:s',strtotime($order->created_at)) }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -490,7 +502,8 @@
                                     .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv, code_page_value)
                                     .text(@json(__('Order Type'))+" : "+print_data.checkout_type, code_page_value)
                                     .text(@json(__('Payment Method'))+" : "+print_data.payment_method, code_page_value)
-                                    .text(@json(__('Order Date'))+" : "+print_data.order_date, code_page_value);
+                                    .text(@json(__('Order Date'))+" : "+print_data.order_date, code_page_value)
+                                    .text(@json(__('Order Time'))+" : "+print_data.order_time, code_page_value);
 
                                     if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery' || print_data.checkout_type == 'room_delivery'){
                                         escposCommands  = escposCommands
