@@ -1,6 +1,6 @@
 <?php
 
-    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings, DeliveryAreas, Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, OtherSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop};
+    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings, CodePage, DeliveryAreas, Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, OtherSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop};
     use Carbon\Carbon;
     use Illuminate\Support\Facades\Auth;
 
@@ -119,6 +119,7 @@
             'shop_latitude',
             'shop_longitude',
             'google_map_order_view',
+            'default_code_page',
         ]);
 
         $settings = [];
@@ -130,6 +131,18 @@
         }
 
         return $settings;
+    }
+
+
+    // Get Code Page Details
+    function getCodePageSettings($code_page_id = null)
+    {
+        if($code_page_id){
+            $code_page_details = CodePage::find($code_page_id);
+        }else{
+            $code_page_details = '';
+        }
+        return $code_page_details;
     }
 
 

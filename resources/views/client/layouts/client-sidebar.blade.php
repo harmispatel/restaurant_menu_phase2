@@ -75,11 +75,14 @@
                         <span>{{ __('Themes') }}</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('special.icons') }}" class="{{ ($routeName == 'special.icons' || $routeName == 'special.icons.add' || $routeName == 'special.icons.edit') ? 'active-link' : '' }}">
-                        <span>{{ __('Special Icons') }}</span>
-                    </a>
-                </li>
+
+                @if(isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1)
+                    <li>
+                        <a href="{{ route('special.icons') }}" class="{{ ($routeName == 'special.icons' || $routeName == 'special.icons.add' || $routeName == 'special.icons.edit') ? 'active-link' : '' }}">
+                            <span>{{ __('Special Icons') }}</span>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </li>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CodePage;
 use App\Models\DeliveryAreas;
 use App\Models\MailForm;
 use App\Models\Order;
@@ -504,6 +505,7 @@ class OrderController extends Controller
     {
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $data['printer_settings'] = getOrderSettings($shop_id);
+        $data['code_pages'] = CodePage::get();
 
         return view('client.orders.printer_settings',$data);
     }
@@ -600,6 +602,7 @@ class OrderController extends Controller
         $all_data['receipt_intro'] = $request->receipt_intro;
         $all_data['print_font_size'] = (isset($request->print_font_size)) ? $request->print_font_size : '';
         $all_data['printer_tray'] = (isset($request->printer_tray)) ? $request->printer_tray : '';
+        $all_data['default_code_page'] = (isset($request->default_code_page)) ? $request->default_code_page : '';
 
         try
         {

@@ -88,19 +88,30 @@
                                         <option value="">not found</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 mb-3">
                                     <label for="default_printer" class="form-label">{{ __('Default Printer') }}</label>
                                     <select name="default_printer" id="default_printer" class="form-select">
                                         <option value="">not found</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 mb-3">
                                     <label for="receipt_intro" class="form-label">{{ __('Receipt Intro') }}</label>
                                     <input type="text" name="receipt_intro" id="receipt_intro" class="form-control" value="{{ (isset($printer_settings['receipt_intro'])) ? $printer_settings['receipt_intro'] : '' }}">
                                 </div>
-                                <div class="col-md-6 mt-2">
+                                <div class="col-md-6 mb-2">
                                     <label for="print_font_size" class="form-label">{{ __('Print Font Size') }}</label>
                                     <input type="number" name="print_font_size" id="print_font_size" value="{{ (isset($printer_settings['print_font_size'])) ? $printer_settings['print_font_size'] : '' }}" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="default_code_page" class="form-label">{{ __('Code Page') }}</label>
+                                    <select name="default_code_page" id="default_code_page" class="form-select">
+                                        <option value="">Select CodePage</option>
+                                        @if(count($code_pages) > 0)
+                                            @foreach ($code_pages as $code_page)
+                                                <option value="{{ $code_page['id'] }}" {{ (isset($printer_settings['default_code_page']) && $printer_settings['default_code_page'] == $code_page['id']) ? 'selected' : '' }}>{{ $code_page['name'] }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 </div>
                             </div>
                             <div class="row mt-3">
