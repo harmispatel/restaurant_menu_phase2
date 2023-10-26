@@ -347,6 +347,7 @@
     "Accept" : "Accept",
     "Finalize" : "Finalize",
     "Order Date" : "Order Date",
+    "Order Time" : "Order Time",
     "Order Type" : "Order Type",
     "Payment Method" : "Payment Method",
     "Customer" : "Customer",
