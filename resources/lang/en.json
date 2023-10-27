@@ -347,7 +347,9 @@
     "Accept" : "Accept",
     "Finalize" : "Finalize",
     "Order Date" : "Order Date",
+    "Date" : "Date",
     "Order Time" : "Order Time",
+    "Time" : "Time",
     "Order Type" : "Order Type",
     "Payment Method" : "Payment Method",
     "Customer" : "Customer",
@@ -489,5 +491,7 @@
 
     "FOOTER: Alternative Text" : "FOOTER: Alternative Text",
     "SEO: Page Title" : "SEO: Page Title",
-    "NOTICE: Service Is Closed" : "NOTICE: Service Is Closed"
+    "NOTICE: Service Is Closed" : "NOTICE: Service Is Closed",
+
+    "Accepted Services" : "Accepted Services"
 }

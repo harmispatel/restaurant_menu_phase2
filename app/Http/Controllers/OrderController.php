@@ -164,8 +164,8 @@ class OrderController extends Controller
                     $html .= '<div class="order-info">';
                         $html .= '<ul>';
                             $html .= '<li><strong>'.__('Order No.').' : #'.$order->order_id.'</strong></li>';
-                            $html .= '<li><strong>'.__('Order Date').' : </strong>'.date('d-m-Y',strtotime($order->created_at)).'</li>';
-                            $html .= '<li><strong>'.__('Order Time').' : </strong>'.date('h:i:s',strtotime($order->created_at)).'</li>';
+                            $html .= '<li><strong>'.__('Date').' : </strong>'.date('d-m-Y',strtotime($order->created_at)).'</li>';
+                            $html .= '<li><strong>'.__('Time').' : </strong>'.date('h:i:s',strtotime($order->created_at)).'</li>';
                             $html .= '<li><strong>'.__('Order Type').' : </strong>'.$order->checkout_type.'</li>';
                             $html .= '<li><strong>'.__('Payment Method').' : </strong>'.$order->payment_method.'</li>';
 
@@ -1285,8 +1285,8 @@ class OrderController extends Controller
                                             $html .= '<li><b>'.__('Order').' '.__('Id').' : </b>'.$order->order_id.'</li>';
                                             $html .= '<li><b>'.__('Order Type').' : </b> '.ucfirst(str_replace('_',' ',$data['checkout_type'])).'</li>';
                                             $html .= '<li><b>'.__('Payment Method').' : </b> '.ucfirst($data['payment_method']).'</li>';
-                                            $html .= '<li><b>'.__('Order Date').' : </b> '.$data['order_date'].'</li>';
-                                            $html .= '<li><b>'.__('Order Time').' : </b> '.$data['order_time'].'</li>';
+                                            $html .= '<li><b>'.__('Date').' : </b> '.$data['order_date'].'</li>';
+                                            $html .= '<li><b>'.__('Time').' : </b> '.$data['order_time'].'</li>';
 
                                             if($data['checkout_type'] == 'takeaway' || $data['checkout_type'] == 'delivery' || $data['checkout_type'] == 'room_delivery')
                                             {

@@ -38,7 +38,7 @@
 
                             {{-- Settings --}}
                             <div class="row">
-                                <h3>{{ __('Settings') }}</h3>
+                                <h3>{{ __('Accepted Services') }}</h3>
                                 <code>{{ __('If none of the settings bellow is enabled add-to-cart button will no be visible.') }}</code>
                             </div>
                             <div class="row mt-2">

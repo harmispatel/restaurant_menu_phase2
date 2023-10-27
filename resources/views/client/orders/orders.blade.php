@@ -116,8 +116,8 @@
                                 <div class="order-info">
                                     <ul>
                                         <li><strong>{{ __('Order No.') }} : #{{ $order->order_id }}</strong></li>
-                                        <li><strong>{{ __('Order Date') }} : </strong>{{ date('d-m-Y',strtotime($order->created_at)) }}</li>
-                                        <li><strong>{{ __('Order Time') }} : </strong>{{ date('h:i:s',strtotime($order->created_at)) }}</li>
+                                        <li><strong>{{ __('Date') }} : </strong>{{ date('d-m-Y',strtotime($order->created_at)) }}</li>
+                                        <li><strong>{{ __('Time') }} : </strong>{{ date('h:i:s',strtotime($order->created_at)) }}</li>
                                         <li><strong>{{ __('Order Type') }} : </strong>{{ $order->checkout_type }}</li>
                                         <li><strong>{{ __('Payment Method') }} : </strong>{{ $order->payment_method }}</li>
                                         @if($order->checkout_type == 'takeaway')
@@ -418,8 +418,8 @@
                                     .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv, code_page_value)
                                     .text(@json(__('Order Type'))+" : "+print_data.checkout_type, code_page_value)
                                     .text(@json(__('Payment Method'))+" : "+print_data.payment_method, code_page_value)
-                                    .text(@json(__('Order Date'))+" : "+print_data.order_date, code_page_value)
-                                    .text(@json(__('Order Time'))+" : "+print_data.order_time, code_page_value);
+                                    .text(@json(__('Date'))+" : "+print_data.order_date, code_page_value)
+                                    .text(@json(__('Time'))+" : "+print_data.order_time, code_page_value);
 
                                     if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery' || print_data.checkout_type == 'room_delivery'){
                                         escposCommands  = escposCommands

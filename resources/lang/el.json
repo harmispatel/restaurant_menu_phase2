@@ -193,7 +193,7 @@
     "French":"Γαλλικά",
 	"Qr Code":"QR Code",
     "Download":"Κατεβάστε",
-    "Print":"Εκτύπωση",
+    "Print":"Εκτύπωσης",
     "Color":"Χρώμα",
     "Style":"Στυλ",
     "Size":"Μέγεθος",
@@ -312,7 +312,9 @@
     "Accept" : "Αποδοχή",
     "Finalize" : "Ολοκλήρωση",
     "Order Date" : "Ημερομηνία Παραγγελίας",
+    "Date" : "Ημερομηνία",
     "Order Time" : "Παραγγελίας Ώρα",
+    "Time" : "Ώρα",
     "Order Type" : "Τύπος Παραγγελίας",
     "Payment Method" : "Μέθοδος Πληρωμής",
     "Customer" : "Πελάτης",
@@ -453,5 +455,7 @@
 
     "FOOTER: Alternative Text" : "ΥΠΟΣΕΛΙΔΟ: Εναλλακτικό Κείμενο",
     "SEO: Page Title" : "SEO: Τίτλος Σελίδας",
-    "NOTICE: Service Is Closed" : "ΕΙΔΟΠΟΙΗΣΗ: Η Υπηρεσία Έκλεισε"
+    "NOTICE: Service Is Closed" : "ΕΙΔΟΠΟΙΗΣΗ: Η Υπηρεσία Έκλεισε",
+
+    "Accepted Services" : "Αποδεκτές Υπηρεσίες"
 }

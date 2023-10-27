@@ -206,7 +206,7 @@
                     </li>
                     <li>
                         <a href="{{ route('printer.settings') }}" class="{{ (($routeName == 'printer.settings')) ? 'active-link' : '' }}">
-                            <span>{{ __('Print Settings') }}</span>
+                            <span>{{ __('Print') }}</span>
                         </a>
                     </li>
                 @endif
