@@ -140,7 +140,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
                                             <label class="form-label">{{__('Mobile No.')}}</label>
-                                            <input type="number" name="mobile" id="mobile" value="{{ $user->mobile }}" class="form-control" placeholder="Plase Enter your Mobile Number">
+                                            <input type="text" name="mobile" id="mobile" value="{{ $user->mobile }}" class="form-control" placeholder="Plase Enter your Mobile Number">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
