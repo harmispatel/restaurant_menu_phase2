@@ -462,16 +462,16 @@
                                     if(print_data.items.length > 0){
                                         print_data.items.forEach(item => {
                                             escposCommands = escposCommands
-                                            .text(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name,737)
-                                            .text(@json(__('Qty.'))+" : " + item.item_qty,737);
+                                            .text(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name,code_page_value)
+                                            .text(@json(__('Qty.'))+" : " + item.item_qty,code_page_value);
 
                                             if(item.options != ''){
                                                 escposCommands = escposCommands
-                                                .text(@json(__('Options'))+": " + item.options,737)
+                                                .text(@json(__('Options'))+": " + item.options,code_page_value)
                                             }
 
                                             escposCommands = escposCommands
-                                            .text(@json(__('Price'))+" : " + item.sub_total_text + "\u20AC",737).feed(1);
+                                            .text(@json(__('Price'))+" : " + item.sub_total_text + "\u20AC",code_page_value).feed(1);
                                         });
                                     }
 
@@ -483,22 +483,22 @@
 
                                     escposCommands = escposCommands
                                     .drawLine(1)
-                                    .text(@json(__('Sub Total'))+" : " + print_data.subtotal + "\u20AC",737);
+                                    .text(@json(__('Sub Total'))+" : " + print_data.subtotal + "\u20AC",code_page_value);
 
                                     if(print_data.discount != 0){
                                         escposCommands = escposCommands
                                         .feed(1)
-                                        .text(@json(__('Discount'))+" : " + print_data.discount ,737);
+                                        .text(@json(__('Discount'))+" : " + print_data.discount ,code_page_value);
                                     }
 
                                     if(print_data.tip != 0){
                                         escposCommands = escposCommands
                                         .feed(1)
-                                        .text(@json(__('Tip'))+" : " + print_data.tip + "\u20AC",737);
+                                        .text(@json(__('Tip'))+" : " + print_data.tip + "\u20AC",code_page_value);
                                     }
 
                                     escposCommands = escposCommands
-                                    .text(@json(__('Total Amount'))+" : " + print_data.total_amount + "\u20AC",737);
+                                    .text(@json(__('Total Amount'))+" : " + print_data.total_amount + "\u20AC",code_page_value);
 
                                     escposCommands = escposCommands
                                     .drawLine(1)
