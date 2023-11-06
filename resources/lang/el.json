@@ -322,7 +322,7 @@
     "Delivery Time" : "Ωρα Παράδοσης",
     "Table No." : "Αριθμός Τραπεζιού",
     "Floor" : "Όροφος",
-    "Door Bell" : "Όνομα Κουδουνιού",
+    "Door Bell" : "Κουδούνι",
     "Google Map" : "Χάρτης Google",
     "Comments" : "Σχόλια",
     "Sub Total" : "ΜΕΡΙΚΟ ΣΥΝΟΛΟ",
@@ -457,5 +457,8 @@
     "SEO: Page Title" : "SEO: Τίτλος Σελίδας",
     "NOTICE: Service Is Closed" : "ΕΙΔΟΠΟΙΗΣΗ: Η Υπηρεσία Έκλεισε",
 
-    "Accepted Services" : "Αποδεκτές Υπηρεσίες"
+    "Accepted Services" : "Αποδεκτές Υπηρεσίες",
+    "Minimum Charge" : "Ελάχιστη χρέωση",
+    "Shop Address" : "Διεύθυνση καταστήματος",
+    "Notification" : "Γνωστοποίηση"
 }

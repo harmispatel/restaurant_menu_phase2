@@ -97,133 +97,69 @@
 
                             {{-- Other Settings --}}
                             <div class="row">
-                                <h3>{{ __('Other Settings') }}</h3>
+                                <h3>{{ __('Settings') }}</h3>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="switch me-2">
-                                        <input type="checkbox" value="1" name="auto_order_approval" id="auto_order_approval" class="ord-setting" {{ (isset($order_settings['auto_order_approval']) && $order_settings['auto_order_approval'] == 1) ? 'checked' : '' }}>
-                                        <span class="slider round">
-                                            <i class="fa-solid fa-circle-check check_icon"></i>
-                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                        </span>
-                                    </label>
-                                    <label for="auto_order_approval" class="form-label">{{ __('Auto Order Approval') }}</label>
+                                <div class="col-md-4">
+                                    <div>
+                                        <label class="switch me-2">
+                                            <input type="checkbox" value="1" name="auto_order_approval" id="auto_order_approval" class="ord-setting" {{ (isset($order_settings['auto_order_approval']) && $order_settings['auto_order_approval'] == 1) ? 'checked' : '' }}>
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="auto_order_approval" class="form-label">{{ __('Auto Order Approval') }}</label>
+                                    </div>
+                                    <h5 class="mt-2">{{ __('Minutes') }}</h5>
+                                    <div>
+                                        <label for="order_arrival_minutes" class="form-label">{{ __('Default estimated minutes until order arrival') }}</label>
+                                        <input type="number" name="order_arrival_minutes" id="order_arrival_minutes" class="form-control ord-setting" value="{{ (isset($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '' }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5>{{ __('Notification') }}</h5>
+                                    <div>
+                                        <label class="switch me-2">
+                                            <input type="checkbox" value="1" name="play_sound" id="play_sound" class="ord-setting" {{ (isset($order_settings['play_sound']) && $order_settings['play_sound'] == 1) ? 'checked' : '' }}>
+                                            <span class="slider round">
+                                                <i class="fa-solid fa-circle-check check_icon"></i>
+                                                <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                            </span>
+                                        </label>
+                                        <label for="play_sound" class="form-label">{{ __('Play Sound') }}</label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <label for="notification_sound" class="form-label">{{ __('Notification Sound') }}</label>
+                                        <select name="notification_sound" id="notification_sound" class="form-select">
+                                            <option value="buzzer-01.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-01.mp3') ? 'selected' : '' }}>Buzzer 1</option>
+                                            <option value="buzzer-02.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-02.mp3') ? 'selected' : '' }}>Buzzer 2</option>
+                                            <option value="buzzer-03.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-03.mp3') ? 'selected' : '' }}>Buzzer 3</option>
+                                            <option value="buzzer-04.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-04.mp3') ? 'selected' : '' }}>Buzzer 4</option>
+                                            <option value="buzzer-05.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-05.mp3') ? 'selected' : '' }}>Buzzer 5</option>
+                                            <option value="male.mp3" {{ ($order_settings['notification_sound'] == 'male.mp3') ? 'selected' : '' }}>Male Gr</option>
+                                            <option value="female.mp3" {{ ($order_settings['notification_sound'] == 'female.mp3') ? 'selected' : '' }}>Female Gr</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5>{{ __('Discount') }}</h5>
+                                    <div>
+                                        <label for="discount_type" class="form-label">{{ __('Discount Type') }}</label>
+                                        <select name="discount_type" id="discount_type" class="form-select ord-setting">
+                                            <option value="percentage" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'percentage') ? 'selected' : '' }}>{{ __('Percentage %') }}</option>
+                                            <option value="fixed" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'fixed') ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="mt-3">
+                                        <label for="discount_percentage" class="form-label">{{ __('Enter the desired discount value, discount applies to the total amount! Leave blank to disable.') }}</label>
+                                        <input type="number" name="discount_percentage" id="discount_percentage" class="form-control ord-setting" value="{{ (isset($order_settings['discount_percentage'])) ? $order_settings['discount_percentage'] : '' }}">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row mt-4">
-                                @php
-                                    $min_amount_delivery = (isset($order_settings['min_amount_for_delivery']) && !empty($order_settings['min_amount_for_delivery'])) ? unserialize($order_settings['min_amount_for_delivery']) : [];
-                                @endphp
-                                <label for="min_amount_for_delivery" class="form-label">{{ __('Minimum amount needed for delivery, if left null any amount is acceptable.') }}</label>
-                                <div class="col-md-6 min-amount-div">
-                                    @if(count($min_amount_delivery) > 0)
-                                        @foreach ($min_amount_delivery as $amt_key => $min_amount_del)
-                                            <div class="row mb-2 min_amount_{{ $amt_key }}">
-                                                <div class="col-md-3">
-                                                    @if($amt_key == 1)
-                                                        <label class="form-label">From KM.</label>
-                                                    @endif
-                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][from]" class="form-control" value="{{ isset($min_amount_del['from']) ? $min_amount_del['from'] : '' }}">
-                                                </div>
-                                                <div class="col-md-3">
-                                                    @if($amt_key == 1)
-                                                        <label class="form-label">To KM.</label>
-                                                    @endif
-                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][to]" class="form-control" value="{{ isset($min_amount_del['to']) ? $min_amount_del['to'] : '' }}">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    @if($amt_key == 1)
-                                                        <label class="form-label">Amount</label>
-                                                    @endif
-                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][amount]" class="form-control" placeholder="Enter Amount" value="{{ isset($min_amount_del['amount']) ? $min_amount_del['amount'] : '' }}">
-                                                </div>
-                                                @if($amt_key != 1)
-                                                    <div class="col-md-2">
-                                                        <a class="btn btn-sm btn-danger" onclick="$('.min_amount_{{ $amt_key }}').remove();  $('#update-btn').removeAttr('disabled',true);"><i class="bi bi-trash"></i></a>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <div class="row mb-2 min_amount_1">
-                                            <div class="col-md-3">
-                                                <label class="form-label">From KM.</label>
-                                                <input type="number" name="min_amount_for_delivery[1][from]" class="form-control">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">To KM.</label>
-                                                <input type="number" name="min_amount_for_delivery[1][to]" class="form-control">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Amount</label>
-                                                <input type="number" name="min_amount_for_delivery[1][amount]" class="form-control" placeholder="Enter Amount">
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
+                            <hr>
                             {{-- <label for="min_amount_for_delivery" class="form-label">{{ __('Minimum amount needed for delivery, if left null any amount is acceptable.') }}</label>
                             <input type="number" name="min_amount_for_delivery" id="min_amount_for_delivery" class="form-control ord-setting" value="{{ (isset($order_settings['min_amount_for_delivery'])) ? $order_settings['min_amount_for_delivery'] : '' }}"> --}}
-                            <div class="row mt-2 mb-2">
-                                <div class="col-md-6">
-                                    <a class="btn btn-sm btn-primary" id="new-min-amt" onclick="newMinAmount()">NEW <i class="bi bi-plus"></i></a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mt-3">
-                                    <label for="discount_type" class="form-label">{{ __('Discount Type') }}</label>
-                                    <select name="discount_type" id="discount_type" class="form-select ord-setting">
-                                        <option value="percentage" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'percentage') ? 'selected' : '' }}>{{ __('Percentage %') }}</option>
-                                        <option value="fixed" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'fixed') ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mt-3">
-                                    <label for="discount_percentage" class="form-label">{{ __('Enter the desired discount value, discount applies to the total amount! Leave blank to disable.') }}</label>
-                                    <input type="number" name="discount_percentage" id="discount_percentage" class="form-control ord-setting" value="{{ (isset($order_settings['discount_percentage'])) ? $order_settings['discount_percentage'] : '' }}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mt-3">
-                                    <label for="order_arrival_minutes" class="form-label">{{ __('Default estimated minutes until order arrival') }}</label>
-                                    <input type="number" name="order_arrival_minutes" id="order_arrival_minutes" class="form-control ord-setting" value="{{ (isset($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '' }}">
-                                </div>
-                            </div>
-                            <hr>
-
-                            {{-- Notifaction Settings --}}
-                            <div class="row">
-                                <h3>{{ __('Notification Settings') }}</h3>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-md-6">
-                                    <label class="switch me-2">
-                                        <input type="checkbox" value="1" name="play_sound" id="play_sound" class="ord-setting" {{ (isset($order_settings['play_sound']) && $order_settings['play_sound'] == 1) ? 'checked' : '' }}>
-                                        <span class="slider round">
-                                            <i class="fa-solid fa-circle-check check_icon"></i>
-                                            <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                        </span>
-                                    </label>
-                                    <label for="play_sound" class="form-label">{{ __('Play Sound') }}</label>
-                                </div>
-                            </div>
-                            <div class="row mt-1">
-                                <div class="col-md-6 mt-2">
-                                    <label for="notification_sound" class="form-label">{{ __('Notification Sound') }}</label>
-                                    <select name="notification_sound" id="notification_sound" class="form-select">
-                                        <option value="buzzer-01.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-01.mp3') ? 'selected' : '' }}>Buzzer 1</option>
-                                        <option value="buzzer-02.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-02.mp3') ? 'selected' : '' }}>Buzzer 2</option>
-                                        <option value="buzzer-03.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-03.mp3') ? 'selected' : '' }}>Buzzer 3</option>
-                                        <option value="buzzer-04.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-04.mp3') ? 'selected' : '' }}>Buzzer 4</option>
-                                        <option value="buzzer-05.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-05.mp3') ? 'selected' : '' }}>Buzzer 5</option>
-                                        <option value="male.mp3" {{ ($order_settings['notification_sound'] == 'male.mp3') ? 'selected' : '' }}>Male Gr</option>
-                                        <option value="female.mp3" {{ ($order_settings['notification_sound'] == 'female.mp3') ? 'selected' : '' }}>Female Gr</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <hr>
 
                             {{-- Delivery Settings --}}
                             <div class="row">
@@ -423,6 +359,67 @@
                                 <input type="hidden" name="new_coordinates" id="new_coordinates">
                                 <div class="col-md-12">
                                     <div id="map" style="height: 500px;"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6"><h3>{{ __('Minimum Charge') }}</h3></div>
+                            </div>
+                            <div class="row mt-4">
+                                @php
+                                    $min_amount_delivery = (isset($order_settings['min_amount_for_delivery']) && !empty($order_settings['min_amount_for_delivery'])) ? unserialize($order_settings['min_amount_for_delivery']) : [];
+                                @endphp
+                                <label for="min_amount_for_delivery" class="form-label">{{ __('Minimum amount needed for delivery, if left null any amount is acceptable.') }}</label>
+                                <div class="col-md-6 min-amount-div">
+                                    @if(count($min_amount_delivery) > 0)
+                                        @foreach ($min_amount_delivery as $amt_key => $min_amount_del)
+                                            <div class="row mb-2 min_amount_{{ $amt_key }}">
+                                                <div class="col-md-3">
+                                                    @if($amt_key == 1)
+                                                        <label class="form-label">From KM.</label>
+                                                    @endif
+                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][from]" class="form-control" value="{{ isset($min_amount_del['from']) ? $min_amount_del['from'] : '' }}">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    @if($amt_key == 1)
+                                                        <label class="form-label">To KM.</label>
+                                                    @endif
+                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][to]" class="form-control" value="{{ isset($min_amount_del['to']) ? $min_amount_del['to'] : '' }}">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    @if($amt_key == 1)
+                                                        <label class="form-label">Amount</label>
+                                                    @endif
+                                                    <input type="number" name="min_amount_for_delivery[{{ $amt_key }}][amount]" class="form-control" placeholder="Enter Amount" value="{{ isset($min_amount_del['amount']) ? $min_amount_del['amount'] : '' }}">
+                                                </div>
+                                                @if($amt_key != 1)
+                                                    <div class="col-md-2">
+                                                        <a class="btn btn-sm btn-danger" onclick="$('.min_amount_{{ $amt_key }}').remove();  $('#update-btn').removeAttr('disabled',true);"><i class="bi bi-trash"></i></a>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="row mb-2 min_amount_1">
+                                            <div class="col-md-3">
+                                                <label class="form-label">From KM.</label>
+                                                <input type="number" name="min_amount_for_delivery[1][from]" class="form-control">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">To KM.</label>
+                                                <input type="number" name="min_amount_for_delivery[1][to]" class="form-control">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Amount</label>
+                                                <input type="number" name="min_amount_for_delivery[1][amount]" class="form-control" placeholder="Enter Amount">
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="row mt-2 mb-2">
+                                <div class="col-md-6">
+                                    <a class="btn btn-sm btn-primary" id="new-min-amt" onclick="newMinAmount()">NEW <i class="bi bi-plus"></i></a>
                                 </div>
                             </div>
                             <hr>

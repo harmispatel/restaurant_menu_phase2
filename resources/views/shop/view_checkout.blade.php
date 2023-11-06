@@ -624,6 +624,14 @@
                         $('#latitude').val(place.geometry['location'].lat());
                         $('#longitude').val(place.geometry['location'].lng());
 
+                        var streetNumber = '';
+                        place.address_components.forEach(function (component) {
+                            if (component.types.includes('street_number')) {
+                                streetNumber = component.long_name;
+                            }
+                        });
+                        $('#street_number').val(streetNumber);
+
                         $.ajax({
                             type: "POST",
                             url: "{{ route('set.delivery.address') }}",

@@ -5,6 +5,7 @@
     $name_key = $primary_code."_name";
 
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+    $shop_name = isset(Auth::user()->hasOneShop->shop['name']) ? Auth::user()->hasOneShop->shop['name'] : '';
     $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
 
     // Subscrption ID
@@ -28,7 +29,7 @@
             <div class="col-md-8">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item active">{{ __('Dashboard') }}</li>
+                        <li class="breadcrumb-item active">{{ $shop_name }}</li>
                     </ol>
                 </nav>
             </div>
