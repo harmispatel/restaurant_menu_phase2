@@ -56,6 +56,7 @@
     $cust_lat = session()->get('cust_lat');
     $cust_lng = session()->get('cust_long');
     $cust_address = session()->get('cust_address');
+    $cust_street = session()->get('cust_street');
 @endphp
 
 @extends('shop.shop-layout')
@@ -72,7 +73,22 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {!! $delivery_message !!}
+                    <div class="row delivery-message" style="display: none;">
+                        <div class="col-md-12 mb-2">
+                            {!! $delivery_message !!}
+                        </div>
+                    </div>
+                    <div class="row street_no mt-2" style="display: none;">
+                        <div class="col-md-12">
+                            <div class="form-group mb-2">
+                                <label for="street_no" class="form-label">Street Number</label>
+                                <input type="text" name="street_no" id="street_no" class="form-control" placeholder="Enter Your Street Number">
+                            </div>
+                            <div class="form-group">
+                                <a class="btn btn-success street-btn btn-sm">Submit</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,7 +202,8 @@
                                     <code>Ex:- 9:30-10:00</code>
                                 </div>
                             @elseif ($checkout_type == 'delivery')
-                                <div class="col-md-6 mb-2">
+                                <input type="hidden" name="street_number" id="street_number" class="form-control " value="{{ $cust_street }}">
+                                <div class="col-md-12 mb-2">
                                     <label for="address" class="form-label">{{ __('Address') }} <span class="text-danger">*</span></label>
                                     <input type="hidden" name="latitude" id="latitude" value="{{ $cust_lat }}">
                                     <input type="hidden" name="longitude" id="longitude" value="{{ $cust_lng }}">
@@ -194,15 +211,6 @@
                                     @if($errors->has('address'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('address') }}
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <label for="street_number" class="form-label">{{ __('Street Number') }} <span class="text-danger">*</span></label>
-                                    <input type="text" name="street_number" id="street_number" class="form-control {{ ($errors->has('street_number')) ? 'is-invalid' : '' }}" value="{{ old('street_number') }}">
-                                    @if($errors->has('street_number'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('street_number') }}
                                         </div>
                                     @endif
                                 </div>
@@ -630,67 +638,176 @@
                                 streetNumber = component.long_name;
                             }
                         });
-                        $('#street_number').val(streetNumber);
 
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('set.delivery.address') }}",
-                            data: {
-                                "_token" : "{{ csrf_token() }}",
-                                "latitude" : place.geometry['location'].lat(),
-                                "longitude" : place.geometry['location'].lng(),
-                                "address" : $('#address').val(),
-                                "shop_id" : "{{ $shop_details['id'] }}",
-                            },
-                            dataType: "JSON",
-                            success: function (response)
-                            {
-                                if(response.success == 1)
+                        if(!streetNumber){
+                            $('#deliveyModal').modal('show');
+                            $('.street_no').show();
+                            $('#street_no').val('');
+                            $('.delivery-message').hide();
+                        }else{
+                            $('#street_number').val(streetNumber);
+
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('set.delivery.address') }}",
+                                data: {
+                                    "_token" : "{{ csrf_token() }}",
+                                    "latitude" : place.geometry['location'].lat(),
+                                    "longitude" : place.geometry['location'].lng(),
+                                    "address" : $('#address').val(),
+                                    "street_number" : streetNumber,
+                                    "shop_id" : "{{ $shop_details['id'] }}",
+                                },
+                                dataType: "JSON",
+                                success: function (response)
                                 {
-                                    if(response.available == 0)
+                                    if(response.success == 1)
                                     {
-                                        $('#deliveyModal').modal('show');
+                                        if(response.available == 0)
+                                        {
+                                            $('#street_no').val('');
+                                            $('.street_no').hide();
+                                            $('.delivery-message').show();
+                                            $('#deliveyModal').modal('show');
+                                        }
+                                        else
+                                        {
+                                            $('#street_no').val('');
+                                            $('.street_no').hide();
+                                            $('#deliveyModal').modal('hide');
+
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "{{ route('check.min_amount_for_delivery') }}",
+                                                data: {
+                                                    "_token" : "{{ csrf_token() }}",
+                                                    "latitude" : place.geometry['location'].lat(),
+                                                    "longitude" : place.geometry['location'].lng(),
+                                                    "address" : $('#address').val(),
+                                                    "shop_id" : "{{ $shop_details['id'] }}",
+                                                    "total_amount" : $('#t_amount').val(),
+                                                    "currency" : "{{ $currency }}",
+                                                },
+                                                dataType: "JSON",
+                                                success: function (response)
+                                                {
+                                                    if (response.success == 0)
+                                                    {
+                                                        $('#distanceMessageModal .modal-body').html('');
+                                                        $('#distanceMessageModal .modal-body').append(response.message);
+                                                        $('#distanceMessageModal').modal('show');
+                                                    }
+                                                }
+                                            });
+                                        }
                                     }
                                     else
                                     {
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "{{ route('check.min_amount_for_delivery') }}",
-                                            data: {
-                                                "_token" : "{{ csrf_token() }}",
-                                                "latitude" : place.geometry['location'].lat(),
-                                                "longitude" : place.geometry['location'].lng(),
-                                                "address" : $('#address').val(),
-                                                "shop_id" : "{{ $shop_details['id'] }}",
-                                                "total_amount" : $('#t_amount').val(),
-                                                "currency" : "{{ $currency }}",
-                                            },
-                                            dataType: "JSON",
-                                            success: function (response)
-                                            {
-                                                if (response.success == 0)
-                                                {
-                                                    $('#distanceMessageModal .modal-body').html('');
-                                                    $('#distanceMessageModal .modal-body').append(response.message);
-                                                    $('#distanceMessageModal').modal('show');
-                                                }
-                                            }
-                                        });
+                                        console.error(response.message);
                                     }
                                 }
-                                else
-                                {
-                                    console.error(response.message);
-                                }
-                            }
-                        });
-
+                            });
+                        }
                     }
                 });
             }
+
+            $('.street-btn').on('click',function(){
+                var street = $('#street_no').val();
+                if(!street){
+                    alert('Please Enter Street Number');
+                }else{
+                    var address = $('#address').val();
+                    var commaIndex = address.indexOf(',');
+
+                    if (commaIndex !== -1)
+                    {
+                        var firstPart = address.slice(0, commaIndex);
+                        var secondPart = address.slice(commaIndex);
+                        address = firstPart +" "+ street + secondPart;
+                    }
+
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({
+                        'address': address
+                    },
+                    function(results, status) {
+                        if (status === 'OK')
+                        {
+                            $('#street_number').val(street);
+                            $('#address').val(address);
+                            var latitude = results[0].geometry.location.lat();
+                            var longitude = results[0].geometry.location.lng();
+
+                            $('#latitude').val(latitude);
+                            $('#longitude').val(longitude);
+
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('set.delivery.address') }}",
+                                data: {
+                                    "_token" : "{{ csrf_token() }}",
+                                    "latitude" : latitude,
+                                    "longitude" : longitude,
+                                    "address" : $('#address').val(),
+                                    "street_number" : street,
+                                    "shop_id" : "{{ $shop_details['id'] }}",
+                                },
+                                dataType: "JSON",
+                                success: function (response)
+                                {
+                                    if(response.success == 1)
+                                    {
+                                        if(response.available == 0)
+                                        {
+                                            $('#street_no').val('');
+                                            $('.street_no').hide();
+                                            $('.delivery-message').show();
+                                            $('#deliveyModal').modal('show');
+                                        }
+                                        else
+                                        {
+                                            $('#street_no').val('');
+                                            $('.street_no').hide();
+                                            $('#deliveyModal').modal('hide');
+
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "{{ route('check.min_amount_for_delivery') }}",
+                                                data: {
+                                                    "_token" : "{{ csrf_token() }}",
+                                                    "latitude" : latitude,
+                                                    "longitude" : longitude,
+                                                    "address" : $('#address').val(),
+                                                    "shop_id" : "{{ $shop_details['id'] }}",
+                                                    "total_amount" : $('#t_amount').val(),
+                                                    "currency" : "{{ $currency }}",
+                                                },
+                                                dataType: "JSON",
+                                                success: function (response)
+                                                {
+                                                    if (response.success == 0)
+                                                    {
+                                                        $('#distanceMessageModal .modal-body').html('');
+                                                        $('#distanceMessageModal .modal-body').append(response.message);
+                                                        $('#distanceMessageModal').modal('show');
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                    else
+                                    {
+                                        console.error(response.message);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
         // End Map Functionality
-
 
         // Toastr
         toastr.options = {

@@ -1032,12 +1032,14 @@ class OrderController extends Controller
         $lng = $request->longitude;
         $address = $request->address;
         $shop_id = $request->shop_id;
+        $street_number = $request->street_number;
 
         try
         {
             session()->put('cust_lat',$lat);
             session()->put('cust_long',$lng);
             session()->put('cust_address',$address);
+            session()->put('cust_street',$street_number);
             session()->save();
 
             $delivey_avaialbility = checkDeliveryAvilability($shop_id,$lat,$lng);

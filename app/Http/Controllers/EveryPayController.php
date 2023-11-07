@@ -582,6 +582,7 @@ class EveryPayController extends Controller
                 session()->forget('cust_lat');
                 session()->forget('cust_long');
                 session()->forget('cust_address');
+                session()->forget('cust_street');
                 session()->save();
 
                 return redirect()->route('shop.checkout.success',[$shop_slug,encrypt($order->id)]);
