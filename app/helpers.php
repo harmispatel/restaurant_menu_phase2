@@ -120,6 +120,7 @@
             'shop_longitude',
             'google_map_order_view',
             'default_code_page',
+            'greek_list',
         ]);
 
         $settings = [];

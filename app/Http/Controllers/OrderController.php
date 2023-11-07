@@ -598,6 +598,7 @@ class OrderController extends Controller
         $all_data['enable_print'] = (isset($request->enable_print)) ? $request->enable_print : 0;
         $all_data['auto_print'] = (isset($request->auto_print)) ? $request->auto_print : 0;
         $all_data['raw_printing'] = (isset($request->raw_printing)) ? $request->raw_printing : 0;
+        $all_data['greek_list'] = (isset($request->greek_list)) ? $request->greek_list : 0;
         $all_data['printer_paper'] = (isset($request->printer_paper)) ? $request->printer_paper : '';
         $all_data['default_printer'] = (isset($request->default_printer)) ? $request->default_printer : '';
         $all_data['receipt_intro'] = $request->receipt_intro;

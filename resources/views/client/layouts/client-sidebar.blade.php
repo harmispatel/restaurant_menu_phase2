@@ -39,7 +39,7 @@
         <li class="nav-item">
             <a class="nav-link {{ ($routeName == 'client.dashboard') ? 'active-tab' : '' }}" href="{{ route('client.dashboard') }}">
                 <i class="fa-solid fa-house-chimney {{ ($routeName == 'client.dashboard') ? 'icon-tab' : '' }}"></i>
-                <span>{{ __('Dashboard') }} {{ $shop_name }}</span>
+                <span>{{ $shop_name }}</span>
             </a>
         </li>
 

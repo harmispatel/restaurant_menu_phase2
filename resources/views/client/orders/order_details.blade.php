@@ -20,6 +20,7 @@
     // Auto Print
     $auto_print = (isset($order_setting['auto_print']) && !empty($order_setting['auto_print'])) ? $order_setting['auto_print'] : 0;
     $enable_print = (isset($order_setting['enable_print']) && !empty($order_setting['enable_print'])) ? $order_setting['enable_print'] : 0;
+    $greek_list = (isset($order_setting['greek_list']) && !empty($order_setting['greek_list'])) ? $order_setting['greek_list'] : 0;
     // Print Font Size
     $printFontSize = (isset($order_setting['print_font_size']) && !empty($order_setting['print_font_size'])) ? $order_setting['print_font_size'] : 20;
 
@@ -429,6 +430,7 @@
         var printFontSize = "{{ $printFontSize }}";
         var code_page_key = parseInt(@json($code_page_key));
         var code_page_value = parseInt(@json($code_page_value));
+        var greek_list = JSON.parse(@json($greek_list));
 
         toastr.options = {
             "closeButton": true,
@@ -487,108 +489,214 @@
                                     var escpos = Neodynamic.JSESCPOSBuilder;
                                     var doc = new escpos.Document();
 
-                                    var escposCommands = doc
-                                    .font(escpos.FontFamily.A)
-                                    .align(escpos.TextAlignment.LeftJustification)
-                                    .style([escpos.FontStyle.Bold])
-                                    .size(2)
-                                    .setCharacterCodeTable(code_page_key)
-                                    .text(print_data.receipt_intro, code_page_value)
-                                    .drawLine(1);
+                                    if(greek_list == 1)
+                                    {
+                                        var escposCommands = doc
+                                        .font(escpos.FontFamily.A)
+                                        .align(escpos.TextAlignment.LeftJustification)
+                                        .style([escpos.FontStyle.Bold])
+                                        .size(2)
+                                        .text(greeklish(print_data.receipt_intro))
+                                        .drawLine(1);
 
-                                    escposCommands = escposCommands
-                                    .feed(1)
-                                    .font(escpos.FontFamily.A)
-                                    .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv, code_page_value)
-                                    .text(@json(__('Order Type'))+" : "+print_data.checkout_type, code_page_value)
-                                    .text(@json(__('Payment Method'))+" : "+print_data.payment_method, code_page_value)
-                                    .text(@json(__('Date'))+" : "+print_data.order_date, code_page_value)
-                                    .text(@json(__('Time'))+" : "+print_data.order_time, code_page_value);
-
-                                    if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery' || print_data.checkout_type == 'room_delivery'){
-                                        escposCommands  = escposCommands
-                                        .text(@json(__('Customer'))+" : "+print_data.customer, code_page_value);
-                                    }
-
-                                    if(print_data.checkout_type == 'delivery'){
                                         escposCommands = escposCommands
-                                        .text(@json(__('Address'))+" : "+print_data.address, code_page_value)
-                                        .text(@json(__('Street Number'))+" : "+print_data.street_number, code_page_value)
-                                        .text(@json(__('Floor'))+" : "+print_data.floor, code_page_value)
-                                        .text(@json(__('Door Bell'))+" : "+print_data.door_bell, code_page_value);
-                                    }
+                                        .feed(1)
+                                        .font(escpos.FontFamily.A)
+                                        .text(greeklish(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv))
+                                        .text(greeklish(@json(__('Order Type'))+" : "+print_data.checkout_type))
+                                        .text(greeklish(@json(__('Payment Method'))+" : "+print_data.payment_method))
+                                        .text(greeklish(@json(__('Date'))+" : "+print_data.order_date))
+                                        .text(greeklish(@json(__('Time'))+" : "+print_data.order_time));
 
-                                    if(print_data.checkout_type == 'room_delivery'){
-                                        escposCommands = escposCommands
-                                        .text(@json(__('Room No.'))+" : "+print_data.room_no, code_page_value)
-                                        .text(@json(__('Delivery Time'))+" : "+print_data.delivery_time, code_page_value);
-                                    }
+                                        if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery' || print_data.checkout_type == 'room_delivery'){
+                                            escposCommands  = escposCommands
+                                            .text(greeklish(@json(__('Customer'))+" : "+print_data.customer));
+                                        }
 
-                                    if(print_data.checkout_type == 'table_service'){
-                                        escposCommands = escposCommands
-                                        .text(@json(__('Table No.'))+" : "+print_data.table_no, code_page_value);
-                                    }
-
-                                    if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery'){
-                                        escposCommands = escposCommands
-                                        .text(@json(__('Telephone'))+" : "+print_data.phone, code_page_value);
-                                        // .text(@json(__('Email'))+" : "+print_data.email, code_page_value);
-                                    }
-
-                                    escposCommands = escposCommands
-                                    .drawLine(1)
-                                    .font(escpos.FontFamily.A)
-                                    .size(2);
-
-                                    escposCommands = escposCommands
-                                    .feed(1);
-
-                                    if(print_data.items.length > 0){
-                                        print_data.items.forEach(item => {
+                                        if(print_data.checkout_type == 'delivery'){
                                             escposCommands = escposCommands
-                                            .text(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name,737)
-                                            .text(@json(__('Qty.'))+" : " + item.item_qty,737);
+                                            .text(greeklish(@json(__('Address'))+" : "+print_data.address))
+                                            .text(greeklish(@json(__('Street Number'))+" : "+print_data.street_number))
+                                            .text(greeklish(@json(__('Floor'))+" : "+print_data.floor))
+                                            .text(greeklish(@json(__('Door Bell'))+" : "+print_data.door_bell));
+                                        }
 
-                                            if(item.options != ''){
+                                        if(print_data.checkout_type == 'room_delivery'){
+                                            escposCommands = escposCommands
+                                            .text(greeklish(@json(__('Room No.'))+" : "+print_data.room_no))
+                                            .text(greeklish(@json(__('Delivery Time'))+" : "+print_data.delivery_time));
+                                        }
+
+                                        if(print_data.checkout_type == 'table_service'){
+                                            escposCommands = escposCommands
+                                            .text(greeklish(@json(__('Table No.'))+" : "+print_data.table_no));
+                                        }
+
+                                        if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery'){
+                                            escposCommands = escposCommands
+                                            .text(greeklish(@json(__('Telephone'))+" : "+print_data.phone));
+                                        }
+
+                                        escposCommands = escposCommands
+                                        .drawLine(1)
+                                        .font(escpos.FontFamily.A)
+                                        .size(2);
+
+                                        escposCommands = escposCommands
+                                        .feed(1);
+
+                                        if(print_data.items.length > 0){
+                                            print_data.items.forEach(item => {
                                                 escposCommands = escposCommands
-                                                .text(@json(__('Options'))+": " + item.options,737)
-                                            }
+                                                .text(greeklish(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name))
+                                                .text(greeklish(@json(__('Qty.'))+" : " + item.item_qty));
 
+                                                if(item.options != ''){
+                                                    escposCommands = escposCommands
+                                                    .text(greeklish(@json(__('Options'))+": " + item.options))
+                                                }
+
+                                                escposCommands = escposCommands
+                                                .text(greeklish(@json(__('Price'))+" : " + item.sub_total_text)).feed(1);
+                                            });
+                                        }
+
+                                        escposCommands = escposCommands
+                                        .drawLine(1);
+
+                                        escposCommands = escposCommands
+                                        .text(greeklish(@json(__('Comments'))+" : "+ print_data.instructions));
+
+                                        escposCommands = escposCommands
+                                        .drawLine(1)
+                                        .text(greeklish(@json(__('Sub Total'))+" : " + print_data.subtotal));
+
+                                        if(print_data.discount != 0){
                                             escposCommands = escposCommands
-                                            .text(@json(__('Price'))+" : " + item.sub_total_text + "\u20AC",737).feed(1);
-                                        });
+                                            .feed(1)
+                                            .text(greeklish(@json(__('Discount'))+" : " + print_data.discount));
+                                        }
+
+                                        if(print_data.tip != 0){
+                                            escposCommands = escposCommands
+                                            .feed(1)
+                                            .text(greeklish(@json(__('Tip'))+" : " + print_data.tip));
+                                        }
+
+                                        escposCommands = escposCommands
+                                        .text(greeklish(@json(__('Total Amount'))+" : " + print_data.total_amount));
+
+                                        escposCommands = escposCommands
+                                        .drawLine(1)
+                                        .text(greeklish("T:"+print_data.shop_telephone+" "+"M:"+print_data.shop_mobile+" "+print_data.shop_address+", "+print_data.shop_city))
+                                        .text(greeklish("Thank You"))
+                                        .drawLine(1);
                                     }
+                                    else
+                                    {
+                                        var escposCommands = doc
+                                        .font(escpos.FontFamily.A)
+                                        .align(escpos.TextAlignment.LeftJustification)
+                                        .style([escpos.FontStyle.Bold])
+                                        .size(2)
+                                        .setCharacterCodeTable(code_page_key)
+                                        .text(print_data.receipt_intro, code_page_value)
+                                        .drawLine(1);
 
-                                    escposCommands = escposCommands
-                                    .drawLine(1);
-
-                                    escposCommands = escposCommands
-                                    .text(@json(__('Comments'))+" : "+ print_data.instructions, code_page_value);
-
-                                    escposCommands = escposCommands
-                                    .drawLine(1)
-                                    .text(@json(__('Sub Total'))+" : " + print_data.subtotal + "\u20AC",737);
-
-                                    if(print_data.discount != 0){
                                         escposCommands = escposCommands
                                         .feed(1)
-                                        .text(@json(__('Discount'))+" : " + print_data.discount ,737);
-                                    }
+                                        .font(escpos.FontFamily.A)
+                                        .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv, code_page_value)
+                                        .text(@json(__('Order Type'))+" : "+print_data.checkout_type, code_page_value)
+                                        .text(@json(__('Payment Method'))+" : "+print_data.payment_method, code_page_value)
+                                        .text(@json(__('Date'))+" : "+print_data.order_date, code_page_value)
+                                        .text(@json(__('Time'))+" : "+print_data.order_time, code_page_value);
 
-                                    if(print_data.tip != 0){
+                                        if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery' || print_data.checkout_type == 'room_delivery'){
+                                            escposCommands  = escposCommands
+                                            .text(@json(__('Customer'))+" : "+print_data.customer, code_page_value);
+                                        }
+
+                                        if(print_data.checkout_type == 'delivery'){
+                                            escposCommands = escposCommands
+                                            .text(@json(__('Address'))+" : "+print_data.address, code_page_value)
+                                            .text(@json(__('Street Number'))+" : "+print_data.street_number, code_page_value)
+                                            .text(@json(__('Floor'))+" : "+print_data.floor, code_page_value)
+                                            .text(@json(__('Door Bell'))+" : "+print_data.door_bell, code_page_value);
+                                        }
+
+                                        if(print_data.checkout_type == 'room_delivery'){
+                                            escposCommands = escposCommands
+                                            .text(@json(__('Room No.'))+" : "+print_data.room_no, code_page_value)
+                                            .text(@json(__('Delivery Time'))+" : "+print_data.delivery_time, code_page_value);
+                                        }
+
+                                        if(print_data.checkout_type == 'table_service'){
+                                            escposCommands = escposCommands
+                                            .text(@json(__('Table No.'))+" : "+print_data.table_no, code_page_value);
+                                        }
+
+                                        if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery'){
+                                            escposCommands = escposCommands
+                                            .text(@json(__('Telephone'))+" : "+print_data.phone, code_page_value);
+                                            // .text(@json(__('Email'))+" : "+print_data.email, code_page_value);
+                                        }
+
                                         escposCommands = escposCommands
-                                        .feed(1)
-                                        .text(@json(__('Tip'))+" : " + print_data.tip + "\u20AC",737);
+                                        .drawLine(1)
+                                        .font(escpos.FontFamily.A)
+                                        .size(2);
+
+                                        escposCommands = escposCommands
+                                        .feed(1);
+
+                                        if(print_data.items.length > 0){
+                                            print_data.items.forEach(item => {
+                                                escposCommands = escposCommands
+                                                .text(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name,code_page_value)
+                                                .text(@json(__('Qty.'))+" : " + item.item_qty,code_page_value);
+
+                                                if(item.options != ''){
+                                                    escposCommands = escposCommands
+                                                    .text(@json(__('Options'))+": " + item.options,code_page_value)
+                                                }
+
+                                                escposCommands = escposCommands
+                                                .text(@json(__('Price'))+" : " + item.sub_total_text + "\u20AC",code_page_value).feed(1);
+                                            });
+                                        }
+
+                                        escposCommands = escposCommands
+                                        .drawLine(1);
+
+                                        escposCommands = escposCommands
+                                        .text(@json(__('Comments'))+" : "+ print_data.instructions, code_page_value);
+
+                                        escposCommands = escposCommands
+                                        .drawLine(1)
+                                        .text(@json(__('Sub Total'))+" : " + print_data.subtotal + "\u20AC",code_page_value);
+
+                                        if(print_data.discount != 0){
+                                            escposCommands = escposCommands
+                                            .feed(1)
+                                            .text(@json(__('Discount'))+" : " + print_data.discount ,code_page_value);
+                                        }
+
+                                        if(print_data.tip != 0){
+                                            escposCommands = escposCommands
+                                            .feed(1)
+                                            .text(@json(__('Tip'))+" : " + print_data.tip + "\u20AC",code_page_value);
+                                        }
+
+                                        escposCommands = escposCommands
+                                        .text(@json(__('Total Amount'))+" : " + print_data.total_amount + "\u20AC",code_page_value);
+
+                                        escposCommands = escposCommands
+                                        .drawLine(1)
+                                        .text("T:"+print_data.shop_telephone+" "+"M:"+print_data.shop_mobile+" "+print_data.shop_address+", "+print_data.shop_city, code_page_value)
+                                        .text("Thank You", code_page_value)
+                                        .drawLine(1);
                                     }
-
-                                    escposCommands = escposCommands
-                                    .text(@json(__('Total Amount'))+" : " + print_data.total_amount + "\u20AC",737);
-
-                                    escposCommands = escposCommands
-                                    .drawLine(1)
-                                    .text("T:"+print_data.shop_telephone+" "+"M:"+print_data.shop_mobile+" "+print_data.shop_address+", "+print_data.shop_city, code_page_value)
-                                    .text("Thank You", code_page_value)
-                                    .drawLine(1);
 
                                     escposCommands = escposCommands
                                     .feed(5)
@@ -634,6 +742,18 @@
                     }
                 });
             }
+        }
+
+        function greeklish(newText)
+        {
+            var greekLen = ['α','ά','Ά','Α','β','Β','γ','Γ','δ','Δ','ε','έ','Ε','Έ','ζ','Ζ','η','ή','Η','θ','Θ','ι','ί','ϊ','ΐ','Ι','Ί','κ','Κ','λ','Λ','μ','Μ','ν','Ν','ξ','Ξ','ο','ό','Ο','Ό','π','Π','ρ','Ρ','σ','ς','Σ','τ','Τ','υ','ύ','Υ','Ύ','φ','Φ','χ','Χ','ψ','Ψ','ω','ώ','Ω','Ώ',' ', "'", "'", ','];
+            var englishLen = ['a', 'a','A','A','b','B','g','G','d','D','e','e','E','E','z','Z','i','i','I','th','Th', 'i','i','i','i','I','I','k','K','l','L','m','M','n','N','x','X','o','o','O','O','p','P' ,'r','R','s','s','S','t','T','u','u','Y','Y','f','F','ch','Ch','ps','Ps','o','o','O','O',' ','',' ',' '];
+
+            for (var i = 0; i < greekLen.length; i++) {
+                var regex = new RegExp(greekLen[i], "g");
+                newText = newText.replace(regex, englishLen[i]);
+            }
+            return newText;
         }
 
         //Check JSPM WebSocket status
