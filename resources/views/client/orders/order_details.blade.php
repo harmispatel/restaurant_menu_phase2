@@ -548,7 +548,8 @@
                                         if(print_data.items.length > 0){
                                             print_data.items.forEach(item => {
                                                 escposCommands = escposCommands
-                                                .text(greeklish(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name))
+                                                // .text(greeklish(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name))
+                                                .text(greeklish(item.item_name))
                                                 .text(greeklish(@json(__('Qty.'))+" : " + item.item_qty));
 
                                                 if(item.options != ''){
@@ -653,7 +654,8 @@
                                         if(print_data.items.length > 0){
                                             print_data.items.forEach(item => {
                                                 escposCommands = escposCommands
-                                                .text(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name,code_page_value)
+                                                // .text(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name,code_page_value)
+                                                .text(greeklish(item.item_name))
                                                 .text(@json(__('Qty.'))+" : " + item.item_qty,code_page_value);
 
                                                 if(item.options != ''){

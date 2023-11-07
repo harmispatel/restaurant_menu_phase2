@@ -109,16 +109,17 @@
                                                 <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                             </span>
                                         </label>
+                                        <br>
                                         <label for="auto_order_approval" class="form-label">{{ __('Auto Order Approval') }}</label>
                                     </div>
-                                    <h5 class="mt-2">{{ __('Minutes') }}</h5>
+                                    {{-- <h5 class="mt-2">{{ __('Minutes') }}</h5> --}}
                                     <div>
                                         <label for="order_arrival_minutes" class="form-label">{{ __('Default estimated minutes until order arrival') }}</label>
                                         <input type="number" name="order_arrival_minutes" id="order_arrival_minutes" class="form-control ord-setting" value="{{ (isset($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '' }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <h5>{{ __('Notification') }}</h5>
+                                    {{-- <h5>{{ __('Notification') }}</h5> --}}
                                     <div>
                                         <label class="switch me-2">
                                             <input type="checkbox" value="1" name="play_sound" id="play_sound" class="ord-setting" {{ (isset($order_settings['play_sound']) && $order_settings['play_sound'] == 1) ? 'checked' : '' }}>
@@ -127,6 +128,7 @@
                                                 <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                             </span>
                                         </label>
+                                        <br>
                                         <label for="play_sound" class="form-label">{{ __('Play Sound') }}</label>
                                     </div>
                                     <div class="mt-2">
@@ -143,7 +145,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <h5>{{ __('Discount') }}</h5>
+                                    {{-- <h5>{{ __('Discount') }}</h5> --}}
                                     <div>
                                         <label for="discount_type" class="form-label">{{ __('Discount Type') }}</label>
                                         <select name="discount_type" id="discount_type" class="form-select ord-setting">
