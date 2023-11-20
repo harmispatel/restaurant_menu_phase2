@@ -14,7 +14,7 @@
     "Profile":"Προφίλ",
     "Admins":"Διαχειριστές",
     "Settings":"Ρυθμίσεις",
-    "Total":"Σύνολο",
+    "Total":"ΣΥΝΟΛΟ",
 	"Restaurants":"Επιχειρήσεις",
     "Recent Clients":"Πρόσφατοι Συνδρομητές",
     "Client":"Συνδρομητής",
@@ -325,7 +325,7 @@
     "Door Bell" : "Κουδούνι",
     "Google Map" : "Χάρτης Google",
     "Comments" : "Σχόλια",
-    "Sub Total" : "ΜΕΡΙΚΟ ΣΥΝΟΛΟ",
+    "Sub Total" : "Μερικό Σύνολο",
     "Discount" : "Εκπτωση",
     "Order No." : "Αρ. Παραγγελίας",
     "Estimated Time" : "Αναμενόμενη Ώρα",
@@ -345,7 +345,7 @@
     "Other Settings" : "Αλλες Ρυθμίσεις",
     "Auto Order Approval" : "Αυτόματη Έγκριση Παραγγελίας",
     "Minimum amount needed for delivery, if left null any amount is acceptable." : "Ελάχιστο ποσό που απαιτείται για Παραγγελία. Εάν μείνει κενό αποδέχεστε όλα τα ποσά.",
-    "Enter the desired discount value, discount applies to the total amount! Leave blank to disable." : "Εισάγετε την τιμή έκπτωσης που επιθυμείτε, Η έκπτωση εφαρμόζεται στο συνολικό ποσό! Αφήστε το κενό για απενεργοποίηση.",
+    "Discount is applied to the total amount!" : "H έκπτωση εφαρμόζεται στο συνολικό ποσό!",
     "Default estimated minutes until order arrival" : "Προεπιλεγμένα εκτιμώμενα λεπτά για τις παραδόσεις",
     "Notification Settings" : "Ρυθμίσεις Ειδοποιήσεων",
     "Play Sound" : "Αναπαραγωγή Ήχου",
@@ -437,7 +437,7 @@
     "The store is closed during these hours." : "Tο κατάστημα είναι κλειστό αυτές τις ώρες.",
     "Sorry, your order has been declined. Reason:" : "Λυπούμαστε, η παραγγελία σας απορρίφθηκε. Αιτία:",
 
-    "Street Number": "Αριθμός δρόμου",
+    "Street Number": "Αριθμός Δρόμου",
     "More Trasnlations": "Περισσότερες μεταφράσεις",
     "Edit More Trasnlations": "Επεξεργασία περισσότερων μεταφράσεων",
     "Login Form Logo": "Λογότυπο φόρμας σύνδεσης",
@@ -461,5 +461,10 @@
     "Minimum Charge" : "Ελάχιστη χρέωση",
     "Shop Address" : "Διεύθυνση καταστήματος",
     "Notification" : "Γνωστοποίηση",
-    "Greeklish" : "Greeklish"
+    "Greeklish" : "Greeklish",
+    "You forgot the Street Number!" : "Ξεχάσατε τον Αριθμό Δρόμου!",
+    "Submission" : "Υποβολή",
+    "Blank or 0 = Disables discount!" : "Κενό ή 0 = Απενεργοποιεί την έκπτωση!",
+
+    "Item Reviews" : "Κριτικές"
 }

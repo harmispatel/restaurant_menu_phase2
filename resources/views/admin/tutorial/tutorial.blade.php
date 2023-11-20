@@ -73,8 +73,8 @@
                                                 @php
                                                     $file_ext = pathinfo($tutorialvalue->video, PATHINFO_EXTENSION);
                                                 @endphp
-                                                @if($file_ext == 'mp4' || $file_ext == 'mov')
-                                                    <video  src="{{ asset('public/client_uploads/tutorial/'.$tutorialvalue->video)}}" width="100px" autoplay muted loop>
+                                                @if($file_ext == 'mp4' || $file_ext == 'mov' || $file_ext == 'webm')
+                                                    <video  src="{{ asset('public/client_uploads/tutorial/'.$tutorialvalue->video)}}" width="150" controls>
                                                     </video>
                                                 @else
                                                     <img  src="{{ asset('public/client_uploads/tutorial/'.$tutorialvalue->video) }}" width="100px"/>

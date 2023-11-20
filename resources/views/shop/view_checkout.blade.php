@@ -81,11 +81,11 @@
                     <div class="row street_no mt-2" style="display: none;">
                         <div class="col-md-12">
                             <div class="form-group mb-2">
-                                <label for="street_no" class="form-label">Street Number</label>
-                                <input type="text" name="street_no" id="street_no" class="form-control" placeholder="Enter Your Street Number">
+                                <label for="street_no" class="form-label">{{ __("Street Number") }}</label>
+                                <input type="text" name="street_no" id="street_no" class="form-control" placeholder="{{ __('You forgot the Street Number!') }}">
                             </div>
                             <div class="form-group">
-                                <a class="btn btn-success street-btn btn-sm">Submit</a>
+                                <a class="btn btn-success street-btn btn-sm">{{ __('Submission') }}</a>
                             </div>
                         </div>
                     </div>

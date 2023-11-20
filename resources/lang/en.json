@@ -380,7 +380,7 @@
     "Other Settings" : "Other Settings",
     "Auto Order Approval" : "Auto Order Approval",
     "Minimum amount needed for delivery, if left null any amount is acceptable." : "Minimum amount needed for delivery, if left null any amount is acceptable.",
-    "Enter the desired discount value, discount applies to the total amount! Leave blank to disable." : "Enter the desired discount value, discount applies to the total amount! Leave blank to disable.",
+    "Discount is applied to the total amount!" : "Discount is applied to the total amount!",
     "Default estimated minutes until order arrival" : "Default estimated minutes until order arrival",
     "Notification Settings" : "Notification Settings",
     "Play Sound" : "Play Sound",
@@ -497,5 +497,10 @@
     "Minimum Charge" : "Minimum Charge",
     "Shop Address" : "Shop Address",
     "Notification" : "Notification",
-    "Greeklish" : "Greeklish"
+    "Greeklish" : "Greeklish",
+    "You forgot the Street Number!" : "You forgot the Street Number!",
+    "Submission" : "Submission",
+    "Blank or 0 = Disables discount!" : "Blank or 0 = Disables discount!",
+
+    "Item Reviews" : "Item Reviews"
 }

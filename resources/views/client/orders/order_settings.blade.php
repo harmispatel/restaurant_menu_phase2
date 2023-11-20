@@ -101,7 +101,7 @@
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-4">
-                                    <div>
+                                    <div class="mb-4">
                                         <label class="switch me-2">
                                             <input type="checkbox" value="1" name="auto_order_approval" id="auto_order_approval" class="ord-setting" {{ (isset($order_settings['auto_order_approval']) && $order_settings['auto_order_approval'] == 1) ? 'checked' : '' }}>
                                             <span class="slider round">
@@ -109,18 +109,17 @@
                                                 <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                             </span>
                                         </label>
-                                        <br>
                                         <label for="auto_order_approval" class="form-label">{{ __('Auto Order Approval') }}</label>
                                     </div>
                                     {{-- <h5 class="mt-2">{{ __('Minutes') }}</h5> --}}
                                     <div>
-                                        <label for="order_arrival_minutes" class="form-label">{{ __('Default estimated minutes until order arrival') }}</label>
+                                        <label style="font-size: 13px" for="order_arrival_minutes" class="form-label">{{ __('Default estimated minutes until order arrival') }}</label>
                                         <input type="number" name="order_arrival_minutes" id="order_arrival_minutes" class="form-control ord-setting" value="{{ (isset($order_settings['order_arrival_minutes'])) ? $order_settings['order_arrival_minutes'] : '' }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     {{-- <h5>{{ __('Notification') }}</h5> --}}
-                                    <div>
+                                    <div class="mb-4">
                                         <label class="switch me-2">
                                             <input type="checkbox" value="1" name="play_sound" id="play_sound" class="ord-setting" {{ (isset($order_settings['play_sound']) && $order_settings['play_sound'] == 1) ? 'checked' : '' }}>
                                             <span class="slider round">
@@ -128,10 +127,9 @@
                                                 <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
                                             </span>
                                         </label>
-                                        <br>
                                         <label for="play_sound" class="form-label">{{ __('Play Sound') }}</label>
                                     </div>
-                                    <div class="mt-2">
+                                    <div>
                                         <label for="notification_sound" class="form-label">{{ __('Notification Sound') }}</label>
                                         <select name="notification_sound" id="notification_sound" class="form-select">
                                             <option value="buzzer-01.mp3" {{ ($order_settings['notification_sound'] == 'buzzer-01.mp3') ? 'selected' : '' }}>Buzzer 1</option>
@@ -148,14 +146,18 @@
                                     {{-- <h5>{{ __('Discount') }}</h5> --}}
                                     <div>
                                         <label for="discount_type" class="form-label">{{ __('Discount Type') }}</label>
-                                        <select name="discount_type" id="discount_type" class="form-select ord-setting">
-                                            <option value="percentage" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'percentage') ? 'selected' : '' }}>{{ __('Percentage %') }}</option>
-                                            <option value="fixed" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'fixed') ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
-                                        </select>
-                                    </div>
-                                    <div class="mt-3">
-                                        <label for="discount_percentage" class="form-label">{{ __('Enter the desired discount value, discount applies to the total amount! Leave blank to disable.') }}</label>
-                                        <input type="number" name="discount_percentage" id="discount_percentage" class="form-control ord-setting" value="{{ (isset($order_settings['discount_percentage'])) ? $order_settings['discount_percentage'] : '' }}">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <select name="discount_type" id="discount_type" class="form-select ord-setting">
+                                                    <option value="percentage" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'percentage') ? 'selected' : '' }}>{{ __('Percentage %') }}</option>
+                                                    <option value="fixed" {{ (isset($order_settings['discount_type']) && $order_settings['discount_type'] == 'fixed') ? 'selected' : '' }}>{{ __('Fixed Amount') }}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="number" name="discount_percentage" id="discount_percentage" class="form-control ord-setting" value="{{ (isset($order_settings['discount_percentage'])) ? $order_settings['discount_percentage'] : '' }}">
+                                            </div>
+                                        </div>
+                                        <label for="discount_percentage" class="form-label mt-3" style="font-size: 13px">{{ __('Discount is applied to the total amount!') }} <br> {{ __('Blank or 0 = Disables discount!') }}</label>
                                     </div>
                                 </div>
                             </div>

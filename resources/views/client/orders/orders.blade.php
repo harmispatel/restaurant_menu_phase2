@@ -116,33 +116,33 @@
                                 </div>
                                 <div class="order-info">
                                     <ul>
-                                        <li><strong>{{ __('Order No.') }} : #{{ $order->order_id }}</strong></li>
-                                        <li><strong>{{ __('Date') }} : </strong>{{ date('d-m-Y',strtotime($order->created_at)) }}</li>
-                                        <li><strong>{{ __('Time') }} : </strong>{{ date('h:i:s',strtotime($order->created_at)) }}</li>
-                                        <li><strong>{{ __('Order Type') }} : </strong>{{ $order->checkout_type }}</li>
-                                        <li><strong>{{ __('Payment Method') }} : </strong>{{ $order->payment_method }}</li>
+                                        <li><strong>{{ __('Order No.') }}: #{{ $order->order_id }}</strong></li>
+                                        <li><strong>{{ __('Date') }}: </strong>{{ date('d-m-Y',strtotime($order->created_at)) }}</li>
+                                        <li><strong>{{ __('Time') }}: </strong>{{ date('h:i:s',strtotime($order->created_at)) }}</li>
+                                        <li><strong>{{ __('Order Type') }}: </strong>{{ $order->checkout_type }}</li>
+                                        <li><strong>{{ __('Payment Method') }}: </strong>{{ $order->payment_method }}</li>
                                         @if($order->checkout_type == 'takeaway')
-                                            <li><strong>{{ __('Customer') }} : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
-                                            <li><strong>{{ __('Telephone') }} : </strong> {{ $order->phone }}</li>
-                                            <li><strong>{{ __('Email') }} : </strong> {{ $order->email }}</li>
+                                            <li><strong>{{ __('Customer') }}: </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
+                                            <li><strong>{{ __('Telephone') }}: </strong> {{ $order->phone }}</li>
+                                            <li><strong>{{ __('Email') }}: </strong> {{ $order->email }}</li>
                                         @elseif($order->checkout_type == 'table_service')
-                                            <li><strong>{{ __('Table No.') }} : </strong> {{ $order->table }}</li>
+                                            <li><strong>{{ __('Table No.') }}: </strong> {{ $order->table }}</li>
                                         @elseif($order->checkout_type == 'room_delivery')
-                                            <li><strong>{{ __('Customer') }} : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
-                                            <li><strong>{{ __('Room No.') }} : </strong> {{ $order->room }}</li>
+                                            <li><strong>{{ __('Customer') }}: </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
+                                            <li><strong>{{ __('Room No.') }}: </strong> {{ $order->room }}</li>
                                             @if(!empty($order->delivery_time ))
-                                                <li><strong>{{ __('Delivery Time') }} : </strong> {{ $order->delivery_time }}</li>
+                                                <li><strong>{{ __('Delivery Time') }}: </strong> {{ $order->delivery_time }}</li>
                                             @endif
                                         @elseif($order->checkout_type == 'delivery')
-                                            <li><strong>{{ __('Customer') }} : </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
-                                            <li><strong>{{ __('Telephone') }} : </strong> {{ $order->phone }}</li>
-                                            <li><strong>{{ __('Email') }} : </strong> {{ $order->email }}</li>
-                                            <li><strong>{{ __('Address') }} : </strong> {{ $order->address }}</li>
-                                            <li><strong>{{ __('Street Number') }} : </strong> {{ $order->street_number }}</li>
-                                            <li><strong>{{ __('Floor') }} : </strong> {{ $order->floor }}</li>
-                                            <li><strong>{{ __('Door Bell') }} : </strong> {{ $order->door_bell }}</li>
-                                            <li><strong>{{ __('Google Map') }} : </strong> <a href="https://maps.google.com?q={{ $order->address }}" target="_blank">Address Link</a></li>
-                                            <li><strong>{{ __('Comments') }} : </strong> {{ $order->instructions }}</li>
+                                            <li><strong>{{ __('Customer') }}: </strong> {{ $order->firstname }} {{ $order->lastname }}</li>
+                                            <li><strong>{{ __('Telephone') }}: </strong> {{ $order->phone }}</li>
+                                            <li><strong>{{ __('Email') }}: </strong> {{ $order->email }}</li>
+                                            <li><strong>{{ __('Address') }}: </strong> {{ $order->address }}</li>
+                                            <li><strong>{{ __('Street Number') }}: </strong> {{ $order->street_number }}</li>
+                                            <li><strong>{{ __('Floor') }}: </strong> {{ $order->floor }}</li>
+                                            <li><strong>{{ __('Door Bell') }}: </strong> {{ $order->door_bell }}</li>
+                                            <li><strong>{{ __('Google Map') }}: </strong> <a href="https://maps.google.com?q={{ $order->address }}" target="_blank">Address Link</a></li>
+                                            <li><strong>{{ __('Comments') }}: </strong> {{ $order->instructions }}</li>
                                         @endif
                                     </ul>
                                 </div>
@@ -180,8 +180,9 @@
                                                         <td class="text-end">+ {{ Currency::currency($currency)->format($order->tip) }}</td>
                                                     </tr>
                                                 @endif
-                                                <tr class="text-end">
-                                                    <td colspan="2"><strong>{{ Currency::currency($currency)->format($total_amount) }}</strong></td>
+                                                <tr>
+                                                    <td><b>{{ __('Total') }}</b></td>
+                                                    <td class="text-end"><strong>{{ Currency::currency($currency)->format($total_amount) }}</strong></td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -411,52 +412,52 @@
                                         .font(escpos.FontFamily.A)
                                         .align(escpos.TextAlignment.LeftJustification)
                                         .style([escpos.FontStyle.Bold])
-                                        .size(2)
+                                        .size(3)
                                         .text(greeklish(print_data.receipt_intro))
                                         .drawLine(1);
 
                                         escposCommands = escposCommands
                                         .feed(1)
                                         .font(escpos.FontFamily.A)
-                                        .text(greeklish(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv))
-                                        .text(greeklish(@json(__('Order Type'))+" : "+print_data.checkout_type))
-                                        .text(greeklish(@json(__('Payment Method'))+" : "+print_data.payment_method))
-                                        .text(greeklish(@json(__('Date'))+" : "+print_data.order_date))
-                                        .text(greeklish(@json(__('Time'))+" : "+print_data.order_time));
+                                        .text(greeklish(@json(__('Order'))+" "+@json(__('Id'))+": "+ print_data.order_inv))
+                                        .text(greeklish(@json(__('Order Type'))+": "+print_data.checkout_type))
+                                        .text(greeklish(@json(__('Payment Method'))+": "+print_data.payment_method))
+                                        .text(greeklish(@json(__('Date'))+": "+print_data.order_date))
+                                        .text(greeklish(@json(__('Time'))+": "+print_data.order_time));
 
                                         if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery' || print_data.checkout_type == 'room_delivery'){
                                             escposCommands  = escposCommands
-                                            .text(greeklish(@json(__('Customer'))+" : "+print_data.customer));
+                                            .text(greeklish(@json(__('Customer'))+": "+print_data.customer));
                                         }
 
                                         if(print_data.checkout_type == 'delivery'){
                                             escposCommands = escposCommands
-                                            .text(greeklish(@json(__('Address'))+" : "+print_data.address))
-                                            .text(greeklish(@json(__('Street Number'))+" : "+print_data.street_number))
-                                            .text(greeklish(@json(__('Floor'))+" : "+print_data.floor))
-                                            .text(greeklish(@json(__('Door Bell'))+" : "+print_data.door_bell));
+                                            .text(greeklish(@json(__('Address'))+": "+print_data.address))
+                                            .text(greeklish(@json(__('Street Number'))+": "+print_data.street_number))
+                                            .text(greeklish(@json(__('Floor'))+": "+print_data.floor))
+                                            .text(greeklish(@json(__('Door Bell'))+": "+print_data.door_bell));
                                         }
 
                                         if(print_data.checkout_type == 'room_delivery'){
                                             escposCommands = escposCommands
-                                            .text(greeklish(@json(__('Room No.'))+" : "+print_data.room_no))
-                                            .text(greeklish(@json(__('Delivery Time'))+" : "+print_data.delivery_time));
+                                            .text(greeklish(@json(__('Room No.'))+": "+print_data.room_no))
+                                            .text(greeklish(@json(__('Delivery Time'))+": "+print_data.delivery_time));
                                         }
 
                                         if(print_data.checkout_type == 'table_service'){
                                             escposCommands = escposCommands
-                                            .text(greeklish(@json(__('Table No.'))+" : "+print_data.table_no));
+                                            .text(greeklish(@json(__('Table No.'))+": "+print_data.table_no));
                                         }
 
                                         if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery'){
                                             escposCommands = escposCommands
-                                            .text(greeklish(@json(__('Telephone'))+" : "+print_data.phone));
+                                            .text(greeklish(@json(__('Telephone'))+": "+print_data.phone));
                                         }
 
                                         escposCommands = escposCommands
                                         .drawLine(1)
                                         .font(escpos.FontFamily.A)
-                                        .size(2);
+                                        .size(3);
 
                                         escposCommands = escposCommands
                                         .feed(1);
@@ -464,9 +465,9 @@
                                         if(print_data.items.length > 0){
                                             print_data.items.forEach(item => {
                                                 escposCommands = escposCommands
-                                                // .text(greeklish(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name))
-                                                .text(greeklish(item.item_name))
-                                                .text(greeklish(@json(__('Qty.'))+" : " + item.item_qty));
+                                                // .text(greeklish(@json(__('Item'))+" "+@json(__('Name'))+": " + item.item_name))
+                                                .text(greeklish(" - "+item.item_name))
+                                                .text(greeklish(@json(__('Qty.'))+": " + item.item_qty));
 
                                                 if(item.options != ''){
                                                     escposCommands = escposCommands
@@ -474,7 +475,7 @@
                                                 }
 
                                                 escposCommands = escposCommands
-                                                .text(greeklish(@json(__('Price'))+" : " + item.sub_total_text)).feed(1);
+                                                .text(greeklish(@json(__('Price'))+": " + item.sub_total_text)).feed(1);
                                             });
                                         }
 
@@ -482,26 +483,26 @@
                                         .drawLine(1);
 
                                         escposCommands = escposCommands
-                                        .text(greeklish(@json(__('Comments'))+" : "+ print_data.instructions));
+                                        .text(greeklish(@json(__('Comments'))+": "+ print_data.instructions));
 
                                         escposCommands = escposCommands
                                         .drawLine(1)
-                                        .text(greeklish(@json(__('Sub Total'))+" : " + print_data.subtotal));
+                                        .text(greeklish(@json(__('Sub Total'))+": " + print_data.subtotal));
 
                                         if(print_data.discount != 0){
                                             escposCommands = escposCommands
                                             .feed(1)
-                                            .text(greeklish(@json(__('Discount'))+" : " + print_data.discount));
+                                            .text(greeklish(@json(__('Discount'))+": " + print_data.discount));
                                         }
 
                                         if(print_data.tip != 0){
                                             escposCommands = escposCommands
                                             .feed(1)
-                                            .text(greeklish(@json(__('Tip'))+" : " + print_data.tip));
+                                            .text(greeklish(@json(__('Tip'))+": " + print_data.tip));
                                         }
 
                                         escposCommands = escposCommands
-                                        .text(greeklish(@json(__('Total Amount'))+" : " + print_data.total_amount));
+                                        .text(greeklish(@json(__('Total'))+": " + print_data.total_amount));
 
                                         escposCommands = escposCommands
                                         .drawLine(1)
@@ -515,7 +516,7 @@
                                         .font(escpos.FontFamily.A)
                                         .align(escpos.TextAlignment.LeftJustification)
                                         .style([escpos.FontStyle.Bold])
-                                        .size(2)
+                                        .size(3)
                                         .setCharacterCodeTable(code_page_key)
                                         .text(print_data.receipt_intro, code_page_value)
                                         .drawLine(1);
@@ -523,46 +524,46 @@
                                         escposCommands = escposCommands
                                         .feed(1)
                                         .font(escpos.FontFamily.A)
-                                        .text(@json(__('Order'))+" "+@json(__('Id'))+" : "+ print_data.order_inv, code_page_value)
-                                        .text(@json(__('Order Type'))+" : "+print_data.checkout_type, code_page_value)
-                                        .text(@json(__('Payment Method'))+" : "+print_data.payment_method, code_page_value)
-                                        .text(@json(__('Date'))+" : "+print_data.order_date, code_page_value)
-                                        .text(@json(__('Time'))+" : "+print_data.order_time, code_page_value);
+                                        .text(@json(__('Order'))+" "+@json(__('Id'))+": "+ print_data.order_inv, code_page_value)
+                                        .text(@json(__('Order Type'))+": "+print_data.checkout_type, code_page_value)
+                                        .text(@json(__('Payment Method'))+": "+print_data.payment_method, code_page_value)
+                                        .text(@json(__('Date'))+": "+print_data.order_date, code_page_value)
+                                        .text(@json(__('Time'))+": "+print_data.order_time, code_page_value);
 
                                         if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery' || print_data.checkout_type == 'room_delivery'){
                                             escposCommands  = escposCommands
-                                            .text(@json(__('Customer'))+" : "+print_data.customer, code_page_value);
+                                            .text(@json(__('Customer'))+": "+print_data.customer, code_page_value);
                                         }
 
                                         if(print_data.checkout_type == 'delivery'){
                                             escposCommands = escposCommands
-                                            .text(@json(__('Address'))+" : "+print_data.address, code_page_value)
-                                            .text(@json(__('Street Number'))+" : "+print_data.street_number, code_page_value)
-                                            .text(@json(__('Floor'))+" : "+print_data.floor, code_page_value)
-                                            .text(@json(__('Door Bell'))+" : "+print_data.door_bell, code_page_value);
+                                            .text(@json(__('Address'))+": "+print_data.address, code_page_value)
+                                            .text(@json(__('Street Number'))+": "+print_data.street_number, code_page_value)
+                                            .text(@json(__('Floor'))+": "+print_data.floor, code_page_value)
+                                            .text(@json(__('Door Bell'))+": "+print_data.door_bell, code_page_value);
                                         }
 
                                         if(print_data.checkout_type == 'room_delivery'){
                                             escposCommands = escposCommands
-                                            .text(@json(__('Room No.'))+" : "+print_data.room_no, code_page_value)
-                                            .text(@json(__('Delivery Time'))+" : "+print_data.delivery_time, code_page_value);
+                                            .text(@json(__('Room No.'))+": "+print_data.room_no, code_page_value)
+                                            .text(@json(__('Delivery Time'))+": "+print_data.delivery_time, code_page_value);
                                         }
 
                                         if(print_data.checkout_type == 'table_service'){
                                             escposCommands = escposCommands
-                                            .text(@json(__('Table No.'))+" : "+print_data.table_no, code_page_value);
+                                            .text(@json(__('Table No.'))+": "+print_data.table_no, code_page_value);
                                         }
 
                                         if(print_data.checkout_type == 'takeaway' || print_data.checkout_type == 'delivery'){
                                             escposCommands = escposCommands
-                                            .text(@json(__('Telephone'))+" : "+print_data.phone, code_page_value);
-                                            // .text(@json(__('Email'))+" : "+print_data.email, code_page_value);
+                                            .text(@json(__('Telephone'))+": "+print_data.phone, code_page_value);
+                                            // .text(@json(__('Email'))+": "+print_data.email, code_page_value);
                                         }
 
                                         escposCommands = escposCommands
                                         .drawLine(1)
                                         .font(escpos.FontFamily.A)
-                                        .size(2);
+                                        .size(3);
 
                                         escposCommands = escposCommands
                                         .feed(1);
@@ -570,9 +571,9 @@
                                         if(print_data.items.length > 0){
                                             print_data.items.forEach(item => {
                                                 escposCommands = escposCommands
-                                                // .text(@json(__('Item'))+" "+@json(__('Name'))+" : " + item.item_name,code_page_value)
-                                                .text(greeklish(item.item_name))
-                                                .text(@json(__('Qty.'))+" : " + item.item_qty,code_page_value);
+                                                // .text(@json(__('Item'))+" "+@json(__('Name'))+": " + item.item_name,code_page_value)
+                                                .text(greeklish(" - "+item.item_name))
+                                                .text(@json(__('Qty.'))+": " + item.item_qty,code_page_value);
 
                                                 if(item.options != ''){
                                                     escposCommands = escposCommands
@@ -580,7 +581,7 @@
                                                 }
 
                                                 escposCommands = escposCommands
-                                                .text(@json(__('Price'))+" : " + item.sub_total_text + "\u20AC",code_page_value).feed(1);
+                                                .text(@json(__('Price'))+": " + item.sub_total_text + "\u20AC",code_page_value).feed(1);
                                             });
                                         }
 
@@ -588,26 +589,26 @@
                                         .drawLine(1);
 
                                         escposCommands = escposCommands
-                                        .text(@json(__('Comments'))+" : "+ print_data.instructions, code_page_value);
+                                        .text(@json(__('Comments'))+": "+ print_data.instructions, code_page_value);
 
                                         escposCommands = escposCommands
                                         .drawLine(1)
-                                        .text(@json(__('Sub Total'))+" : " + print_data.subtotal + "\u20AC",code_page_value);
+                                        .text(@json(__('Sub Total'))+": " + print_data.subtotal + "\u20AC",code_page_value);
 
                                         if(print_data.discount != 0){
                                             escposCommands = escposCommands
                                             .feed(1)
-                                            .text(@json(__('Discount'))+" : " + print_data.discount ,code_page_value);
+                                            .text(@json(__('Discount'))+": " + print_data.discount ,code_page_value);
                                         }
 
                                         if(print_data.tip != 0){
                                             escposCommands = escposCommands
                                             .feed(1)
-                                            .text(@json(__('Tip'))+" : " + print_data.tip + "\u20AC",code_page_value);
+                                            .text(@json(__('Tip'))+": " + print_data.tip + "\u20AC",code_page_value);
                                         }
 
                                         escposCommands = escposCommands
-                                        .text(@json(__('Total Amount'))+" : " + print_data.total_amount + "\u20AC",code_page_value);
+                                        .text(@json(__('Total'))+": " + print_data.total_amount + "\u20AC",code_page_value);
 
                                         escposCommands = escposCommands
                                         .drawLine(1)
@@ -665,7 +666,7 @@
         function greeklish(newText)
         {
             var greekLen = ['α','ά','Ά','Α','β','Β','γ','Γ','δ','Δ','ε','έ','Ε','Έ','ζ','Ζ','η','ή','Η','θ','Θ','ι','ί','ϊ','ΐ','Ι','Ί','κ','Κ','λ','Λ','μ','Μ','ν','Ν','ξ','Ξ','ο','ό','Ο','Ό','π','Π','ρ','Ρ','σ','ς','Σ','τ','Τ','υ','ύ','Υ','Ύ','φ','Φ','χ','Χ','ψ','Ψ','ω','ώ','Ω','Ώ',' ', "'", "'", ','];
-            var englishLen = ['a', 'a','A','A','b','B','g','G','d','D','e','e','E','E','z','Z','i','i','I','th','Th', 'i','i','i','i','I','I','k','K','l','L','m','M','n','N','x','X','o','o','O','O','p','P' ,'r','R','s','s','S','t','T','u','u','Y','Y','f','F','ch','Ch','ps','Ps','o','o','O','O',' ','',' ',' '];
+            var englishLen = ['a','a','A','A','b','B','g','G','d','D','e','e','E','E','z','Z','i','i','I','th','Th', 'i','i','i','i','I','I','k','K','l','L','m','M','n','N','x','X','o','o','O','O','p','P' ,'r','R','s','s','S','t','T','u','u','Y','Y','f','F','ch','Ch','ps','Ps','o','o','O','O',' ','',' ',','];
 
             for (var i = 0; i < greekLen.length; i++) {
                 var regex = new RegExp(greekLen[i], "g");

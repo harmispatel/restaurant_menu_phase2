@@ -48,10 +48,10 @@
                                             @php
                                                 $file_ext = pathinfo($item->video, PATHINFO_EXTENSION);
                                             @endphp
-                                            @if ($file_ext == 'mp4' || $file_ext == 'mov')
+                                            @if ($file_ext == 'mp4' || $file_ext == 'mov' || $file_ext == 'webm')
                                                 <video class="w-100"
                                                     src="{{ asset('public/client_uploads/tutorial/' . $item->video) }}"
-                                                    width="100px" autoplay muted loop>
+                                                    width="100px" controls>
                                                 </video>
                                             @else
                                                 <img class="w-100"
@@ -78,4 +78,22 @@
     </div>
 
 
+@endsection
+
+@section('page-js')
+<script type="text/javascript">
+
+    $('.accordion-button').on('click',function(){
+        var acrID = $(this).attr('data-bs-target');
+        if($(this).hasClass('collapsed')){
+            var video = $(acrID + " video")[0];
+            if (video.paused) {
+            } else {
+                // If playing, pause the video
+                video.pause();
+            }
+        }
+    });
+
+</script>
 @endsection

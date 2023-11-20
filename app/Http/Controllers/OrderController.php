@@ -163,42 +163,42 @@ class OrderController extends Controller
 
                     $html .= '<div class="order-info">';
                         $html .= '<ul>';
-                            $html .= '<li><strong>'.__('Order No.').' : #'.$order->order_id.'</strong></li>';
-                            $html .= '<li><strong>'.__('Date').' : </strong>'.date('d-m-Y',strtotime($order->created_at)).'</li>';
-                            $html .= '<li><strong>'.__('Time').' : </strong>'.date('h:i:s',strtotime($order->created_at)).'</li>';
-                            $html .= '<li><strong>'.__('Order Type').' : </strong>'.$order->checkout_type.'</li>';
-                            $html .= '<li><strong>'.__('Payment Method').' : </strong>'.$order->payment_method.'</li>';
+                            $html .= '<li><strong>'.__('Order No.').': #'.$order->order_id.'</strong></li>';
+                            $html .= '<li><strong>'.__('Date').': </strong>'.date('d-m-Y',strtotime($order->created_at)).'</li>';
+                            $html .= '<li><strong>'.__('Time').': </strong>'.date('h:i:s',strtotime($order->created_at)).'</li>';
+                            $html .= '<li><strong>'.__('Order Type').': </strong>'.$order->checkout_type.'</li>';
+                            $html .= '<li><strong>'.__('Payment Method').': </strong>'.$order->payment_method.'</li>';
 
                             if($order->checkout_type == 'takeaway')
                             {
-                                $html .= '<li><strong>'.__('Customer').' : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
-                                $html .= '<li><strong>'.__('Telephone').' : </strong> '.$order->phone.'</li>';
-                                $html .= '<li><strong>'.__('Email').' : </strong> '.$order->email.'</li>';
+                                $html .= '<li><strong>'.__('Customer').': </strong>'.$order->firstname.' '.$order->lastname.'</li>';
+                                $html .= '<li><strong>'.__('Telephone').': </strong> '.$order->phone.'</li>';
+                                $html .= '<li><strong>'.__('Email').': </strong> '.$order->email.'</li>';
                             }
                             elseif($order->checkout_type == 'table_service')
                             {
-                                $html .= '<li><strong>'.__('Table No.').' : </strong> '.$order->table.'</li>';
+                                $html .= '<li><strong>'.__('Table No.').': </strong> '.$order->table.'</li>';
                             }
                             elseif($order->checkout_type == 'room_delivery')
                             {
-                                $html .= '<li><strong>'.__('Customer').' : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
-                                $html .= '<li><strong>'.__('Room No.').' : </strong> '.$order->room.'</li>';
+                                $html .= '<li><strong>'.__('Customer').': </strong>'.$order->firstname.' '.$order->lastname.'</li>';
+                                $html .= '<li><strong>'.__('Room No.').': </strong> '.$order->room.'</li>';
                                 if(!empty($order->delivery_time ))
                                 {
-                                    $html .= '<li><strong>'.__('Delivery Time').' : </strong> '.$order->delivery_time.'</li>';
+                                    $html .= '<li><strong>'.__('Delivery Time').': </strong> '.$order->delivery_time.'</li>';
                                 }
                             }
                             elseif($order->checkout_type == 'delivery')
                             {
-                                $html .= '<li><strong>'.__('Customer').' : </strong>'.$order->firstname.' '.$order->lastname.'</li>';
-                                $html .= '<li><strong>'.__('Telephone').' : </strong> '.$order->phone.'</li>';
-                                $html .= '<li><strong>'.__('Email').' : </strong> '.$order->email.'</li>';
-                                $html .= '<li><strong>'.__('Address').' : </strong> '.$order->address.'</li>';
-                                $html .= '<li><strong>'.__('Street Number').' : </strong> '.$order->street_number.'</li>';
-                                $html .= '<li><strong>'.__('Floor').' : </strong> '.$order->floor.'</li>';
-                                $html .= '<li><strong>'.__('Door Bell').' : </strong> '.$order->door_bell.'</li>';
-                                $html .= '<li><strong>'.__('Google Map').' : </strong> <a href="https://maps.google.com?q='.$order->address.'" target="_blank">Address Link</a></li>';
-                                $html .= '<li><strong>'.__('Comments').' : </strong> '.$order->instructions.'</li>';
+                                $html .= '<li><strong>'.__('Customer').': </strong>'.$order->firstname.' '.$order->lastname.'</li>';
+                                $html .= '<li><strong>'.__('Telephone').': </strong> '.$order->phone.'</li>';
+                                $html .= '<li><strong>'.__('Email').': </strong> '.$order->email.'</li>';
+                                $html .= '<li><strong>'.__('Address').': </strong> '.$order->address.'</li>';
+                                $html .= '<li><strong>'.__('Street Number').': </strong> '.$order->street_number.'</li>';
+                                $html .= '<li><strong>'.__('Floor').': </strong> '.$order->floor.'</li>';
+                                $html .= '<li><strong>'.__('Door Bell').': </strong> '.$order->door_bell.'</li>';
+                                $html .= '<li><strong>'.__('Google Map').': </strong> <a href="https://maps.google.com?q='.$order->address.'" target="_blank">Address Link</a></li>';
+                                $html .= '<li><strong>'.__('Comments').': </strong> '.$order->instructions.'</li>';
                             }
 
                         $html .= '</ul>';
@@ -243,7 +243,7 @@ class OrderController extends Controller
                                         $html .= '</tr>';
                                     }
 
-                                    $html .= '<tr class="text-end"><td colspan="2"><strong>'.Currency::currency($currency)->format($total_amount).'</strong></td></tr>';
+                                    $html .= '<tr><td><b>'. __('Total') .'</b></td><td class="text-end"><strong>'.Currency::currency($currency)->format($total_amount).'</strong></td></tr>';
 
                                 $html .= '</table>';
                             $html .= '</div>';
@@ -1285,43 +1285,43 @@ class OrderController extends Controller
                                     $html .= '<div class="col-md-12">';
                                         $html .= '<ul class="p-2 m-0 list-unstyled" style="border-bottom:2px solid #000 !important; border-top: 2px dotted #ccc;">';
 
-                                            $html .= '<li><b>'.__('Order').' '.__('Id').' : </b>'.$order->order_id.'</li>';
-                                            $html .= '<li><b>'.__('Order Type').' : </b> '.ucfirst(str_replace('_',' ',$data['checkout_type'])).'</li>';
-                                            $html .= '<li><b>'.__('Payment Method').' : </b> '.ucfirst($data['payment_method']).'</li>';
-                                            $html .= '<li><b>'.__('Date').' : </b> '.$data['order_date'].'</li>';
-                                            $html .= '<li><b>'.__('Time').' : </b> '.$data['order_time'].'</li>';
+                                            $html .= '<li><b>'.__('Order').' '.__('Id').': </b>'.$order->order_id.'</li>';
+                                            $html .= '<li><b>'.__('Order Type').': </b> '.ucfirst(str_replace('_',' ',$data['checkout_type'])).'</li>';
+                                            $html .= '<li><b>'.__('Payment Method').': </b> '.ucfirst($data['payment_method']).'</li>';
+                                            $html .= '<li><b>'.__('Date').': </b> '.$data['order_date'].'</li>';
+                                            $html .= '<li><b>'.__('Time').': </b> '.$data['order_time'].'</li>';
 
                                             if($data['checkout_type'] == 'takeaway' || $data['checkout_type'] == 'delivery' || $data['checkout_type'] == 'room_delivery')
                                             {
-                                                $html .= '<li><b>'.__('Customer').' : </b> '.$data['customer'].'</li>';
+                                                $html .= '<li><b>'.__('Customer').': </b> '.$data['customer'].'</li>';
                                             }
 
                                             if($data['checkout_type'] == 'delivery')
                                             {
-                                                $html .= '<li><b>'.__('Address').' : </b> '.$data['address'].'</li>';
-                                                $html .= '<li><b>'.__('Street Number').' : </b> '.$data['street_number'].'</li>';
-                                                $html .= '<li><b>'.__('Floor').' : </b> '.$data['floor'].'</li>';
-                                                $html .= '<li><b>'.__('Door Bell').' : </b> '.$data['door_bell'].'</li>';
+                                                $html .= '<li><b>'.__('Address').': </b> '.$data['address'].'</li>';
+                                                $html .= '<li><b>'.__('Street Number').': </b> '.$data['street_number'].'</li>';
+                                                $html .= '<li><b>'.__('Floor').': </b> '.$data['floor'].'</li>';
+                                                $html .= '<li><b>'.__('Door Bell').': </b> '.$data['door_bell'].'</li>';
                                             }
 
                                             if($data['checkout_type'] == 'room_delivery')
                                             {
-                                                $html .= '<li><b>'.__('Room No.').' : </b> '.$data['room_no'].'</li>';
+                                                $html .= '<li><b>'.__('Room No.').': </b> '.$data['room_no'].'</li>';
                                                 if(!empty($delivery_time))
                                                 {
-                                                    $html .= '<li><b>'.__('Delivery Time').' : </b> '.$delivery_time.'</li>';
+                                                    $html .= '<li><b>'.__('Delivery Time').': </b> '.$delivery_time.'</li>';
                                                 }
                                             }
 
                                             if($data['checkout_type'] == 'table_service')
                                             {
-                                                $html .= '<li><b>'.__('Table No.').' : </b> '.$data['table_no'].'</li>';
+                                                $html .= '<li><b>'.__('Table No.').': </b> '.$data['table_no'].'</li>';
                                             }
 
                                             if($data['checkout_type'] == 'takeaway' || $data['checkout_type'] == 'delivery')
                                             {
-                                                $html .= '<li><b>'.__('Telephone').' : </b> '.$data['phone'].'</li>';
-                                                // $html .= '<li><b>'.__('Email').' : </b> '.$data['email'].'</li>';
+                                                $html .= '<li><b>'.__('Telephone').': </b> '.$data['phone'].'</li>';
+                                                // $html .= '<li><b>'.__('Email').': </b> '.$data['email'].'</li>';
                                             }
 
                                         $html .= '</ul>';
@@ -1367,19 +1367,19 @@ class OrderController extends Controller
                                             $total_amount = $order->order_total;
 
                                             $html .= '<tr>';
-                                                $html .= '<td width="25%"><strong>'.__('Comments').' : </strong></td>';
+                                                $html .= '<td width="25%"><strong>'.__('Comments').': </strong></td>';
                                                 $html .= '<td class="text-end">'.$data['instructions'].'</td>';
                                             $html .= '</tr>';
 
                                             $html .= '<tr>';
-                                                $html .= '<td><strong>'.__('Sub Total').' : </strong></td>';
+                                                $html .= '<td><strong>'.__('Sub Total').': </strong></td>';
                                                 $html .= '<td class="text-end">'.Currency::currency($currency)->format($total_amount).'</td>';
                                             $html .= '</tr>';
 
                                             if($order->discount_per > 0)
                                             {
                                                 $html .= '<tr>';
-                                                    $html .= '<td><strong>'.__('Discount').' : </strong></td>';
+                                                    $html .= '<td><strong>'.__('Discount').': </strong></td>';
                                                     if($order->discount_per == 'fixed')
                                                     {
                                                         $discount_amount = $order->discount_per;
@@ -1403,8 +1403,9 @@ class OrderController extends Controller
                                                 $html .= '</tr>';
                                             }
 
-                                            $html .= '<tr class="text-end">';
-                                                $html .= '<td colspan="2"><strong>'.Currency::currency($currency)->format($total_amount).'</strong></td>';
+                                            $html .= '<tr>';
+                                                $html .= '<td><strong>'. __('Total') .'</strong></td>';
+                                                $html .= '<td class="text-end" colspan="2"><strong>'.Currency::currency($currency)->format($total_amount).'</strong></td>';
                                             $html .= '</tr>';
 
                                         $html .= '</table>';
