@@ -85,14 +85,16 @@
 
     $('.accordion-button').on('click',function(){
         var acrID = $(this).attr('data-bs-target');
-        if($(this).hasClass('collapsed')){
-            var video = $(acrID + " video")[0];
-            if (video.paused) {
-            } else {
-                // If playing, pause the video
-                video.pause();
+        var videos = $("video");
+
+        $.each(videos, function (index, video) {
+            if(video != undefined){
+                if (video.paused) {
+                } else {
+                    video.pause();
+                }
             }
-        }
+        });
     });
 
 </script>
