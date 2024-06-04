@@ -665,16 +665,7 @@
                                                 @endif
                                             </div>
                                         @elseif($checkout_type == 'table_service')
-                                        <input type="hidden" name="table" id="table" value="{{ $table }}">
-                                            <!-- <div class="col-md-6 mb-3">
-                                                <label for="table" class="form-label">{{ __('Table No.') }} <span class="text-danger">*</span></label>
-                                                <input type="number" name="table" id="table" class="form-control {{ ($errors->has('table')) ? 'is-invalid' : '' }}">
-                                                @if($errors->has('table'))
-                                                    <div class="invalid-feedback">
-                                                        {{ $errors->first('table') }}
-                                                    </div>
-                                                @endif
-                                            </div> -->
+                                            <input type="hidden" name="table" id="table" value="{{ $table }}">                                           
                                         @elseif($checkout_type == 'room_delivery')
                                             <div class="col-md-6 mb-3">
                                                 <input type="text" name="firstname" id="firstname" class="form-control {{ ($errors->has('firstname')) ? 'is-invalid' : '' }}" value="{{ old('firstname') }}" placeholder="{{ __('First Name') }}">
@@ -757,16 +748,8 @@
                                             <div class="col-md-6 mb-3">
                                                 <input type="text" name="door_bell" id="door_bell" class="form-control" value="{{ old('door_bell') }}" placeholder="{{ __('Door Bell') }}">
                                             </div>
-                                            <!-- <div class="col-md-6 mb-3">
-                                                <label for="instructions" class="form-label">{{ __('Instructions') }}</label>
-                                                <textarea name="instructions" id="instructions" rows="3" class="form-control">{{ old('instructions') }}</textarea>
-                                            </div> -->
                                         @endif
-                                        <div class="col-md-6 mb-3 tip-div" style="display: none;">
-                                            <label for="tip" class="form-label"></label>
-                                            <input type="text" id="tip" name="tip" value="" class="form-control" placeholder="{{ __('Tip') }}">
-                                        </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <select name="payment_method" id="payment_method" class="form-select">
                                                 <option value="">{{ __('Payment Method') }}</option>
                                                 @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
@@ -783,6 +766,9 @@
                                                 @endif
                                             </select>
                                         </div>
+                                        <div class="col-md-6 mb-3 tip-div" style="display: none;">
+                                            <input type="text" id="tip" name="tip" value="" class="form-control" placeholder="{{ __('Tip') }}">
+                                        </div>                                        
                                     </div>
                                     <hr>
                                     <div class="row">
