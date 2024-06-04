@@ -3038,6 +3038,11 @@ span.qty-number {
 }
 
 @media (max-width: 767px) {
+
+    .cart-back-btn {
+        display: none;
+    }
+
     .open_time h4 {
         font-size: 14px;
     }

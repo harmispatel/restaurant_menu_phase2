@@ -337,10 +337,10 @@
     @endif
     </div>
     @endif
-                        <div class="back_service">
-                            <a onclick="homePage('{{ $shop_details['shop_slug'] }}')"><i
-                                    class="fa-solid fa-arrow-left"></i></a>
-                        </div>
+    <div class="back_service">
+        <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i
+                class="fa-solid fa-arrow-left"></i></a>
+    </div>
 
     </section>
 @endif
@@ -374,7 +374,7 @@
 
                 </div>
                 <div class="back_service">
-                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')"><i
+                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i
                             class="fa-solid fa-arrow-left"></i></a>
                 </div>
             </div>
@@ -619,8 +619,10 @@
                         @csrf
                         <input type="hidden" name="checkout_type" id="checkout_type" value="{{ $checkout_type }}">
                         <div class="card checkout_box">
-                            <div class="card-header">
+                            <div class="card-header position-relative">
                                 <h2>{{ __('Checkout') }}</h2>
+                                <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn" style="cursor: pointer;"><i
+                                    class="fa-solid fa-arrow-left-long"></i></a>
                                 <a href="{{ url()->previous() }}" class="checkout_close_btn"><i class="fa-solid fa-xmark"></i></a>
                             </div>
 
@@ -1061,7 +1063,7 @@
     </footer>
 
     @if ($layout == 'layout_1')
-        <a class="back_bt" onclick="homePage('{{ $shop_details['shop_slug'] }}')"><i class="fa-solid fa-chevron-left"></i></a>
+        <a class="back_bt" onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i class="fa-solid fa-chevron-left"></i></a>
     @endif
 
 @endsection

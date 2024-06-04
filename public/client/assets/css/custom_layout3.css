@@ -2519,6 +2519,10 @@ header .cart-btn {
 
 @media (max-width:767px) {
 
+    .cart-back-btn {
+        display: none;
+    }
+
     .shop_cart .page {
         margin: 0 !important;
     }
@@ -3073,7 +3077,7 @@ padding:10px;
     top: 50%;
     left: 0;
     text-align: center;
-    /* transform: translate(0, -50%); */
+    transform: translate(0, -50%);
     z-index: 9;
     padding: 0 100px;
     /* color:#ff0000; */

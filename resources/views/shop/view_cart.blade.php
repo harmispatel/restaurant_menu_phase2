@@ -416,7 +416,7 @@
     </div>
     @endif
     <div class="back_service">
-        <a onclick="homePage('{{ $shop_details['shop_slug'] }}')"><i class="fa-solid fa-arrow-left"></i></a>
+        <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></a>
     </div>
 
     </section>
@@ -450,7 +450,7 @@
 
                     </div>
                     <div class="back_service">
-                        <a onclick="homePage('{{ $shop_details['shop_slug'] }}')"><i
+                        <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i
                                 class="fa-solid fa-arrow-left"></i></a>
                     </div>
                 </div>
@@ -715,7 +715,7 @@
                             <div class="cart_info">
                                 <div class="cart_title">
                                     <h2>{{ __('Order Options') }}</h2>
-                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn"><i
+                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn" style="cursor: pointer;"><i
                                             class="fa-solid fa-arrow-left-long"></i></a>
                                 </div>
                                 <div class="cart_info_inr">
@@ -1317,7 +1317,7 @@
                             <div class="cart_info">
                                 <div class="cart_title">
                                     <h2>{{ __('Order Options') }}</h2>
-                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn"><i
+                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn" style="cursor: pointer;"><i
                                             class="fa-solid fa-arrow-left-long"></i></a>
                                 </div>
                                 <div class="cart_info_inr">
