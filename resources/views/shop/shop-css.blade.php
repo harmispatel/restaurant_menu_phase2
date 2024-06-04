@@ -744,7 +744,7 @@
 
         /* Item Rating Star Icon Color */
         @if(isset($theme_settings['rating_star_icon_color']) && !empty($theme_settings['rating_star_icon_color']))
-            .item_detail .review_btn {
+            .item_detail .item_image .review_btn, .item_detail_inr .item_image .review_btn, .menu_item_img_inner .review_btn {
                 color: {{ $theme_settings['rating_star_icon_color'] }} !important;
             }
         @endif        
