@@ -742,4 +742,11 @@
             }
         @endif
 
+        /* Item Rating Star Icon Color */
+        @if(isset($theme_settings['rating_star_icon_color']) && !empty($theme_settings['rating_star_icon_color']))
+            .item_detail .review_btn {
+                color: {{ $theme_settings['rating_star_icon_color'] }} !important;
+            }
+        @endif        
+
 </style>

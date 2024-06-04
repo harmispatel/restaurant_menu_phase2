@@ -290,6 +290,7 @@ class UserController extends Controller
                         'modal_quantity_icon_color' => '#ffffff',
                         'modal_quantity_bg_color' => '#4d572b',
                         'modal_body_bg_color' => '#e6e6e6',
+                        'rating_star_icon_color' => '#000000'
                     ];
 
                     foreach($setting_keys as $key => $val)
@@ -364,6 +365,7 @@ class UserController extends Controller
                         'modal_quantity_icon_color' => '#ffffff',
                         'modal_quantity_bg_color' => '#000000',
                         'modal_body_bg_color' => '#e6e6e6',
+                        'rating_star_icon_color' => '#ffffff'
                     ];
 
                     foreach($setting_keys as $key => $val)

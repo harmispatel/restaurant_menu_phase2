@@ -926,7 +926,17 @@ $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ?
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <div class="row align-items-center mb-4" id="item-rating-star-icon-colors">
+                                                    <div class="col-md-8">
+                                                        <span>{{ __('Rating Stars Icon Color') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="rating_star_icon_color" name="rating_star_icon_color" class="form-control me-2 p-0" value="" onchange="changeVal('rating_star_icon_color','rating_star_icon_color_input')">
+                                                            <input id="rating_star_icon_color_input" type="text" class="form-control" value="" onkeyup="changeColor('rating_star_icon_color_input','rating_star_icon_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="row align-items-center mb-4" id="theme-preview-image">
                                                     <div class="col-md-4">
                                                         <span>{{ __('Theme Preview Image') }}</span>

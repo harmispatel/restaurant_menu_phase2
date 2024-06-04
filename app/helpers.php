@@ -336,7 +336,7 @@
             'cover_link_icon_color',
             'cover_link_bg_color',
             'bg_image',
-
+            'rating_star_icon_color'
         ]);
 
         $settings = [];
