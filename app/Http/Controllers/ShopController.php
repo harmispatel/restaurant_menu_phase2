@@ -814,7 +814,7 @@ class ShopController extends Controller
                                                 $html .= '<img width="170" class="mt-3" src="' . $today_spec_icon . '">';
                                             } else {
                                                 if (!empty($default_special_image)) {
-                                                    $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '">';
+                                                    $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '" alt="Special">';
                                                 } else {
                                                     $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
                                                     $html .= '<img width="170" class="mt-3" src="' . $def_tds_img . '">';
@@ -1015,7 +1015,7 @@ class ShopController extends Controller
                                                                 $html .= '<img width="170"  src="' . $today_spec_icon . '">';
                                                             } else {
                                                                 if (!empty($default_special_image)) {
-                                                                    $html .= '<img width="170"  src="' . $default_special_image . '">';
+                                                                    $html .= '<img width="170"  src="' . $default_special_image . '" alt="Special">';
                                                                 } else {
                                                                     $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
                                                                     $html .= '<img width="170"  src="' . $def_tds_img . '">';
@@ -1370,7 +1370,7 @@ class ShopController extends Controller
                                             $html .= '<img width="170" class="mt-3" src="' . $today_spec_icon . '">';
                                         } else {
                                             if (!empty($default_special_image)) {
-                                                $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '">';
+                                                $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '" alt="Special">';
                                             } else {
                                                 $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
                                                 $html .= '<img width="170" class="mt-3" src="' . $def_tds_img . '">';
@@ -1575,7 +1575,7 @@ class ShopController extends Controller
                                                                 $html .= '<img width="170"  src="' . $today_spec_icon . '">';
                                                             } else {
                                                                 if (!empty($default_special_image)) {
-                                                                    $html .= '<img width="170"  src="' . $default_special_image . '">';
+                                                                    $html .= '<img width="170"  src="' . $default_special_image . '" alt="Special">';
                                                                 } else {
                                                                     $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
                                                                     $html .= '<img width="170"  src="' . $def_tds_img . '">';
@@ -1838,7 +1838,7 @@ class ShopController extends Controller
                                         $html .= '<img width="170" class="mt-3" src="' . $today_spec_icon . '">';
                                     } else {
                                         if (!empty($default_special_image)) {
-                                            $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '">';
+                                            $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '" alt="Special">';
                                         } else {
                                             $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
                                             $html .= '<img width="170" class="mt-3" src="' . $def_tds_img . '">';
@@ -2043,7 +2043,7 @@ class ShopController extends Controller
                                                                 $html .= '<img width="170"  src="' . $today_spec_icon . '">';
                                                             } else {
                                                                 if (!empty($default_special_image)) {
-                                                                    $html .= '<img width="170"  src="' . $default_special_image . '">';
+                                                                    $html .= '<img width="170"  src="' . $default_special_image . '" alt="Special">';
                                                                 } else {
                                                                     $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
                                                                     $html .= '<img width="170"  src="' . $def_tds_img . '">';
@@ -2272,7 +2272,8 @@ class ShopController extends Controller
         $theme_settings = themeSettings($shop_theme_id);
 
         // Today Special Icon
-        $today_special_icon = isset($theme_settings['today_special_icon']) ? $theme_settings['today_special_icon'] : '';
+        $today_special_icon = moreTranslations($request->shop_id, 'today_special_icon');
+        $today_special_icon = (isset($today_special_icon[$current_lang_code . "_value"]) && !empty($today_special_icon[$current_lang_code . "_value"])) ? $today_special_icon[$current_lang_code . "_value"] : '';
 
         // Layout
         $active_layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : '';
@@ -2454,11 +2455,11 @@ class ShopController extends Controller
                                     $html .= '<img  src="' . $tds_icon . '">';
                                 }else{
                                     if (!empty($default_special_image)) {
-                                                        $html .= '<img  src="' . $default_special_image . '">';
-                                                    } else {
-                                                        $sp_image = asset('public/client_images/bs-icon/today_special.gif');
-                                                        $html .= '<img src="' . $sp_image . '">';
-                                                    }
+                                        $html .= '<img  src="' . $default_special_image . '" alt="Special">';
+                                    } else {
+                                        $sp_image = asset('public/client_images/bs-icon/today_special.gif');
+                                        $html .= '<img src="' . $sp_image . '">';
+                                    }
                                 }
                                 $html .='</div>';
                             }
@@ -3130,379 +3131,377 @@ class ShopController extends Controller
     public function editCart(Request $request)
     {
 
-                     $shop_id = $request->shop_id;
+        $shop_id = $request->shop_id;
 
-                    // Current Languge Code
-                    $current_lang_code = (session()->has('locale')) ? session()->get('locale') : 'en';
+        // Current Languge Code
+        $current_lang_code = (session()->has('locale')) ? session()->get('locale') : 'en';
 
-                    // Shop Settings
-                    $shop_settings = getClientSettings($shop_id);
+        // Shop Settings
+        $shop_settings = getClientSettings($shop_id);
 
-                    // Shop Default Currency
-                    $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
+        // Shop Default Currency
+        $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 
-                    // Shop Theme ID
-                    $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
+        // Shop Theme ID
+        $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
 
-                    // Theme Settings
-                    $theme_settings = themeSettings($shop_theme_id);
+        // Theme Settings
+        $theme_settings = themeSettings($shop_theme_id);
 
-                    // Today Special Icon
-                    $today_special_icon = isset($theme_settings['today_special_icon']) ? $theme_settings['today_special_icon'] : '';
+        // Today Special Icon
+        $today_special_icon = moreTranslations($shop_id, 'today_special_icon');
+        $today_special_icon = (isset($today_special_icon[$current_lang_code . "_value"]) && !empty($today_special_icon[$current_lang_code . "_value"])) ? $today_special_icon[$current_lang_code . "_value"] : '';
 
-                    // Layout
-                    $active_layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : '';
+        // Layout
+        $active_layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : '';
 
-                    // Admin Settings
-                    $admin_settings = getAdminSettings();
+        // Admin Settings
+        $admin_settings = getAdminSettings();
 
-                    // Get Subscription ID
-                    $subscription_id = getClientSubscriptionID($shop_id);
+        // Get Subscription ID
+        $subscription_id = getClientSubscriptionID($shop_id);
 
-                    // Get Package Permissions
-                    $package_permissions = getPackagePermission($subscription_id);
+        // Get Package Permissions
+        $package_permissions = getPackagePermission($subscription_id);
 
-                    // Shop Details
-
-
-                    $shop_details = Shop::where('id', $shop_id)->first();
-                    $shop_slug = isset($shop_details['shop_slug']) ? $shop_details['shop_slug'] : '';
-
-                    // Default Today Special Image
-                    $default_special_image = (isset($admin_settings['default_special_item_image'])) ? $admin_settings['default_special_item_image'] : '';
-
-                    // Column Keys
-                    $name_key = $current_lang_code . "_name";
-                    $title_key = $current_lang_code . "_title";
-                    $description_key = $current_lang_code . "_description";
-                    $calories_key = $current_lang_code . "_calories";
-                    $price_label_key = $current_lang_code . "_label";
+        // Shop Details
 
 
-                    $cart = session()->get('cart', []);
+        $shop_details = Shop::where('id', $shop_id)->first();
+        $shop_slug = isset($shop_details['shop_slug']) ? $shop_details['shop_slug'] : '';
 
-                    $item_id = $request->item_id;
-                    $price_id = $request->price_id;
-                    $item_key = $request->item_key;
+        // Default Today Special Image
+        $default_special_image = (isset($admin_settings['default_special_item_image'])) ? $admin_settings['default_special_item_image'] : '';
+
+        // Column Keys
+        $name_key = $current_lang_code . "_name";
+        $title_key = $current_lang_code . "_title";
+        $description_key = $current_lang_code . "_description";
+        $calories_key = $current_lang_code . "_calories";
+        $price_label_key = $current_lang_code . "_label";
 
 
-                try {
-                    $html = '';
+        $cart = session()->get('cart', []);
 
-                    $item = Items::where('id', $item_id)->first();
+        $item_id = $request->item_id;
+        $price_id = $request->price_id;
+        $item_key = $request->item_key;
 
-                    if (isset($item)) {
-                        $item_image = (isset($item['image']) && !empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) ? asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) : '';
-                        $item_image_detail = (isset($item['image_detail']) && !empty($item['image_detail']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image_detail'])) ? asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image_detail']) : '';
-                        $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : $item['name'];
-                        $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : $item['calories'];
-                        $item_desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : $item['description'];
-                        $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
-                        $price_arr = getItemPrice($item['id']);
-                        $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
-                        $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
-                        $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
 
-                        $html .= '<input type="hidden" name="item_id" id="item_id" value="' . $item['id'] . '">';
-                        $html .= '<input type="hidden" name="shop_id" id="shop_id" value="' . $shop_id . '">';
-                            $html .= '<div class="modal-body">';
-                            if(!empty($item_image_detail)){
-                                $html .= '<div class="item_image">';
-                                $html .= '<img src="' . $item_image_detail . '" alt="" class="w-100 h-100">';
-                                if ($item['as_sign'] == 1) {
-                                    $sign_image = asset('public/client_images/bs-icon/signature.png');
-                                    $html .= '<img class="is_sign tag-img position-absolute" src="' . $sign_image . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
-                                }
-                                if ($item['is_new'] == 1) {
-                                    $is_new_img = asset('public/client_images/bs-icon/new.png');
-                                    $html .= '<img class="is_new tag-img position-absolute" src="' . $is_new_img . '" style="top:0; left:0; width:70px;">';
-                                }
-                                $html .= '</div>';
-                            }else if(!empty($item_image))
-                            {
-                                $html .= '<div class="item_image">';
-                                $html .= '<img src="' . $item_image . '" alt="" class="w-100 h-100">';
-                                if ($item['as_sign'] == 1) {
-                                    $sign_image = asset('public/client_images/bs-icon/signature.png');
-                                    $html .= '<img class="is_sign tag-img position-absolute" src="' . $sign_image . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
-                                }
-                                if ($item['is_new'] == 1) {
-                                    $is_new_img = asset('public/client_images/bs-icon/new.png');
-                                    $html .= '<img class="is_new tag-img position-absolute" src="' . $is_new_img . '" style="top:0; left:0; width:70px;">';
-                                }
-                                $html .= '</div>';
-                            }else{
-                                if($item['as_sign'] == 1 || $item['is_new'] == 1){
-                                    $html .='<div class="without_img_modal" style="height: 70px;">';
-                                    if ($item['as_sign'] == 1) {
-                                        $sign_image = asset('public/client_images/bs-icon/signature.png');
-                                        $html .= '<img class="is_sign tag-img position-absolute" src="' . $sign_image . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
-                                    }
-                                    if ($item['is_new'] == 1) {
-                                        $is_new_img = asset('public/client_images/bs-icon/new.png');
-                                        $html .= '<img class="is_new tag-img position-absolute" src="' . $is_new_img . '" style="top:0; left:0; width:70px;">';
-                                    }
-                                    $html .='</div>';
-                                }
+        try {
+            $html = '';
+
+            $item = Items::where('id', $item_id)->first();
+
+            if (isset($item)) {
+                $item_image = (isset($item['image']) && !empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) ? asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) : '';
+                $item_image_detail = (isset($item['image_detail']) && !empty($item['image_detail']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image_detail'])) ? asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image_detail']) : '';
+                $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : $item['name'];
+                $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : $item['calories'];
+                $item_desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : $item['description'];
+                $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
+                $price_arr = getItemPrice($item['id']);
+                $item_discount = (isset($item['discount'])) ? $item['discount'] : 0;
+                $item_discount_type = (isset($item['discount_type'])) ? $item['discount_type'] : 'percentage';
+                $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
+
+                $html .= '<input type="hidden" name="item_id" id="item_id" value="' . $item['id'] . '">';
+                $html .= '<input type="hidden" name="shop_id" id="shop_id" value="' . $shop_id . '">';
+                    $html .= '<div class="modal-body">';
+                    if(!empty($item_image_detail)){
+                        $html .= '<div class="item_image">';
+                        $html .= '<img src="' . $item_image_detail . '" alt="" class="w-100 h-100">';
+                        if ($item['as_sign'] == 1) {
+                            $sign_image = asset('public/client_images/bs-icon/signature.png');
+                            $html .= '<img class="is_sign tag-img position-absolute" src="' . $sign_image . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
+                        }
+                        if ($item['is_new'] == 1) {
+                            $is_new_img = asset('public/client_images/bs-icon/new.png');
+                            $html .= '<img class="is_new tag-img position-absolute" src="' . $is_new_img . '" style="top:0; left:0; width:70px;">';
+                        }
+                        $html .= '</div>';
+                    }else if(!empty($item_image))
+                    {
+                        $html .= '<div class="item_image">';
+                        $html .= '<img src="' . $item_image . '" alt="" class="w-100 h-100">';
+                        if ($item['as_sign'] == 1) {
+                            $sign_image = asset('public/client_images/bs-icon/signature.png');
+                            $html .= '<img class="is_sign tag-img position-absolute" src="' . $sign_image . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
+                        }
+                        if ($item['is_new'] == 1) {
+                            $is_new_img = asset('public/client_images/bs-icon/new.png');
+                            $html .= '<img class="is_new tag-img position-absolute" src="' . $is_new_img . '" style="top:0; left:0; width:70px;">';
+                        }
+                        $html .= '</div>';
+                    }else{
+                        if($item['as_sign'] == 1 || $item['is_new'] == 1){
+                            $html .='<div class="without_img_modal" style="height: 70px;">';
+                            if ($item['as_sign'] == 1) {
+                                $sign_image = asset('public/client_images/bs-icon/signature.png');
+                                $html .= '<img class="is_sign tag-img position-absolute" src="' . $sign_image . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
                             }
-
-                            $html .= '<div class="item_info">';
-                            $html .= '<h3>' . $item_name . '</h3>';
-                            if (!empty($item_desc)) {
-                                $html .= '<p>' . $item_desc . '</p>';
+                            if ($item['is_new'] == 1) {
+                                $is_new_img = asset('public/client_images/bs-icon/new.png');
+                                $html .= '<img class="is_new tag-img position-absolute" src="' . $is_new_img . '" style="top:0; left:0; width:70px;">';
                             }
-                            if(count($ingrediet_arr) > 0 || $item['day_special'] == 1 || !empty($item_calories))
-                            {
-                                $html .='<div class="item_detail_inner_info">';
-                                    if (count($ingrediet_arr) > 0) {
-                                        $html .='<div class="item_detail_tag">';
-                                        foreach ($ingrediet_arr as $val) {
-                                            $ingredient = getIngredientDetail($val);
-                                            if (isset($ingredient['icon']) && !empty($ingredient['icon']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ingredient['icon'])) {
-                                                $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ingredient['icon']);
-                                                $html .= '<img src="' . $ing_icon . '" width="55px" height="55px">';
-                                            }
-                                        }
-                                        $html .='</div>';
+                            $html .='</div>';
+                        }
+                    }
+
+                    $html .= '<div class="item_info">';
+                    $html .= '<h3>' . $item_name . '</h3>';
+                    if (!empty($item_desc)) {
+                        $html .= '<p>' . $item_desc . '</p>';
+                    }
+                    if(count($ingrediet_arr) > 0 || $item['day_special'] == 1 || !empty($item_calories))
+                    {
+                        $html .='<div class="item_detail_inner_info">';
+                            if (count($ingrediet_arr) > 0) {
+                                $html .='<div class="item_detail_tag">';
+                                foreach ($ingrediet_arr as $val) {
+                                    $ingredient = getIngredientDetail($val);
+                                    if (isset($ingredient['icon']) && !empty($ingredient['icon']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ingredient['icon'])) {
+                                        $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ingredient['icon']);
+                                        $html .= '<img src="' . $ing_icon . '" width="55px" height="55px">';
                                     }
-                                    if ($item['day_special'] == 1) {
-                                        $html .='<div class="item_detail_special">';
-                                        if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
-                                            $tds_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
-                                            $html .= '<img  src="' . $tds_icon . '">';
-                                        }else{
-                                            if (!empty($default_special_image)) {
-                                                                $html .= '<img  src="' . $default_special_image . '">';
-                                                            } else {
-                                                                $sp_image = asset('public/client_images/bs-icon/today_special.gif');
-                                                                $html .= '<img src="' . $sp_image . '">';
-                                                            }
-                                        }
-                                        $html .='</div>';
-                                    }
-                                    if (!empty($item_calories)) {
-                                        $html .='<div class="item_detail_cal">';
-                                        $html .= '<p><strong>Cal: </strong>' . $item_calories.'</p>';
-                                        $html .='</div>';
-                                    }
+                                }
                                 $html .='</div>';
-
                             }
-                            $html .= '</div>';
-
-                            // Options
-                            $option_ids = (isset($item['options']) && !empty($item['options'])) ? unserialize($item['options']) : [];
-
-                            if(count($option_ids) > 0){
-                                $opt_display = '';
-                            }else{
-                                $opt_display = 'none';
-                            }
-
-                            if (count($price_arr) > 0) {
-                                $html .= '<input type="hidden" name="def_currency" id="def_currency" value="' . $currency . '">';
-                                $t_price = (isset($price_arr[0]->price)) ? Currency::currency($currency)->format($price_arr[0]->price) : Currency::currency($currency)->format(0.00);
-                                $html .= '</div>';
-                                if (count($price_arr) > 0) {
-                                    if (count($price_arr) > 1) {
-                                        $display = '';
-                                        $dinamic_col = 6;
+                            if ($item['day_special'] == 1) {
+                                $html .='<div class="item_detail_special">';
+                                if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
+                                    $tds_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
+                                    $html .= '<img  src="' . $tds_icon . '">';
+                                }else{
+                                    if (!empty($default_special_image)) {
+                                        $html .= '<img  src="' . $default_special_image . '" alt="Special">';
                                     } else {
-                                        // $display = 'none';
-                                        $display = '';
-                                        $dinamic_col = 12;
+                                        $sp_image = asset('public/client_images/bs-icon/today_special.gif');
+                                        $html .= '<img src="' . $sp_image . '">';
                                     }
-
-                                    $outer_display = ($opt_display == 'none' && $display == 'none') ? 'none' : '';
-
-                                    if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && $item_delivery == 1) {
-                                        $inputVisible = 1;
-                                        $lableVisible = '';
-                                    }else{
-                                        $inputVisible = 0;
-                                        $lableVisible = 'radio-item-disabled';
-                                    }
-    
-
-                                    $html .= '<div class="igradient_box" style="display: '.$outer_display.'">';
-                                    $html .= '<div class="igradient_category_box" style="display:' . $display . '">';
-                                    $html .= '<div class="row">';
-                                                    foreach ($price_arr as $key => $value) {
-                                                        if ($item_discount > 0) {
-                                                            if ($item_discount_type == 'fixed') {
-                                                                $price = number_format($value['price'] - $item_discount, 2);
-                                                            } else {
-                                                                $price_per = $value['price'] *  $item_discount / 100;
-                                                                $price = number_format($value['price'] - $price_per, 2);
-                                                            }
-                                                        } else {
-                                                            $price = $value['price'];
-                                                        }
-                                        $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
-
-                                        $html .= '<div class="col-md-'.$dinamic_col.'">';
-                                            $html .= '<div class="radio-item '.$lableVisible.'">';
-
-                                                if ($inputVisible == 1) {
-                                                    $html .= '<input type="radio" name="base_price" onchange="updatePrice()" value="' . $price . '" id="base_price_' . $key . '"';
-                                                    if ($key == 0) {
-                                                        $html .= 'checked';
-                                                    }
-                                                    if ($value['id'] == $cart[$item_id][$price_id][$item_key]['option_id']) {
-                                                        $html .= ' checked'; // Check if the option-id matches the one in the cart
-                                                    }
-                                                    $html .= ' option-id="' . $value['id'] . '">';
-                                                }
-
-                                                $html .= '<label for="base_price_' . $key . '">';
-                                                    $html .= '<span>' . $price_label . '</span>';
-                                                    $html .= '<span>' . Currency::currency($currency)->format($price) . '</span>';
-                                                $html .= '</label>';
-                                            $html .= '</div>';
-                                        $html .= '</div>';
-                                    }
-                                    $html .= '</div>';
-                                    $html .= '</div>';
-
                                 }
-
-                                    if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && $item_delivery == 1) {
-
-                                        $html .= "<input type='hidden' name='option_ids' id='option_ids' value='" . json_encode($option_ids, TRUE) . "'>";
-
-                                            if (count($option_ids) > 0) {
-                                                foreach ($option_ids as $outer_key => $opt_id) {
-                                                    $html .= '<div class="igradient_category_box">';
-                                                    $html .= '<div class="row" id="option_' . $outer_key . '">';
-                                                    $opt_dt = Option::with(['optionPrices'])->where('id', $opt_id)->first();
-                                                    $enable_price = (isset($opt_dt['enabled_price'])) ? $opt_dt['enabled_price'] : '';
-                                                    $option_prices = (isset($opt_dt['optionPrices'])) ? $opt_dt['optionPrices'] : [];
-
-                                                    if (count($option_prices) > 0) {
-                                                        $html .= '<h3>' . $opt_dt[$title_key] . '</h3>';
-                                                        $radio_key = 0;
-                                                        foreach ($option_prices as $key => $option_price) {
-                                                            $opt_price = Currency::currency($currency)->format($option_price['price']);
-                                                            $opt_price_label = (isset($option_price[$name_key])) ? $option_price[$name_key] : "";
-
-                                                            // Check if the option should be checked based on data in $cart
-                                                            $is_checked = '';
-                                                            if (isset($cart[$item_id][$price_id][$item_key]['categories_data'][$opt_id])) {
-                                                                $selected_options = $cart[$item_id][$price_id][$item_key]['categories_data'][$opt_id];
-                                                                if (is_array($selected_options)) {
-                                                                    if (in_array($option_price['id'], $selected_options)) {
-                                                                        $is_checked = 'checked';
-                                                                    }
-                                                                } else {
-                                                                    if ($selected_options == $option_price['id']) {
-                                                                        $is_checked = 'checked';
-                                                                    }
-                                                                }
-                                                            }
-
-                                                            if (isset($opt_dt['multiple_select']) && $opt_dt['multiple_select'] == 1) {
-                                                                $html .= '<div class="col-6">';
-                                                                $html .= '<div class="radio-item check">';
-                                                                $html .= '<input type="checkbox" value="' . $option_price['price'] . '" name="option_price_checkbox_' . $outer_key . '" onchange="updatePrice()" id="option_price_checkbox_' . $outer_key . '_' . $key . '" class="me-2" opt_price_id="' . $option_price['id'] . '" ' . $is_checked . '>';
-                                                                $html .= '<label class="form-label" for="option_price_checkbox_' . $outer_key . '_' . $key . '">';
-                                                                $html .= '<span>' . $opt_price_label . '</span>';
-                                                                if ($enable_price == 1) {
-                                                                    $html .= '<span>' . $opt_price . '</span>';
-                                                                }
-                                                                $html .= '</label>';
-                                                                $html .= '</div>';
-                                                                $html .= '</div>';
-                                                            } else {
-                                                                $radio_key++;
-                                                                $auto_check_radio = ($radio_key == 1) ? 'checked' : '';
-                                                                $html .= '<div class="col-md-6">';
-                                                                $html .= '<div class="radio-item">';
-                                                                $html .= '<input type="radio" value="' . $option_price['price'] . '" name="option_price_radio_' . $outer_key . '" onchange="updatePrice()" id="option_price_radio_' . $outer_key . '_' . $key . '" class="me-2" opt_price_id="' . $option_price['id'] . '" ' . $auto_check_radio . ' ' . $is_checked . '>';
-                                                                $html .= '<label class="form-label" for="option_price_radio_' . $outer_key . '_' . $key . '">';
-                                                                $html .= '<span>' . $opt_price_label . '</span>';
-                                                                if ($enable_price == 1) {
-                                                                    $html .= '<span>' . $opt_price . '</span>';
-                                                                }
-                                                                $html .= '</label>';
-                                                                $html .= '</div>';
-                                                                $html .= '</div>';
-                                                            }
-                                                        }
-                                                    }
-                                                    $html .= '</div>';
-                                                    $html .= '</div>';
-                                                }
-
-                                            }
-                                    }
-                                $html .= '</div>';
-                                $html .= '</div>';
-
-
-                                if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && $item_delivery == 1) {
-                                    $html .= '<div class="modal-footer">';
-                                    $html .= '<div class="add_to_cart_box w-100">';
-                                    $html .= '<div class="row align-items-center">';
-                                    $html .= '<div class="col-4">';
-                                    $html .= '<div class="quantity_btn_group">';
-                                    $quantity = $cart[$item_id][$price_id][$item_key]['quantity'];
-                                    $html .= '<button type="button" class="btn btn-number" ' . ($quantity > 1 ? '' : 'disabled="disabled"') . ' data-type="minus" onclick="QuntityIncDec(this)" data-field="quant[1]">';
-                                    $html .= '<span class="fa fa-minus"></span>';
-                                    $html .= '</button>';
-                                    $html .= '<input type="text" name="quant[1]" id="quantity" onchange="QuntityIncDecOnChange(this)" class="form-control input-number" value="' . $quantity . '" min="1" max="1000" width="60">';
-                                    $html .= '<button type="button" onclick="QuntityIncDec(this)" class="btn  btn-number" data-type="plus" data-field="quant[1]" >';
-                                    $html .= '<span class="fa fa-plus"></span>';
-                                    $html .= '</button>';
-                                    $html .= '</div>';
-                                    $html .= '</div>';
-                                    $html .= '<div class="col-4">';
-                                    // $html .= '<button class="btn add_to_cart_btn_modal btn-success w-100">Add to Cart</button>';
-                                    $html .= '<a class="btn add_to_cart_btn_modal btn-success w-100" onclick="updateToCart(' . $item_id . ', ' . $price_id . ', \'' . $item_key . '\')"><i class="bi bi-cart4"></i> ' . __('Update') . '</a>';
-
-
-                                    $html .= '</div>';
-                                    $html .='<div class="col-4">';
-                                    if (count($price_arr) > 0) {
-                                        $html .= '<div class="item_price text-center">';
-                                        $html .= '<input type="hidden" name="def_currency" id="def_currency" value="' . $currency . '">';
-                                    $t_price = (isset($price_arr[0]->price)) ? Currency::currency($currency)->format($price_arr[0]->price) : Currency::currency($currency)->format(0.00);
-                                    $html .= '<h4 id="total_price">' . $t_price . '</h4>';
-                                    if ($item_discount > 0) {
-                                            if ($item_discount_type == 'fixed') {
-                                                $hidden_price = number_format($price_arr[0]->price - $item_discount, 2);
-                                            } else {
-                                                $dis_per = $price_arr[0]->price * $item_discount / 100;
-                                                $hidden_price = number_format($price_arr[0]->price - $dis_per, 2);
-                                            }
-                                            $html .= "<input type='hidden' name='total_amount' id='total_amount' value='" . $hidden_price . "'>";
-                                        } else {
-                                            $html .= "<input type='hidden' name='total_amount' id='total_amount' value='" . $price_arr[0]->price . "'>";
-                                        }
-                                    $html .= '</div>';
-                                    }
-                                    $html .='</div>';
-                                    $html .= '</div>';
-                                    $html .= '</div>';
-
-                                }
+                                $html .='</div>';
                             }
+                            if (!empty($item_calories)) {
+                                $html .='<div class="item_detail_cal">';
+                                $html .= '<p><strong>Cal: </strong>' . $item_calories.'</p>';
+                                $html .='</div>';
+                            }
+                        $html .='</div>';
 
                     }
-                    return response()->json([
-                        'success' => 1,
-                        'message' => 'Details has been Fetched SuccessFully...',
-                        'data'    => $html,
-                    ]);
+                    $html .= '</div>';
 
-                } catch (\Throwable $th) {
-                    //throw $th;
-                    return response()->json([
-                        'success' => 0,
-                        'message' => 'Internal Server Error!',
-                    ]);
-                }
+                    // Options
+                    $option_ids = (isset($item['options']) && !empty($item['options'])) ? unserialize($item['options']) : [];
+
+                    if(count($option_ids) > 0){
+                        $opt_display = '';
+                    }else{
+                        $opt_display = 'none';
+                    }
+
+                    if (count($price_arr) > 0) {
+                        $html .= '<input type="hidden" name="def_currency" id="def_currency" value="' . $currency . '">';
+                        $t_price = (isset($price_arr[0]->price)) ? Currency::currency($currency)->format($price_arr[0]->price) : Currency::currency($currency)->format(0.00);
+                        $html .= '</div>';
+                        if (count($price_arr) > 0) {
+                            if (count($price_arr) > 1) {
+                                $display = '';
+                                $dinamic_col = 6;
+                            } else {
+                                // $display = 'none';
+                                $display = '';
+                                $dinamic_col = 12;
+                            }
+
+                            $outer_display = ($opt_display == 'none' && $display == 'none') ? 'none' : '';
+
+                            if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && $item_delivery == 1) {
+                                $inputVisible = 1;
+                                $lableVisible = '';
+                            }else{
+                                $inputVisible = 0;
+                                $lableVisible = 'radio-item-disabled';
+                            }
 
 
+                            $html .= '<div class="igradient_box" style="display: '.$outer_display.'">';
+                            $html .= '<div class="igradient_category_box" style="display:' . $display . '">';
+                            $html .= '<div class="row">';
+                                            foreach ($price_arr as $key => $value) {
+                                                if ($item_discount > 0) {
+                                                    if ($item_discount_type == 'fixed') {
+                                                        $price = number_format($value['price'] - $item_discount, 2);
+                                                    } else {
+                                                        $price_per = $value['price'] *  $item_discount / 100;
+                                                        $price = number_format($value['price'] - $price_per, 2);
+                                                    }
+                                                } else {
+                                                    $price = $value['price'];
+                                                }
+                                $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
+
+                                $html .= '<div class="col-md-'.$dinamic_col.'">';
+                                    $html .= '<div class="radio-item '.$lableVisible.'">';
+
+                                        if ($inputVisible == 1) {
+                                            $html .= '<input type="radio" name="base_price" onchange="updatePrice()" value="' . $price . '" id="base_price_' . $key . '"';
+                                            if ($key == 0) {
+                                                $html .= 'checked';
+                                            }
+                                            if ($value['id'] == $cart[$item_id][$price_id][$item_key]['option_id']) {
+                                                $html .= ' checked'; // Check if the option-id matches the one in the cart
+                                            }
+                                            $html .= ' option-id="' . $value['id'] . '">';
+                                        }
+
+                                        $html .= '<label for="base_price_' . $key . '">';
+                                            $html .= '<span>' . $price_label . '</span>';
+                                            $html .= '<span>' . Currency::currency($currency)->format($price) . '</span>';
+                                        $html .= '</label>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
+                            }
+                            $html .= '</div>';
+                            $html .= '</div>';
+
+                        }
+
+                            if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && $item_delivery == 1) {
+
+                                $html .= "<input type='hidden' name='option_ids' id='option_ids' value='" . json_encode($option_ids, TRUE) . "'>";
+
+                                    if (count($option_ids) > 0) {
+                                        foreach ($option_ids as $outer_key => $opt_id) {
+                                            $html .= '<div class="igradient_category_box">';
+                                            $html .= '<div class="row" id="option_' . $outer_key . '">';
+                                            $opt_dt = Option::with(['optionPrices'])->where('id', $opt_id)->first();
+                                            $enable_price = (isset($opt_dt['enabled_price'])) ? $opt_dt['enabled_price'] : '';
+                                            $option_prices = (isset($opt_dt['optionPrices'])) ? $opt_dt['optionPrices'] : [];
+
+                                            if (count($option_prices) > 0) {
+                                                $html .= '<h3>' . $opt_dt[$title_key] . '</h3>';
+                                                $radio_key = 0;
+                                                foreach ($option_prices as $key => $option_price) {
+                                                    $opt_price = Currency::currency($currency)->format($option_price['price']);
+                                                    $opt_price_label = (isset($option_price[$name_key])) ? $option_price[$name_key] : "";
+
+                                                    // Check if the option should be checked based on data in $cart
+                                                    $is_checked = '';
+                                                    if (isset($cart[$item_id][$price_id][$item_key]['categories_data'][$opt_id])) {
+                                                        $selected_options = $cart[$item_id][$price_id][$item_key]['categories_data'][$opt_id];
+                                                        if (is_array($selected_options)) {
+                                                            if (in_array($option_price['id'], $selected_options)) {
+                                                                $is_checked = 'checked';
+                                                            }
+                                                        } else {
+                                                            if ($selected_options == $option_price['id']) {
+                                                                $is_checked = 'checked';
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (isset($opt_dt['multiple_select']) && $opt_dt['multiple_select'] == 1) {
+                                                        $html .= '<div class="col-6">';
+                                                        $html .= '<div class="radio-item check">';
+                                                        $html .= '<input type="checkbox" value="' . $option_price['price'] . '" name="option_price_checkbox_' . $outer_key . '" onchange="updatePrice()" id="option_price_checkbox_' . $outer_key . '_' . $key . '" class="me-2" opt_price_id="' . $option_price['id'] . '" ' . $is_checked . '>';
+                                                        $html .= '<label class="form-label" for="option_price_checkbox_' . $outer_key . '_' . $key . '">';
+                                                        $html .= '<span>' . $opt_price_label . '</span>';
+                                                        if ($enable_price == 1) {
+                                                            $html .= '<span>' . $opt_price . '</span>';
+                                                        }
+                                                        $html .= '</label>';
+                                                        $html .= '</div>';
+                                                        $html .= '</div>';
+                                                    } else {
+                                                        $radio_key++;
+                                                        $auto_check_radio = ($radio_key == 1) ? 'checked' : '';
+                                                        $html .= '<div class="col-md-6">';
+                                                        $html .= '<div class="radio-item">';
+                                                        $html .= '<input type="radio" value="' . $option_price['price'] . '" name="option_price_radio_' . $outer_key . '" onchange="updatePrice()" id="option_price_radio_' . $outer_key . '_' . $key . '" class="me-2" opt_price_id="' . $option_price['id'] . '" ' . $auto_check_radio . ' ' . $is_checked . '>';
+                                                        $html .= '<label class="form-label" for="option_price_radio_' . $outer_key . '_' . $key . '">';
+                                                        $html .= '<span>' . $opt_price_label . '</span>';
+                                                        if ($enable_price == 1) {
+                                                            $html .= '<span>' . $opt_price . '</span>';
+                                                        }
+                                                        $html .= '</label>';
+                                                        $html .= '</div>';
+                                                        $html .= '</div>';
+                                                    }
+                                                }
+                                            }
+                                            $html .= '</div>';
+                                            $html .= '</div>';
+                                        }
+
+                                    }
+                            }
+                        $html .= '</div>';
+                        $html .= '</div>';
+
+
+                        if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && $item_delivery == 1) {
+                            $html .= '<div class="modal-footer">';
+                            $html .= '<div class="add_to_cart_box w-100">';
+                            $html .= '<div class="row align-items-center">';
+                            $html .= '<div class="col-4">';
+                            $html .= '<div class="quantity_btn_group">';
+                            $quantity = $cart[$item_id][$price_id][$item_key]['quantity'];
+                            $html .= '<button type="button" class="btn btn-number" ' . ($quantity > 1 ? '' : 'disabled="disabled"') . ' data-type="minus" onclick="QuntityIncDec(this)" data-field="quant[1]">';
+                            $html .= '<span class="fa fa-minus"></span>';
+                            $html .= '</button>';
+                            $html .= '<input type="text" name="quant[1]" id="quantity" onchange="QuntityIncDecOnChange(this)" class="form-control input-number" value="' . $quantity . '" min="1" max="1000" width="60">';
+                            $html .= '<button type="button" onclick="QuntityIncDec(this)" class="btn  btn-number" data-type="plus" data-field="quant[1]" >';
+                            $html .= '<span class="fa fa-plus"></span>';
+                            $html .= '</button>';
+                            $html .= '</div>';
+                            $html .= '</div>';
+                            $html .= '<div class="col-4">';
+                            // $html .= '<button class="btn add_to_cart_btn_modal btn-success w-100">Add to Cart</button>';
+                            $html .= '<a class="btn add_to_cart_btn_modal btn-success w-100" onclick="updateToCart(' . $item_id . ', ' . $price_id . ', \'' . $item_key . '\')"><i class="bi bi-cart4"></i> ' . __('Update') . '</a>';
+
+
+                            $html .= '</div>';
+                            $html .='<div class="col-4">';
+                            if (count($price_arr) > 0) {
+                                $html .= '<div class="item_price text-center">';
+                                $html .= '<input type="hidden" name="def_currency" id="def_currency" value="' . $currency . '">';
+                            $t_price = (isset($price_arr[0]->price)) ? Currency::currency($currency)->format($price_arr[0]->price) : Currency::currency($currency)->format(0.00);
+                            $html .= '<h4 id="total_price">' . $t_price . '</h4>';
+                            if ($item_discount > 0) {
+                                    if ($item_discount_type == 'fixed') {
+                                        $hidden_price = number_format($price_arr[0]->price - $item_discount, 2);
+                                    } else {
+                                        $dis_per = $price_arr[0]->price * $item_discount / 100;
+                                        $hidden_price = number_format($price_arr[0]->price - $dis_per, 2);
+                                    }
+                                    $html .= "<input type='hidden' name='total_amount' id='total_amount' value='" . $hidden_price . "'>";
+                                } else {
+                                    $html .= "<input type='hidden' name='total_amount' id='total_amount' value='" . $price_arr[0]->price . "'>";
+                                }
+                            $html .= '</div>';
+                            }
+                            $html .='</div>';
+                            $html .= '</div>';
+                            $html .= '</div>';
+
+                        }
+                    }
+
+            }
+            return response()->json([
+                'success' => 1,
+                'message' => 'Details has been Fetched SuccessFully...',
+                'data'    => $html,
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Internal Server Error!',
+            ]);
+        }
     }
 
     public function updateItemCart(Request $request)

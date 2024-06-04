@@ -95,7 +95,7 @@
 
     // Admin Settings
     $admin_settings = getAdminSettings();
-    $default_special_image = isset($admin_settings['default_special_item_image']) ? $admin_settings['default_special_item_image'] : '';
+    $default_special_image = (isset($admin_settings['default_special_item_image'])) ? $admin_settings['default_special_item_image'] : '';
     $shop_desc = html_entity_decode($shop_desc);
 
     $cat_name = isset($cat_details[$name_key]) ? $cat_details[$name_key] : '';
@@ -1939,18 +1939,13 @@
                                                                     </ul>
 
                                                                     @if ($item['day_special'] == 1)
-                                                                        @if (
-                                                                            !empty($today_special_icon) &&
-                                                                                file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
-                                                                            <img width="170" class="mt-4"
-                                                                                src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
+                                                                        @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
+                                                                            <img width="170" class="mt-4" src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
                                                                         @else
-                                                                            @if (!empty($default_special_image) && file_exists($default_special_image))
-                                                                                <img width="170" class="mt-4"
-                                                                                    src="{{ $default_special_image }}">
+                                                                            @if (!empty($default_special_image))
+                                                                                <img width="170" class="mt-4" src="{{ $default_special_image }}" alt="Special">
                                                                             @else
-                                                                                <img width="170" class="mt-4"
-                                                                                    src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
+                                                                                <img width="170" class="mt-4" src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
                                                                             @endif
                                                                         @endif
                                                                     @endif
@@ -2184,18 +2179,13 @@
                                                                         </ul>
 
                                                                         @if ($item['day_special'] == 1)
-                                                                            @if (
-                                                                                !empty($today_special_icon) &&
-                                                                                    file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
-                                                                                <img width="170" class="mt-4"
-                                                                                    src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
+                                                                            @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
+                                                                                <img width="170" class="mt-4" src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
                                                                             @else
-                                                                                @if (!empty($default_special_image) && file_exists($default_special_image))
-                                                                                    <img width="170" class="mt-4"
-                                                                                        src="{{ $default_special_image }}">
+                                                                                @if (!empty($default_special_image))
+                                                                                    <img width="170" class="mt-4" src="{{ $default_special_image }}" alt="Special">
                                                                                 @else
-                                                                                    <img width="170" class="mt-4"
-                                                                                        src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
+                                                                                    <img width="170" class="mt-4" src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
                                                                                 @endif
                                                                             @endif
                                                                         @endif
@@ -2414,18 +2404,13 @@
                                                             </ul>
 
                                                             @if ($item['day_special'] == 1)
-                                                                @if (
-                                                                    !empty($today_special_icon) &&
-                                                                        file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
-                                                                    <img width="170" class="mt-4"
-                                                                        src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
+                                                                @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
+                                                                    <img width="170" class="mt-4" src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
                                                                 @else
-                                                                    @if (!empty($default_special_image) && file_exists($default_special_image))
-                                                                        <img width="170" class="mt-4"
-                                                                            src="{{ $default_special_image }}">
+                                                                    @if (!empty($default_special_image))
+                                                                        <img width="170" class="mt-4" src="{{ $default_special_image }}" alt="Special">
                                                                     @else
-                                                                        <img width="170" class="mt-4"
-                                                                            src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
+                                                                        <img width="170" class="mt-4" src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
                                                                     @endif
                                                                 @endif
                                                             @endif
@@ -2862,21 +2847,16 @@
                                                             </div>
                                                             <div class="special_day_item_gif text-center">
                                                                 @if ($item['day_special'] == 1)
-                                                                                @if (
-                                                                                    !empty($today_special_icon) &&
-                                                                                        file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
-                                                                                    <img width="170"
-                                                                                        src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
-                                                                                @else
-                                                                                    @if (!empty($default_special_image) && file_exists($default_special_image))
-                                                                                        <img width="170"
-                                                                                            src="{{ $default_special_image }}">
-                                                                                    @else
-                                                                                        <img width="170"
-                                                                                            src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
-                                                                                    @endif
-                                                                                @endif
-                                                                            @endif
+                                                                    @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
+                                                                        <img width="170" src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
+                                                                    @else
+                                                                        @if (!empty($default_special_image))
+                                                                            <img width="170" src="{{ $default_special_image }}" alt="Special">
+                                                                        @else
+                                                                            <img width="170" src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
+                                                                        @endif
+                                                                    @endif
+                                                                @endif
                                                             </div>
                                                             <div class="item_footer">
                                                                 @if($tagName)
@@ -3211,22 +3191,17 @@
                                                             </div>
                                                             <div class="special_day_item_gif text-center">
                                                                 @if ($item['day_special'] == 1)
-                                                                            @if (
-                                                                                !empty($today_special_icon) &&
-                                                                                    file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
-                                                                                <img width="170"
-                                                                                    src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
-                                                                            @else
-                                                                                @if (!empty($default_special_image) && file_exists($default_special_image))
-                                                                                    <img width="170"
-                                                                                        src="{{ $default_special_image }}">
-                                                                                @else
-                                                                                    <img width="170"
-                                                                                        src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
-                                                                                @endif
-                                                                            @endif
+                                                                    @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
+                                                                        <img width="170" src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
+                                                                    @else
+                                                                        @if (!empty($default_special_image))
+                                                                            <img width="170" src="{{ $default_special_image }}" alt="Special">
+                                                                        @else
+                                                                            <img width="170" src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
+                                                                        @endif
                                                                     @endif
-                                                                </div>
+                                                                @endif
+                                                            </div>
                                                             <div class="item_footer">
                                                                 @if($tagName)
                                                                     <span>{{ $tagName }}</span>
