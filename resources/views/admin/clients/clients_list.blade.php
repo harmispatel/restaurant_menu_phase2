@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.admin-layout')
 
 @section('title', __('Clients'))
@@ -69,7 +70,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped w-100" id="clientsTable">
+                            <table class="table table-striped" id="clientsTable" style="text-wrap:nowrap">
                                 <thead>
                                     <tr>
                                         <th>{{ __('Id')}}</th>
@@ -77,13 +78,14 @@
                                         <th>{{ __('email')}}</th>
                                         <th>{{ __('Status')}}</th>
                                         <th>{{ __('Favorite')}}</th>
+                                        <th>{{ __('Duration') }}</th>
                                         <th class="text-center">{{ __('Actions')}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($clients as $client)
                                         <tr>
-                                            <td>{{ $client->id }}</td>
+                                            <td>{{ (isset($client->hasOneShop->shop['id'])) ? $client->hasOneShop->shop['id'] : '' }}</td>
                                             <td>{{ $client->firstname }} {{ $client->lastname }}</td>
                                             <td>{{ $client->email }}</td>
                                             <td>
@@ -106,6 +108,26 @@
                                                     <input class="form-check-input" type="checkbox" role="switch" onchange="addToisFav({{ $fav_checkVal }},{{ $client->id }})" id="statusBtn" {{ $fav_checked }}>
                                                 </div>
                                             </td>
+                                            <td>
+                                                @php
+                                                            $endDate = \Carbon\Carbon::parse($client->hasOneSubscription->end_date);
+                                                            $now = \Carbon\Carbon::now();
+                                                            $diff = $now->diff($endDate);
+                                                            $years = $diff->y;
+                                                            $months = $diff->m;
+                                                            $days = $diff->d;
+                                                            $subscriptionId = isset($client->hasOneSubscription['subscription_id']) ? $client->hasOneSubscription['id'] : '';
+                                                @endphp
+                                                @if(\Carbon\Carbon::now()->diffInDays($client->hasOneSubscription->end_date, false) > 0)
+                                                        <span class="text-success">
+                                                            (@if($years > 0){{ $years }} Years, @endif
+                                                            @if($months > 0){{ $months }} Months, @endif
+                                                            @if($days > 0){{ $days }} Days @endif Left.)
+                                                        </span>
+                                                    @else
+                                                        <span class="text-danger">(Expired plan.)</span>
+                                                    @endif
+                                            </td>
                                             <td class="text-center">
                                                 <a href="{{ route('clients.access',$client->id) }}" class=" m-1 btn btn-sm btn-primary">
                                                     <i class="bi bi-eye"></i>
@@ -114,6 +136,10 @@
                                                 <a href="{{ route('clients.edit',$client->id) }}" class=" m-1 btn btn-sm btn-primary">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
+                                                <a onclick="resetSubscribers({{ $subscriptionId }})" data-bs-toggle="tooltip" data-bs-placement="top" title="Reset Subscriptions" class="m-1 btn btn-sm btn-primary">
+                                                    <i class="fa fa-refresh"></i>
+
+                                                </a>
                                                 <a onclick="deleteClient({{ $client->id }})" class=" m-1 btn btn-sm btn-danger">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
@@ -121,7 +147,7 @@
                                         </tr>
                                     @empty
                                         <tr class="text-center">
-                                            <td colspan="6">{{ __('Clients Not Found!')}}</td>
+                                            <td colspan="7">{{ __('Clients Not Found!')}}</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -240,6 +266,36 @@
                 else
                 {
                     swal("Cancelled", "", "error");
+                }
+            });
+        }
+
+        // Function for Reset Subscriber
+        function resetSubscribers(subscriptionId)
+        {
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('client.subscription.reset') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'id': subscriptionId,
+                },
+                dataType: 'JSON',
+                success: function(response)
+                {
+                    if (response.success == 1)
+                    {
+                        toastr.success("Update Subscription has been Changed SuccessFully");
+                        setTimeout(() => {
+                                    location.reload();
+                                }, 1200);
+                    }
+                    else
+                    {
+                        toastr.error("Internal Serve Errors");
+                        locattion.reload();
+                    }
                 }
             });
         }

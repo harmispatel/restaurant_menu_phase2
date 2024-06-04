@@ -9,13 +9,18 @@ class Items extends Model
 {
     use HasFactory;
 
-    function category()
+    public function tag()
     {
-        return $this->hasOne(Category::class,'id','category_id');
+        return $this->hasOne(CategoryProductTags::class,'item_id','id');
     }
 
     public function ratings()
     {
         return $this->hasMany(ItemReview::class,'item_id','id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class,'category_item');
     }
 }

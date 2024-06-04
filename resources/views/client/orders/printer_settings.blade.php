@@ -40,9 +40,9 @@
                                 <h3>{{ __('Print Settings') }}</h3>
                                 <div class="col-md-12">
                                     <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Before you enable print option.') }}</label> <br>
-                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('You have to install the client software JS Print Manager Ver. 6.x.x') }}</label> <br>
+                                    <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('You have to install the client software JS Print Manager Ver. 7.x.x') }}</label> <br>
                                     <label><i class="bi bi-arrow-right-circle me-1 text-success"></i>{{ __('Download or Visit this') }} <a target="_incognito" href="https://www.neodynamic.com/downloads/jspm/">{{ __('Link') }}</a></label> <br>
-                                    <a href="{{ url('/neodynamic-jspm/jspm6-6-win.zip') }}" class="btn btn-primary btn-sm mt-2 mb-2"><i class="bi bi-download"></i> Download</a> <br>
+                                    <a href="{{ url('/neodynamic-jspm/jspm7-7-win.zip') }}" class="btn btn-primary btn-sm mt-2 mb-2"><i class="bi bi-download"></i> Download</a> <br>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -143,7 +143,7 @@
 {{-- Custom Script --}}
 @section('page-js')
 
-    <script src="{{ asset('public/admin/assets/js/jsprintmanager.js') }}"></script>
+    <script src="{{ asset('public/admin/assets/js/jsprintmanager-v7.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 

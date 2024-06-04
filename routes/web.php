@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController, ItemsReviewsController, LanguageController,LanguagesController, MailFormController, OptionController,OrderController, OtherSettingController, PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController};
+use App\Http\Controllers\{AdminSettingsController,AuthController,BillingInfoController,CategoryController,DashboardController,ContactController,DesignController,EveryPayController,ImportExportController,IngredientController,ItemsController, ItemsReviewsController, LanguageController,LanguagesController, MailFormController, OptionController,OrderController, OtherSettingController, PaymentController,PaypalController,PreviewController,ShopBannerController,ShopController,ShopQrController,StatisticsController,SubscriptionsController,TagsController,ThemeController,TutorialController,UserController,LayoutController,StaffController,RateServiceController,ServiceReviewsController,CouponController, ShopRoomController, ShopTableController, WaiterController};
+use App\Http\Requests\ShopRoomRequest;
+use App\Models\ShopCoupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +72,7 @@ Route::group(['prefix' => 'admin'], function ()
         Route::post('/update-clients',[UserController::class,'update'])->name('clients.update');
         Route::post('/delete-clients-data',[UserController::class,'deleteClientsData'])->name('client.delete.data');
         Route::post('/delete-clients-orders',[UserController::class,'deleteClientsOrders'])->name('client.delete.orders');
+        Route::post('/update-subscription-client',[UserController::class,'resetSubscription'])->name('client.subscription.reset');
 
         // Subscription
         Route::get('/subscriptions',[SubscriptionsController::class,'index'])->name('subscriptions');
@@ -127,6 +130,7 @@ Route::group(['prefix' => 'client'], function()
     {
         // Client Dashboard
         Route::get('dashboard', [DashboardController::class,'clientDashboard'])->name('client.dashboard');
+        Route::get('dashboard/check-orders-and-waiter-call', [DashboardController::class,'checkOrdersAndWaiterCall'])->name('client.check-orders-and-waiter-call');
 
         // Categories
         Route::get('categories/{cat_id?}',[CategoryController::class,'index'])->name('categories');
@@ -154,6 +158,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('sorting-items',[ItemsController::class,'sorting'])->name('items.sorting');
         Route::post('delete-price-items',[ItemsController::class,'deleteItemPrice'])->name('items.delete.price');
         Route::get('delete-items-image/{id}',[ItemsController::class,'deleteItemImage'])->name('items.delete.image');
+        Route::get('delete-items-image-detail/{id}',[ItemsController::class,'deleteItemImageDetail'])->name('items.delete.image.detail');
 
         // Options
         Route::get('options',[OptionController::class,'index'])->name('options');
@@ -170,11 +175,13 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/design-logo-delete', [DesignController::class,'deleteLogo'])->name('design.logo.delete');
 
         Route::post('/design-intro-status', [DesignController::class,'introStatus'])->name('design.intro.status');
+        Route::post('/design-intro-cube', [DesignController::class,'introCube'])->name('design.intro.cube');
         Route::post('/design-intro-icon', [DesignController::class,'introIconUpload'])->name('design.intro.icon');
         Route::post('/design-intro-duration', [DesignController::class,'introDuration'])->name('design.intro.duration');
+        Route::post('/design-intro-link', [DesignController::class,'introLink'])->name('design.intro.link');
 
         Route::get('/design-cover', [DesignController::class,'cover'])->name('design.cover');
-        Route::get('/design-cover-delete', [DesignController::class,'deleteCover'])->name('design.cover.delete');
+        Route::get('/design-cover-delete/{key}', [DesignController::class,'deleteCover'])->name('design.cover.delete');
 
         Route::get('/banners', [ShopBannerController::class,'index'])->name('banners');
         Route::post('/banners-store', [ShopBannerController::class,'store'])->name('banners.store');
@@ -183,10 +190,13 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/banners-update', [ShopBannerController::class,'update'])->name('banners.update');
         Route::post('/banners-image-delete', [ShopBannerController::class,'deleteBanner'])->name('banners.delete.image');
         Route::post('update-banners-by-lang',[ShopBannerController::class,'updateByLangCode'])->name('banners.update-by-lang');
+        Route::post('status-banner',[ShopBannerController::class,'status'])->name('banners.status');
+
 
         Route::get('/design-general-info', [DesignController::class,'generalInfo'])->name('design.general-info');
         Route::post('/design-generalInfoUpdate', [DesignController::class,'generalInfoUpdate'])->name('design.generalInfoUpdate');
         Route::post('/design-mailFormUpdate', [DesignController::class,'mailFormUpdate'])->name('design.mailFormUpdate');
+        Route::get('/design-loader-delete',[DesignController::class,'loaderDelete'])->name('design.loader.delete');
 
         // Billing Infor
         Route::get('billing-info',[BillingInfoController::class, 'billingInfo'])->name('billing.info');
@@ -230,6 +240,57 @@ Route::group(['prefix' => 'client'], function()
         Route::post('sorting-tags',[TagsController::class,'sorting'])->name('tags.sorting');
         Route::post('update-tags-by-lang',[TagsController::class,'updateByLangCode'])->name('tags.update-by-lang');
 
+        // Staff
+        Route::get('staffs',[StaffController::class,'index'])->name('staffs');
+        Route::get('add-staffs',[StaffController::class,'insert'])->name('staffs.add');
+        Route::post('store-staffs',[StaffController::class,'store'])->name('staffs.store');
+        Route::post('/delete-staffs',[StaffController::class,'destroy'])->name('staffs.destroy');
+        Route::get('/edit-staffs/{id}',[StaffController::class,'edit'])->name('staffs.edit');
+        Route::post('/update-staffs',[StaffController::class,'update'])->name('staffs.udpate');
+        Route::post('/status-staffs',[StaffController::class,'changeStatus'])->name('staffs.status');
+
+        // RateService
+        Route::get('rate-services',[RateServiceController::class,'index'])->name('rate.services');
+        Route::get('add-rate-services',[RateServiceController::class,'insert'])->name('rate.services.add');
+        Route::post('sotre-rate-services',[RateServiceController::class,'store'])->name('rate.services.save');
+        Route::post('status-rate-services',[RateServiceController::class,'changeStatus'])->name('rate.services.status');
+        Route::post('edit-rate-services',[RateServiceController::class,'edit'])->name('rate.services.edit');
+        Route::post('update-rate-service',[RateServiceController::class,'update'])->name('rate.service.update');
+        Route::post('update-rate-service-by-lang',[RateServiceController::class,'updateByLangCode'])->name('rate.service.update-by-lang');
+        Route::post('delete-rate-service',[RateServiceController::class,'destroy'])->name('rate.services.destroy');
+        Route::post('email-rate-services',[RateServiceController::class,'emailRate'])->name('email.rate.services');
+
+
+        // Coupons
+        Route::get('coupons',[CouponController::class,'index'])->name('coupons');
+        Route::get('add-coupons',[CouponController::class,'insert'])->name('coupons.add');
+        Route::post('store-coupons',[CouponController::class,'store'])->name('coupons.save');
+        Route::post('status-coupons',[CouponController::class,'changeStatus'])->name('coupons.status');
+        Route::get('edit-coupon/{id}',[CouponController::class,'edit'])->name('coupons.edit');
+        Route::post('update-coupons',[CouponController::class,'update'])->name('coupons.update');
+        Route::post('delete-coupons',[CouponController::class,'destroy'])->name('coupons.destroy');
+
+        // Rooms
+        Route::get('rooms',[ShopRoomController::class,'index'])->name('rooms');
+        Route::get('add-rooms',[ShopRoomController::class,'insert'])->name('rooms.add');
+        Route::post('store-rooms',[ShopRoomController::class,'store'])->name('rooms.save');
+        Route::post('status-room',[ShopRoomController::class,'changeStatus'])->name('rooms.status');
+        Route::get('edit-room/{id}',[ShopRoomController::class,'edit'])->name('rooms.edit');
+        Route::post('update-rooms',[ShopRoomController::class,'update'])->name('rooms.update');
+        Route::post('delete-rooms',[ShopRoomController::class,'destroy'])->name('rooms.destroy');
+        Route::post('rooms/enable',[ShopRoomController::class,'enableRoom'])->name('rooms.enable');
+
+
+        // Tables
+        Route::get('tables',[ShopTableController::class,'index'])->name('tables');
+        Route::get('tables/create',[ShopTableController::class,'create'])->name('tables.create');
+        Route::post('tables/store',[ShopTableController::class,'store'])->name('tables.store');
+        Route::post('tables/status',[ShopTableController::class,'status'])->name('tables.status');
+        Route::get('tables/edit/{id}',[ShopTableController::class,'edit'])->name('tables.edit');
+        Route::post('tables/update',[ShopTableController::class,'update'])->name('tables.update');
+        Route::post('tables/destroy',[ShopTableController::class,'destroy'])->name('tables.destroy');
+        Route::post('tables/enable',[ShopTableController::class,'enableTable'])->name('tables.enable');
+
         // Preview
         Route::get('/preview',[PreviewController::class,'index'])->name('preview');
 
@@ -253,7 +314,12 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/change-theme', [ThemeController::class,'changeTheme'])->name('theme.change');
         Route::get('/delete-theme/{id}', [ThemeController::class,'destroy'])->name('theme.delete');
         Route::get('/clone-theme/{id}', [ThemeController::class,'cloneView'])->name('theme.clone');
+        Route::get('/delete-header-image/{id}',[ThemeController::class,'deleteHeaderImg'])->name('delete.header.img');
+        Route::get('/delete-bg-image/{id}',[ThemeController::class,'deleteBgImg'])->name('delete.bg.img');
 
+        //  Layouts
+        Route::get('/design-layout', [LayoutController::class,'index'])->name('desgin.layout');
+        Route::post('/change-layout',[LayoutController::class,'changeLayout'])->name('layout.change');
 
         // Orders
         Route::get('/orders-settings',[OrderController::class,'OrderSettings'])->name('order.settings');
@@ -274,6 +340,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/order-notification',[OrderController::class,'orderNotification'])->name('order.notification');
         Route::get('/new-orders',[OrderController::class,'getNewOrders'])->name('new.orders');
         Route::get('/jspm',[OrderController::class,'setPrinterLicense'])->name('jspm');
+        Route::post('/orders-delivery',[OrderController::class,'deliveryOrder'])->name('orders.delivery');
 
         // Special Icons
         Route::get('/special-icons',[IngredientController::class,'specialIcons'])->name('special.icons');
@@ -284,6 +351,7 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/update-special-icons',[IngredientController::class,'updateSpecialIcons'])->name('special.icons.update');
         Route::post('/status-special-icons',[IngredientController::class,'changeStatus'])->name('special.icons.status');
 
+
         // Payment
         Route::get('/payment-settings',[PaymentController::class,'paymentSettings'])->name('payment.settings');
         Route::post('/payment-settings-update',[PaymentController::class,'UpdatePaymentSettings'])->name('update.payment.settings');
@@ -291,6 +359,11 @@ Route::group(['prefix' => 'client'], function()
         // Item Reviews
         Route::get('/items-reviews',[ItemsReviewsController::class,'index'])->name('items.reviews');
         Route::post('/items-reviews-destroy',[ItemsReviewsController::class,'destroy'])->name('items.reviews.destroy');
+
+        // Service  Reviews
+        Route::get('/service-reviews',[ServiceReviewsController::class,'index'])->name('services.review');
+        Route::get('/service-reviews-view/{id}',[ServiceReviewsController::class,'view'])->name('services.view');
+        Route::post('/service-reviews-destroy',[ServiceReviewsController::class,'destroy'])->name('service.reviews.destroy');
 
         Route::post('/verify/client/password',[UserController::class,'verifyClientPassword'])->name('verify.client.password');
 
@@ -304,6 +377,15 @@ Route::group(['prefix' => 'client'], function()
         Route::post('/other-settings-edit', [OtherSettingController::class,'edit'])->name('other.settings.edit');
         Route::post('/other-settings-update-by-lang', [OtherSettingController::class,'updateByLangCode'])->name('other.settings.update.by.lang');
         Route::post('/other-settings-update', [OtherSettingController::class,'update'])->name('other.settings.update');
+
+        Route::post('/show-all-call-waiter',[WaiterController::class,'showAllCallWaiter'])->name('show.all.call.waiter');
+        Route::get('/list-call-waiter',[WaiterController::class,'listCallWaiter'])->name('list.call.waiter');
+        Route::get('/show-call-waiter/{id}',[WaiterController::class,'showCallWaiter'])->name('show.call.waiter');
+        Route::post('/delete-call-waiter',[WaiterController::class,'deleteCallWaiter'])->name('delete.call.waiter');
+        Route::post('/on-off-call-waiter',[WaiterController::class,'onOffCallWaiter'])->name('on.off.call.waiter');
+        Route::post('/play-sound-on-off',[WaiterController::class,'onOffPlaySound'])->name('on.off.playsound');
+        Route::post('/select-play-sound',[WaiterController::class,'selectPlaySound'])->name('select.play.sound');
+        Route::post('/accept-call-waiter',[WaiterController::class, 'acceptCallWaiter'])->name('accept.call.waiter');
 
     });
 });
@@ -341,6 +423,8 @@ Route::post('details-items',[ShopController::class,'getDetails'])->name('items.g
 Route::post('do-check-in',[ShopController::class,'checkIn'])->name('do.check.in');
 Route::post('shop-add-to-cart',[ShopController::class,'addToCart'])->name('shop.add.to.cart');
 Route::post('shop-update-cart',[ShopController::class,'updateCart'])->name('shop.update.cart');
+Route::post('shop-edit-cart',[ShopController::class,'editCart'])->name('shop.edit.cart');
+Route::post('shop-item-update-cart',[ShopController::class,'updateItemCart'])->name('shop.item.update.cart');
 Route::post('shop-remove-cart-item',[ShopController::class,'removeCartItem'])->name('shop.remove.cart.item');
 Route::get('{my_shop_slug}/my/cart/',[ShopController::class,'viewCart'])->name('shop.cart');
 Route::get('{my_shop_slug}/my/cart/checkout/',[ShopController::class,'cartCheckout'])->name('shop.cart.checkout');
@@ -349,8 +433,23 @@ Route::get('{my_shop_slug}/checkout/success/{id}',[ShopController::class,'checko
 Route::post('set-checkout-type',[ShopController::class,'setCheckoutType'])->name('set.checkout.type');
 Route::post('check-order-status',[ShopController::class,'checkOrderStatus'])->name('check.order.status');
 Route::post('send-item-review',[ShopController::class,'sendItemReview'])->name('send.item.review');
+Route::post('item-review',[ShopController::class,'itemReview'])->name('item.review');
 Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
 Route::post('/check-min-amount-for-delivery',[OrderController::class,'checkMinAmountforDelivery'])->name('check.min_amount_for_delivery');
+Route::post('service-review',[ShopController::class,'serviceReview'])->name('service.review');
+Route::post('send-service-review',[ShopController::class,'sendServiceReview'])->name('send.service.review');
+Route::post('/validate-coupon',[ShopController::class,'validateCoupon'])->name('validate.coupon');
+Route::post('/remove-coupon',[ShopController::class,'removeCoupon'])->name('remove.coupon');
+Route::post('/get-room',[ShopController::class,'getRoom'])->name('set.room.no');
+Route::post('/add-to-cart',[ShopController::class,'directAddToCart'])->name('add.to.cart');
+Route::post('/moblie-item-category',[ShopController::class,'mobileItemCategory'])->name('mobile.item.category');
+Route::post('/is-cover',[ShopController::class,'isCover'])->name('is.cover');
+
+
+// Waiter
+Route::post('/call-waiter',[WaiterController::class,'callWiter'])->name('call.waiter');
+Route::Post('/send-call-waiter',[WaiterController::class,'sendCallWaiter'])->name('send.call.waiter');
+
 
 // Paypal Payment
 Route::get('{my_shop_slug}/paypal/payment/',[PaypalController::class,'payWithpaypal'])->name('paypal.payment');

@@ -272,13 +272,12 @@ class CategoryController extends Controller
             $id = $request->id;
             $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
 
-            // Category Items Count
-            $items_count = Items::where('category_id',$id)->count();
 
             // Category Details
             $category_details = Category::where('id',$id)->first();
 
-            if($items_count > 0)
+
+            if($category_details->items()->exists())
             {
                 return response()->json([
                     'success' => 0,
@@ -336,6 +335,7 @@ class CategoryController extends Controller
         }
         catch (\Throwable $th)
         {
+            dd($th);
             return response()->json([
                 'success' => 0,
                 'message' => "Internal Server Error!",

@@ -2,6 +2,8 @@
     $admin_settings = getAdminSettings();
     $main_screen = isset($admin_settings['theme_main_screen_demo']) ? $admin_settings['theme_main_screen_demo'] : '';
     $category_screen = isset($admin_settings['theme_category_screen_demo']) ? $admin_settings['theme_category_screen_demo'] : '';
+    $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ? $admin_settings['cart_modal_screen_layout'] : '';
+
 @endphp
 
 @extends('client.layouts.client-layout')
@@ -96,7 +98,7 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-7">
-                                                                <span>{{ __('Search Box Position')}}</span>
+                                                                <span>{{ __('Burger Menu Position')}}</span>
                                                             </div>
                                                             <div class="col-md-5">
                                                                 <select name="search_box_position" id="search_box_position" class="form-select">
@@ -108,7 +110,7 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-7">
-                                                                <span>{{ __('Search Box Icon Color')}}</span>
+                                                                <span>{{ __('Submenu Icon Color')}}</span>
                                                             </div>
                                                             <div class="col-md-5">
                                                                 <div class="from-group d-flex align-items-center">
@@ -142,7 +144,7 @@
                                                         </div> --}}
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-7">
-                                                                <span>{{ __('Banner Slide Button')}}</span>
+                                                                <span>{{ __('Banner Buttons')}}</span>
                                                             </div>
                                                             <div class="col-md-5">
                                                                 <label class="switch">
@@ -156,7 +158,7 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-7">
-                                                                <span>{{ __('Banner Delay Time')}}</span>
+                                                                <span>{{ __('Banner Speed')}}</span>
                                                             </div>
                                                             <div class="col-md-5">
                                                                 <div class="form-group">
@@ -234,7 +236,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="preview_img">
-                                                        @if(!empty($main_screen))
+                                                        @if(!empty($main_screen) && file_exists($main_screen))
                                                             <img src="{{ $main_screen }}" class="w-100">
                                                             {{-- <img src="{{ asset('public/client_images/not-found/theme_main_screen.png') }}" class="w-100"> --}}
                                                         @endif
@@ -259,7 +261,7 @@
                                                     <div class="main_theme_color">
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
-                                                                <span>{{ __('Categories Bar Color')}}</span>
+                                                                <span>{{ __('Search Arrows')}}</span>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <div class="from-group d-flex align-items-center">
@@ -270,7 +272,7 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
-                                                                <span>{{ __('Category Bar Type')}}</span>
+                                                                <span>{{ __('Category Images')}}</span>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <select name="category_bar_type" id="category_bar_type" class="form-select">
@@ -336,7 +338,7 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
-                                                                <span>{{ __('Item Title Color')}}</span>
+                                                                <span>{{ __('Title Color')}}</span>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <div class="from-group d-flex align-items-center">
@@ -347,7 +349,7 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
-                                                                <span>{{ __('Item Description Color')}}</span>
+                                                                <span>{{ __('Description Color')}}</span>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <div class="from-group d-flex align-items-center">
@@ -466,7 +468,7 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
-                                                                <span>{{ __('Tag Font Color')}}</span>
+                                                                <span>{{ __('Active Tag Text')}}</span>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <div class="from-group d-flex align-items-center">
@@ -477,7 +479,7 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
-                                                                <span>{{ __('Tag Label Color')}}</span>
+                                                                <span>{{ __('Tag & Underline Text')}}</span>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <div class="from-group d-flex align-items-center">
@@ -516,7 +518,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="preview_img">
-                                                        @if(!empty($category_screen))
+                                                        @if(!empty($category_screen) && file_exists($category_screen))
                                                             <img src="{{ $category_screen }}" class="w-100">
                                                         @endif
                                                     </div>
@@ -525,6 +527,284 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                {{-- Item Cart Modal --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                        aria-expanded="false" aria-controls="collapseThree">
+                                            {{  __('Item Cart Modal') }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse"
+                                    aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="main_theme_color">
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Item Titel color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_item_title_color"
+                                                                    name="modal_item_title_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_item_title_color']) ? $settings['modal_item_title_color'] : '' }}"
+                                                                    onchange="changeVal('modal_item_title_color','modal_item_title_color_input')">
+                                                                <input id="modal_item_title_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_item_title_color']) ? $settings['modal_item_title_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_item_title_color_input','modal_item_title_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('Title Font Size') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="number" min="1" id="modal_item_title_font_size"
+                                                                            name="modal_item_title_font_size"
+                                                                            class="form-control"
+                                                                            value="{{ isset($settings['modal_item_title_font_size']) ? $settings['modal_item_title_font_size'] : '' }}">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Description Color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_item_des_color"
+                                                                    name="modal_item_des_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_item_des_color']) ? $settings['modal_item_des_color'] : '' }}"
+                                                                    onchange="changeVal('modal_item_des_color','modal_item_des_color_input')">
+                                                                <input id="modal_item_des_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_item_des_color']) ? $settings['modal_item_des_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_item_des_color_input','modal_item_des_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Price Color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_item_price_color"
+                                                                    name="modal_item_price_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_item_price_color']) ? $settings['modal_item_price_color'] : '' }}"
+                                                                    onchange="changeVal('modal_item_price_color','modal_item_price_color_input')">
+                                                                <input id="modal_item_price_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_item_price_color']) ? $settings['modal_item_price_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_item_price_color_input','modal_item_price_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Close Button Icon') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_close_icon_color"
+                                                                    name="modal_close_icon_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_close_icon_color']) ? $settings['modal_close_icon_color'] : '' }}"
+                                                                    onchange="changeVal('modal_close_icon_color','modal_close_icon_color_input')">
+                                                                <input id="modal_close_icon_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_close_icon_color']) ? $settings['modal_close_icon_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_close_icon_color_input','modal_close_icon_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Close Button BG') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_close_bg_color"
+                                                                    name="modal_close_bg_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_close_bg_color']) ? $settings['modal_close_bg_color'] : '' }}"
+                                                                    onchange="changeVal('modal_close_bg_color','modal_close_bg_color_input')">
+                                                                <input id="modal_close_bg_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_close_bg_color']) ? $settings['modal_close_bg_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_close_bg_color_input','modal_close_bg_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Cart Button color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_add_btn_color"
+                                                                    name="modal_add_btn_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_add_btn_color']) ? $settings['modal_add_btn_color'] : '' }}"
+                                                                    onchange="changeVal('modal_add_btn_color','modal_add_btn_color_input')">
+                                                                <input id="modal_add_btn_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_add_btn_color']) ? $settings['modal_add_btn_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_add_btn_color_input','modal_add_btn_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Cart Button text color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_add_btn_text_color"
+                                                                    name="modal_add_btn_text_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_add_btn_text_color']) ? $settings['modal_add_btn_text_color'] : '' }}"
+                                                                    onchange="changeVal('modal_add_btn_text_color','modal_add_btn_text_color_input')">
+                                                                <input id="modal_add_btn_text_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_add_btn_text_color']) ? $settings['modal_add_btn_text_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_add_btn_text_color_input','modal_add_btn_text_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Quantity Icon Color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_quantity_icon_color"
+                                                                    name="modal_quantity_icon_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_quantity_icon_color']) ? $settings['modal_quantity_icon_color'] : '' }}"
+                                                                    onchange="changeVal('modal_quantity_icon_color','modal_quantity_icon_color_input')">
+                                                                <input id="modal_quantity_icon_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_quantity_icon_color']) ? $settings['modal_quantity_icon_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_quantity_icon_color_input','modal_quantity_icon_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Quantity BG Color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_quantity_bg_color"
+                                                                    name="modal_quantity_bg_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_quantity_bg_color']) ? $settings['modal_quantity_bg_color'] : '' }}"
+                                                                    onchange="changeVal('modal_quantity_bg_color','modal_quantity_bg_color_input')">
+                                                                <input id="modal_quantity_bg_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_quantity_bg_color']) ? $settings['modal_quantity_bg_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_quantity_bg_color_input','modal_quantity_bg_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Price label color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_price_label_color"
+                                                                    name="modal_price_label_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_price_label_color']) ? $settings['modal_price_label_color'] : '' }}"
+                                                                    onchange="changeVal('modal_price_label_color','modal_price_label_color_input')">
+                                                                <input id="modal_price_label_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_price_label_color']) ? $settings['modal_price_label_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_price_label_color_input','modal_price_label_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Ingredients Text Color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_igradient_type_color"
+                                                                    name="modal_igradient_type_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value="{{ isset($settings['modal_igradient_type_color']) ? $settings['modal_igradient_type_color'] : '' }}"
+                                                                    onchange="changeVal('modal_igradient_type_color','modal_igradient_type_color_input')">
+                                                                <input id="modal_igradient_type_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value="{{ isset($settings['modal_igradient_type_color']) ? $settings['modal_igradient_type_color'] : '' }}"
+                                                                    onkeyup="changeColor('modal_igradient_type_color_input','modal_igradient_type_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                        <div class="col-md-8">
+                                                            <span>{{ __('Background Color') }}</span>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="from-group d-flex align-items-center">
+                                                                <input type="color" id="modal_body_bg_color"
+                                                                    name="modal_body_bg_color"
+                                                                    class="form-control me-2 p-0"
+                                                                    value=""
+                                                                    onchange="changeVal('modal_body_bg_color','modal_body_bg_color_input')">
+                                                                <input id="modal_body_bg_color_input"
+                                                                    type="text" class="form-control"
+                                                                    value=""
+                                                                    onkeyup="changeColor('modal_body_bg_color_input','modal_body_bg_color')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>{{ __('Rating Service Name Color') }}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="rating_service_name_color"
+                                                                        name="rating_service_name_color"
+                                                                        class="form-control me-2 p-0"
+                                                                        value="{{ isset($settings['rating_service_name_color']) ? $settings['rating_service_name_color'] : '' }}"
+                                                                        onchange="changeVal('rating_service_name_color','rating_service_name_color_input')">
+                                                                    <input id="rating_service_name_color_input"
+                                                                        type="text" class="form-control"
+                                                                        value="{{ isset($settings['rating_service_name_color']) ? $settings['rating_service_name_color'] : '' }}"
+                                                                        onkeyup="changeColor('rating_service_name_color_input','rating_service_name_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="preview_img">
+                                                    @if (!empty($cart_modal_screen_layout) && file_exists($cart_modal_screen_layout))
+                                                        <img src="{{ $cart_modal_screen_layout }}" class="w-100">
+                                                    @endif
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

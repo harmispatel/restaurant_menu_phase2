@@ -1,4 +1,5 @@
 @php
+
     $admin_settings = getAdminSettings();
     $light_img = isset($admin_settings['default_light_theme_image']) ? $admin_settings['default_light_theme_image'] : '';
     $dark_img = isset($admin_settings['default_dark_theme_image']) ? $admin_settings['default_dark_theme_image'] : '';

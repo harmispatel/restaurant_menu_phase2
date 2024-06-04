@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->integer('order_id');
             $table->integer('shop_id');
+            $table->integer('staff_id')->nullable();
             $table->string('ip_address',50);
             $table->tinyInteger('is_new')->default(0);
             $table->string('firstname',30)->nullable();
@@ -41,6 +42,10 @@ class CreateOrdersTable extends Migration
             $table->string('discount_per')->nullable();
             $table->string('discount_type')->nullable();
             $table->string('discount_value')->nullable();
+            $table->string('coupon_per')->nullable();
+            $table->string('coupon_type')->nullable();
+            $table->string('coupon_value')->nullable();
+            $table->longText('comment')->nullable();
             $table->string('tip')->default(0);
             $table->string('order_total')->nullable();
             $table->string('order_total_text')->nullable();

@@ -118,7 +118,7 @@
                   <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent" align="center">
-                    <!--<div class="Logo" >Smart QR™</div>-->
+                    {{-- <div class="Logo" >Smart QR™</div> --}}
                   <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                       <li class="logo_li">
                           <a class="navbar-brand m-0" href="https://www.smartqr.gr">Smart QR™</a>

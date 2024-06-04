@@ -34,10 +34,12 @@ class CategoriesandItemsExport implements WithMultipleSheets
 
         // Additional Languages
         $additional_languages = AdditionalLanguage::where('shop_id',$this->shop_id)->get();
+
         if(count($additional_languages) > 0)
         {
             foreach($additional_languages as $value)
             {
+
                 // Additional Language Details
                 $add_lang_detail = Languages::where('id',$value->language_id)->first();
                 $add_lang_code = isset($add_lang_detail->code) ? $add_lang_detail->code : '';
@@ -45,7 +47,6 @@ class CategoriesandItemsExport implements WithMultipleSheets
                 $lang_codes[$add_lang_id] = $add_lang_code;
             }
         }
-
         foreach($all_data['categories'] as $category)
         {
             $sheets[] = new SingleExport($category,$all_data['languages'],$lang_codes);

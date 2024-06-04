@@ -17,12 +17,21 @@
     $order_settings = getOrderSettings($shop_id);
     $play_sound = (isset($order_settings['play_sound']) && !empty($order_settings['play_sound'])) ? $order_settings['play_sound'] : 0;
     $notification_sound = (isset($order_settings['notification_sound']) && !empty($order_settings['notification_sound'])) ? $order_settings['notification_sound'] : 'buzzer-01.mp3';
+
+    $client_settings = getClientSettings($shop_id);
+    $waiter_play_sound = (isset($client_settings['waiter_call_on_off_sound']) && !empty($client_settings['waiter_call_on_off_sound'])) ? $client_settings['waiter_call_on_off_sound'] : 0;
+    $waiter_notification_sound = (isset($client_settings['waiter_call_sound']) && !empty($client_settings['waiter_call_sound'])) ? $client_settings['waiter_call_sound'] : 'buzzer-01.mp3';
+
 @endphp
 
 <body>
 
     <input type="hidden" name="play_sound" id="play_sound" value="{{ $play_sound }}">
     <input type="hidden" name="notification_sound" id="notification_sound" value="{{ asset('public/admin/assets/audios/'.$notification_sound) }}">
+
+    <input type="hidden" name="waiter_play_sound" id="waiter_play_sound" value="{{ $waiter_play_sound }}">
+
+    <input type="hidden" name="waiter_notification_sound" id="waiter_notification_sound" value="{{ asset('public/admin/assets/audios/'.$waiter_notification_sound) }}">
 
     {{-- Preview Modal --}}
     <div class="modal fade preview_modal" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">

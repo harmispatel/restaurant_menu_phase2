@@ -105,7 +105,7 @@
                                         $expire_date =  (isset($recent_client->hasOneSubscription['end_date'])) ? \Carbon\Carbon::now()->diffInMonths($recent_client->hasOneSubscription['end_date'], false) : '';
                                     @endphp
                                     <tr>
-                                        <td>{{ $recent_client->id }}</td>
+                                        <td>{{ (isset($recent_client->hasOneShop->shop['id'])) ? $recent_client->hasOneShop->shop['id'] : '' }}</td>
                                         <td>{{ $recent_client->firstname }} {{ $recent_client->lastname }}</td>
                                         <td>{{ isset($recent_client->hasOneShop->shop['name']) ? $recent_client->hasOneShop->shop['name'] : '' }}</td>
                                         <td>{{ isset($recent_client->hasOneSubscription['duration']) ? $recent_client->hasOneSubscription['duration'] : '' }}</td>

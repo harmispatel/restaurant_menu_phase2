@@ -1,12 +1,12 @@
 @extends('client.layouts.client-layout')
 
-@section('title', __('Item Reviews'))
+@section('title', __('Items Reviews'))
 
 @section('content')
 
     {{-- Page Title --}}
     <div class="pagetitle">
-        <h1>{{ __('Item Reviews')}}</h1>
+        <h1>{{ __('Items Reviews')}}</h1>
         <div class="row">
             <div class="col-md-8">
                 <nav>
@@ -28,7 +28,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped w-100" id="ingredientsTable">
+                            <table class="table table-striped" id="ingredientsTable" style="text-wrap:nowrap;">
                                 <thead>
                                     <tr>
                                         <th>{{ __('Id')}}</th>

@@ -9,13 +9,13 @@
 
 @extends('client.layouts.client-layout')
 
-@section('title', __('Statistics'))
+@section('title', __('Analytics'))
 
 @section('content')
 
     <section class="statistics_main">
         <div class="sec_title">
-            <h2>{{ __('Statistics')}}</h2>
+            <h2>{{ __('Analytics')}}</h2>
         </div>
         <div class="row justify-content-end">
             <div class="col-md-3">

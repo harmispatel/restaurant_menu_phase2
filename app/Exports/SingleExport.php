@@ -92,7 +92,11 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
                 if(!empty($cat_dt) && !empty($lang_code))
                 {
                     $name_code = $lang_code."_name";
-                    $data[] = isset($cat_dt[$name_code]) ? $cat_dt[$name_code] : '';
+                    if($cat_type == 'product_category'){
+                        $data[] = '';
+                    }else{
+                        $data[] = isset($cat_dt[$name_code]) ? $cat_dt[$name_code] : '';
+                    }
                 }
 
             }
@@ -103,6 +107,7 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
         $title_data = [
             'AA',
             'LNG',
+            'Categories',
             'Product Name',
             'Description',
             'Price Descr 1',
@@ -130,66 +135,92 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
             'Priority',
             'Divider',
             'Unpublished',
+
         ];
         $all_excel_data[] = $title_data;
 
 
         // Items Section
-        if(count($this->client_langs) > 0 && count($all_lang) > 0)
+        if($cat_type == 'product_category')
         {
-            foreach($this->client_langs as $langkey => $lang)
+            if(count($this->client_langs) > 0 && count($all_lang) > 0)
             {
-                $lang_code = $lang;
-                $lang_id = $langkey;
-
-                $items = Items::where('category_id',$cat_dt['id'])->get();
-                if(count($items) > 0)
+                foreach($this->client_langs as $langkey => $lang)
                 {
-                    $inner_item_data = [];
+                    $lang_code = $lang;
+                    $lang_id = $langkey;
 
-                    foreach($items as $key => $item)
+                    $items = (isset($cat_dt->items)) ? $cat_dt->items : [];
+                    if(count($items) > 0)
                     {
-                        $item_name_key = $lang_code."_name";
-                        $item_description_key = $lang_code."_description";
-                        $item_data = [];
+                        $inner_item_data = [];
 
-                        // No
-                        $item_data[] = $key+1;
-
-                        // Language Code
-                        $item_data[] = $lang_code;
-
-                        // Item Name
-                        $item_data[] = isset($item[$item_name_key]) ? $item[$item_name_key] : '';
-
-                        // Item Description
-                        $item_data[] = isset($item[$item_description_key]) ? $item[$item_description_key] : '';
-
-                        // Item Price
-                        $item_prices = ItemPrice::where('item_id',$item['id'])->get();
-
-                        if($item['type'] == 1)
+                        foreach($items as $key => $item)
                         {
-                            if(count($item_prices) > 0)
-                            {
-                                $total = 10;
-                                $item_total_prices = (count($item_prices) < 10) ? count($item_prices) : 10;
-                                $total_price = $total - $item_total_prices;
+                            $item_categories = (isset($item->categories)) ? $item->categories : [];
+                            $item_name_key = $lang_code."_name";
+                            $cat_name_key = $lang_code."_name";
+                            $item_description_key = $lang_code."_description";
+                            $item_data = [];
 
-                                foreach($item_prices as $key => $price)
+                            // No
+                            $item_data[] = $key+1;
+
+                            // Language Code
+                            $item_data[] = $lang_code;
+
+                            // Categories
+                            if(count($item_categories) > 0){
+                                $cats = [];
+                                foreach($item_categories as $item_cat){
+                                    $cats[] = isset($item_cat[$cat_name_key]) ? $item_cat[$cat_name_key] : '';
+                                }
+                                $imp_cats = (count($cats) > 0) ? implode(',',$cats) : $cats;
+                                $item_data[] = $imp_cats;
+                            }else{
+                                $item_data[] = '';
+                            }
+
+                            // Item Name
+                            $item_data[] = isset($item[$item_name_key]) ? $item[$item_name_key] : '';
+
+                            // Item Description
+                            $item_data[] = isset($item[$item_description_key]) ? $item[$item_description_key] : '';
+
+                            // Item Price
+                            $item_prices = ItemPrice::where('item_id',$item['id'])->get();
+
+                            if($item['type'] == 1)
+                            {
+                                if(count($item_prices) > 0)
                                 {
-                                    $price_label_key = $lang_code."_label";
-                                    $item_data[] = isset($price[$price_label_key]) ? $price[$price_label_key] : '';
-                                    $item_data[] = isset($price['price']) ? $price['price'] : '';
-                                    if($key == 9)
+                                    $total = 10;
+                                    $item_total_prices = (count($item_prices) < 10) ? count($item_prices) : 10;
+                                    $total_price = $total - $item_total_prices;
+
+                                    foreach($item_prices as $key => $price)
                                     {
-                                        break;
+                                        $price_label_key = $lang_code."_label";
+                                        $item_data[] = isset($price[$price_label_key]) ? $price[$price_label_key] : '';
+                                        $item_data[] = isset($price['price']) ? $price['price'] : '';
+                                        if($key == 9)
+                                        {
+                                            break;
+                                        }
+                                    }
+
+                                    if(($total_price > 0))
+                                    {
+                                        for($i=1;$i<=$total_price;$i++)
+                                        {
+                                            $item_data[] = "";
+                                            $item_data[] = "";
+                                        }
                                     }
                                 }
-
-                                if(($total_price > 0))
+                                else
                                 {
-                                    for($i=1;$i<=$total_price;$i++)
+                                    for($i=1;$i<=10;$i++)
                                     {
                                         $item_data[] = "";
                                         $item_data[] = "";
@@ -204,58 +235,63 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
                                     $item_data[] = "";
                                 }
                             }
-                        }
-                        else
-                        {
-                            for($i=1;$i<=10;$i++)
+
+                            $item_image = (isset($item['image'])) ? $item['image'] : '';
+
+                            // Images
+                            $item_data[] = $item_image;
+
+                            // Tags
+                            $item_tags = CategoryProductTags::with(['hasOneTag'])->where('category_id',$cat_dt['id'])->where('item_id',$item['id'])->get();
+
+                            if(count($item_tags) > 0)
+                            {
+                                $tags = [];
+                                foreach($item_tags as $tag)
+                                {
+                                    $tag_name_key = $lang_code."_name";
+                                    $tags[] = isset($tag->hasOneTag[$tag_name_key]) ? $tag->hasOneTag[$tag_name_key] : '';
+                                }
+                                $imp_tags = (count($tags) > 0) ? implode(',',$tags) : $tags;
+                                $item_data[] = $imp_tags;
+                            }
+                            else
                             {
                                 $item_data[] = "";
-                                $item_data[] = "";
                             }
-                        }
 
-                        $item_image = (isset($item['image'])) ? $item['image'] : '';
-
-                        // Images
-                        $item_data[] = $item_image;
-
-                        // Tags
-                        $item_tags = CategoryProductTags::with(['hasOneTag'])->where('category_id',$cat_dt['id'])->where('item_id',$item['id'])->get();
-
-                        if(count($item_tags) > 0)
-                        {
-                            $tags = [];
-                            foreach($item_tags as $tag)
-                            {
-                                $tag_name_key = $lang_code."_name";
-                                $tags[] = isset($tag->hasOneTag[$tag_name_key]) ? $tag->hasOneTag[$tag_name_key] : '';
-                            }
-                            $imp_tags = (count($tags) > 0) ? implode(',',$tags) : $tags;
-                            $item_data[] = $imp_tags;
-                        }
-                        else
-                        {
+                            // Priority
                             $item_data[] = "";
+
+                            // Divider
+                            $item_data[] = ($item['type'] == 2) ? '2' : '';
+
+                            // Unpublished
+                            $item_data[] = ($item['published'] == 0) ? '0' : '';
+
+                            // // Categories
+                            // if(count($item_categories) > 0){
+                            //     $cats = [];
+                            //     foreach($item_categories as $item_cat){
+                            //         $cats[] = isset($item_cat[$cat_name_key]) ? $item_cat[$cat_name_key] : '';
+                            //     }
+                            //     $imp_cats = (count($cats) > 0) ? implode(',',$cats) : $cats;
+                            //     $item_data[] = $imp_cats;
+                            // }else{
+                            //     $item_data[] = '';
+                            // }
+
+                            $inner_item_data[] = $item_data;
                         }
-
-                        // Priority
-                        $item_data[] = "";
-
-                        // Divider
-                        $item_data[] = ($item['type'] == 2) ? '2' : '';
-
-                        // Unpublished
-                        $item_data[] = ($item['published'] == 0) ? '0' : '';
-
-                        $inner_item_data[] = $item_data;
+                        $all_excel_data[] = $inner_item_data;
                     }
-                    $all_excel_data[] = $inner_item_data;
                 }
             }
         }
 
         return collect($all_excel_data);
     }
+
 
 
     // Sheet Heading
@@ -299,8 +335,10 @@ class SingleExport implements FromCollection, WithTitle, WithHeadings, WithEvent
                 $event->sheet->getDelegate()->getColumnDimension('S')->setWidth(15);
                 $event->sheet->getDelegate()->getColumnDimension('U')->setWidth(15);
                 $event->sheet->getDelegate()->getColumnDimension('W')->setWidth(15);
-                $event->sheet->getDelegate()->getColumnDimension('z')->setWidth(30);
+                $event->sheet->getDelegate()->getColumnDimension('Z')->setWidth(30);
+                $event->sheet->getDelegate()->getColumnDimension('Y')->setWidth(30);
                 $event->sheet->getDelegate()->getColumnDimension('AC')->setWidth(15);
+                $event->sheet->getDelegate()->getColumnDimension('AD')->setWidth(40);
 
                 // $event->sheet->getDelegate()->getStyle('A3:AC3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('ECF0F1');
 

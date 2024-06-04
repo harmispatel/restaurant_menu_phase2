@@ -29,6 +29,7 @@ class LanguageController extends Controller
         // Other Settings
         $data['other_settings'] = OtherSetting::where('shop_id',$shop_id)->get();
 
+
         $data['categories'] = Category::with(['items'])->where('shop_id',$shop_id)->get();
         $data['languages'] = Languages::get();
         $data['additional_languages'] = AdditionalLanguage::with(['language'])->where('shop_id',$shop_id)->get();

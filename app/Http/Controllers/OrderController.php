@@ -8,9 +8,11 @@ use App\Models\MailForm;
 use App\Models\Order;
 use App\Models\OrderSetting;
 use App\Models\UserShop;
+use App\Models\Staff;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Magarrent\LaravelCurrencyFormatter\Facades\Currency;
 
 class OrderController extends Controller
@@ -21,6 +23,8 @@ class OrderController extends Controller
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $data['orders'] = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->orderBy('id','DESC')->get();
         $delivery_orders = Order::where('shop_id',$shop_id)->whereIn('order_status',['pending','accepted'])->where('checkout_type','delivery')->get();
+
+        //Staff
 
         $shop_settings = getClientSettings($shop_id);
         // Shop Currency
@@ -110,6 +114,7 @@ class OrderController extends Controller
     // Function for Get newly created order
     public function getNewOrders()
     {
+
         $html = '';
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
 
@@ -130,9 +135,22 @@ class OrderController extends Controller
             foreach($orders as $order)
             {
                 $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
-
+                $coupon_type = (isset($order->coupon_type) && !empty($order->coupon_type)) ? $order->coupon_type : 'percentage';
+                if($order->checkout_type == 'delivery')
+                                {
+                                    $staffs = Staff::where('shop_id',$shop_id)->where('status',1)->where('type',0)->get();
+                                }else{
+                                    $staffs = Staff::where('shop_id',$shop_id)->where('status',1)->where('type',1)->get();
+                                }
                 $html .= '<div class="order">';
                     $html .= '<div class="order-btn d-flex align-items-center justify-content-end">';
+                        $html .= '<select name="staff_id" id="staff_id" class="form-select me-2 staff_id" style="width:150px" onchange="ChangeStaff(this,'.$order->id.');"'.($order->staff_id != '' ? "disabled" : "").'>';
+                                $html .='<option value="">--Select Staff--</option>';
+                                foreach ($staffs as $staff)
+                                {
+                                    $html .= '<option value="'.$staff->id.'"'.($staff->id == $order->staff_id ? "selected" : "").'>'.$staff->name.'</option>';
+                                }
+                         $html .= '</select>';
                         $html .= '<div class="d-flex align-items-center flex-wrap">'.__('Estimated time of arrival').' <input type="number" onchange="changeEstimatedTime(this)" name="estimated_time" id="estimated_time" value="'.$order->estimated_time.'" class="form-control mx-1 estimated_time" style="width: 100px!important" ord-id="'.$order->id.'"';
                         if($order->order_status == 'accepted')
                         {
@@ -183,6 +201,7 @@ class OrderController extends Controller
                             {
                                 $html .= '<li><strong>'.__('Customer').': </strong>'.$order->firstname.' '.$order->lastname.'</li>';
                                 $html .= '<li><strong>'.__('Room No.').': </strong> '.$order->room.'</li>';
+                                $html .= '<li><strong>'.__('Floor.').': </strong> '.$order->floor.'</li>';
                                 if(!empty($order->delivery_time ))
                                 {
                                     $html .= '<li><strong>'.__('Delivery Time').': </strong> '.$order->delivery_time.'</li>';
@@ -198,8 +217,10 @@ class OrderController extends Controller
                                 $html .= '<li><strong>'.__('Floor').': </strong> '.$order->floor.'</li>';
                                 $html .= '<li><strong>'.__('Door Bell').': </strong> '.$order->door_bell.'</li>';
                                 $html .= '<li><strong>'.__('Google Map').': </strong> <a href="https://maps.google.com?q='.$order->address.'" target="_blank">Address Link</a></li>';
-                                $html .= '<li><strong>'.__('Comments').': </strong> '.$order->instructions.'</li>';
                             }
+                                if($order->instructions){
+                                    $html .= '<li><strong>'.__('Order Comments').': </strong> '.$order->instructions.'</li>';
+                                }
 
                         $html .= '</ul>';
                     $html .= '</div>';
@@ -208,7 +229,7 @@ class OrderController extends Controller
 
                     $html .= '<div class="order-info mt-2">';
                         $html .= '<div class="row">';
-                            $html .= '<div class="col-md-3">';
+                            $html .= '<div class="col-md-4">';
                                 $html .= '<table class="table">';
 
                                     $total_amount = $order->order_total;
@@ -232,6 +253,24 @@ class OrderController extends Controller
                                             $html .= '<td class="text-end">- '.$order->discount_per.'%</td>';
                                         }
                                         $total_amount = $total_amount - $discount_amount;
+                                    }
+
+                                    if($order->coupon_per > 0)
+                                    {
+                                        $html .='<tr>';
+                                        $html .= '<td><b>'. __('Coupon Discount') .'</b></td>';
+                                        if($coupon_type == 'fixed')
+                                        {
+                                            $coupon_amount = $order->coupon_per;
+                                            $html .= '<td class="text-end">- '. Currency::currency($currency)->format($order->coupon_per) .'</td>';
+                                        }
+                                        else
+                                        {
+                                            $coupon_amount = ($total_amount * $order->coupon_per) / 100;
+                                            $html .= '<td class="text-end">- '.$order->coupon_per.'%</td>';
+                                        }
+                                        $html .='</tr>';
+                                        $total_amount = $total_amount - $coupon_amount;
                                     }
 
                                     if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
@@ -1015,7 +1054,8 @@ class OrderController extends Controller
         try
         {
             $order_id = decrypt($order_id);
-            $data['order'] = Order::with(['order_items'])->where('id',$order_id)->first();
+            $data['order'] = Order::with(['order_items','staff'])->where('id',$order_id)->first();
+
             return view('client.orders.order_details',$data);
         }
         catch (\Throwable $th)
@@ -1108,7 +1148,7 @@ class OrderController extends Controller
                         else
                         {
                             $remain_amount = Currency::currency($currency)->format($amount - $total_amount);
-                            $message = "<code class='fs-6'>$remain_amount ".$distance_alert_message."</code>";
+                            $message = "<div class='delivery_message_box'><code class='fs-6'>$remain_amount ".$distance_alert_message."</code></div>";
 
                             return response()->json([
                                 'success' => 0,
@@ -1171,6 +1211,7 @@ class OrderController extends Controller
         {
             $order = Order::with(['order_items','shop'])->where('id',$data['order_id'])->first();
             $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
+            $coupon_type = (isset($order->coupon_type) && !empty($order->coupon_type)) ? $order->coupon_type : 'percentage';
             $data['shop_id'] = (isset($order->shop['id'])) ? $order->shop['id'] : '';
             $shop_name = (isset(Auth::user()->hasOneShop->shop['name'])) ? Auth::user()->hasOneShop->shop['name'] : '';
 
@@ -1252,6 +1293,27 @@ class OrderController extends Controller
                 $discount_text = 0;
             }
             $data['discount'] = $discount_text;
+
+            // Coupon Discount
+            if($order->coupon_per > 0)
+            {
+                if($coupon_type == 'fixed')
+                {
+                    $coupon_amount = $order->coupon_per;
+                    $coupon_text = "- " . Currency::currency($currency)->format($order->coupon_per);
+                }
+                else
+                {
+                    $coupon_amount = ($total_amount * $order->coupon_per) / 100;
+                    $coupon_text = "- " . $order->coupon_per . "%";
+                }
+                $total_amount = $total_amount - $coupon_amount;
+            }
+            else
+            {
+                $coupon_text = 0;
+            }
+            $data['coupon_discount'] = $coupon_text;
 
             // Tip
             if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
@@ -1394,6 +1456,24 @@ class OrderController extends Controller
                                                 $total_amount = $total_amount - $discount_amount;
                                             }
 
+                                            if($order->coupon_per > 0)
+                                            {
+                                                $html .= '<tr>';
+                                                    $html .= '<td><strong>'.__('Coupon Discount').': </strong></td>';
+                                                    if($order->coupon_per == 'fixed')
+                                                    {
+                                                        $coupon_amount = $order->coupon_per;
+                                                        $html .= '<td class="text-end">- '.Currency::currency($currency)->format($order->coupon_per).'</td>';
+                                                    }
+                                                    else
+                                                    {
+                                                        $coupon_amount = ($total_amount * $order->coupon_per) / 100;
+                                                        $html .= '<td class="text-end">- '.$order->coupon_per.'%</td>';
+                                                    }
+                                                $html .= '</tr>';
+                                                $total_amount = $total_amount - $coupon_amount;
+                                            }
+
                                             if(($order->payment_method == 'paypal' || $order->payment_method == 'every_pay') && $order->tip > 0)
                                             {
                                                 $total_amount = $total_amount + $order->tip;
@@ -1469,7 +1549,7 @@ class OrderController extends Controller
 
         if($new_order_count > 0)
         {
-            $html .= 'You Have '.$new_order_count.' New Orders';
+            $html .= 'You Have '.$new_order_count.' New Notification';
             $html .= '<a href="'.route('client.orders').'"><span class="badge rounded-pill bg-primary p-2 ms-2">View All</span></a>';
         }
         else
@@ -1484,6 +1564,201 @@ class OrderController extends Controller
             'data' => $html,
             'count' => $new_order_count,
         ]);
+    }
+
+    public function deliveryOrder(Request $request)
+    {
+        try {
+           $from_email = isset(Auth::user()->email) ? Auth::user()->email : '';
+
+           $delivery= Order::find($request->order_id);
+
+           $data['shop_settings'] = getClientSettings($delivery->shop_id);
+
+            // Shop Currency
+            $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
+
+
+             $staff = Staff::find($request->staff_id);
+
+             if(!empty($from_email) && !empty($staff) )
+             {
+                $to = $staff->email;
+                $from = $from_email;
+                $subject = "Order Delivery";
+                $discount_type = (isset($delivery->discount_type) && !empty($delivery->discount_type)) ? $delivery->discount_type : 'percentage';
+
+                $message = '';
+                $message .= '<div>';
+                    $message .= '<table style="width:100%; border:1px solid gray;border-collapse: collapse;">';
+                        $message .= '<tbody style="font-weight: 700!important;">';
+                            $message .= '<tr>';
+                                $message .= '<td style="padding:10px; border-bottom:1px solid gray">Order No : </td>';
+                                $message .= '<td style="padding:10px; border-bottom:1px solid gray">#'.$delivery->order_id.'</td>';
+                            $message .= '</tr>';
+                            if ($delivery->checkout_type == 'takeaway') {
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Customer: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->firstname.' '.$delivery->lastname.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Telephone: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->phone.'</td>';
+                                $message .= '</tr>';
+                            }elseif($delivery->checkout_type == 'table_service') {
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Table No: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->table.'</td>';
+                                $message .= '</tr>';
+                            }elseif($delivery->checkout_type == 'room_delivery') {
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Customer: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->firstname.' '.$delivery->lastname.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Room No: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->room.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Floor: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->floor.'</td>';
+                                $message .= '</tr>';
+                            }elseif($delivery->checkout_type == 'delivery') {
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Customer: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->firstname.' '.$delivery->lastname.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Telephone: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->phone.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Address: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->address.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Street Number: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->street_number.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Floor: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->floor.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Door Bell: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->door_bell.'</td>';
+                                $message .= '</tr>';
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Google Map: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray"><a href="https://maps.google.com?q='.$delivery->address.'" target="_blank">Address Link</a></td>';
+                                $message .= '</tr>';
+                            }
+                            if($delivery->instructions){
+                                $message .= '<tr>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">Order Comment: </td>';
+                                    $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.$delivery->instructions.'</td>';
+                                $message .= '</tr>';
+
+                            }
+
+                        $message .= '</tbody>';
+                    $message .= '</table>';
+                $message .= '</div>';
+
+                // Order Total
+                $order_tot_amount = $delivery->order_total;
+                $message .= '<div>';
+                $message .= '<table style="width:100%; border:1px solid gray;border-collapse: collapse;">';
+                $message .= '<tbody style="font-weight: 700!important;">';
+                    $message .= '<tr>';
+                        $message .= '<td style="padding:10px; border-bottom:1px solid gray">Sub Total : </td>';
+                        $message .= '<td style="padding:10px; border-bottom:1px solid gray">'.Currency::currency($currency)->format($order_tot_amount).'</td>';
+                    $message .= '</tr>';
+
+                    if($delivery->discount_per > 0)
+                    {
+                        $message .= '<tr>';
+                            $message .= '<td style="padding:10px; border-bottom:1px solid gray">Discount : </td>';
+                            if($discount_type == 'fixed')
+                            {
+                                $discount_amount = $delivery->discount_per;
+                                $message .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($delivery->discount_per).'</td>';
+                            }
+                            else
+                            {
+                                $discount_amount = ($order_tot_amount * $delivery->discount_per) / 100;
+                                $message .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$delivery->discount_per.'%</td>';
+                            }
+                            $order_tot_amount = $order_tot_amount - $discount_amount;
+                        $message .= '</tr>';
+                    }
+
+                    if($delivery->coupon_per > 0)
+                    {
+                        $message .= '<tr>';
+                            $message .= '<td style="padding:10px; border-bottom:1px solid gray">Coupon Discount : </td>';
+                            if($discount_type == 'fixed')
+                            {
+                                $coupon_amount = $delivery->coupon_per;
+                                $message .= '<td style="padding:10px; border-bottom:1px solid gray">- '.Currency::currency($currency)->format($delivery->coupon_per).'</td>';
+                            }
+                            else
+                            {
+                                $coupon_amount = ($order_tot_amount * $delivery->coupon_per) / 100;
+                                $message .= '<td style="padding:10px; border-bottom:1px solid gray">- '.$delivery->coupon_per.'%</td>';
+                            }
+                            $order_tot_amount = $order_tot_amount - $coupon_amount;
+                        $message .= '</tr>';
+                    }
+
+                    if(($delivery->payment_method == 'paypal' || $delivery->payment_method == 'every_pay') && $delivery->tip > 0)
+                    {
+                        $order_tot_amount = $order_tot_amount + $delivery->tip;
+                        $message .= '<tr>';
+                            $message .= '<td style="padding:10px; border-bottom:1px solid gray">Tip : </td>';
+                            $message .= '<td style="padding:10px; border-bottom:1px solid gray">+ '.Currency::currency($currency)->format($delivery->tip).'</td>';
+                        $message .= '</tr>';
+                    }
+
+                    $message .= '<tr>';
+                        $message .= '<td style="padding:10px;">Total : </td>';
+                        $message .= '<td style="padding:10px;">';
+                            $message .= Currency::currency($currency)->format($order_tot_amount);
+                        $message .= '</td>';
+                    $message .= '</tr>';
+
+                $message .= '</tbody>';
+                $message .= '</table>';
+                $message .= '</div>';
+
+
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                // More headers
+                $headers .= 'From: <'.$from.'>' . "\r\n";
+
+                mail($to,$subject,$message,$headers);
+
+             }
+
+             $delivery->staff_id = $request->staff_id;
+             $delivery->save();
+
+
+             return response()->json([
+                'success' => 1,
+                'message' => 'Order Delivery Send SuccessFully...',
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+            return response()->json([
+                'success' => 0,
+                'message' => "Internal Server Error!",
+            ]);
+        }
     }
 
 }

@@ -15,12 +15,17 @@ class AdminSettingsController extends Controller
             'favourite_client_limit',
             'copyright_text',
             'logo',
+            'loader',
             'login_form_logo',
             'login_form_background',
             'default_light_theme_image',
             'default_dark_theme_image',
             'theme_main_screen_demo',
             'theme_category_screen_demo',
+            'theme_main_screen_layout_two_demo',
+            'theme_category_screen_layout_two_demo',
+            'theme_main_screen_layout_three_demo',
+            'theme_category_screen_layout_three_demo',
             'default_special_item_image',
             'contact_us_email',
             'google_map_api',
@@ -29,6 +34,8 @@ class AdminSettingsController extends Controller
             'days_for_send_first_expiry_mail',
             'days_for_send_second_expiry_mail',
             'subscription_expiry_mails',
+            'cart_modal_screen_layout',
+            'is_client_loader',
         ]);
 
         $settings = [];
@@ -54,12 +61,18 @@ class AdminSettingsController extends Controller
             'favourite_client_limit'        =>          'required|numeric',
             'copyright_text'                =>          'required',
             'logo'                          =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'loader'                        =>          'mimes:gif',
             'login_form_background'         =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'login_form_logo'         =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'default_light_theme_image'     =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'default_dark_theme_image'      =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'theme_main_screen_demo'        =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'theme_category_screen_demo'    =>          'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'theme_main_screen_layout_two_demo' =>      'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'theme_category_screen_layout_two_demo' =>  'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'theme_main_screen_layout_three_demo' =>    'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'theme_category_screen_layout_three_demo' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'cart_modal_screen_layout' =>                   'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'default_special_item_image'    =>          'mimes:png,jpg,svg,gif,jpeg,PNG,SVG,JPG,JPEG,GIF',
             'contact_us_email'              =>          'required',
         ]);
@@ -76,6 +89,7 @@ class AdminSettingsController extends Controller
         $all_data['days_for_send_first_expiry_mail'] = $request->days_for_send_first_expiry_mail;
         $all_data['days_for_send_second_expiry_mail'] = $request->days_for_send_second_expiry_mail;
         $all_data['subscription_expiry_mails'] = serialize($explode_subscription_expiry_mails);
+        $all_data['is_client_loader'] = isset($request->is_client_loader) ? $request->is_client_loader : 0;
 
         if($request->hasFile('logo'))
         {
@@ -83,6 +97,14 @@ class AdminSettingsController extends Controller
             $request->file('logo')->move(public_path('admin_uploads/logos/'), $logoname);
             $logoUrl = asset('/').'public/admin_uploads/logos/'.$logoname;
             $all_data['logo'] = $logoUrl;
+        }
+
+        if($request->hasFile('loader'))
+        {
+            $loadername = "loader_".time().".". $request->file('loader')->getClientOriginalExtension();
+            $request->file('loader')->move(public_path('admin_uploads/loaders/'), $loadername);
+            $loaderUrl = asset('/').'public/admin_uploads/loaders/'.$loadername;
+            $all_data['loader'] = $loaderUrl;
         }
 
         if($request->hasFile('login_form_background'))
@@ -132,6 +154,47 @@ class AdminSettingsController extends Controller
             $imageUrl = asset('/').'public/admin_uploads/screen_image/'.$imageName;
             $all_data['theme_category_screen_demo'] = $imageUrl;
         }
+
+        if($request->hasFile('theme_main_screen_layout_two_demo'))
+        {
+            $imageName = "main_screen_".time().".". $request->file('theme_main_screen_layout_two_demo')->getClientOriginalExtension();
+            $request->file('theme_main_screen_layout_two_demo')->move(public_path('admin_uploads/screen_image/'), $imageName);
+            $imageUrl = asset('/').'public/admin_uploads/screen_image/'.$imageName;
+            $all_data['theme_main_screen_layout_two_demo'] = $imageUrl;
+        }
+
+        if($request->hasFile('theme_category_screen_layout_two_demo'))
+        {
+            $imageName = "category_screen_".time().".". $request->file('theme_category_screen_layout_two_demo')->getClientOriginalExtension();
+            $request->file('theme_category_screen_layout_two_demo')->move(public_path('admin_uploads/screen_image/'), $imageName);
+            $imageUrl = asset('/').'public/admin_uploads/screen_image/'.$imageName;
+            $all_data['theme_category_screen_layout_two_demo'] = $imageUrl;
+        }
+
+        if($request->hasFile('theme_main_screen_layout_three_demo'))
+        {
+            $imageName = "main_screen_".time().".". $request->file('theme_main_screen_layout_three_demo')->getClientOriginalExtension();
+            $request->file('theme_main_screen_layout_three_demo')->move(public_path('admin_uploads/screen_image/'), $imageName);
+            $imageUrl = asset('/').'public/admin_uploads/screen_image/'.$imageName;
+            $all_data['theme_main_screen_layout_three_demo'] = $imageUrl;
+        }
+
+        if($request->hasFile('theme_category_screen_layout_three_demo'))
+        {
+            $imageName = "category_screen_".time().".". $request->file('theme_category_screen_layout_three_demo')->getClientOriginalExtension();
+            $request->file('theme_category_screen_layout_three_demo')->move(public_path('admin_uploads/screen_image/'), $imageName);
+            $imageUrl = asset('/').'public/admin_uploads/screen_image/'.$imageName;
+            $all_data['theme_category_screen_layout_three_demo'] = $imageUrl;
+        }
+
+        if($request->hasFile('cart_modal_screen_layout'))
+        {
+            $imageName = "category_screen_".time().".". $request->file('cart_modal_screen_layout')->getClientOriginalExtension();
+            $request->file('cart_modal_screen_layout')->move(public_path('admin_uploads/screen_image/'), $imageName);
+            $imageUrl = asset('/').'public/admin_uploads/screen_image/'.$imageName;
+            $all_data['cart_modal_screen_layout'] = $imageUrl;
+        }
+
 
         if($request->hasFile('default_special_item_image'))
         {

@@ -190,6 +190,10 @@
                                             {{ __('SEO: Page Title') }}
                                         @elseif ($other_setting->key == 'service_closed_message')
                                             {{ __('NOTICE: Service Is Closed') }}
+                                        @elseif ($other_setting->key == 'header_text_1')
+                                            {{ __('HEADER 1: Working Hours') }}
+                                        @elseif ($other_setting->key == 'header_text_2')
+                                            {{ __('HEADER 2: Sub Title') }}
                                         @endif
                                     </td>
                                     <td>
@@ -650,7 +654,7 @@
                         $('#editOtherSettingsModal #other_setting_lang_div').html('');
                         $('#editOtherSettingsModal #other_setting_lang_div').append(response.data);
 
-                        if(settingKey == 'delivery_message' || settingKey == 'homepage_intro' || settingKey == 'service_closed_message')
+                        if(settingKey == 'delivery_message' || settingKey == 'homepage_intro' || settingKey == 'service_closed_message' || settingKey == 'header_text_2')
                         {
                             // Description Text Editor
                             $('.ck-editor').remove();
@@ -770,6 +774,8 @@
                 myFormData.set('homepage_intro',deliveryMessageEditor.getData());
             }else if(setting_key == 'service_closed_message'){
                 myFormData.set('service_closed_message',deliveryMessageEditor.getData());
+            }else if(setting_key == 'header_text_2'){
+                myFormData.set('header_text_2',deliveryMessageEditor.getData());
             }
             myFormData.append('next_lang_code',next_lang_code);
 
@@ -791,7 +797,7 @@
                         $('#editOtherSettingsModal #other_setting_lang_div').html('');
                         $('#editOtherSettingsModal #other_setting_lang_div').append(response.data);
 
-                        if(setting_key == 'delivery_message' || setting_key == 'homepage_intro' || setting_key == 'service_closed_message')
+                        if(setting_key == 'delivery_message' || setting_key == 'homepage_intro' || setting_key == 'service_closed_message' || setting_key == 'header_text_2')
                         {
                             // Description Text Editor
                             $('.ck-editor').remove();
@@ -921,6 +927,9 @@
                 myFormData.set('homepage_intro',deliveryMessageEditor.getData());
             }else if(setting_key == 'service_closed_message'){
                 myFormData.set('service_closed_message',deliveryMessageEditor.getData());
+            }else if(setting_key == 'header_text_2'){
+                myFormData.set('header_text_2',deliveryMessageEditor.getData());
+
             }
 
             // Clear all Toastr Messages

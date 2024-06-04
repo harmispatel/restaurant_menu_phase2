@@ -61,6 +61,9 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        session()->forget('lang_code');
+        session()->forget('locale');
+        session()->save();
         Auth::logout();
         return redirect()->route('login');
     }

@@ -120,6 +120,7 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+
                                                 <tr>
                                                     <td class="text-muted">
                                                         <div class="client-order-info">
@@ -132,6 +133,33 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                @if($order->checkout_type == 'delivery')
+                                                <tr>
+                                                    <td class="text-muted">
+                                                        <div class="client-order-info">
+                                                            <div class="">
+                                                                <i class="bi bi-person-circle"></i>&nbsp;{{ __('Driver') }}
+                                                            </div>
+                                                            <div class="fw-bold">
+                                                                {{ $order->staff->name }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @elseif($order->checkout_type == 'table_service' || $order->checkout_type == 'room_delivery')
+                                                <tr>
+                                                    <td class="text-muted">
+                                                        <div class="client-order-info">
+                                                            <div class="">
+                                                                <i class="bi bi-person-circle"></i>&nbsp;{{ __('Waiter') }}
+                                                            </div>
+                                                            <div class="fw-bold">
+                                                                {{ $order->staff->name }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @endif
                                                 @if($order->checkout_type == 'table_service')
                                                     <tr>
                                                         <td class="text-muted">
@@ -414,7 +442,7 @@
 
 {{-- Custom Script --}}
 @section('page-js')
-    <script src="{{ asset('public/admin/assets/js/jsprintmanager.js') }}"></script>
+    <script src="{{ asset('public/admin/assets/js/jsprintmanager-v7.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/SheetJS/js-codepage/dist/cptable.js"></script>

@@ -39,6 +39,13 @@ class SubscriptionsController extends Controller
         $permission['check_in'] = (isset($request->check_in)) ? $request->check_in : 0;
         $permission['ordering'] = (isset($request->ordering)) ? $request->ordering : 0;
         $permission['special_icons'] = (isset($request->special_icons)) ? $request->special_icons : 0;
+        $permission['layout_2'] = (isset($request->layout_2)) ? $request->layout_2 : 0;
+        $permission['layout_3'] = (isset($request->layout_3)) ? $request->layout_3 : 0;
+        $permission['grading'] = (isset($request->grading)) ? $request->grading : 0;
+        $permission['bell'] = (isset($request->bell)) ? $request->bell : 0;
+        $permission['cover'] = (isset($request->cover)) ? $request->cover : 0;
+        $permission['cover_cube'] = (isset($request->cover_cube)) ? $request->cover_cube : 0;
+        $permission['loader'] = (isset($request->loader)) ? $request->loader : 0;
 
         $permission = serialize($permission);
 
@@ -138,6 +145,15 @@ class SubscriptionsController extends Controller
         $permission['check_in'] = (isset($request->check_in)) ? $request->check_in : 0;
         $permission['ordering'] = (isset($request->ordering)) ? $request->ordering : 0;
         $permission['special_icons'] = (isset($request->special_icons)) ? $request->special_icons : 0;
+        $permission['layout_2'] = (isset($request->layout_2)) ? $request->layout_2 : 0;
+        $permission['layout_3'] = (isset($request->layout_3)) ? $request->layout_3 : 0;
+        $permission['grading'] = (isset($request->grading)) ? $request->grading : 0;
+        $permission['bell'] = (isset($request->bell)) ? $request->bell : 0;
+        $permission['cover'] = (isset($request->cover)) ? $request->cover : 0;
+        $permission['cover_cube'] = (isset($request->cover_cube)) ? $request->cover_cube : 0;
+        $permission['loader'] = (isset($request->loader)) ? $request->loader : 0;
+
+
 
         $permission = serialize($permission);
 

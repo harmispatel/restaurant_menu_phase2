@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class OptionPrice extends Model
 {
     use HasFactory;
+
+    public function optionName()
+    {
+        return $this->hasOne(Option::class,'id','option_id');
+    }
 }

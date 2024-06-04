@@ -194,6 +194,48 @@
                                                         <label for="special_icons" class="form-label ms-2">Special Icons</label>
                                                     </div>
                                                 </div>
+                                                <div class="form-group mb-1">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="layout_2" role="switch" id="layout_2" value="1" {{ (isset($permissions['layout_2']) && $permissions['layout_2'] == 1) ? 'checked' : '' }}>
+                                                        <label for="layout_2" class="form-label ms-2">Layout 2</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-1">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="layout_3" role="switch" id="layout_3" value="1" {{ (isset($permissions['layout_3']) && $permissions['layout_3'] == 1) ? 'checked' : '' }}>
+                                                        <label for="layout_3" class="form-label ms-2">Layout 3</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-1">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="grading" role="switch" id="grading" value="1" {{ (isset($permissions['grading']) && $permissions['grading'] == 1) ? 'checked' : '' }}>
+                                                        <label for="grading" class="form-label ms-2">Grading</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-1">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="bell" role="switch" id="bell" value="1" {{ (isset($permissions['bell']) && $permissions['bell'] == 1) ? 'checked' : '' }}>
+                                                        <label for="bell" class="form-label ms-2">Bell</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-1">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="cover" role="switch" id="cover" value="1" {{ (isset($permissions['cover']) && $permissions['cover'] == 1) ? 'checked' : '' }}>
+                                                        <label for="cover" class="form-label ms-2">Cover</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-1">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="cover_cube" role="switch" id="cover_cube" value="1" {{ (isset($permissions['cover_cube']) && $permissions['cover_cube'] == 1) ? 'checked' : '' }}>
+                                                        <label for="cover_cube" class="form-label ms-2">Cover +</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-1">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="loader" role="switch" id="loader" value="1" {{ (isset($permissions['loader']) && $permissions['loader'] == 1) ? 'checked' : '' }}>
+                                                        <label for="loader" class="form-label ms-2">Loader</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

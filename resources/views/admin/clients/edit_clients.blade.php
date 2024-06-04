@@ -170,31 +170,39 @@
                                         </div>
                                     </div> --}}
                                 </div>
+
                                 <hr>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <h3>{{ __('Subscription Details')}}</h3>
-                                    </div>
+                                <h4 >Renew Subscription ?</h4>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input float-none" type="checkbox" role="switch" id="renew_subscription" name="renew_subscription" value="1">
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-group">
-                                            <label for="subscription" class="form-label">{{ __('Subscriptions')}}</label>
-                                            <select name="subscription" id="subscription" class="form-control {{ ($errors->has('subscription')) ? 'is-invalid' : '' }}">
-                                                <option value="">Select Subscription</option>
-                                                @if (count($subscriptions) > 0)
-                                                    @foreach ($subscriptions as $subscription)
-                                                        <option value="{{ $subscription->id }}" {{ ($client->hasOneSubscription['subscription_id'] == $subscription->id) ? 'selected' : '' }}>{{ $subscription->name }} ({{$subscription->duration}} Months)</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                            @if($errors->has('subscription'))
-                                                <div class="invalid-feedback">
-                                                    {{ $errors->first('subscription') }}
-                                                </div>
-                                            @endif
+                                <div class="subscription_div d-none" >
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <h3>{{ __('Subscription Details')}}</h3>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="subscription" class="form-label">{{ __('Subscriptions')}}</label>
+                                                <select name="subscription" id="subscription" class="form-control {{ ($errors->has('subscription')) ? 'is-invalid' : '' }}">
+                                                    <option value="">Select Subscription</option>
+                                                    @if (count($subscriptions) > 0)
+                                                        @foreach ($subscriptions as $subscription)
+                                                            <option value="{{ $subscription->id }}" {{ ($client->hasOneSubscription['subscription_id'] == $subscription->id) ? 'selected' : '' }}>{{ $subscription->name }} ({{$subscription->duration}} Months)</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                                @if($errors->has('subscription'))
+                                                    <div class="invalid-feedback">
+                                                        {{ $errors->first('subscription') }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -212,6 +220,14 @@
 {{-- Custom JS --}}
 @section('page-js')
     <script type="text/javascript">
-
+        $(document).ready(function() {
+            $('#renew_subscription').on('change', function(){
+        if($('#renew_subscription').prop('checked') === true){
+            $('.subscription_div').removeClass('d-none');
+        }else{
+            $('.subscription_div').addClass('d-none');
+        }
+    });
+            });
     </script>
 @endsection

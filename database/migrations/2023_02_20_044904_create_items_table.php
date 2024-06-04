@@ -15,7 +15,6 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->integer('category_id')->nullable();
             $table->integer('shop_id')->nullable();
             $table->integer('order_key');
             $table->tinyInteger('type')->default(1);
@@ -68,9 +67,9 @@ class CreateItemsTable extends Migration
             $table->string('ka_name')->nullable();
             $table->string('ka_calories')->nullable();
             $table->text('ka_description')->nullable();
-
             $table->string('ingredients')->nullable();
             $table->string('image')->nullable();
+            $table->integer('divider_img_size')->nullable();
             $table->tinyInteger('is_new')->default(0);
             $table->tinyInteger('as_sign')->default(0);
             $table->tinyInteger('day_special')->default(0);

@@ -119,6 +119,7 @@
                                         <tr>
                                             <th style="width: 12%">{{ __('Banner') }}</th>
                                             <th style="width: 75%">{{ __('Description') }}</th>
+                                            <th>{{ __('Status') }}</th>
                                             <th>{{ __('Actions') }}</th>
                                         </tr>
                                     </thead>
@@ -127,6 +128,8 @@
                                             @php
                                                 $banner_image = isset($banner->$image_key) ? $banner->$image_key : '';
                                                 $banner_description = isset($banner->$description_key) ? $banner->$description_key : '';
+
+
                                             @endphp
 
                                             <tr>
@@ -143,6 +146,14 @@
                                                             $banner_description = strip_tags($banner_description);
                                                         @endphp
                                                         {{ substr($banner_description,0,170) }} ...
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-check form-switch">
+                                                        @php
+                                                            $newStatus = ($banner->status == 1) ? 0 : 1;
+                                                        @endphp
+                                                        <input class="form-check-input" type="checkbox" name="status" role="switch" id="status" onclick="changeStatus({{ $banner->id }},{{ $newStatus }})" value="1" {{ ($banner->status == 1) ? 'checked' : '' }}>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -734,6 +745,39 @@
                     else
                     {
                         toastr.error(response.message);
+                    }
+                }
+            });
+        }
+
+
+        // Function for Change Banner Status
+        function changeStatus(bannerId, status)
+        {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('banners.status') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "status":status,
+                    "id":bannerId
+                },
+                dataType:'JSON',
+                success: function(response)
+                {
+                    if (response.success == 1)
+                    {
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+                    }
+                    else
+                    {
+                        toastr.error(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
                     }
                 }
             });

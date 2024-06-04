@@ -2,7 +2,7 @@
     $primary_code = isset($primary_language_detail['code']) ? $primary_language_detail['code'] : '';
     $primary_name = isset($primary_language_detail['name']) ? $primary_language_detail['name'] : '';
 
-    $name_key = $primary_code."_name";
+    $name_key = $primary_code . '_name';
 
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
     $shop_name = isset(Auth::user()->hasOneShop->shop['name']) ? Auth::user()->hasOneShop->shop['name'] : '';
@@ -55,32 +55,38 @@
                     <div class="col-md-3">
                         <div class="card info-card sales-card">
                             <div class="card-body">
-                                <h5 class="card-title p-0"><a href="{{ route('categories') }}">{{ __('Categories')}}</a></h5>
+                                <h5 class="card-title p-0"><a href="{{ route('categories') }}">{{ __('Categories') }}</a>
+                                </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="ri-restaurant-2-line"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
-                                            - {{ isset($category['total_category']) ? $category['total_category'] : 0 }}</span>
+                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i>
+                                            {{ __('Total') }}
+                                            -
+                                            {{ isset($category['total_category']) ? $category['total_category'] : 0 }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    @if(isset($package_permissions['page']) && !empty($package_permissions['page']) && $package_permissions['page'] == 1)
+                    @if (isset($package_permissions['page']) && !empty($package_permissions['page']) && $package_permissions['page'] == 1)
                         <!-- Page Card -->
                         <div class="col-md-3">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title p-0"><a href="{{ route('categories','page') }}">{{ __('Pages')}}</a></h5>
+                                    <h5 class="card-title p-0"><a
+                                            href="{{ route('categories', 'page') }}">{{ __('Pages') }}</a></h5>
                                     <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-files"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i>
+                                                {{ __('Total') }}
                                                 - {{ isset($category['total_page']) ? $category['total_page'] : 0 }}</span>
                                         </div>
                                     </div>
@@ -89,18 +95,21 @@
                         </div>
                     @endif
 
-                    @if(isset($package_permissions['link']) && !empty($package_permissions['link']) && $package_permissions['link'] == 1)
+                    @if (isset($package_permissions['link']) && !empty($package_permissions['link']) && $package_permissions['link'] == 1)
                         <!-- Link Card -->
                         <div class="col-md-3">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title p-0"><a href="{{ route('categories','link') }}">{{ __('Links')}}</a></h5>
+                                    <h5 class="card-title p-0"><a
+                                            href="{{ route('categories', 'link') }}">{{ __('Links') }}</a></h5>
                                     <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-hash"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i>
+                                                {{ __('Total') }}
                                                 - {{ isset($category['total_link']) ? $category['total_link'] : 0 }}</span>
                                         </div>
                                     </div>
@@ -109,18 +118,24 @@
                         </div>
                     @endif
 
-                    @if(isset($package_permissions['gallery']) && !empty($package_permissions['gallery']) && $package_permissions['gallery'] == 1)
+                    @if (isset($package_permissions['gallery']) &&
+                            !empty($package_permissions['gallery']) &&
+                            $package_permissions['gallery'] == 1)
                         <!-- Galleries Card -->
                         <div class="col-md-3">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title p-0"><a href="{{ route('categories','gallery') }}">{{ __('Image Galleries')}}</a></h5>
+                                    <h5 class="card-title p-0"><a
+                                            href="{{ route('categories', 'gallery') }}">{{ __('Image Galleries') }}</a>
+                                    </h5>
                                     <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-images"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i>
+                                                {{ __('Total') }}
                                                 - {{ isset($category['gallery']) ? $category['gallery'] : 0 }}</span>
                                         </div>
                                     </div>
@@ -129,18 +144,23 @@
                         </div>
                     @endif
 
-                    @if(isset($package_permissions['pdf_file']) && !empty($package_permissions['pdf_file']) && $package_permissions['pdf_file'] == 1)
+                    @if (isset($package_permissions['pdf_file']) &&
+                            !empty($package_permissions['pdf_file']) &&
+                            $package_permissions['pdf_file'] == 1)
                         <!-- PDF Card -->
                         <div class="col-md-3">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title p-0"><a href="{{ route('categories','pdf_page') }}">{{ __('PDF')}}</a></h5>
+                                    <h5 class="card-title p-0"><a
+                                            href="{{ route('categories', 'pdf_page') }}">{{ __('PDF') }}</a></h5>
                                     <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i>
+                                                {{ __('Total') }}
                                                 - {{ isset($category['pdf_page']) ? $category['pdf_page'] : 0 }}</span>
                                         </div>
                                     </div>
@@ -149,18 +169,24 @@
                         </div>
                     @endif
 
-                    @if(isset($package_permissions['check_in']) && !empty($package_permissions['check_in']) && $package_permissions['check_in'] == 1)
+                    @if (isset($package_permissions['check_in']) &&
+                            !empty($package_permissions['check_in']) &&
+                            $package_permissions['check_in'] == 1)
                         <!-- Check In Page Card -->
                         <div class="col-md-3">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title p-0"><a href="{{ route('categories','check_in') }}">{{ __('Check In Pages')}}</a></h5>
+                                    <h5 class="card-title p-0"><a
+                                            href="{{ route('categories', 'check_in') }}">{{ __('Check In Pages') }}</a>
+                                    </h5>
                                     <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-person-check-fill"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                            <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i>
+                                                {{ __('Total') }}
                                                 - {{ isset($category['check_in']) ? $category['check_in'] : 0 }}</span>
                                         </div>
                                     </div>
@@ -173,19 +199,56 @@
                     <div class="col-md-3">
                         <div class="card info-card sales-card">
                             <div class="card-body">
-                                <h5 class="card-title p-0"><a href="{{ route('items') }}">{{ __('Items')}}</a></h5>
+                                <h5 class="card-title p-0"><a href="{{ route('items') }}">{{ __('Items') }}</a></h5>
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="ri-restaurant-2-line"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i> {{ __('Total')}}
+                                        <span class="text-success pt-1"><i class="bi bi-arrow-up-circle"></i>
+                                            {{ __('Total') }}
                                             - {{ isset($item['total']) ? $item['total'] : 0 }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    @if ((isset($package_permissions['bell']) && !empty($package_permissions['bell']) && $package_permissions['bell'] == 1) || (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))                        
+                        <div class="col-md-3 {{ $waiter_call > 0 || $orders_count > 0 ? '' : 'd-none' }}"
+                            id="call_waiter_and_orders">
+                            <div class="card info-card sales-card">
+                                <div class="card-body">
+                                    <div class="call_waiter_and_orders">
+
+                                        @if(isset($package_permissions['bell']) && !empty($package_permissions['bell']) && $package_permissions['bell'] == 1)
+                                            <div id="waiter_call_box" class="{{ $waiter_call > 0 ? '' : 'd-none' }}">
+                                                <h5 class="card-title p-0">
+                                                    <a href="{{ route('list.call.waiter') }}">{{ __('Waiter Call') }}</a>
+                                                </h5>
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center waiter_call_bell mx-auto">
+                                                    <i class="fa-solid fa-comments"></i>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                                            <div id="orders_box" class="{{ $orders_count > 0 ? '' : 'd-none' }}">
+                                                <h5 class="card-title p-0">
+                                                    <a href="{{ route('client.orders') }}">{{ __('Orders') }}</a>
+                                                </h5>
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center waiter_call_bell mx-auto">
+                                                    <i class="fa-solid fa-bell"></i>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -195,55 +258,73 @@
                     <div class="col-md-6">
                         <div class="card top-selling overflow-auto">
                             <div class="card-body pb-0">
-                                <h5 class="card-title">{{ __('Recent Categories')}}</h5>
+                                <h5 class="card-title">{{ __('Recent Categories') }}</h5>
                                 <table class="table table-borderless">
                                     <thead>
                                         <tr>
-                                            <th scope="col">{{ __('Preview')}}</th>
-                                            <th scope="col">{{ __('Category')}}</th>
-                                            <th scope="col">{{ __('Updated At')}}</th>
+                                            <th scope="col">{{ __('Preview') }}</th>
+                                            <th scope="col">{{ __('Category') }}</th>
+                                            <th scope="col">{{ __('Updated At') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if(count($categories) > 0)
+                                        @if (count($categories) > 0)
                                             @foreach ($categories as $cat)
                                                 @php
-                                                    $check_cat_type_permission = checkCatTypePermission($cat->category_type,$shop_id);
-                                                    $cat_image = isset($cat->categoryImages[0]['image']) ? $cat->categoryImages[0]['image'] : '';
+                                                    $check_cat_type_permission = checkCatTypePermission(
+                                                        $cat->category_type,
+                                                        $shop_id,
+                                                    );
+                                                    $cat_image = isset($cat->categoryImages[0]['image'])
+                                                        ? $cat->categoryImages[0]['image']
+                                                        : '';
                                                 @endphp
-                                                @if($check_cat_type_permission == 1)
+                                                @if ($check_cat_type_permission == 1)
                                                     <tr>
                                                         <th scope="row">
-                                                            @if($cat->category_type == 'page' || $cat->category_type == 'gallery' || $cat->category_type == 'link' || $cat->category_type == 'check_in' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_page')
-                                                                @if(!empty($cat->cover) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat->cover))
-                                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat['cover']) }}" width="35">
+                                                            @if (
+                                                                $cat->category_type == 'page' ||
+                                                                    $cat->category_type == 'gallery' ||
+                                                                    $cat->category_type == 'link' ||
+                                                                    $cat->category_type == 'check_in' ||
+                                                                    $cat->category_type == 'parent_category' ||
+                                                                    $cat->category_type == 'pdf_page')
+                                                                @if (!empty($cat->cover) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover))
+                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']) }}"
+                                                                        width="35">
                                                                 @else
-                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35">
+                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}"
+                                                                        width="35">
                                                                 @endif
                                                             @else
-                                                                @if(!empty($cat_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image))
-                                                                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image) }}" width="35">
+                                                                @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}"
+                                                                        width="35">
                                                                 @else
-                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35">
+                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}"
+                                                                        width="35">
                                                                 @endif
                                                             @endif
                                                         </th>
                                                         <td>
-                                                            @if($cat['parent_category'] == 0 && empty($cat['parent_id']))
-                                                                <a href="{{ route('categories',$cat['category_type']) }}">{{ $cat->$name_key }}</a>
+                                                            @if ($cat['parent_category'] == 0 && empty($cat['parent_id']))
+                                                                <a
+                                                                    href="{{ route('categories', $cat['category_type']) }}">{{ $cat->$name_key }}</a>
                                                             @elseif ($cat['category_type'] == 'product_category' && !empty($cat['parent_id']))
-                                                                <a href="{{ route('categories',$cat['parent_id']) }}">{{ $cat->$name_key }}</a>
+                                                                <a
+                                                                    href="{{ route('categories', $cat['parent_id']) }}">{{ $cat->$name_key }}</a>
                                                             @else
-                                                                <a href="{{ route('categories') }}">{{ $cat->$name_key }}</a>
+                                                                <a
+                                                                    href="{{ route('categories') }}">{{ $cat->$name_key }}</a>
                                                             @endif
                                                         </td>
-                                                        <td>{{ date('d-m-Y h:i:s',strtotime($cat->updated_at)) }}</td>
+                                                        <td>{{ date('d-m-Y h:i:s', strtotime($cat->updated_at)) }}</td>
                                                     </tr>
                                                 @endif
                                             @endforeach
                                         @else
                                             <tr class="text-center">
-                                                <th scope="row" colspan="3">{{ __('Categories Not Found!')}}</th>
+                                                <th scope="row" colspan="3">{{ __('Categories Not Found!') }}</th>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -254,37 +335,39 @@
                     <div class="col-md-6">
                         <div class="card top-selling overflow-auto">
                             <div class="card-body pb-0">
-                                <h5 class="card-title">{{ __('Recent Items')}}</h5>
+                                <h5 class="card-title">{{ __('Recent Items') }}</h5>
                                 <table class="table table-borderless">
                                     <thead>
                                         <tr>
-                                            <th scope="col">{{ __('Preview')}}</th>
-                                            <th scope="col">{{ __('Category')}}</th>
-                                            <th scope="col">{{ __('Item')}}</th>
-                                            <th scope="col">{{ __('Updated At')}}</th>
+                                            <th scope="col">{{ __('Preview') }}</th>
+                                            <th scope="col">{{ __('Item') }}</th>
+                                            <th scope="col">{{ __('Updated At') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if(count($items) > 0)
+
+                                        @if (count($items) > 0)
                                             @foreach ($items as $val)
                                                 <tr>
                                                     <th scope="row">
-                                                        @if(!empty($val['image']))
-                                                            <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$val['image']) }}" width="35" height="35">
+                                                        @if (!empty($val['image']))
+                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $val['image']) }}"
+                                                                width="35" height="35">
                                                         @else
-                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="35" height="35">
+                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}"
+                                                                width="35" height="35">
                                                         @endif
                                                     </th>
-                                                    <td>{{ isset($val->category[$name_key]) ? $val->category[$name_key] :  "" }}</td>
                                                     <td>
-                                                        <a href="{{ route('items',$val['category_id']) }}">{{ $val->$name_key }}</a>
+                                                        <a
+                                                            href="{{ route('items', $val['category_id']) }}">{{ $val->$name_key }}</a>
                                                     </td>
-                                                    <td>{{ date('d-m-Y h:i:s',strtotime($val->updated_at)) }}</td>
+                                                    <td>{{ date('d-m-Y h:i:s', strtotime($val->updated_at)) }}</td>
                                                 </tr>
                                             @endforeach
                                         @else
                                             <tr class="text-center">
-                                                <th scope="row" colspan="4">{{ __('Items Not Found!')}}</th>
+                                                <th scope="row" colspan="4">{{ __('Items Not Found!') }}</th>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -317,6 +400,46 @@
             toastr.error('{{ Session::get('error') }}')
         @endif
 
+
+        // Check Waiter Call & Orders
+        setInterval(() => {
+            checkWaiterCallAndOrders();
+        }, 5000);
+
+        function checkWaiterCallAndOrders() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('client.check-orders-and-waiter-call') }}",
+                dataType: "JSON",
+                success: function(response) {
+                    if (response.success == 1) {
+                        const waiter_call_count = response.data?.waiter_call;
+                        const orders_count = response.data?.orders_count;
+
+                        if (waiter_call_count > 0 || orders_count > 0) {
+                            $('#call_waiter_and_orders').removeClass('d-none');
+                        } else {
+                            $('#call_waiter_and_orders').addClass('d-none');
+                        }
+
+                        if (waiter_call_count > 0) {
+                            $('#waiter_call_box').removeClass('d-none');
+                        } else {
+                            $('#waiter_call_box').addClass('d-none');
+                        }
+
+                        if (orders_count > 0) {
+                            $('#orders_box').removeClass('d-none');
+                        } else {
+                            $('#orders_box').addClass('d-none');
+                        }
+
+                    } else {
+                        console.error(response.message)
+                    }
+                }
+            });
+        }
     </script>
 
 @endsection

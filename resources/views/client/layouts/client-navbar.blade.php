@@ -18,6 +18,12 @@
 
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
 
+    // Subscrption ID
+    $subscription_id = Auth::user()->hasOneSubscription['subscription_id'];
+
+    // Get Package Permissions
+    $package_permissions = getPackagePermission($subscription_id);
+
 @endphp
 
 <header id="header" class="header fixed-top d-flex align-items-center">
@@ -40,18 +46,36 @@
             <button id="myHiddenButton" style="display: none;">Hidden</button>
 
             {{-- Notification Section --}}
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge bg-primary badge-number noti-count">0</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header noti-message">
-                        You have 0 new Orders
-                        <a href="{{ route('client.orders') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                    </li>
-                </ul>
-            </li>
+            @if(isset($package_permissions['bell']) && !empty($package_permissions['bell']) && $package_permissions['bell'] == 1)
+                <li class="nav-item dropdown">
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-comments"></i>
+                        <span class="badge bg-primary badge-number waiter-count">0</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                        <li class="dropdown-header waiter-message">
+                            You have 0 new Orders
+                            <a href="{{ route('list.call.waiter') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+
+            {{-- Notification Section --}}
+            @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                <li class="nav-item dropdown">
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell"></i>
+                        <span class="badge bg-primary badge-number noti-count">0</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                        <li class="dropdown-header noti-message">
+                            You have 0 new Orders
+                            <a href="{{ route('client.orders') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
 
             {{-- Language Section --}}
             <li class="nav-item lang-drop pe-3">
@@ -90,7 +114,7 @@
 
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="{{ route('client.profile.view',$userID) }}">
-                            <i class="bi bi-person"></i>
+                            <i class="fa-solid fa-user"></i>
                             <span>{{ __('My Profile') }}</span>
                         </a>
                     </li>
@@ -99,8 +123,28 @@
                     </li>
 
                     <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('client.subscription',$userID) }}">
+                            <i class="fa-solid fa-money-bill"></i>
+                            <span>{{ __('Subscription') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('billing.info') }}">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>{{ __('Billing Info') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
                         <a href="{{ route('logout') }}" class="dropdown-item d-flex align-items-center">
-                            <i class="bi bi-box-arrow-right"></i>
+                            <i class="fa-solid fa-right-from-bracket"></i>
                             <span>{{ __('Logout') }}</span>
                         </a>
                     </li>

@@ -99,3 +99,35 @@
     right: 10px;
 }
 
+.sidebar-multi-level-dropdown a i{
+    font-size:16px!important;
+}
+
+
+.waiter_service span {
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 50%;
+}
+.waiter_service span.waiter_service_box{
+  background-color: #1daa31;
+}
+
+.waiter_service span.waiter_not_service{
+  background-color: #ea1616;
+}
+
+.waiter_service h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 0;
+    /* margin-right: 30px; */
+}
+
+.waiter_service {
+    margin-bottom: 15px;
+    /* display: flex; */
+    /* align-items: center; */
+}

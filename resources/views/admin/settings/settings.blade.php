@@ -102,13 +102,44 @@
                                     @endif
                                 </div>
                             </div>
+                            {{-- Loader --}}
+                            @php
+                                $loader = isset($settings['loader']) ? $settings['loader'] : '';
+                            @endphp
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Loader') }}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="file" name="loader" class="form-control {{ ($errors->has('loader')) ? 'is-invalid' : '' }}">
+                                    @if($errors->has('loader'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('loader') }}
+                                        </div>
+                                    @endif
+                                    @if(!empty($loader))
+                                    <div class="mt-3">
+                                        <img src="{{ $loader }}" alt="" width="150">
+                                    </div>
+                                @endif
+                                </div>
+
+                            </div>
+                            <!-- <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Client Area Loader') }}</b>
+                                </div>
+                                <div class="col-md-6 form-switch">
+                                    <input class="form-check-input" type="checkbox" name="is_client_loader" role="switch" id="is_client_loader" value="1"  {{ ($settings['is_client_loader'] == 1) ? 'checked' : '' }}>
+                                </div>
+                            </div> -->
 
                             @php
                                 $login_bg = isset($settings['login_form_background']) ? $settings['login_form_background'] : '';
                             @endphp
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Login Form Background')}}</b>
+                                    <b>{{ __('Login Form BG')}}</b>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="file" name="login_form_background" class="form-control {{ ($errors->has('login_form_background')) ? 'is-invalid' : '' }}">
@@ -193,13 +224,13 @@
                                 </div>
                             </div>
 
-                            {{-- Main Screen Map --}}
+                            {{-- Main Screen Map Layout 1 --}}
                             @php
                                 $theme_main_screen = isset($settings['theme_main_screen_demo']) ? $settings['theme_main_screen_demo'] : '';
                             @endphp
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Main Screen Map')}}</b>
+                                    <b>{{ __('Main Screen Map Layout One')}}</b>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="file" name="theme_main_screen_demo" id="theme_main_screen_demo" class="form-control {{ ($errors->has('theme_main_screen_demo')) ? 'is-invalid' : '' }}">
@@ -216,13 +247,13 @@
                                 </div>
                             </div>
 
-                            {{-- Product Screen Map --}}
+                            {{-- Product Screen Map Layout 1 --}}
                             @php
                                 $theme_category_screen = isset($settings['theme_category_screen_demo']) ? $settings['theme_category_screen_demo'] : '';
                             @endphp
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <b>{{ __('Product Screen Map')}}</b>
+                                    <b>{{ __('Product Screen Map Layout One')}}</b>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="file" name="theme_category_screen_demo" id="theme_category_screen_demo" class="form-control {{ ($errors->has('theme_category_screen_demo')) ? 'is-invalid' : '' }}">
@@ -238,6 +269,122 @@
                                     @endif
                                 </div>
                             </div>
+
+                            {{-- Main Screen Map Layout 2 --}}
+                            @php
+                                $theme_main_screen_layout_two_demo = isset($settings['theme_main_screen_layout_two_demo']) ? $settings['theme_main_screen_layout_two_demo'] : '';
+                            @endphp
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Main Screen Map Layout Two')}}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="file" name="theme_main_screen_layout_two_demo" id="theme_main_screen_layout_two_demo" class="form-control {{ ($errors->has('theme_main_screen_layout_two_demo')) ? 'is-invalid' : '' }}">
+                                    @if($errors->has('theme_main_screen_layout_two_demo'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('theme_main_screen_layout_two_demo') }}
+                                        </div>
+                                    @endif
+                                    @if(!empty($theme_main_screen_layout_two_demo))
+                                        <div class="mt-3">
+                                            <img src="{{ $theme_main_screen_layout_two_demo }}" alt="" width="100">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Product Screen Map Layout 2 --}}
+                            @php
+                                $theme_category_screen_layout_two_demo = isset($settings['theme_category_screen_layout_two_demo']) ? $settings['theme_category_screen_layout_two_demo'] : '';
+                            @endphp
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Product Screen Map Layout Two')}}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="file" name="theme_category_screen_layout_two_demo" id="theme_category_screen_layout_two_demo" class="form-control {{ ($errors->has('theme_category_screen_layout_two_demo')) ? 'is-invalid' : '' }}">
+                                    @if($errors->has('theme_category_screen_layout_two_demo'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('theme_category_screen_layout_two_demo') }}
+                                        </div>
+                                    @endif
+                                    @if(!empty($theme_category_screen_layout_two_demo))
+                                        <div class="mt-3">
+                                            <img src="{{ $theme_category_screen_layout_two_demo }}" alt="" width="100">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Main Screen Map Layout 3 --}}
+                            @php
+                                $theme_main_screen_layout_three_demo = isset($settings['theme_main_screen_layout_three_demo']) ? $settings['theme_main_screen_layout_three_demo'] : '';
+                            @endphp
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Main Screen Map Layout Three')}}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="file" name="theme_main_screen_layout_three_demo" id="theme_main_screen_layout_three_demo" class="form-control {{ ($errors->has('theme_main_screen_layout_three_demo')) ? 'is-invalid' : '' }}">
+                                    @if($errors->has('theme_main_screen_layout_three_demo'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('theme_main_screen_layout_three_demo') }}
+                                        </div>
+                                    @endif
+                                    @if(!empty($theme_main_screen_layout_three_demo))
+                                        <div class="mt-3">
+                                            <img src="{{ $theme_main_screen_layout_three_demo }}" alt="" width="100">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Product Screen Map Layout 3 --}}
+                            @php
+                                $theme_category_screen_layout_three_demo = isset($settings['theme_category_screen_layout_three_demo']) ? $settings['theme_category_screen_layout_three_demo'] : '';
+                            @endphp
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Product Screen Map Layout Three')}}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="file" name="theme_category_screen_layout_three_demo" id="theme_category_screen_layout_three_demo" class="form-control {{ ($errors->has('theme_category_screen_layout_three_demo')) ? 'is-invalid' : '' }}">
+                                    @if($errors->has('theme_category_screen_layout_three_demo'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('theme_category_screen_layout_three_demo') }}
+                                        </div>
+                                    @endif
+                                    @if(!empty($theme_category_screen_layout_three_demo))
+                                        <div class="mt-3">
+                                            <img src="{{ $theme_category_screen_layout_three_demo }}" alt="" width="100">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Cart Modal Screen Layout  --}}
+                            @php
+                                $cart_modal_screen_layout = isset($settings['cart_modal_screen_layout']) ? $settings['cart_modal_screen_layout'] : '';
+                            @endphp
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Cart Modal Screen Map')}}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="file" name="cart_modal_screen_layout" id="cart_modal_screen_layout" class="form-control {{ ($errors->has('cart_modal_screen_layout')) ? 'is-invalid' : '' }}">
+                                    @if($errors->has('cart_modal_screen_layout'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('cart_modal_screen_layout') }}
+                                        </div>
+                                    @endif
+                                    @if(!empty($cart_modal_screen_layout))
+                                        <div class="mt-3">
+                                            <img src="{{ $cart_modal_screen_layout }}" alt="" width="100">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
 
                             {{-- Day Special Image --}}
                             @php
@@ -342,6 +489,7 @@
                                     <code>Tags : ({shop_name}, {shop_logo}, {subject}, {message})</code>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <b>{{ __('Subscription Expire Mail Form') }}</b>

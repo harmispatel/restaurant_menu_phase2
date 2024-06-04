@@ -40,6 +40,8 @@ class ThemeController extends Controller
 
         // Keys
         $keys = ([
+            'desk_layout',
+            'slider_effect',
             'header_color',
             'sticky_header',
             'language_bar_position',
@@ -49,10 +51,14 @@ class ThemeController extends Controller
             'banner_type',
             'banner_slide_button',
             'banner_delay_time',
+            'category_image_sider',
+            'category_image_slider_delay_time',
             'background_color',
             'font_color',
             'label_color',
+            'category_side',
             'social_media_icon_color',
+            'category_slider_effect',
             'categories_bar_color',
             'menu_bar_font_color',
             'category_title_and_description_color',
@@ -78,6 +84,44 @@ class ThemeController extends Controller
             'item_box_background_color',
             'item_title_color',
             'item_description_color',
+            'icon_bg_color',
+            'special_discount_backgound_color',
+            'header_image',
+            'category_view',
+            'special_discount_text_color',
+            'cart_animation_color',
+            'modal_item_title_color',
+            'modal_item_des_color',
+            'modal_item_price_color',
+            'modal_close_icon_color',
+            'modal_close_bg_color',
+            'modal_add_btn_color',
+            'modal_add_btn_text_color',
+            'modal_quantity_icon_color',
+            'modal_quantity_bg_color',
+            'modal_price_label_color',
+            'modal_igradient_type_color',
+            'modal_body_bg_color',
+            'special_day_effect_box',
+            'special_day_effect_color',
+            'category_box_shadow',
+            'category_box_title_icon_color',
+            'category_box_text_color',
+            'category_box_background',
+            'category_box_title_background',
+            'label_font_size',
+            'modal_item_title_font_size',
+            'back_arrow_bg_color',
+            'back_arrow_icon_color',
+            'category_box_act_txt_bg',
+            'header_bg_color_opc',
+            'header_effect_bg_color',
+            'rating_service_name_color',
+            'bar_icon_color',
+            'bar_icon_bg_color',
+            'cover_link_icon_color',
+            'cover_link_bg_color',
+            'bg_image'
         ]);
 
         $settings = [];
@@ -117,6 +161,8 @@ class ThemeController extends Controller
         $request->validate([
             'theme_name' => 'required',
             'theme_preview_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'header_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'bg_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
         ]);
 
         // Shop ID
@@ -133,6 +179,8 @@ class ThemeController extends Controller
         $theme->save();
 
         $setting_keys = [
+            'desk_layout' => isset($request->desk_layout) ? $request->desk_layout : "layout_1",
+            'slider_effect'=> $request->slider_effect,
             'header_color' => $request->header_color,
             'sticky_header' => isset($request->sticky_header) ? $request->sticky_header : 0,
             'language_bar_position' => $request->language_bar_position,
@@ -142,10 +190,14 @@ class ThemeController extends Controller
             'banner_type' => $request->banner_type,
             'banner_slide_button' => isset($request->banner_slide_button) ? $request->banner_slide_button : 0,
             'banner_delay_time' => $request->banner_delay_time,
+            'category_image_sider' => $request->category_image_sider,
+            'category_image_slider_delay_time' => isset($request->category_image_slider_delay_time) ? $request->category_image_slider_delay_time : 1200 ,
             'background_color' => $request->background_color,
+            'category_side' => $request->category_side,
             'font_color' => $request->font_color,
             'label_color' => $request->label_color,
             'social_media_icon_color' => $request->social_media_icon_color,
+            'category_slider_effect' => $request->category_slider_effect,
             'categories_bar_color' => $request->categories_bar_color,
             'menu_bar_font_color' => $request->menu_bar_font_color,
             'category_title_and_description_color' => $request->category_title_and_description_color,
@@ -170,6 +222,43 @@ class ThemeController extends Controller
             'item_box_background_color' => $request->item_box_background_color,
             'item_title_color' => $request->item_title_color,
             'item_description_color' => $request->item_description_color,
+            'special_discount_backgound_color' => $request->special_discount_backgound_color,
+            'icon_bg_color' => $request->icon_bg_color,
+            'category_view' => $request->category_view,
+            'special_discount_text_color' => $request->special_discount_text_color,
+            'cart_animation_color' => $request->cart_animation_color,
+            'modal_item_title_color' => $request->modal_item_title_color,
+            'modal_item_des_color' => $request->modal_item_des_color,
+            'modal_item_price_color' => $request->modal_item_price_color,
+            'modal_close_icon_color' => $request->modal_close_icon_color,
+            'modal_close_bg_color' => $request->modal_close_bg_color,
+            'modal_add_btn_color' => $request->modal_add_btn_color,
+            'modal_add_btn_text_color' => $request->modal_add_btn_text_color,
+            'modal_quantity_icon_color' => $request->modal_quantity_icon_color,
+            'modal_quantity_bg_color' => $request->modal_quantity_bg_color,
+            'modal_price_label_color' => $request->modal_price_label_color,
+            'modal_igradient_type_color' => $request->modal_igradient_type_color,
+            'modal_body_bg_color' => $request->modal_body_bg_color,
+            'special_day_effect_box' => $request->special_day_effect_box,
+            'special_day_effect_color' => $request->special_day_effect_color,
+            'category_box_shadow' => $request->category_box_shadow,
+            'category_box_title_icon_color' => $request->category_box_title_icon_color,
+            'category_box_text_color' => $request->category_box_text_color,
+            'category_box_background' => $request->category_box_background,
+            'category_box_title_background' => $request->category_box_title_background,
+            'label_font_size'=>$request->label_font_size,
+            'modal_item_title_font_size'=> $request->modal_item_title_font_size,
+            'back_arrow_bg_color'=>$request->back_arrow_bg_color,
+            'back_arrow_icon_color'=>$request->back_arrow_icon_color,
+            'category_box_act_txt_bg'=>$request->category_box_act_txt_bg,
+            'header_bg_color_opc'=>$request->header_bg_color_opc,
+            'header_effect_bg_color'=>$request->header_effect_bg_color,
+            'rating_service_name_color'=>$request->rating_service_name_color,
+            'bar_icon_color'=>$request->bar_icon_color,
+            'bar_icon_bg_color'=>$request->bar_icon_bg_color,
+            'cover_link_icon_color'=>$request->cover_link_icon_color,
+            'cover_link_bg_color'=>$request->cover_link_bg_color,
+
         ];
 
         if($request->hasFile('theme_preview_image'))
@@ -177,6 +266,21 @@ class ThemeController extends Controller
             $imgname = "theme_preview_image_".time().".". $request->file('theme_preview_image')->getClientOriginalExtension();
             $request->file('theme_preview_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/theme_preview_image/'), $imgname);
             $setting_keys['theme_preview_image'] = $imgname;
+        }
+
+        if($request->hasFile('bg_image'))
+        {
+            $imgname = "bg_image".time().".". $request->file('bg_image')->getClientOriginalExtension();
+            $request->file('bg_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/background_image/'), $imgname);
+            $setting_keys['bg_image'] = $imgname;
+        }
+
+
+        if($request->hasFile('header_image'))
+        {
+            $imgname = "header_image_".time().".". $request->file('header_image')->getClientOriginalExtension();
+            $request->file('header_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/header_image/'), $imgname);
+            $setting_keys['header_image'] = $imgname;
         }
 
         if($theme->id)
@@ -246,11 +350,14 @@ class ThemeController extends Controller
     // Update the specified resource in storage.
     public function update(Request $request)
     {
+
         $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
 
         $request->validate([
             'theme_name' => 'required',
             'theme_preview_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'header_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'bg_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
         ]);
 
         // Theme ID
@@ -262,6 +369,8 @@ class ThemeController extends Controller
         $theme->update();
 
         $setting_keys = [
+            'desk_layout' => isset($request->desk_layout) ? $request->desk_layout : "layout_1",
+            'slider_effect'=> $request->slider_effect,
             'header_color' => $request->header_color,
             'sticky_header' => isset($request->sticky_header) ? $request->sticky_header : 0,
             'language_bar_position' => $request->language_bar_position,
@@ -271,10 +380,14 @@ class ThemeController extends Controller
             'banner_type' => $request->banner_type,
             'banner_slide_button' => isset($request->banner_slide_button) ? $request->banner_slide_button : 0,
             'banner_delay_time' => $request->banner_delay_time,
+            'category_image_sider' => $request->category_image_sider,
+            'category_image_slider_delay_time' => isset($request->category_image_slider_delay_time) ? $request->category_image_slider_delay_time : 1200 ,
             'background_color' => $request->background_color,
+            'category_side' => $request->category_side,
             'font_color' => $request->font_color,
             'label_color' => $request->label_color,
             'social_media_icon_color' => $request->social_media_icon_color,
+            'category_slider_effect' => $request->category_slider_effect,
             'categories_bar_color' => $request->categories_bar_color,
             'menu_bar_font_color' => $request->menu_bar_font_color,
             'category_title_and_description_color' => $request->category_title_and_description_color,
@@ -299,6 +412,43 @@ class ThemeController extends Controller
             'item_box_background_color' => $request->item_box_background_color,
             'item_title_color' => $request->item_title_color,
             'item_description_color' => $request->item_description_color,
+            'icon_bg_color' => $request->icon_bg_color,
+            'special_discount_backgound_color' => $request->special_discount_backgound_color,
+            'category_view' => $request->category_view,
+            'special_discount_text_color' => $request->special_discount_text_color,
+            'cart_animation_color' => $request->cart_animation_color,
+            'modal_item_title_color' => $request->modal_item_title_color,
+            'modal_item_des_color' => $request->modal_item_des_color,
+            'modal_item_price_color' => $request->modal_item_price_color,
+            'modal_close_icon_color' => $request->modal_close_icon_color,
+            'modal_close_bg_color' => $request->modal_close_bg_color,
+            'modal_add_btn_color' => $request->modal_add_btn_color,
+            'modal_add_btn_text_color' => $request->modal_add_btn_text_color,
+            'modal_quantity_icon_color' => $request->modal_quantity_icon_color,
+            'modal_quantity_bg_color' => $request->modal_quantity_bg_color,
+            'modal_price_label_color' => $request->modal_price_label_color,
+            'modal_igradient_type_color' => $request->modal_igradient_type_color,
+            'modal_body_bg_color' => $request->modal_body_bg_color,
+            'special_day_effect_box' => $request->special_day_effect_box,
+            'special_day_effect_color' => $request->special_day_effect_color,
+            'category_box_shadow' => $request->category_box_shadow,
+            'category_box_title_icon_color' => $request->category_box_title_icon_color,
+            'category_box_text_color' => $request->category_box_text_color,
+            'category_box_background' => $request->category_box_background,
+            'category_box_title_background' => $request->category_box_title_background,
+            'label_font_size'=>$request->label_font_size,
+            'modal_item_title_font_size'=> $request->modal_item_title_font_size,
+            'back_arrow_bg_color'=>$request->back_arrow_bg_color,
+            'back_arrow_icon_color'=>$request->back_arrow_icon_color,
+            'category_box_act_txt_bg'=>$request->category_box_act_txt_bg,
+            'header_bg_color_opc'=>$request->header_bg_color_opc,
+            'header_effect_bg_color'=>$request->header_effect_bg_color,
+            'rating_service_name_color'=>$request->rating_service_name_color,
+            'bar_icon_color'=>$request->bar_icon_color,
+            'bar_icon_bg_color'=>$request->bar_icon_bg_color,
+            'cover_link_icon_color'=>$request->cover_link_icon_color,
+            'cover_link_bg_color'=>$request->cover_link_bg_color,
+
         ];
 
         if($request->hasFile('theme_preview_image'))
@@ -306,6 +456,20 @@ class ThemeController extends Controller
             $imgname = "theme_preview_image_".time().".". $request->file('theme_preview_image')->getClientOriginalExtension();
             $request->file('theme_preview_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/theme_preview_image/'), $imgname);
             $setting_keys['theme_preview_image'] = $imgname;
+        }
+
+        if($request->hasFile('bg_image'))
+        {
+            $imgname = "bg_image".time().".". $request->file('bg_image')->getClientOriginalExtension();
+            $request->file('bg_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/background_image/'), $imgname);
+            $setting_keys['bg_image'] = $imgname;
+        }
+
+        if($request->hasFile('header_image'))
+        {
+            $imgname = "header_image_".time().".". $request->file('header_image')->getClientOriginalExtension();
+            $request->file('header_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/header_image/'), $imgname);
+            $setting_keys['header_image'] = $imgname;
         }
 
         // Update Theme Settings
@@ -381,6 +545,7 @@ class ThemeController extends Controller
             'font_color',
             'label_color',
             'social_media_icon_color',
+            'category_slider_effect',
             'categories_bar_color',
             'menu_bar_font_color',
             'category_title_and_description_color',
@@ -406,6 +571,20 @@ class ThemeController extends Controller
             'item_box_background_color',
             'item_title_color',
             'item_description_color',
+            'modal_item_title_color',
+            'modal_item_des_color',
+            'modal_item_price_color',
+            'modal_close_icon_color',
+            'modal_close_bg_color',
+            'modal_add_btn_color',
+            'modal_add_btn_text_color',
+            'modal_quantity_icon_color',
+            'modal_quantity_bg_color',
+            'modal_price_label_color',
+            'modal_igradient_type_color',
+            'modal_body_bg_color',
+            'modal_item_title_font_size',
+            'rating_service_name_color',
         ]);
 
         $settings = [];
@@ -417,5 +596,42 @@ class ThemeController extends Controller
         }
 
         return view('client.design.theme.clone',compact(['theme','settings']));
+    }
+
+    public function deleteHeaderImg($id)
+    {
+
+        // Delete Theme Settings
+         $header_img = ThemeSettings::where('theme_id',$id)->where('key','header_image')->first();
+         $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
+         if($header_img)
+         {
+            $filePath = public_path('client_uploads/shops/' . $shop_slug . '/header_image/' . $header_img->value);
+            if (file_exists($filePath)) {
+                // Delete the file
+                unlink($filePath);
+            }
+            $header_img->delete();
+            return redirect()->back()->with('success','Header Image has been Removed SuccessFully..');
+         }
+    }
+
+    public function deleteBgImg($id)
+    {
+          // Delete Theme Settings
+          $bg_img = ThemeSettings::where('theme_id',$id)->where('key','bg_image')->first();
+          $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
+          if($bg_img)
+          {
+             $filePath = public_path('client_uploads/shops/' . $shop_slug . '/background_image/' . $bg_img->value);
+             if (file_exists($filePath)) {
+                 // Delete the file
+                 unlink($filePath);
+             }
+             $bg_img->delete();
+             return redirect()->back()->with('success','Background  Image has been Removed SuccessFully..');
+          }
     }
 }

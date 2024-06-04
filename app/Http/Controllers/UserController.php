@@ -38,6 +38,7 @@ use App\Models\User;
 use App\Models\UserShop;
 use App\Models\UsersSubscriptions;
 use App\Models\UserVisits;
+use App\Models\DefaultShopLayout;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -153,6 +154,9 @@ class UserController extends Controller
             mkdir(public_path('client_uploads/shops/'.$shop_slug."/theme_preview_image"));
             mkdir(public_path('client_uploads/shops/'.$shop_slug."/today_special_icon"));
             mkdir(public_path('client_uploads/shops/'.$shop_slug."/top_logos"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/header_image"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/loader"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/background_image"));
 
 
             if($request->hasFile('shop_logo'))
@@ -233,6 +237,11 @@ class UserController extends Controller
                 if($value == 'Default Light Theme')
                 {
                     $setting_keys = [
+                        'desk_layout' => 'layout_1',
+                        'slider_effect' => 'fade',
+                        'category_slider_effect' => 'default',
+                        'special_day_effect_box' => 'blink',
+                        'special_day_effect_box' => 'blink',
                         'header_color' => '#ffffff',
                         'sticky_header' => 1,
                         'language_bar_position' => 'left',
@@ -260,6 +269,7 @@ class UserController extends Controller
                         'item_divider_position' => 'top',
                         'item_divider_font_color' => '#4d572b',
                         'tag_font_color' => '#4d572b',
+                        'tag_label_color' => '#4d572b',
                         'tag_label_color' => '#ffffff',
                         'category_bar_type' => '8px',
                         'search_box_icon_color' => '#000000',
@@ -269,6 +279,17 @@ class UserController extends Controller
                         'item_box_background_color' => '#ffffff',
                         'item_title_color' => '#4d572b',
                         'item_description_color' => '#000000',
+                        'bar_icon_color' => '#ffffff',
+                        'bar_icon_bg_color ' => '#4d572b',
+                        'cover_link_icon_color' => '#ffffff',
+                        'cover_link_bg_color' => '#4d572b',
+                        'modal_close_icon_color' => '#ffffff',
+                        'modal_close_bg_color' => '#4d572b',
+                        'modal_add_btn_color' => '#4d572b',
+                        'modal_add_btn_text_color' => '#ffffff',
+                        'modal_quantity_icon_color' => '#ffffff',
+                        'modal_quantity_bg_color' => '#4d572b',
+                        'modal_body_bg_color' => '#e6e6e6',
                     ];
 
                     foreach($setting_keys as $key => $val)
@@ -291,6 +312,10 @@ class UserController extends Controller
                 else
                 {
                     $setting_keys = [
+                        'desk_layout' => 'layout_1',
+                        'slider_effect' => 'fade',
+                        'category_slider_effect' => 'default',
+                        'special_day_effect_box' => 'blink',
                         'header_color' => '#000000',
                         'sticky_header' => 1,
                         'language_bar_position' => 'left',
@@ -318,7 +343,9 @@ class UserController extends Controller
                         'item_divider_position' => 'bottom',
                         'item_devider_font_color' => '#ffffff',
                         'tag_font_color' => '#ffffff',
+                        'tag_label_color' => '#ffffff',
                         'tag_label_color' => '#000000',
+                        'category_bar_type' => '8px',
                         'search_box_icon_color' => '#ffffff',
                         'read_more_link_color' => '#9f9f9f',
                         'banner_height' => '350',
@@ -326,6 +353,17 @@ class UserController extends Controller
                         'item_box_background_color' => '#000000',
                         'item_title_color' => '#ffffff',
                         'item_description_color' => '#ffffff',
+                        'bar_icon_color' => '#000000',
+                        'bar_icon_bg_color ' => '#ffffff',
+                        'cover_link_icon_color' => '#000000',
+                        'cover_link_bg_color' => '#ffffff',
+                        'modal_close_icon_color' => '#ffffff',
+                        'modal_close_bg_color' => '#000000',
+                        'modal_add_btn_color' => '#000000',
+                        'modal_add_btn_text_color' => '#ffffff',
+                        'modal_quantity_icon_color' => '#ffffff',
+                        'modal_quantity_bg_color' => '#000000',
+                        'modal_body_bg_color' => '#e6e6e6',
                     ];
 
                     foreach($setting_keys as $key => $val)
@@ -339,6 +377,12 @@ class UserController extends Controller
                 }
 
             }
+
+            // Shop's Default Layout
+            $default_layout = new DefaultShopLayout();
+            $default_layout->shop_id = $shop->id;
+            $default_layout->layout_id = $shop->id;
+            $default_layout->save();
 
             // Insert Order Settings
             $order_settings_keys = [
@@ -416,6 +460,8 @@ class UserController extends Controller
                 'homepage_intro',
                 'seo_message',
                 'service_closed_message',
+                'header_text_1',
+                'header_text_2',
             ];
             $more_translations_val = [
                 'read_more_link_label' => 'Read More',
@@ -426,6 +472,8 @@ class UserController extends Controller
                 'homepage_intro' => null,
                 'seo_message' => null,
                 'service_closed_message' => null,
+                'header_text_1' => 'OPEN',
+                'header_text_2' => 'Happy Time',
             ];
             foreach($more_translations_key as $val)
             {
@@ -501,6 +549,7 @@ class UserController extends Controller
 
     public function update(ClientRequest $request)
     {
+
         $subscription_id = $request->subscription;
 
         $subscription = Subscriptions::where('id',$subscription_id)->first();
@@ -510,6 +559,7 @@ class UserController extends Controller
         $current_date = $date->toDateTimeString();
         $end_date = $date->addMonths($subscription_duration)->toDateTimeString();
         $duration = $subscription_duration.' Months.';
+
 
         $firstname = $request->firstname;
         $lastname = $request->lastname;
@@ -537,7 +587,7 @@ class UserController extends Controller
 
 
         // Update User Subscriptions
-        if(!empty($subscription_id ) && !empty($request->user_sub_id))
+        if(!empty($subscription_id) && !empty($request->user_sub_id) &&  $request->renew_subscription == 1)
         {
             $user_subscription = UsersSubscriptions::find($request->user_sub_id);
             $user_subscription->subscription_id = $subscription_id;
@@ -574,6 +624,38 @@ class UserController extends Controller
         $shop->update();
 
         return redirect()->route('clients.list')->with('success','Client has been Updated SuccessFully....');
+    }
+
+    public function resetSubscription(Request $request)
+    {
+        try {
+            $subscription_id = $request->id;
+
+            $subscription = UsersSubscriptions::where('id',$subscription_id)->first();
+
+            $duration = isset($subscription->duration) ?  str_replace("Months.","", $subscription->duration) : '';
+            $subscription_duration  =  trim($duration);
+            $date = Carbon::now();
+            $current_date = $date->toDateTimeString();
+            $end_date = $date->addMonths($subscription_duration)->toDateTimeString();
+
+
+            if(!empty($subscription_id))
+            {
+                $user_subscription = UsersSubscriptions::find($subscription_id);
+                $user_subscription->start_date = $current_date;
+                $user_subscription->end_date = $end_date;
+                $user_subscription->update();
+            }
+            return response()->json([
+                'success' => 1,
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'success' => 0,
+            ]);
+        }
     }
 
 
@@ -1175,6 +1257,10 @@ class UserController extends Controller
             $categories = Category::select('id')->where('shop_id',$shop_id)->get();
             $cat_arr = [];
 
+            foreach ($categories as $category) {
+                $category->items()->detach();
+            }
+
             if(count($categories) > 0)
             {
                 foreach($categories as $cat)
@@ -1185,6 +1271,7 @@ class UserController extends Controller
 
             $cat_arr = (count($cat_arr) > 0) ? array_unique($cat_arr) : [];
 
+
             // Delete Shop Category Tags
             CategoryProductTags::whereIn('category_id',$cat_arr)->delete();
 
@@ -1193,6 +1280,7 @@ class UserController extends Controller
 
             // Delete Shop Categories
             Category::where('shop_id',$shop_id)->delete();
+
 
             // Delete Shop Items
             Items::where('shop_id',$shop_id)->delete();

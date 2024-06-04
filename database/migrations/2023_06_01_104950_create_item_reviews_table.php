@@ -16,7 +16,7 @@ class CreateItemReviewsTable extends Migration
         Schema::create('item_reviews', function (Blueprint $table) {
             $table->id();
             $table->integer('shop_id');
-            $table->integer('category_id');
+            $table->longText('category_id');
             $table->integer('item_id');
             $table->integer('rating');
             $table->string('ip_address');

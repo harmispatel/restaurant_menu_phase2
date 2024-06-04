@@ -123,6 +123,16 @@ class OtherSettingController extends Controller
                                         $html .= '<label for="service_closed_message" class="form-label">'. __('NOTICE: Service Is Closed') .'</label>';
                                         $html .= '<textarea name="service_closed_message" id="service_closed_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
                                     }
+                                    elseif($setting_details['key'] == 'header_text_1'){
+                                        $html .= '<label for="header_text_1" class="form-label">'.  __('HEADER 1: Working Hours') .'</label>';
+                                        $html .= '<input type="text" name="header_text_1" id="header_text_1" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                    }
+                                    elseif($setting_details['key'] == 'header_text_2'){
+                                        $html .= '<label for="header_text_2" class="form-label">'.  __('HEADER 2: Sub Title') .'</label>';
+                                        // $html .= '<input type="text" name="header_text_2" id="header_text_2" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                        $html .= '<textarea name="header_text_2" id="header_text_2" class="form-control header_text_2" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+
+                                    }
 
                                 $html .= '</div>';
                             $html .= '</div>';
@@ -206,6 +216,16 @@ class OtherSettingController extends Controller
                                     {
                                         $html .= '<label for="service_closed_message" class="form-label">'. __('NOTICE: Service Is Closed') .'</label>';
                                         $html .= '<textarea name="service_closed_message" id="service_closed_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                    }
+                                    elseif($setting_details['key'] == 'header_text_1'){
+                                        $html .= '<label for="header_text_1" class="form-label">'.  __('HEADER 1: Working Hours') .'</label>';
+                                        $html .= '<input type="text" name="header_text_1" id="header_text_1" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                    }
+                                    elseif($setting_details['key'] == 'header_text_2'){
+                                        $html .= '<label for="header_text_2" class="form-label">'.  __('HEADER 2: Sub Title') .'</label>';
+                                        // $html .= '<input type="text" name="header_text_2" id="header_text_2" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                        $html .= '<textarea name="header_text_2" id="header_text_2" class="form-control header_text_2" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+
                                     }
 
                                 $html .= '</div>';
@@ -310,6 +330,16 @@ class OtherSettingController extends Controller
                 $other_setting->$value_key = $request->service_closed_message;
                 $other_setting->update();
             }
+            elseif($setting_key == 'header_text_1')
+            {
+                $other_setting->$value_key = $request->header_text_1;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'header_text_2')
+            {
+                $other_setting->$value_key = $request->header_text_2;
+                $other_setting->update();
+            }
 
             $html_data = $this->getEditOtherSettingData($next_lang_code,$setting_id);
 
@@ -406,6 +436,16 @@ class OtherSettingController extends Controller
             elseif($setting_key == 'service_closed_message')
             {
                 $other_setting->$value_key = $request->service_closed_message;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'header_text_1')
+            {
+                $other_setting->$value_key = $request->header_text_1;
+                $other_setting->update();
+            }
+            elseif($setting_key == 'header_text_2')
+            {
+                $other_setting->$value_key = $request->header_text_2;
                 $other_setting->update();
             }
 
@@ -540,6 +580,16 @@ class OtherSettingController extends Controller
                                     $html .= '<label for="service_closed_message" class="form-label">'. __('NOTICE: Service Is Closed') .'</label>';
                                     $html .= '<textarea name="service_closed_message" id="service_closed_message" class="form-control" rows="5">'.$setting_details[$current_lang_code."_value"].'</textarea>';
                                 }
+                                elseif($setting_details['key'] == 'header_text_1'){
+                                    $html .= '<label for="header_text_1" class="form-label">'.  __('HEADER 1: Working Hours') .'</label>';
+                                    $html .= '<input type="text" name="header_text_1" id="header_text_1" value="'.$setting_details[$current_lang_code."_value"].'" class="form-control">';
+                                }
+                                elseif($setting_details['key'] == 'header_text_2'){
+                                    $html .= '<label for="header_text_2" class="form-label">'.  __('HEADER 2: Sub Title') .'</label>';
+                                    // $html .= '<input type="text" name="header_text_2" id="header_text_2" value="'.$setting_details[$current_lang_code."_value"].'" class="form-control">';
+                                    $html .= '<textarea name="header_text_2" id="header_text_2" class="form-control header_text_2" rows="5">'.$setting_details[$current_lang_code."_value"].'</textarea>';
+
+                                }
 
                             $html .= '</div>';
                         $html .= '</div>';
@@ -623,6 +673,16 @@ class OtherSettingController extends Controller
                                 {
                                     $html .= '<label for="service_closed_message" class="form-label">'. __('NOTICE: Service Is Closed') .'</label>';
                                     $html .= '<textarea name="service_closed_message" id="service_closed_message" class="form-control" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+                                }
+                                elseif($setting_details['key'] == 'header_text_1'){
+                                    $html .= '<label for="header_text_1" class="form-label">'.  __('HEADER 1: Working Hours') .'</label>';
+                                    $html .= '<input type="text" name="header_text_1" id="header_text_1" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                }
+                                elseif($setting_details['key'] == 'header_text_2'){
+                                    $html .= '<label for="header_text_2" class="form-label">'.  __('HEADER 2: Sub Title') .'</label>';
+                                    // $html .= '<input type="text" name="header_text_2" id="header_text_2" value="'.$setting_details[$primary_lang_code."_value"].'" class="form-control">';
+                                    $html .= '<textarea name="header_text_2" id="header_text_2" class="form-control header_text_2" rows="5">'.$setting_details[$primary_lang_code."_value"].'</textarea>';
+
                                 }
 
                             $html .= '</div>';

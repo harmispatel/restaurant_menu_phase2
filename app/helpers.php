@@ -1,6 +1,6 @@
 <?php
 
-    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings, CodePage, DeliveryAreas, Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, OtherSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop};
+    use App\Models\{AdminSettings, Category, CategoryProductTags,ClientSettings, CodePage, DeliveryAreas, Ingredient,ItemPrice, Items, Languages,LanguageSettings, OrderSetting, OtherSetting, PaymentSettings, ShopBanner,Subscriptions,ThemeSettings,User,UserShop,UsersSubscriptions,Shop,DefaultShopLayout, ShopRoom, ShopTable};
     use Carbon\Carbon;
     use Illuminate\Support\Facades\Auth;
 
@@ -12,12 +12,17 @@
             'favourite_client_limit',
             'copyright_text',
             'logo',
+            'loader',
             'login_form_logo',
             'login_form_background',
             'default_light_theme_image',
             'default_dark_theme_image',
             'theme_main_screen_demo',
             'theme_category_screen_demo',
+            'theme_main_screen_layout_two_demo',
+            'theme_category_screen_layout_two_demo',
+            'theme_main_screen_layout_three_demo',
+            'theme_category_screen_layout_three_demo',
             'default_special_item_image',
             'contact_us_email',
             'google_map_api',
@@ -26,6 +31,8 @@
             'days_for_send_first_expiry_mail',
             'days_for_send_second_expiry_mail',
             'subscription_expiry_mails',
+            'cart_modal_screen_layout',
+            'is_client_loader',
         ]);
 
         $settings = [];
@@ -57,10 +64,20 @@
         $keys = ([
             'shop_view_header_logo',
             'shop_intro_icon',
+            'shop_intro_icon_1',
+            'shop_intro_icon_2',
+            'shop_intro_icon_3',
+            'shop_intro_icon_4',
+            'shop_intro_icon_link_1',
+            'shop_intro_icon_link_2',
+            'shop_intro_icon_link_3',
+            'shop_intro_icon_link_4',
+            'shop_intro_icon_is_cube',
             'intro_icon_status',
             'intro_icon_duration',
             'business_name',
             'default_currency',
+            // 'business_subtitle',
             'business_telephone',
             'instagram_link',
             'pinterest_link',
@@ -74,6 +91,20 @@
             'orders_mail_form_client',
             'orders_mail_form_customer',
             'check_in_mail_form',
+            'shop_loader',
+            'is_loader',
+            'label_font_size',
+            'shop_start_time',
+            'shop_end_time',
+            // 'happy_start_time',
+            // 'happy_end_time',
+            'grading-email-required',
+            'waiter_call_status',
+            'waiter_call_on_off_sound',
+            'waiter_call_sound',
+            'is_sub_title',
+            'table_enable_status',
+            'room_enable_status',
         ]);
 
         $settings = [];
@@ -222,6 +253,8 @@
     {
         // Keys
         $keys = ([
+            'desk_layout',
+            'slider_effect',
             'header_color',
             'sticky_header',
             'language_bar_position',
@@ -231,10 +264,14 @@
             'banner_type',
             'banner_slide_button',
             'banner_delay_time',
+            'category_image_sider',
+            'category_image_slider_delay_time',
+            'category_side',
             'background_color',
             'font_color',
             'label_color',
             'social_media_icon_color',
+            'category_slider_effect',
             'categories_bar_color',
             'menu_bar_font_color',
             'category_title_and_description_color',
@@ -260,6 +297,46 @@
             'item_box_background_color',
             'item_title_color',
             'item_description_color',
+            'icon_bg_color',
+            'special_discount_backgound_color',
+            'header_image',
+            'category_view',
+            'special_discount_text_color',
+            'cart_animation_color',
+            'modal_item_title_color',
+            'modal_item_des_color',
+            'modal_item_price_color',
+            'modal_close_icon_color',
+            'modal_close_bg_color',
+            'modal_add_btn_color',
+            'modal_add_btn_text_color',
+            'modal_quantity_icon_color',
+            'modal_quantity_bg_color',
+            'modal_price_label_color',
+            'modal_igradient_type_color',
+            'modal_body_bg_color',
+            'special_day_effect_box',
+            'special_day_effect_color',
+            'category_box_shadow',
+            'category_box_title_icon_color',
+            'category_box_text_color',
+            'category_box_background',
+            'category_box_title_background',
+            'label_font_size',
+            'cart_modal_screen_layout',
+            'modal_item_title_font_size',
+            'back_arrow_bg_color',
+            'back_arrow_icon_color',
+            'category_box_act_txt_bg',
+            'header_bg_color_opc',
+            'header_effect_bg_color',
+            'rating_service_name_color',
+            'bar_icon_color',
+            'bar_icon_bg_color',
+            'cover_link_icon_color',
+            'cover_link_bg_color',
+            'bg_image',
+
         ]);
 
         $settings = [];
@@ -317,7 +394,7 @@
     // Get Banner Settings
     function getBanners($shopID)
     {
-        $banners = ShopBanner::where('shop_id',$shopID)->where('key','shop_banner')->get();
+        $banners = ShopBanner::where('shop_id',$shopID)->where('key','shop_banner')->where('status',1)->get();
         return $banners;
     }
 
@@ -639,7 +716,7 @@
     // Get Item Details
     function itemDetails($itemID)
     {
-        $item_details = Items::with(['category'])->where('id',$itemID)->first();
+        $item_details = Items::with('categories')->where('id',$itemID)->first();
         return $item_details;
     }
 
@@ -797,6 +874,74 @@
             // return number_format($nauticalmiles,2).' NM.';
             return number_format($nauticalmiles,2);
         }
+    }
+
+
+    function getcheckLayout(){
+        $shopId = Auth::user()->hasOneShop->shop_id;
+
+        $layout = DefaultShopLayout::where('shop_id',$shopId)->where('layout_id',3)->first();
+
+        return $layout;
+    }
+
+    function getShopSlug()
+    {
+        // Get the full URL
+        $fullUrl = request()->url();
+        $dynamicPart = str_replace(url('/'),'',$fullUrl);
+        $shopSlug = trim($dynamicPart,'/');
+
+        return $shopSlug;
+    }
+
+
+    function  getAllItems($cat_id)
+    {
+        // $allItems = Items::where('category_id',$cat_id)->orderBy('order_key')->where('published',1)->get();
+        $allItems = Items::where('published', 1)
+                        ->whereHas('categories', function ($query) use ($cat_id) {
+                            $query->where('id', $cat_id);
+                        })
+                        ->orderBy('order_key')
+                        ->get();
+        return $allItems;
+    }
+
+    function getTagName($item_id)
+    {
+        $tag_name = CategoryProductTags::where('item_id',$item_id)->with('hasOneTag')->first();
+
+        return $tag_name;
+    }
+
+    function getShopRooms($shop_id)
+    {
+        $rooms = ShopRoom::where('shop_id',$shop_id)->where('status',1)->get();
+
+        return $rooms;
+    }
+
+    function getShopTables($shop_id)
+    {
+        $tables =  ShopTable::where('shop_id',$shop_id)->where('status',1)->get();
+
+        return $tables;
+    }
+
+
+    function getChildCategories($parent_id)
+    {
+        $datas = Category::with(['categoryImages', 'items'])->where('published', 1)->where('parent_id', $parent_id)->orderBy('order_key')->get();
+
+        return $datas;
+    }
+
+    function getCategoryDetail($id)
+    {
+        $cat = Category::with(['categoryImages', 'items'])->where('id', $id)->first();
+
+        return $cat;
     }
 
 ?>

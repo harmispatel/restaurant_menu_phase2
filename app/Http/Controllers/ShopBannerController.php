@@ -13,6 +13,7 @@ class ShopBannerController extends Controller
 
     public function index()
     {
+
         // Shop ID
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
 
@@ -717,6 +718,34 @@ class ShopBannerController extends Controller
             return response()->json([
                 'success' => 0,
                 'message' => 'Internal Server Error!',
+            ]);
+        }
+    }
+
+
+    // Function for Change Banner Status
+    public function status(Request $request)
+    {
+        try
+        {
+            $id = $request->id;
+            $status = $request->status;
+
+            $banner = ShopBanner::find($id);
+            $banner->status = $status;
+            $banner->update();
+
+            return response()->json([
+                'success' => 1,
+                'message' => "Banner Status has been Changed Successfully..",
+            ]);
+
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'success' => 0,
+                'message' => "Internal Server Error!",
             ]);
         }
     }

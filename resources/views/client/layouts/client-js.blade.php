@@ -49,11 +49,63 @@
 
     $(document).ready(function (){
         OrderNotification();
+        WaiterNotification();
     });
 
     setInterval(() => {
         OrderNotification();
+        WaiterNotification();
     }, 10000);
+
+
+
+    function WaiterNotification()
+    {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('show.all.call.waiter') }}",
+            data: {
+                "_token" : "{{ csrf_token()  }}" ,
+            },
+            dataType: "JSON",
+            success: function(response)
+            {
+                if(response.success == 1)
+                {
+                    if(response.success == 1)
+                    {
+                        if(response.count > 0)
+                            {
+                                $('.waiter-count').html('');
+                                $('.waiter-count').append(response.count);
+                                $('.waiter-message').html('');
+                                $('.waiter-message').append(response.data);
+                                var waiter_play_sound = $('#waiter_play_sound').val();
+                                var waiter_notification_sound = $('#waiter_notification_sound').val();
+
+                                if(waiter_play_sound == 1)
+                                {
+                                    var sound = new Howl({
+                                        src: [waiter_notification_sound],
+                                        autoplay : true,
+                                    });
+                                    $('#myHiddenButton').trigger("click");
+                                }
+                            }else{
+
+                                $('.waiter-count').html('');
+                                $('.waiter-count').append(response.count);
+                                $('.waiter-message').html('');
+                                $('.waiter-message').append(response.data);
+
+                            }
+
+                    }
+                }
+            }
+        });
+
+    }
 
     function OrderNotification()
     {
@@ -127,6 +179,8 @@
             }
         });
     }
+
+
 
 
 </script>

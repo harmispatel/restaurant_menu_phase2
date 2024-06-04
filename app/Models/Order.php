@@ -22,4 +22,10 @@ class Order extends Model
     {
         return $this->hasOne(Shop::class,'id','shop_id');
     }
+
+    // Relation with Staff
+    public function staff()
+    {
+        return $this->hasOne(Staff::class,'id','staff_id');
+    }
 }

@@ -17,8 +17,8 @@
     $settings = getAdminSettings();
     $favourite_client_limit = isset($settings['favourite_client_limit']) ? $settings['favourite_client_limit'] : 5;
 
-    // Current Route Name
-    $routeName = Route::currentRouteName();
+        // Current Route Name
+        $routeName = Route::currentRouteName();
 
     // Get Fav Clients List
     $clients = FavClients($favourite_client_limit);

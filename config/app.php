@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://192.168.1.73/wificatalogue_new'),
+    'url' => env('APP_URL', 'http://192.168.1.203/smartqr'),
 
     'asset_url' => env('ASSET_URL', null),
 

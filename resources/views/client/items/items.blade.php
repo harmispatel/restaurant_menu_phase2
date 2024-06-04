@@ -1,5 +1,6 @@
 @php
 
+
     // Shop ID & Slug
     $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : "";
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
@@ -28,6 +29,7 @@
 
     {{-- Add Modal --}}
     <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -70,7 +72,7 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="category" class="form-label">{{ __('Category')}}</label>
-                                <select name="category" id="category" class="form-control">
+                                <select name="categories[]" id="categories" class="form-control" multiple>
                                     <option value="">Choose Category</option>
                                     @if(count($categories) > 0)
                                         @foreach ($categories as $cat)
@@ -149,6 +151,15 @@
                                 </div>
                             </div>
 
+                             {{-- Crop Size --}}
+                                <div class="col-md-12 crop_size" style="display: none;">
+                                    <label for="crop_size" class="form-label">{{ __('Crop Size')}}</label>
+                                    <select name="crop_size" id="crop_size" class="form-select">
+                                        <option value="400">400*400</option>
+                                        <option value="700">700*400</option>
+                                    </select>
+                                </div>
+
                             {{-- Image --}}
                             <div class="row mb-3">
                                 <div class="col-md-12">
@@ -185,6 +196,42 @@
                                 </div>
                             </div>
 
+                            <!-- Image Detail -->
+                            <div class="row mb-3 image-detail" style="display:none;">
+                                <div class="col-md-12">
+                                    <label for="image_detail" class="form-label">{{ __('Image Detail')}}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <div id="img-detail-label">
+                                                    <label for="image_detail" style="cursor: pointer">
+                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100 h-100" id="crp-img-detail-prw" style="border-radius: 10px;">
+                                                    </label>
+                                                </div>
+                                                <input type="file" name="image_detail" id="image_detail" class="form-control" style="display: none;">
+                                                <input type="hidden" name="og_image_detail" id="og_image_detail">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <code>Upload Image in (700*400) Dimensions</code>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 img-detail-crop-sec mb-2" style="display: none">
+                                    <img src="" alt="" id="resize-image-detail" class="w-100">
+                                    <div class="mt-3">
+                                        <a class="btn btn-sm btn-success" onclick="saveDetailCropper('addItemForm')">Save</a>
+                                        <a class="btn btn-sm btn-danger" onclick="resetDetailCropper()">Reset</a>
+                                        <a class="btn btn-sm btn-secondary" onclick="cancelDetailCropper('addItemForm')">Cancel</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 img-detail-crop-sec" style="display: none;">
+                                    <div class="preview_detail" style="width: 200px; height:200px; overflow: hidden;margin: 0 auto;"></div>
+                                </div>
+                            </div>
+
                             {{-- Indicative Icons --}}
                             <div class="row mb-3">
                                 <div class="col-md-12">
@@ -201,6 +248,20 @@
                                                 @endif
                                             @endforeach
                                         @endif
+                                    </select>
+                                </div>
+                            </div>
+
+                             {{-- Recomendation Item --}}
+                             <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="recomendation_items" class="form-label">{{ __('Recomendation Items')}}</label>
+                                    <select name="recomendation_items[]" id="recomendation_items" class="form-control" multiple>
+                                        @if(count($recomendation_items) > 0)
+                                            @foreach ($recomendation_items as $recomendation_item)
+                                                <option value="{{ (isset($recomendation_item->id)) ? $recomendation_item->id : '' }}">{{ (isset($recomendation_item[$name_key])) ? $recomendation_item[$name_key] : '' }}</option>
+                                            @endforeach
+                                    @endif
                                     </select>
                                 </div>
                             </div>
@@ -518,12 +579,165 @@
     <script type="text/javascript">
 
         var cropper;
+        var cropperDetail;
         var addItemEditor;
         var editItemEditor;
+
+    function newItemBtn(){
+         // Reset addItemForm
+        $('#addItemForm').trigger('reset');
+
+        // Remove Validation Class
+        $('#addItemForm #name').removeClass('is-invalid');
+        $('#addItemForm #category').removeClass('is-invalid');
+        $('#addItemForm #image').removeClass('is-invalid');
+
+        // Clear all Toastr Messages
+        toastr.clear();
+
+        // Intialized Ingredients SelectBox
+        $("#addItemForm #categories").select2({
+            dropdownParent: $("#addItemModal"),
+            placeholder: "Choose Categtory",
+        });
+
+        // Intialized Ingredients SelectBox
+        $("#addItemForm #ingredients").select2({
+            dropdownParent: $("#addItemModal"),
+            placeholder: "Select Indicative Icons",
+        });
+
+        // Intialized Recomendation Name SelectBox
+        $("#addItemForm #recomendation_items").select2({
+            dropdownParent: $("#addItemModal"),
+            placeholder: "Select Recomendation Items",
+        });
+
+        // Intialized Options SelectBox
+        $("#addItemForm #options").select2({
+            dropdownParent: $("#addItemModal"),
+            placeholder: "Select Attributes",
+        });
+
+        // Intialized Tags SelectBox
+        $("#addItemForm #tags").select2({
+            dropdownParent: $("#addItemModal"),
+            placeholder: "Select Tags",
+            tags: true,
+            // tokenSeparators: [',', ' ']
+        });
+
+        $('.ck-editor').remove();
+        addItemEditor = "";
+
+        var item_textarea = $('#addItemForm #description')[0];
+
+
+        // Text Editor
+        CKEDITOR.ClassicEditor.create(item_textarea,
+        {
+            toolbar: {
+                items: [
+                    'heading', '|',
+                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                    'bulletedList', 'numberedList', 'todoList', '|',
+                    'outdent', 'indent', '|',
+                    'undo', 'redo',
+                    '-',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                    'alignment', '|',
+                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                    'sourceEditing'
+                ],
+                shouldNotGroupWhenFull: true
+            },
+            list: {
+                properties: {
+                    styles: true,
+                    startIndex: true,
+                    reversed: true
+                }
+            },
+            'height':500,
+            fontSize: {
+                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                supportAllValues: true
+            },
+            htmlSupport: {
+                allow: [
+                    {
+                        name: /.*/,
+                        attributes: true,
+                        classes: true,
+                        styles: true
+                    }
+                ]
+            },
+            htmlEmbed: {
+                showPreviews: true
+            },
+            link: {
+                decorators: {
+                    addTargetToExternalLinks: true,
+                    defaultProtocol: 'https://',
+                    toggleDownloadable: {
+                        mode: 'manual',
+                        label: 'Downloadable',
+                        attributes: {
+                            download: 'file'
+                        }
+                    }
+                }
+            },
+            mention: {
+                feeds: [
+                    {
+                        marker: '@',
+                        feed: [
+                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                            '@sugar', '@sweet', '@topping', '@wafer'
+                        ],
+                        minimumCharacters: 1
+                    }
+                ]
+            },
+            removePlugins: [
+                'CKBox',
+                'CKFinder',
+                'EasyImage',
+                'RealTimeCollaborativeComments',
+                'RealTimeCollaborativeTrackChanges',
+                'RealTimeCollaborativeRevisionHistory',
+                'PresenceList',
+                'Comments',
+                'TrackChanges',
+                'TrackChangesData',
+                'RevisionHistory',
+                'Pagination',
+                'WProofreader',
+                'MathType'
+            ]
+        }).then( editor => {
+            addItemEditor = editor;
+        });
+
+        if(cropper)
+        {
+            cancelCropper('addItemForm');
+        }
+        if(cropperDetail)
+        {
+            cancelDetailCropper('addItemForm');
+        }
+    }
 
         // Reset AddItem Modal & Form
         $('#NewItemBtn').on('click',function()
         {
+
             // Reset addItemForm
             $('#addItemForm').trigger('reset');
 
@@ -536,9 +750,21 @@
             toastr.clear();
 
             // Intialized Ingredients SelectBox
+            $("#addItemForm #categories").select2({
+                dropdownParent: $("#addItemModal"),
+                placeholder: "Choose Categtory",
+            });
+
+            // Intialized Ingredients SelectBox
             $("#addItemForm #ingredients").select2({
                 dropdownParent: $("#addItemModal"),
                 placeholder: "Select Indicative Icons",
+            });
+
+            // Intialized Recomendation Name SelectBox
+            $("#addItemForm #recomendation_items").select2({
+                dropdownParent: $("#addItemModal"),
+                placeholder: "Select Recomendation Items",
             });
 
             // Intialized Options SelectBox
@@ -559,6 +785,7 @@
             addItemEditor = "";
 
             var item_textarea = $('#addItemForm #description')[0];
+
 
             // Text Editor
             CKEDITOR.ClassicEditor.create(item_textarea,
@@ -655,12 +882,17 @@
             {
                 cancelCropper('addItemForm');
             }
+            if(cropperDetail)
+            {
+                cancelDetailCropper('addItemForm');
+            }
 
         });
 
         // Remove Some Fetaures when Close Add Modal
         $('#addItemModal .btn-close, #addItemModal .close-btn').on('click',function()
         {
+            deleteDetailCropper('addItemForm');
             deleteCropper('addItemForm');
             $('.ck-editor').remove();
             addItemEditor = "";
@@ -677,6 +909,12 @@
             {
                 cropper.destroy();
             }
+
+            if(cropperDetail)
+            {
+                cropperDetail.destroy();
+            }
+
             $('#editItemModal #item_lang_div').html('');
         });
 
@@ -815,6 +1053,7 @@
         // Save New Item
         function saveItem()
         {
+
             const myFormData = new FormData(document.getElementById('addItemForm'));
             myFormData.set('description',addItemEditor.getData());
 
@@ -868,10 +1107,10 @@
                         }
 
                         // Category Error
-                        var categoryError = (validationErrors.category) ? validationErrors.category : '';
+                        var categoryError = (validationErrors.categories) ? validationErrors.categories : '';
                         if (categoryError != '')
                         {
-                            $('#addItemForm #category').addClass('is-invalid');
+                            $('#addItemForm #categories').addClass('is-invalid');
                             toastr.error(categoryError);
                         }
 
@@ -990,6 +1229,7 @@
                     {
                         $('#ItemSection').html('');
                         $('#ItemSection').append(response.data);
+
                     }
                     else
                     {
@@ -1033,7 +1273,7 @@
                         const itemType = response.item_type;
 
                         // If Item Type is Divider Then Hide Price Divs
-                        if(itemType === 2)
+                        if(itemType == 2)
                         {
                             $('#editItemModal .price_div').hide();
                             $('#editItemModal .calories_div').hide();
@@ -1042,6 +1282,9 @@
                             $('#editItemModal .mark_new').hide();
                             $('#editItemModal .review_rating').hide();
                             $('#editItemModal .delivery').hide();
+                            $('#editItemModal .crop_size').show();
+                            $('#editItemModal .image-detail').hide();
+
                         }
                         else
                         {
@@ -1052,7 +1295,17 @@
                             $('#editItemModal .mark_new').show();
                             $('#editItemModal .review_rating').show();
                             $('#editItemModal .delivery').show();
+                            $('#editItemModal .crop_size').hide();
+                            $('#editItemModal .image-detail').show();
+
+
                         }
+
+                        var categoriesEle = "#editItemModal #categories";
+                        $(categoriesEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Categories",
+                        });
 
                         // Intialized Ingredients SelectBox
                         var ingredientsEle = "#editItemModal #ingredients";
@@ -1060,6 +1313,13 @@
                             dropdownParent: $("#editItemModal"),
                             placeholder: "Select Indicative Icons",
                         });
+
+                        // Intialized Recomendation Items SelectBox
+                        var recomendationitems = '#editItemModal #recomendation_items';
+                        $(recomendationitems).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Recomendation Items",
+                        })
 
                         // Intialized Tags SelectBox
                         var tagsEle = "#editItemModal #tags";
@@ -1210,8 +1470,9 @@
                         // Item Type
                         const itemType = response.item_type;
 
+
                         // If Item Type is Divider Then Hide Price Divs
-                        if(itemType === 2)
+                        if(itemType == 2)
                         {
                             $('#editItemModal .price_div').hide();
                             $('#editItemModal .calories_div').hide();
@@ -1220,6 +1481,9 @@
                             $('#editItemModal .mark_new').hide();
                             $('#editItemModal .review_rating').hide();
                             $('#editItemModal .delivery').hide();
+                            $('#editItemModal .crop_size').show();
+                            $('#editItemModal .image-detail').hide();
+
                         }
                         else
                         {
@@ -1230,7 +1494,17 @@
                             $('#editItemModal .mark_new').show();
                             $('#editItemModal .review_rating').show();
                             $('#editItemModal .delivery').show();
+                            $('#editItemModal .crop_size').hide();
+                            $('#editItemModal .image-detail').show();
+
+
                         }
+
+                        var categoriesEle = "#editItemModal #categories";
+                        $(categoriesEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Categories",
+                        });
 
                         // Intialized Ingredients SelectBox
                         var ingredientsEle = "#editItemModal #ingredients";
@@ -1238,6 +1512,13 @@
                             dropdownParent: $("#editItemModal"),
                             placeholder: "Select Indicative Icons",
                         });
+
+                        // Intialized Recomendation Items SelectBox
+                        var recomendationitems = '#editItemModal #recomendation_items';
+                        $(recomendationitems).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Recomendation Items",
+                        })
 
                         // Intialized Tags SelectBox
                         var tagsEle = "#editItemModal #tags";
@@ -1418,7 +1699,9 @@
 
         }
 
-
+        $(document).ready(function(){
+            togglePrice('addItemModal');
+        });
 
         // Function for Hide & Show Price
         function togglePrice(ModalName)
@@ -1434,6 +1717,8 @@
                 $("#"+ModalName+" .mark_new").hide();
                 $("#"+ModalName+" .review_rating").hide();
                 $("#"+ModalName+" .delivery").hide();
+                $("#"+ModalName+" .crop_size").show();
+                $("#"+ModalName+" .image-detail").hide();
             }
             else
             {
@@ -1444,6 +1729,9 @@
                 $("#"+ModalName+" .mark_new").show();
                 $("#"+ModalName+" .review_rating").show();
                 $("#"+ModalName+" .delivery").show();
+                $("#"+ModalName+" .crop_size").show();
+                $("#"+ModalName+" .image-detail").show();
+
             }
         }
 
@@ -1668,7 +1956,6 @@
                         }
                     }
                 });
-
             });
 
         });
@@ -1705,6 +1992,79 @@
 
         }
 
+        // Devider Size change
+        $('#addItemModal #crop_size').on('change', function(){
+            const formID = this.form.id;
+            cropper.destroy();
+            $('#'+formID+' #resize-image').attr('src',"");
+            $('#'+formID+' .img-crop-sec').hide();
+            $('#'+formID+' #image').val('');
+            $('#'+formID+' #item_image').val('');
+            $('#'+formID+' #og_image').val('');
+        });
+
+        // Devider Size change
+        $(document).on('change', '#editItemModal #crop_size', function() {
+            const formID = this.form.id;
+            cropper.destroy();
+            $('#'+formID+' #resize-image').attr('src',"");
+            $('#'+formID+' .img-crop-sec').hide();
+            $('#'+formID+' #image').val('');
+            $('#'+formID+' #item_image').val('');
+            $('#'+formID+' #og_image').val('');
+        });
+
+       // Image detail Functionality for Add Modal
+        $('#addItemModal #image_detail').on('change', function() {
+            const myFormID = this.form.id;
+            const currentFile = this.files[0];
+            var fitPreview = 0;
+
+            if (currentFile) {
+                var catImage = new Image();
+                catImage.src = URL.createObjectURL(currentFile);
+                catImage.onload = function() {
+                    if (this.width === 700 && this.height === 400) {
+                        fitPreview = 1;
+                    }
+
+                    var currRatio = 700 / 400; // Setting aspect ratio to 700:400
+
+                    fileSize = currentFile.size / 1024 / 1024;
+                    fileName = currentFile.name;
+                    fileType = fileName.split('.').pop().toLowerCase();
+
+                    if (fileSize > 2) {
+                        toastr.error("File is too Big " + fileSize.toFixed(2) + "MiB. Max File size : 2 MiB.");
+                        $('#' + myFormID + ' #image_detail').val('');
+                        return false;
+                    } else {
+                        if ($.inArray(fileType, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                            toastr.error("The Item Image must be a file of type: png, jpg, svg, jpeg");
+                            $('#' + myFormID + ' #image_detail').val('');
+                            return false;
+                        } else {
+                            if (cropperDetail) {
+                                cropperDetail.destroy();
+                            }
+
+                            $('#' + myFormID + ' #resize-image-detail').attr('src', "");
+                            $('#' + myFormID + ' #resize-image-detail').attr('src', URL.createObjectURL(currentFile));
+                            $('#' + myFormID + ' .img-detail-crop-sec').show();
+
+                            const CrpImage = document.getElementById('resize-image-detail');
+                            cropperDetail = new Cropper(CrpImage, {
+                                aspectRatio: currRatio,
+                                zoomable: false,
+                                cropBoxResizable: false,
+                                preview: '#' + myFormID + ' .preview_detail',
+                                autoCropArea: fitPreview,
+                            });
+                        }
+                    }
+                }
+            }
+        });
 
         // Image Cropper Functionality for Add Model
         $('#addItemModal #image').on('change',function()
@@ -1713,6 +2073,7 @@
             const currentFile = this.files[0];
             var fitPreview = 0;
             var item_type = $('#addItemModal #type').val();
+            var crop_size = $('#addItemModal #crop_size').val();
 
             if (currentFile)
             {
@@ -1731,7 +2092,11 @@
                     }
                     else
                     {
-                        currRatio = 700 / 400;
+                        if(crop_size == 400){
+                            currRatio = 1;
+                        }else{
+                            currRatio = 700 / 400;
+                        }
                     }
 
                     fileSize = currentFile.size / 1024 / 1024;
@@ -1778,13 +2143,90 @@
         });
 
 
+
+
+        // Image Cropper Functionality for Edit Modal
+        function imageDetailCropper(formID,ele)
+        {
+
+            var currentFile = ele.files[0];
+            var myFormID = formID;
+
+            var fitPreview = 0;
+            var item_type = $('#editItemModal #type').val();
+
+
+
+            if (currentFile)
+            {
+                var catImage = new Image();
+                catImage.src = URL.createObjectURL(currentFile);
+                catImage.onload = function()
+                {
+                    if (this.width === 700 && this.height === 400) {
+                        fitPreview = 1;
+                    }
+
+                    var currRatio = 700 / 400; // Setting aspect ratio to 700:400
+
+                    fileSize = currentFile.size / 1024 / 1024;
+                    fileName = currentFile.name;
+                    fileType = fileName.split('.').pop().toLowerCase();
+
+                    if(fileSize > 2)
+                    {
+                        toastr.error("File is to Big "+fileSize.toFixed(2)+"MiB. Max File size : 2 MiB.");
+                        $('#'+myFormID+' #item_image_detail').val('');
+                        return false;
+                    }
+                    else
+                    {
+                        if($.inArray(fileType, ['gif','png','jpg','jpeg']) == -1)
+                        {
+                            toastr.error("The Item Image must be a file of type: png, jpg, svg, jpeg");
+                            $('#'+myFormID+' #item_image_detail').val('');
+                            return false;
+                        }
+                        else
+                        {
+                            if(cropperDetail)
+                            {
+                                cropperDetail.destroy();
+                                $('#'+myFormID+' #resize-image-detail').attr('src',"");
+                                $('#'+myFormID+' .img-detail-crop-sec').hide();
+                            }
+
+                            $('#'+myFormID+' #resize-image-detail').attr('src',"");
+                            $('#'+myFormID+' #resize-image-detail').attr('src',URL.createObjectURL(currentFile));
+                            $('#'+myFormID+' .img-detail-crop-sec').show();
+
+                            // const CrpImage = document.getElementById('resize-image');
+                            const CrpImage = $('#'+myFormID+' #resize-image-detail')[0];
+
+                            cropperDetail = new Cropper(CrpImage, {
+                                aspectRatio: currRatio,
+                                zoomable:false,
+                                cropBoxResizable: false,
+                                preview: '#'+myFormID+' .preview',
+                                autoCropArea: fitPreview,
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
         // Image Cropper Functionality for Edit Modal
         function imageCropper(formID,ele)
         {
             var currentFile = ele.files[0];
             var myFormID = formID;
+
             var fitPreview = 0;
             var item_type = $('#editItemModal #type').val();
+            var crop_size = $('#editItemModal #crop_size').val();
+
+
 
             if (currentFile)
             {
@@ -1803,7 +2245,12 @@
                     }
                     else
                     {
-                        currRatio = 700 / 400;
+                        if(crop_size == 400){
+                            currRatio = 1;
+                        }else{
+                            currRatio = 700 / 400;
+                        }
+
                     }
 
                     fileSize = currentFile.size / 1024 / 1024;
@@ -1854,6 +2301,86 @@
         }
 
 
+
+            // Save Cropper Image for Image Detail
+            function saveDetailCropper(formID) {
+
+                    var item_type = $('#' + formID + " #type").val();
+
+                    var canvas = cropperDetail.getCroppedCanvas({
+                        width: 700,
+                        height: 400 // Adjust dimensions as needed
+                    });
+
+                canvas.toBlob(function(blob) {
+                    $('#' + formID + " #crp-img-detail-prw").attr('src', URL.createObjectURL(blob));
+                    var reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        $('#' + formID + ' #og_image_detail').val(base64data);
+                    };
+                });
+
+                cropperDetail.destroy();
+                $('#' + formID + ' #resize-image-detail').attr('src', "");
+                $('#' + formID + ' .img-detail-crop-sec').hide();
+
+                    if(formID == 'addItemForm')
+                    {
+                        $('#'+formID+" #img-detail-label").append('<a class="btn btn-sm btn-danger" id="del-img-detail" style="border-radius:50%" onclick="deleteDetailCropper(\''+formID+'\')"><i class="fa fa-trash"></i></a>');
+                    }
+                    else
+                    {
+                        $('#'+formID+' #edit-img-detail').hide();
+                        $('#'+formID+" #img-detail-label").append('<a class="btn btn-sm btn-danger" id="del-img-detail" style="border-radius:50%" onclick="deleteDetailCropper(\''+formID+'\')"><i class="fa fa-trash"></i></a>');
+                        $('#'+formID+' #rep-image-detail').show();
+                    }
+
+            }
+
+            function resetDetailCropper(){
+                cropperDetail.reset();
+            }
+
+            // Cancel Cropper for Image Detail
+            function cancelDetailCropper(formID) {
+                cropperDetail.destroy();
+                $('#' + formID + ' #resize-image-detail').attr('src', "");
+                $('#' + formID + ' .img-detail-crop-sec').hide();
+                $('#' + formID + ' #image_detail').val('');
+                $('#' + formID + ' #og_image_detail').val('');
+            }
+
+            // Delete Cropper for Image Detail
+            function deleteDetailCropper(formID) {
+                if (cropperDetail) {
+
+                    cropperDetail.destroy();
+
+                }
+
+                $('#'+formID+' #resize-image-detail').attr('src',"");
+                $('#'+formID+' .img-detail-crop-sec').hide();
+                $('#'+formID+' #og_image_detail').val('');
+                $('#'+formID+" #del-img-detail").remove();
+
+                if(formID == 'addItemForm')
+                {
+                    $('#'+formID+' #image_detail').val('');
+                    $('#'+formID+" #crp-img-det-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+                }
+                else
+                {
+                    $('#'+formID+' #image_detail').val('');
+                    $('#'+formID+" #crp-img-det-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+                    $('#'+formID+' #edit-img-detail').show();
+                    $('#'+formID+' #rep-image-detail').hide();
+                }
+            }
+
+
+
         // Reset Copper
         function resetCropper(){
             cropper.reset();
@@ -1876,6 +2403,8 @@
         function saveCropper(formID)
         {
             var item_type = $('#'+formID+" #type").val();
+            var crop_size = $('#'+formID+" #crop_size").val();
+
 
             if(item_type == 1)
             {
@@ -1886,10 +2415,17 @@
             }
             else
             {
-                var canvas = cropper.getCroppedCanvas({
-                    width:700,
-                    height:400
-                });
+                if (crop_size == 400) {
+                        var canvas = cropper.getCroppedCanvas({
+                        width:400,
+                        height:400
+                    });
+                }else{
+                    var canvas = cropper.getCroppedCanvas({
+                        width:700,
+                        height:400
+                    });
+                }
             }
 
 
@@ -1938,7 +2474,7 @@
 
             if(formID == 'addItemForm')
             {
-                $('#'+formID+' #image').val('');
+                $('#'+formID+' #image_detail').val('');
                 $('#'+formID+" #crp-img-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
             }
             else
