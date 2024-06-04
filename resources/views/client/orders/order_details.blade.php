@@ -141,7 +141,7 @@
                                                                 <i class="bi bi-person-circle"></i>&nbsp;{{ __('Driver') }}
                                                             </div>
                                                             <div class="fw-bold">
-                                                                {{ $order->staff->name }}
+                                                                {{ (isset($order->staff->name)) ? $order->staff->name : '' }}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -154,7 +154,7 @@
                                                                 <i class="bi bi-person-circle"></i>&nbsp;{{ __('Waiter') }}
                                                             </div>
                                                             <div class="fw-bold">
-                                                                {{ $order->staff->name }}
+                                                                {{ (isset($order->staff->name)) ? $order->staff->name : '' }}
                                                             </div>
                                                         </div>
                                                     </td>
