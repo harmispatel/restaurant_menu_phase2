@@ -53,10 +53,10 @@ class DashboardController extends Controller
         $category['check_in'] = Category::where('shop_id', $data['shop_id'])->where('category_type', 'check_in')->count();
 
         // All Categories List
-        $data['categories'] = Category::with(['categoryImages'])->where('shop_id', $data['shop_id'])->limit(8)->latest('updated_at')->get();
+        $data['categories'] = Category::with(['categoryImages'])->where('shop_id', $data['shop_id'])->limit(12)->latest('updated_at')->get();
 
         // Get All Items
-        $data['items'] = Items::with('categories')->where('shop_id', $data['shop_id'])->limit(8)->latest('updated_at')->get();
+        $data['items'] = Items::with('categories')->where('shop_id', $data['shop_id'])->limit(12)->latest('updated_at')->get();
 
         // Total Food Count
         $item['total'] = Items::where('shop_id', $data['shop_id'])->count();

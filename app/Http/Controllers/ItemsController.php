@@ -15,6 +15,7 @@ use App\Models\Option;
 use App\Models\Tags;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ItemsController extends Controller
 {
@@ -317,6 +318,7 @@ class ItemsController extends Controller
 
             $item = Items::find($id);
             $item->published = $published;
+            $item->updated_at = Carbon::now();
             $item->update();
 
             return response()->json([
@@ -346,6 +348,7 @@ class ItemsController extends Controller
 
             $item = Items::find($id);
             $item->delivery = $delivery;
+            $item->updated_at = Carbon::now();
             $item->update();
 
             return response()->json([
@@ -1610,6 +1613,7 @@ class ItemsController extends Controller
                     $item->image_detail = $imgnamedetail;
                 }
 
+                $item->updated_at = Carbon::now();
                 $item->update();
 
                 $item->categories()->sync($categories);
@@ -1827,6 +1831,7 @@ class ItemsController extends Controller
                     file_put_contents($img_path_detail, $image_detail_base64);
                     $item->image_detail = $imgnamedetail;
                 }
+                $item->updated_at = Carbon::now();
                 $item->update();
                 $item->categories()->sync($categories);
 
@@ -2965,6 +2970,7 @@ class ItemsController extends Controller
             }
 
             $item->image = "";
+            $item->updated_at = Carbon::now();
             $item->update();
         }
 
@@ -2988,6 +2994,7 @@ class ItemsController extends Controller
             }
 
             $item->image_detail = "";
+            $item->updated_at = Carbon::now();
             $item->update();
         }
 

@@ -525,6 +525,7 @@ class DesignController extends Controller
         $all_data['is_loader'] = isset($request->is_loader) ? $request->is_loader : 0;
         $all_data['shop_start_time'] = $request->shop_start_time;
         $all_data['shop_end_time'] = $request->shop_end_time;
+        $all_data['default_timezone'] = $request->default_timezone;
         if($request->hasFile('shop_loader'))
         {
             $all_data['shop_loader'] = $request->shop_loader;

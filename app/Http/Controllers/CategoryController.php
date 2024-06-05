@@ -10,6 +10,7 @@ use App\Models\Items;
 use App\Models\Languages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class CategoryController extends Controller
 {
@@ -1415,6 +1416,7 @@ class CategoryController extends Controller
                     }
                 }
 
+                $category->updated_at = Carbon::now();
                 $category->update();
             }
 
@@ -1620,6 +1622,7 @@ class CategoryController extends Controller
                     }
                 }
 
+                $category->updated_at = Carbon::now();
                 $category->update();
             }
 
@@ -2427,6 +2430,7 @@ class CategoryController extends Controller
 
             $category = Category::find($id);
             $category->published = $published;
+            $category->updated_at = Carbon::now();
             $category->update();
 
             return response()->json([
@@ -2642,6 +2646,7 @@ class CategoryController extends Controller
             }
 
             $category->image = "";
+            $category->updated_at = Carbon::now();
             $category->update();
         }
 

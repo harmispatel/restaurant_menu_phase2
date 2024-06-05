@@ -46,7 +46,7 @@ Route::get('/logout', [AuthController::class,'logout'])->name('logout');
 Route::group(['prefix' => 'admin'], function ()
 {
     // If Auth Login
-    Route::group(['middleware' => ['auth','is_admin']], function ()
+    Route::group(['middleware' => ['auth','is_admin', 'def_timezone']], function ()
     {
         // Admin Dashboard
         Route::get('dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
@@ -126,7 +126,7 @@ Route::group(['prefix' => 'admin'], function ()
 Route::group(['prefix' => 'client'], function()
 {
     // If Auth Login
-    Route::group(['middleware' => ['auth','is_client']], function ()
+    Route::group(['middleware' => ['auth','is_client', 'def_timezone']], function ()
     {
         // Client Dashboard
         Route::get('dashboard', [DashboardController::class,'clientDashboard'])->name('client.dashboard');
@@ -414,51 +414,51 @@ Route::post('total-with-currency',function(Request $request)
 })->name('total.with.currency');
 
 // Shops
-Route::get('/{shop_slug}/{catID?}',[ShopController::class,'index'])->name('restaurant')->where('shop_slug','[a-z-]+');
-Route::get('{shop_slug}/items/{catID}',[ShopController::class,'itemPreview'])->name('items.preview')->where('shop_slug','[a-z-]+');
-Route::post('shop-locale-change',[ShopController::class,'changeShopLocale'])->name('shop.locale.change');
-Route::post('search-shop-categories',[ShopController::class,'searchCategories'])->name('shop.categories.search');
-Route::post('search-shop-items',[ShopController::class,'searchItems'])->name('shop.items.search');
-Route::post('details-items',[ShopController::class,'getDetails'])->name('items.get.details');
-Route::post('do-check-in',[ShopController::class,'checkIn'])->name('do.check.in');
-Route::post('shop-add-to-cart',[ShopController::class,'addToCart'])->name('shop.add.to.cart');
-Route::post('shop-update-cart',[ShopController::class,'updateCart'])->name('shop.update.cart');
-Route::post('shop-edit-cart',[ShopController::class,'editCart'])->name('shop.edit.cart');
-Route::post('shop-item-update-cart',[ShopController::class,'updateItemCart'])->name('shop.item.update.cart');
-Route::post('shop-remove-cart-item',[ShopController::class,'removeCartItem'])->name('shop.remove.cart.item');
-Route::get('{my_shop_slug}/my/cart/',[ShopController::class,'viewCart'])->name('shop.cart');
-Route::get('{my_shop_slug}/my/cart/checkout/',[ShopController::class,'cartCheckout'])->name('shop.cart.checkout');
-Route::post('{my_shop_slug}/my/cart/checkout/processing/',[ShopController::class,'checkoutProcessing'])->name('shop.cart.processing');
-Route::get('{my_shop_slug}/checkout/success/{id}',[ShopController::class,'checkoutSuccess'])->name('shop.checkout.success');
-Route::post('set-checkout-type',[ShopController::class,'setCheckoutType'])->name('set.checkout.type');
-Route::post('check-order-status',[ShopController::class,'checkOrderStatus'])->name('check.order.status');
-Route::post('send-item-review',[ShopController::class,'sendItemReview'])->name('send.item.review');
-Route::post('item-review',[ShopController::class,'itemReview'])->name('item.review');
-Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
-Route::post('/check-min-amount-for-delivery',[OrderController::class,'checkMinAmountforDelivery'])->name('check.min_amount_for_delivery');
-Route::post('service-review',[ShopController::class,'serviceReview'])->name('service.review');
-Route::post('send-service-review',[ShopController::class,'sendServiceReview'])->name('send.service.review');
-Route::post('/validate-coupon',[ShopController::class,'validateCoupon'])->name('validate.coupon');
-Route::post('/remove-coupon',[ShopController::class,'removeCoupon'])->name('remove.coupon');
-Route::post('/get-room',[ShopController::class,'getRoom'])->name('set.room.no');
-Route::post('/add-to-cart',[ShopController::class,'directAddToCart'])->name('add.to.cart');
-Route::post('/moblie-item-category',[ShopController::class,'mobileItemCategory'])->name('mobile.item.category');
-Route::post('/is-cover',[ShopController::class,'isCover'])->name('is.cover');
+Route::group(['middleware' => ['def_timezone']], function (){
+    Route::get('/{shop_slug}/{catID?}',[ShopController::class,'index'])->name('restaurant')->where('shop_slug','[a-z-]+');
+    Route::get('{shop_slug}/items/{catID}',[ShopController::class,'itemPreview'])->name('items.preview')->where('shop_slug','[a-z-]+');
+    Route::post('shop-locale-change',[ShopController::class,'changeShopLocale'])->name('shop.locale.change');
+    Route::post('search-shop-categories',[ShopController::class,'searchCategories'])->name('shop.categories.search');
+    Route::post('search-shop-items',[ShopController::class,'searchItems'])->name('shop.items.search');
+    Route::post('details-items',[ShopController::class,'getDetails'])->name('items.get.details');
+    Route::post('do-check-in',[ShopController::class,'checkIn'])->name('do.check.in');
+    Route::post('shop-add-to-cart',[ShopController::class,'addToCart'])->name('shop.add.to.cart');
+    Route::post('shop-update-cart',[ShopController::class,'updateCart'])->name('shop.update.cart');
+    Route::post('shop-edit-cart',[ShopController::class,'editCart'])->name('shop.edit.cart');
+    Route::post('shop-item-update-cart',[ShopController::class,'updateItemCart'])->name('shop.item.update.cart');
+    Route::post('shop-remove-cart-item',[ShopController::class,'removeCartItem'])->name('shop.remove.cart.item');
+    Route::get('{my_shop_slug}/my/cart/',[ShopController::class,'viewCart'])->name('shop.cart');
+    Route::get('{my_shop_slug}/my/cart/checkout/',[ShopController::class,'cartCheckout'])->name('shop.cart.checkout');
+    Route::post('{my_shop_slug}/my/cart/checkout/processing/',[ShopController::class,'checkoutProcessing'])->name('shop.cart.processing');
+    Route::get('{my_shop_slug}/checkout/success/{id}',[ShopController::class,'checkoutSuccess'])->name('shop.checkout.success');
+    Route::post('set-checkout-type',[ShopController::class,'setCheckoutType'])->name('set.checkout.type');
+    Route::post('check-order-status',[ShopController::class,'checkOrderStatus'])->name('check.order.status');
+    Route::post('send-item-review',[ShopController::class,'sendItemReview'])->name('send.item.review');
+    Route::post('item-review',[ShopController::class,'itemReview'])->name('item.review');
+    Route::post('/set-delivery-address',[OrderController::class,'setDeliveryAddress'])->name('set.delivery.address');
+    Route::post('/check-min-amount-for-delivery',[OrderController::class,'checkMinAmountforDelivery'])->name('check.min_amount_for_delivery');
+    Route::post('service-review',[ShopController::class,'serviceReview'])->name('service.review');
+    Route::post('send-service-review',[ShopController::class,'sendServiceReview'])->name('send.service.review');
+    Route::post('/validate-coupon',[ShopController::class,'validateCoupon'])->name('validate.coupon');
+    Route::post('/remove-coupon',[ShopController::class,'removeCoupon'])->name('remove.coupon');
+    Route::post('/get-room',[ShopController::class,'getRoom'])->name('set.room.no');
+    Route::post('/add-to-cart',[ShopController::class,'directAddToCart'])->name('add.to.cart');
+    Route::post('/moblie-item-category',[ShopController::class,'mobileItemCategory'])->name('mobile.item.category');
+    Route::post('/is-cover',[ShopController::class,'isCover'])->name('is.cover');
 
+    // Waiter
+    Route::post('/call-waiter',[WaiterController::class,'callWiter'])->name('call.waiter');
+    Route::Post('/send-call-waiter',[WaiterController::class,'sendCallWaiter'])->name('send.call.waiter');
 
-// Waiter
-Route::post('/call-waiter',[WaiterController::class,'callWiter'])->name('call.waiter');
-Route::Post('/send-call-waiter',[WaiterController::class,'sendCallWaiter'])->name('send.call.waiter');
+    // Paypal Payment
+    Route::get('{my_shop_slug}/paypal/payment/',[PaypalController::class,'payWithpaypal'])->name('paypal.payment');
+    Route::get('{my_shop_slug}/paypal/payment/status',[PaypalController::class,'getPaymentStatus'])->name('paypal.payment.status');
+    Route::get('{my_shop_slug}/paypal/payment/cancel',[PaypalController::class,'paymentCancel'])->name('paypal.payment.cancel');
 
-
-// Paypal Payment
-Route::get('{my_shop_slug}/paypal/payment/',[PaypalController::class,'payWithpaypal'])->name('paypal.payment');
-Route::get('{my_shop_slug}/paypal/payment/status',[PaypalController::class,'getPaymentStatus'])->name('paypal.payment.status');
-Route::get('{my_shop_slug}/paypal/payment/cancel',[PaypalController::class,'paymentCancel'])->name('paypal.payment.cancel');
-
-// EveryPay Payment
-Route::post('{my_shop_slug}/everypay/payment/',[EveryPayController::class,'payWithEveryPay'])->name('everypay.payment');
-Route::get('{my_shop_slug}/my/cart/checkout/processing/everypay',[EveryPayController::class,'gotoEveryPayCheckout'])->name('everypay.checkout.view');
+    // EveryPay Payment
+    Route::post('{my_shop_slug}/everypay/payment/',[EveryPayController::class,'payWithEveryPay'])->name('everypay.payment');
+    Route::get('{my_shop_slug}/my/cart/checkout/processing/everypay',[EveryPayController::class,'gotoEveryPayCheckout'])->name('everypay.checkout.view');
+});
 
 // Change Backend Language
 Route::post('/change-backend-language', [DashboardController::class, 'changeBackendLanguage'])->name('change.backend.language');

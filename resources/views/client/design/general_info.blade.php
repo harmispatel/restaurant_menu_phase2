@@ -13,7 +13,6 @@
     // Get Package Permissions
     $package_permissions = getPackagePermission($subscription_id);
 
-
 @endphp
 
 @extends('client.layouts.client-layout')
@@ -86,19 +85,16 @@
                             <div class="col-6"><input type="time" class="form-control" name="shop_start_time" id="shop_start_time" value="{{ (isset($client_settings['shop_start_time']) && !empty($client_settings['shop_start_time'])) ? $client_settings['shop_start_time'] : '' }}"></div>
                             <div class="col-6"><input type="time" class="form-control" name="shop_end_time" id="shop_end_time" value="{{ (isset($client_settings['shop_end_time']) && !empty($client_settings['shop_end_time'])) ? $client_settings['shop_end_time'] : '' }}"></div>
                             </div>
-
                         </div>
                     </div>
-                    <!-- <div class="col-md-4 mb-3">
-                        <div class="form-group">
-                            <label for="form-label" for="happy_start_time">{{ __('Happy time') }}</label>
-                            <div class="row">
-                            <div class="col-6"><input type="time" class="form-control" name="happy_start_time" id="happy_start_time" value="{{ (isset($client_settings['happy_start_time']) && !empty($client_settings['happy_start_time'])) ? $client_settings['happy_start_time'] : '' }}"></div>
-                            <div class="col-6"><input type="time" class="form-control" name="happy_end_time" id="happy_end_time" value="{{ (isset($client_settings['happy_end_time']) && !empty($client_settings['happy_end_time'])) ? $client_settings['happy_end_time'] : '' }}"></div>
-                            </div>
 
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="form-label" for="shop_start_time">{{ __('Default TimeZone') }}</label>
+                            <input type="text" class="form-control" name="default_timezone" id="default_timezone" value="{{ (isset($client_settings['default_timezone']) && !empty($client_settings['default_timezone'])) ? $client_settings['default_timezone'] : '' }}">
                         </div>
-                    </div> -->
+                    </div>
+
                 </div>
 
                 <div class="social_media_part">

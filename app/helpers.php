@@ -105,6 +105,7 @@
             'is_sub_title',
             'table_enable_status',
             'room_enable_status',
+            'default_timezone',
         ]);
 
         $settings = [];
