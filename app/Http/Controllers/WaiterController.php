@@ -260,7 +260,7 @@ class WaiterController extends Controller
 
                     $headers .= 'From: <'.$from.'>' . "\r\n";
 
-                    // mail($to,$subject,$message,$headers);
+                    mail($to,$subject,$message,$headers);
 
                 }
             }
