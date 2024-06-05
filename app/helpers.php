@@ -337,7 +337,9 @@
             'cover_link_icon_color',
             'cover_link_bg_color',
             'bg_image',
-            'rating_star_icon_color'
+            'rating_star_icon_color',
+            'tag_background_color',
+            'active_tag_background_color',
         ]);
 
         $settings = [];

@@ -270,28 +270,106 @@
         @endif
 
 
-        /* Tags Font Color */
-        @if(isset($theme_settings['tag_font_color']) && !empty($theme_settings['tag_font_color']))
-            .nav-item .tags-btn.active{
-                color : {{ $theme_settings['tag_font_color'] }}!important;
-            }
+        @if($layout == "layout_2")
+            /* Active Tag Background */
+            @if(isset($theme_settings['active_tag_background_color']) && !empty($theme_settings['active_tag_background_color']))
+                .nav-item .tags-btn.active{
+                    background-color : {{ $theme_settings['active_tag_background_color'] }}!important;
+                    border-color: {{ $theme_settings['active_tag_background_color'] }}!important;
+                }
+            @endif
+
+            /* Active Tag Text & Circle */
+            @if(isset($theme_settings['tag_font_color']) && !empty($theme_settings['tag_font_color']))
+                .nav-item .tags-btn.active{
+                    color : {{ $theme_settings['tag_font_color'] }}!important;
+                }
+                .nav-item .tags-btn.active::before{
+                    background-color : {{ $theme_settings['tag_font_color'] }}!important;
+                }
+            @endif
+
+            /* Tag Background */
+            @if(isset($theme_settings['tag_background_color']) && !empty($theme_settings['tag_background_color']))
+                .nav-item .tags-btn{
+                    background-color : {{ $theme_settings['tag_background_color'] }}!important;
+                    border-color: {{ $theme_settings['tag_background_color'] }}!important;
+                }
+            @endif
+
+            /* Tag Text & Circle */
+            @if(isset($theme_settings['tag_label_color']) && !empty($theme_settings['tag_label_color']))
+                .nav-item .tags-btn{
+                    color : {{ $theme_settings['tag_label_color'] }}!important;
+                }
+                .nav-item .tags-btn::before{
+                    background-color : {{ $theme_settings['tag_label_color'] }}!important;
+                }
+            @endif
+        @elseif($layout == "layout_3")
+            /* Active Tag Background & Tags Border */
+            @if(isset($theme_settings['active_tag_background_color']) && !empty($theme_settings['active_tag_background_color']))
+                .nav-item .tags-btn.active{
+                    background-color : {{ $theme_settings['active_tag_background_color'] }}!important;
+                    border-color: {{ $theme_settings['active_tag_background_color'] }}!important;
+                }
+                .nav-item .tags-btn{
+                    border-color: {{ $theme_settings['active_tag_background_color'] }}!important;
+                }
+            @endif
+
+            /* Active Tag Text */
+            @if(isset($theme_settings['tag_font_color']) && !empty($theme_settings['tag_font_color']))
+                .nav-item .tags-btn.active{
+                    color : {{ $theme_settings['tag_font_color'] }}!important;
+                }
+            @endif
+
+            /* Tag Background */
+            @if(isset($theme_settings['tag_background_color']) && !empty($theme_settings['tag_background_color']))
+                .nav-item .tags-btn{
+                    background-color : {{ $theme_settings['tag_background_color'] }}!important;
+                    /* border-color: {{ $theme_settings['tag_background_color'] }}!important; */
+                }
+            @endif
+
+            /* Tags Label Color */
+            @if(isset($theme_settings['tag_label_color']) && !empty($theme_settings['tag_label_color']))
+                .nav-item .tags-btn{
+                    color : {{ $theme_settings['tag_label_color'] }}!important;
+                }
+            @endif
+        @else
+            /* Active Tag Background */
+            @if(isset($theme_settings['active_tag_background_color']))
+                .nav-item .tags-btn.active{
+                    background-color : {{ (!empty($theme_settings['active_tag_background_color'])) ? $theme_settings['active_tag_background_color'] : '#000000' }}!important;
+                }
+            @endif
+
+            /* Active Tag Text */
+            @if(isset($theme_settings['tag_font_color']))
+                .nav-item .tags-btn.active{
+                    color : {{ (!empty($theme_settings['tag_font_color'])) ? $theme_settings['tag_font_color'] : '#ffffff' }} !important;
+                }
+            @endif
+
+            /* Tag Background */
+            @if(isset($theme_settings['tag_background_color']))
+                .nav-item .tags-btn{
+                    background-color : {{ (!empty($theme_settings['tag_background_color'])) ? $theme_settings['tag_background_color'] : '#505050' }}!important;
+                }
+            @endif
+
+            /* Tags Label Color */
+            @if(isset($theme_settings['tag_label_color']))
+                .nav-item .tags-btn{
+                    color : {{ (!empty($theme_settings['tag_label_color'])) ? $theme_settings['tag_label_color'] : '#ffffff' }}!important;
+                }
+            @endif
         @endif
 
-        /* Tags Label Color */
-        @if(isset($theme_settings['tag_label_color']) && !empty($theme_settings['tag_label_color']))
-            .nav-item .tags-btn.active{
-                background-color : {{ $theme_settings['tag_label_color'] }}!important;
-                border-color: {{ $theme_settings['tag_label_color'] }}!important;
-            }
-        @endif
 
-        /* Tags Label Color */
-        @if(isset($theme_settings['tag_label_color']) && !empty($theme_settings['tag_label_color']))
-            .nav-item .tags-btn{
-                color : {{ $theme_settings['tag_label_color'] }}!important;
-                border-color: {{ $theme_settings['tag_label_color'] }}!important;
-            }
-        @endif
 
         /* Special discount Color */
         @if(isset($theme_settings['special_discount_backgound_color']) && !empty($theme_settings['special_discount_backgound_color']))

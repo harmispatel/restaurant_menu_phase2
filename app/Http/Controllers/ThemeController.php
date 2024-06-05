@@ -122,7 +122,9 @@ class ThemeController extends Controller
             'cover_link_icon_color',
             'cover_link_bg_color',
             'bg_image',
-            'rating_star_icon_color'
+            'rating_star_icon_color',
+            'tag_background_color',
+            'active_tag_background_color',
         ]);
 
         $settings = [];
@@ -260,7 +262,9 @@ class ThemeController extends Controller
             'cover_link_icon_color'=>$request->cover_link_icon_color,
             'cover_link_bg_color'=>$request->cover_link_bg_color,
             'rating_star_icon_color'=>$request->rating_star_icon_color,
-        ];
+            'tag_background_color'=>$request->tag_background_color,
+            'active_tag_background_color'=>$request->active_tag_background_color,
+        ];        
 
         if($request->hasFile('theme_preview_image'))
         {
@@ -450,6 +454,8 @@ class ThemeController extends Controller
             'cover_link_icon_color'=>$request->cover_link_icon_color,
             'cover_link_bg_color'=>$request->cover_link_bg_color,
             'rating_star_icon_color'=>$request->rating_star_icon_color,
+            'tag_background_color'=>$request->tag_background_color,
+            'active_tag_background_color'=>$request->active_tag_background_color,
         ];
 
         if($request->hasFile('theme_preview_image'))
@@ -587,6 +593,8 @@ class ThemeController extends Controller
             'modal_item_title_font_size',
             'rating_service_name_color',
             'rating_star_icon_color',
+            'tag_background_color',
+            'active_tag_background_color',
         ]);
 
         $settings = [];

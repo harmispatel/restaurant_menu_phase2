@@ -769,7 +769,7 @@ $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ?
                                                             <input id="tag_font_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_font_color_input','tag_font_color')">
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div>                                                
                                                 <div class="row align-items-center mb-4" id="tag-label-color">
                                                     <div class="col-md-8">
                                                         <span>{{ __('Tag & Underline Text') }}</span>
@@ -778,6 +778,28 @@ $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ?
                                                         <div class="from-group d-flex align-items-center">
                                                             <input type="color" id="tag_label_color" name="tag_label_color" class="form-control me-2 p-0" value="" onchange="changeVal('tag_label_color','tag_label_color_input')">
                                                             <input id="tag_label_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_label_color_input','tag_label_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="tags-background-color">
+                                                    <div class="col-md-8">
+                                                        <span>{{ __('Tag BG Color') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="tag_background_color" name="tag_background_color" class="form-control me-2 p-0" value="" onchange="changeVal('tag_background_color','tag_background_color_input')">
+                                                            <input id="tag_background_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_background_color_input','tag_background_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="active-tags-background-color">
+                                                    <div class="col-md-8">
+                                                        <span>{{ __('Active Tag BG Color') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="active_tag_background_color" name="active_tag_background_color" class="form-control me-2 p-0" value="" onchange="changeVal('active_tag_background_color','active_tag_background_color_input')">
+                                                            <input id="active_tag_background_color_input" type="text" class="form-control" value="" onkeyup="changeColor('active_tag_background_color_input','active_tag_background_color')">
                                                         </div>
                                                     </div>
                                                 </div>

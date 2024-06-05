@@ -1100,6 +1100,42 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="row align-items-center mb-4" id="tags-background-color">
+                                                                <div class="col-md-8">
+                                                                    <span>{{ __('Tag BG Color') }}</span>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color" id="tag_background_color"
+                                                                            name="tag_background_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['tag_background_color']) ? $settings['tag_background_color'] : '' }}"
+                                                                            onchange="changeVal('tag_background_color','tag_background_color_input')">
+                                                                        <input id="tag_background_color_input" type="text"
+                                                                            class="form-control"
+                                                                            value="{{ isset($settings['tag_background_color']) ? $settings['tag_background_color'] : '' }}"
+                                                                            onkeyup="changeColor('tag_background_color_input','tag_background_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row align-items-center mb-4" id="active-tags-background-color">
+                                                                <div class="col-md-8">
+                                                                    <span>{{ __('Active Tag BG Color') }}</span>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color" id="active_tag_background_color"
+                                                                            name="active_tag_background_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['active_tag_background_color']) ? $settings['active_tag_background_color'] : '' }}"
+                                                                            onchange="changeVal('active_tag_background_color','active_tag_background_color_input')">
+                                                                        <input id="active_tag_background_color_input" type="text"
+                                                                            class="form-control"
+                                                                            value="{{ isset($settings['active_tag_background_color']) ? $settings['active_tag_background_color'] : '' }}"
+                                                                            onkeyup="changeColor('active_tag_background_color_input','active_tag_background_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div class="row align-items-center mb-4"
                                                                 id="read-more-link-color">
                                                                 <div class="col-md-8">

@@ -711,6 +711,7 @@ header.header_preview {
     font-weight: 400;
     color: #4d572b;
     white-space: nowrap;
+    background: #505050;
 }
 
 .item_box_main > .nav-tabs .nav-link {
@@ -730,11 +731,11 @@ header.header_preview {
 }
 
 .item_box_main .nav-tabs .nav-link.active {
-    border-bottom: 3px solid #4d572b;
+    /* border-bottom: 3px solid #4d572b; */
     padding-bottom: 10px;
-    color: #4d572b;
+    color: #ffffff;
     font-weight: 700;
-    background: transparent !important;
+    background: #000000;
 }
 
 .item_detail_inner_info {
@@ -895,19 +896,28 @@ header.header_preview {
 .dark .footer_media ul li a,
 .dark .footer-inr,
 .dark .item_box_main .tab-content .tab-pane h3,
-.dark .item_inr_info .nav-tabs .nav-link,
 .dark .cart-symbol i {
     color: #fff !important;
 }
 
-.dark .item_box_main .nav-tabs .nav-link.active {
+/* .dark .item_box_main .nav-tabs .nav-link.active {
     border-bottom: 3px solid #e7b76b !important;
     color: #e7b76b;
-}
+} */
 
-.dark .item_inr_info .nav-tabs .nav-link.active {
+/* .dark .item_inr_info .nav-tabs .nav-link.active {
     border-bottom: 3px solid #fff !important;
     color: #fff;
+} */
+
+.dark .item_inr_info .nav-tabs .tags-btn.active {
+    background-color: #c59c5b !important;
+    color:#ffffff !important;
+}
+
+.dark .item_inr_info .nav-tabs .tags-btn{
+    background-color:#ffffff  !important;
+    color:#c59c5b !important;
 }
 
 .dark .single_item_inr {
@@ -1105,13 +1115,11 @@ header.header_preview {
 } */
 
 .dark,
-.dark .navbar,
-.dark .item_box_main .nav-tabs .nav-link {
+.dark .navbar {
     background-color: #000 !important;
 }
 
-.dark .search_bt,
-.dark .item_box_main .nav-tabs .nav-link {
+.dark .search_bt {
     color: #e7b76b !important;
 }
 
@@ -1122,20 +1130,19 @@ header.header_preview {
 
 .dark .footer_media ul li a,
 .dark .footer-inr,
-.dark .item_box_main .tab-content .tab-pane h3,
-.dark .item_inr_info .nav-tabs .nav-link {
+.dark .item_box_main .tab-content .tab-pane h3 {
     color: #fff !important;
 }
 
-.dark .item_box_main .nav-tabs .nav-link.active {
+/* .dark .item_box_main .nav-tabs .nav-link.active {
     border-bottom: 3px solid #e7b76b !important;
     color: #e7b76b;
-}
+} */
 
-.dark .item_inr_info .nav-tabs .nav-link.active {
+/* .dark .item_inr_info .nav-tabs .nav-link.active {
     border-bottom: 3px solid #fff !important;
     color: #fff;
-}
+} */
 
 .dark .single_item_inr {
     background-color: #000 !important;

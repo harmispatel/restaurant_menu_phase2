@@ -268,8 +268,7 @@ class UserController extends Controller
                         'item_divider_type' => 'solid',
                         'item_divider_position' => 'top',
                         'item_divider_font_color' => '#4d572b',
-                        'tag_font_color' => '#4d572b',
-                        'tag_label_color' => '#4d572b',
+                        'tag_font_color' => '#ffffff',
                         'tag_label_color' => '#ffffff',
                         'category_bar_type' => '8px',
                         'search_box_icon_color' => '#000000',
@@ -290,7 +289,9 @@ class UserController extends Controller
                         'modal_quantity_icon_color' => '#ffffff',
                         'modal_quantity_bg_color' => '#4d572b',
                         'modal_body_bg_color' => '#e6e6e6',
-                        'rating_star_icon_color' => '#000000'
+                        'rating_star_icon_color' => '#000000',
+                        'tag_background_color' => '#505050',
+                        'active_tag_background_color' => '#000000',
                     ];
 
                     foreach($setting_keys as $key => $val)
@@ -344,8 +345,7 @@ class UserController extends Controller
                         'item_divider_position' => 'bottom',
                         'item_devider_font_color' => '#ffffff',
                         'tag_font_color' => '#ffffff',
-                        'tag_label_color' => '#ffffff',
-                        'tag_label_color' => '#000000',
+                        'tag_label_color' => '#c59c5b',
                         'category_bar_type' => '8px',
                         'search_box_icon_color' => '#ffffff',
                         'read_more_link_color' => '#9f9f9f',
@@ -365,7 +365,9 @@ class UserController extends Controller
                         'modal_quantity_icon_color' => '#ffffff',
                         'modal_quantity_bg_color' => '#000000',
                         'modal_body_bg_color' => '#e6e6e6',
-                        'rating_star_icon_color' => '#ffffff'
+                        'rating_star_icon_color' => '#ffffff',
+                        'tag_background_color' => '#ffffff',
+                        'active_tag_background_color' => '#c59c5b',
                     ];
 
                     foreach($setting_keys as $key => $val)
