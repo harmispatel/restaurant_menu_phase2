@@ -755,8 +755,6 @@ class ShopController extends Controller
                                             $html .= '</div>';
                                         }
 
-                                        $html .= '<h3>' . $item_name . '</h3>';
-
                                         if (count($ingrediet_arr) > 0) {
                                             $html .= '<div>';
                                             foreach ($ingrediet_arr as $val) {
@@ -774,7 +772,12 @@ class ShopController extends Controller
                                             $html .= '</div>';
                                         }
 
-                                        $html .= '<div class="item-desc">' . (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "" . '</div>';
+                                        $html .= '<h3>' . $item_name . '</h3>';
+
+                                        if(isset($item[$description_key]) && !empty($item[$description_key]))
+                                        {
+                                            $html .= '<div class="item-desc">' . $item[$description_key] . '</div>';
+                                        }
 
                                         $html .= '</div>';
                                         $html .= '</div>';
@@ -800,46 +803,11 @@ class ShopController extends Controller
                                             if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) {
                                                 $item_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
                                                 $html .= '<img src="' . $item_image . '" onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">';
-                                            }
-                                            $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
-                                                $html .= '<i class="fa-solid fa-star"></i>';
-                                                $html .= '<i class="fa-solid fa-star"></i>';
-                                                $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '</a>';
+                                            }                                            
                                         $html .= '</div>';
 
-                                        if ($item['day_special'] == 1) {
-                                            if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
-                                                $today_spec_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
-                                                $html .= '<img width="170" class="mt-3" src="' . $today_spec_icon . '">';
-                                            } else {
-                                                if (!empty($default_special_image)) {
-                                                    $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '" alt="Special">';
-                                                } else {
-                                                    $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
-                                                    $html .= '<img width="170" class="mt-3" src="' . $def_tds_img . '">';
-                                                }
-                                            }
-                                        }
-
-                                        $html .= '<h3 onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">' . $item_name . '</h3>';
-
-                                        if (!empty($item_calories)) {
-                                            $html .= '<p class="m-0 p-0"><strong>Cal: ' . $item_calories . '</strong></p>';
-                                        }
-
-                                        if ($item['is_new'] == 1) {
-                                            $new_img = asset('public/client_images/bs-icon/new.png');
-                                            $html .= '<img class="is_new tag-img" src="' . $new_img . '">';
-                                        }
-
-                                        if ($item['as_sign'] == 1) {
-                                            $as_sign_img = asset('public/client_images/bs-icon/signature.png');
-                                            $html .= '<img class="is_sign tag-img" src="' . $as_sign_img . '">';
-                                        }
-
                                         if (count($ingrediet_arr) > 0) {
-                                            $html .= '<div>';
+                                            $html .= '<div class="mt-3">';
                                             foreach ($ingrediet_arr as $val) {
                                                 $ingredient = getIngredientDetail($val);
                                                 $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
@@ -855,27 +823,67 @@ class ShopController extends Controller
                                             $html .= '</div>';
                                         }
 
+                                        $html .= '<div class="item_image">';
+                                            $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                            $html .= '</a>';
+                                        $html .= '</div>';
+
+                                        if (!empty($item_calories)) {
+                                            $html .= '<p class="m-0 p-0 mt-3"><strong>Cal: ' . $item_calories . '</strong></p>';
+                                        }                                        
+
+                                        $html .= '<h3 onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">' . $item_name . '</h3>';                                        
+
+                                        if ($item['is_new'] == 1) {
+                                            $new_img = asset('public/client_images/bs-icon/new.png');
+                                            $html .= '<img class="is_new tag-img" src="' . $new_img . '">';
+                                        }
+
+                                        if ($item['as_sign'] == 1) {
+                                            $as_sign_img = asset('public/client_images/bs-icon/signature.png');
+                                            $html .= '<img class="is_sign tag-img" src="' . $as_sign_img . '">';
+                                        }                                        
+
                                         $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
 
-                                        if (strlen(strip_tags($desc)) > 180) {
-                                            $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                            $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
-                                                        <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
-                                        } else {
-                                            $html .= '<div class="item-desc"><p>' . strip_tags($desc) . '</p></div>';
-                                        }
-
-                                        $html .= '<ul class="price_ul">';
-                                        $price_arr = getItemPrice($item['id']);
-                                        if (count($price_arr) > 0) {
-                                            foreach ($price_arr as $key => $value) {
-                                                $price = Currency::currency($currency)->format($value['price']);
-                                                $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
-
-                                                $html .= '<li><p>' . $price_label . ' <span>' . $price . '</span></p></li>';
+                                        if(!empty($desc)){
+                                            if (strlen(strip_tags($desc)) > 180) {
+                                                $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                                $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
+                                                            <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
+                                            } else {
+                                                $html .= '<div class="item-desc"><p>' . strip_tags($desc) . '</p></div>';
                                             }
                                         }
-                                        $html .= '</ul>';
+
+                                        $price_arr = getItemPrice($item['id']);
+                                        if (count($price_arr) > 0) {
+                                            $html .= '<ul class="price_ul">';
+                                                foreach ($price_arr as $key => $value) {
+                                                    $price = Currency::currency($currency)->format($value['price']);
+                                                    $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
+
+                                                    $html .= '<li><p>' . $price_label . ' <span>' . $price . '</span></p></li>';
+                                                }
+                                            $html .= '</ul>';
+                                        }
+
+                                        if ($item['day_special'] == 1) {
+                                            if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
+                                                $today_spec_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
+                                                $html .= '<img width="170" class="mt-3" src="' . $today_spec_icon . '">';
+                                            } else {
+                                                if (!empty($default_special_image)) {
+                                                    $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '" alt="Special">';
+                                                } else {
+                                                    $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
+                                                    $html .= '<img width="170" class="mt-3" src="' . $def_tds_img . '">';
+                                                }
+                                            }
+                                        }
 
                                         if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1) {
                                             $html .= '<div class="cart-symbol" onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer"><i class="bi bi-cart4"></i></div>';
@@ -1304,36 +1312,41 @@ class ShopController extends Controller
                                 if ($item['type'] == 2) {
 
                                     $html .= '<div class="col-md-12 mb-3">';
-                                    $html .= '<div class="item_detail single_item_inr devider">';
+                                        $html .= '<div class="item_detail single_item_inr devider">';
 
-                                    if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) {
-                                        $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                        $html .= '<div class="item_image">';
-                                        $html .= '<img src="' . $item_divider_image . '">';
-                                        $html .= '</div>';
-                                    }
-
-                                    $html .= '<h3>' . $item_name . '</h3>';
-
-                                    if (count($ingrediet_arr) > 0) {
-                                        $html .= '<div>';
-                                        foreach ($ingrediet_arr as $val) {
-                                            $ingredient = getIngredientDetail($val);
-                                            $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
-                                            $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
-
-                                            if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
-                                                if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
-                                                    $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
-                                                    $html .= '<img src="' . $ing_icon . '" width="60px" height="60px">';
-                                                }
+                                            if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) {
+                                                $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                                $html .= '<div class="item_image">';
+                                                $html .= '<img src="' . $item_divider_image . '">';
+                                                $html .= '</div>';
                                             }
-                                        }
+
+                                            if (count($ingrediet_arr) > 0) {
+                                                $html .= '<div>';
+                                                foreach ($ingrediet_arr as $val) {
+                                                    $ingredient = getIngredientDetail($val);
+                                                    $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                    $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
+
+                                                    if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
+                                                        if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
+                                                            $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
+                                                            $html .= '<img src="' . $ing_icon . '" width="60px" height="60px">';
+                                                        }
+                                                    }
+                                                }
+                                                $html .= '</div>';
+                                            }
+
+                                            $html .= '<h3>' . $item_name . '</h3>';
+                                    
+                                            $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
+
+                                            if(!empty($desc)){
+                                                $html .= '<div class="item-desc">' . json_decode($desc, true) . '</div>';
+                                            }
+
                                         $html .= '</div>';
-                                    }
-                                    $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
-                                    $html .= '<div class="item-desc">' . json_decode($desc, true) . '</div>';
-                                    $html .= '</div>';
                                     $html .= '</div>';
                                 } else {
                                     $html .= '<div class="col-md-6 col-lg-6 col-xl-3 mb-3">';
@@ -1357,45 +1370,10 @@ class ShopController extends Controller
                                             $item_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
                                             $html .= '<img src="' . $item_image . '" onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">';
                                         }
-                                        $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                        $html .= '</a>';
                                     $html .= '</div>';
 
-                                    if ($item['day_special'] == 1) {
-                                        if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
-                                            $today_spec_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
-                                            $html .= '<img width="170" class="mt-3" src="' . $today_spec_icon . '">';
-                                        } else {
-                                            if (!empty($default_special_image)) {
-                                                $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '" alt="Special">';
-                                            } else {
-                                                $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
-                                                $html .= '<img width="170" class="mt-3" src="' . $def_tds_img . '">';
-                                            }
-                                        }
-                                    }
-
-                                    $html .= '<h3 onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">' . $item_name . '</h3>';
-
-                                    if (!empty($item_calories)) {
-                                        $html .= '<p class="m-0 p-0"><strong>Cal: </strong>' . $item_calories . '</p>';
-                                    }
-
-                                    if ($item['is_new'] == 1) {
-                                        $new_img = asset('public/client_images/bs-icon/new.png');
-                                        $html .= '<img class="is_new tag-img" src="' . $new_img . '">';
-                                    }
-
-                                    if ($item['as_sign'] == 1) {
-                                        $as_sign_img = asset('public/client_images/bs-icon/signature.png');
-                                        $html .= '<img class="is_sign tag-img" src="' . $as_sign_img . '">';
-                                    }
-
                                     if (count($ingrediet_arr) > 0) {
-                                        $html .= '<div>';
+                                        $html .= '<div class="mt-3">';
                                         foreach ($ingrediet_arr as $val) {
                                             $ingredient = getIngredientDetail($val);
                                             $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
@@ -1411,27 +1389,67 @@ class ShopController extends Controller
                                         $html .= '</div>';
                                     }
 
+                                    $html .= '<div class="item_image">';
+                                        $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
+                                            $html .= '<i class="fa-solid fa-star"></i>';
+                                            $html .= '<i class="fa-solid fa-star"></i>';
+                                            $html .= '<i class="fa-solid fa-star"></i>';
+                                        $html .= '</a>';
+                                    $html .= '</div>';
+
+                                    if (!empty($item_calories)) {
+                                        $html .= '<p class="m-0 p-0 mt-3"><strong>Cal: </strong>' . $item_calories . '</p>';
+                                    }                                    
+
+                                    $html .= '<h3 onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">' . $item_name . '</h3>';                                    
+
+                                    if ($item['is_new'] == 1) {
+                                        $new_img = asset('public/client_images/bs-icon/new.png');
+                                        $html .= '<img class="is_new tag-img" src="' . $new_img . '">';
+                                    }
+
+                                    if ($item['as_sign'] == 1) {
+                                        $as_sign_img = asset('public/client_images/bs-icon/signature.png');
+                                        $html .= '<img class="is_sign tag-img" src="' . $as_sign_img . '">';
+                                    }                                    
+
                                     $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
 
-                                    if (strlen(strip_tags($desc)) > 180) {
-                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                        $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
-                                                    <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
-                                    } else {
-                                        $html .= '<div class="item-desc"><p?>' . strip_tags($desc) . '</p></div>';
-                                    }
-
-                                    $html .= '<ul class="price_ul">';
-                                    $price_arr = getItemPrice($item['id']);
-                                    if (count($price_arr) > 0) {
-                                        foreach ($price_arr as $key => $value) {
-                                            $price = Currency::currency($currency)->format($value['price']);
-                                            $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
-
-                                            $html .= '<li><p>' . $price_label . ' <span>' . $price . '</span></p></li>';
+                                    if(!empty($desc)){
+                                        if (strlen(strip_tags($desc)) > 180) {
+                                            $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                            $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
+                                                        <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
+                                        } else {
+                                            $html .= '<div class="item-desc"><p?>' . strip_tags($desc) . '</p></div>';
                                         }
                                     }
-                                    $html .= '</ul>';
+
+                                    $price_arr = getItemPrice($item['id']);
+                                    if (count($price_arr) > 0) {
+                                        $html .= '<ul class="price_ul">';
+                                            foreach ($price_arr as $key => $value) {
+                                                $price = Currency::currency($currency)->format($value['price']);
+                                                $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
+
+                                                $html .= '<li><p>' . $price_label . ' <span>' . $price . '</span></p></li>';
+                                            }
+                                        $html .= '</ul>';
+                                    }
+
+                                    if ($item['day_special'] == 1) {
+                                        if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
+                                            $today_spec_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
+                                            $html .= '<img width="170" class="mt-3" src="' . $today_spec_icon . '">';
+                                        } else {
+                                            if (!empty($default_special_image)) {
+                                                $html .= '<img width="170" class="mt-3" src="' . $default_special_image . '" alt="Special">';
+                                            } else {
+                                                $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
+                                                $html .= '<img width="170" class="mt-3" src="' . $def_tds_img . '">';
+                                            }
+                                        }
+                                    }
 
                                     if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1) {
                                         $html .= '<div class="cart-symbol" onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer"><i class="bi bi-cart4"></i></div>';
@@ -1783,19 +1801,56 @@ class ShopController extends Controller
 
                             if ($item['type'] == 2) {
                                 $html .= '<div class="col-md-12 mb-3">';
-                                $html .= '<div class="single_item_inr devider">';
+                                    $html .= '<div class="single_item_inr devider">';
 
-                                if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) {
-                                    $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                    $html .= '<div class="item_image">';
-                                    $html .= '<img src="' . $item_divider_image . '">';
+                                        if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) {
+                                            $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                            $html .= '<div class="item_image">';
+                                            $html .= '<img src="' . $item_divider_image . '">';
+                                            $html .= '</div>';
+                                        }
+
+                                        if (count($ingrediet_arr) > 0) {
+                                            $html .= '<div>';
+                                            foreach ($ingrediet_arr as $val) {
+                                                $ingredient = getIngredientDetail($val);
+                                                $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
+
+                                                if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
+                                                    if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
+                                                        $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
+                                                        $html .= '<img src="' . $ing_icon . '" width="60px" height="60px">';
+                                                    }
+                                                }
+                                            }
+                                            $html .= '</div>';
+                                        }
+
+                                        $html .= '<h3>' . $item_name . '</h3>';
+
+
+                                        $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
+
+                                        if(!empty($desc)){
+                                            $html .= '<div class="item-desc">' . json_decode($desc, true) . '</div>';
+                                        }
+
                                     $html .= '</div>';
-                                }
+                                $html .= '</div>';
+                            } else {
+                                $html .= '<div class="col-md-6 col-lg-6 col-xl-3 mb-3">';
+                                $html .= '<div class="item_detail single_item_inr devider-border">';
 
-                                $html .= '<h3>' . $item_name . '</h3>';
+                                $html .= '<div class="item_image">';
+                                    if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) {
+                                        $item_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                        $html .= '<img src="' . $item_image . '" onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">';
+                                    }
+                                $html .= '</div>';
 
                                 if (count($ingrediet_arr) > 0) {
-                                    $html .= '<div>';
+                                    $html .= '<div class="mt-3">';
                                     foreach ($ingrediet_arr as $val) {
                                         $ingredient = getIngredientDetail($val);
                                         $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
@@ -1811,26 +1866,53 @@ class ShopController extends Controller
                                     $html .= '</div>';
                                 }
 
-                                $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
-                                $html .= '<div class="item-desc">' . json_decode($desc, true) . '</div>';
-
-                                $html .= '</div>';
-                                $html .= '</div>';
-                            } else {
-                                $html .= '<div class="col-md-6 col-lg-6 col-xl-3 mb-3">';
-                                $html .= '<div class="item_detail single_item_inr devider-border">';
-
                                 $html .= '<div class="item_image">';
-                                if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) {
-                                    $item_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                    $html .= '<img src="' . $item_image . '" onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">';
                                     $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
                                         $html .= '<i class="fa-solid fa-star"></i>';
                                         $html .= '<i class="fa-solid fa-star"></i>';
                                         $html .= '<i class="fa-solid fa-star"></i>';
                                     $html .= '</a>';
-                                }
                                 $html .= '</div>';
+
+                                if (!empty($item_calories)) {
+                                    $html .= '<p class="m-0 p-0 mt-3"><strong>Cal: </strong>' . $item_calories . '</p>';
+                                }                                
+
+                                $html .= '<h3 onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">' . $item_name . '</h3>';                               
+
+                                if ($item['is_new'] == 1) {
+                                    $new_img = asset('public/client_images/bs-icon/new.png');
+                                    $html .= '<img class="is_new tag-img" src="' . $new_img . '">';
+                                }
+
+                                if ($item['as_sign'] == 1) {
+                                    $as_sign_img = asset('public/client_images/bs-icon/signature.png');
+                                    $html .= '<img class="is_sign tag-img" src="' . $as_sign_img . '">';
+                                }                                
+
+                                $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
+
+                                if(!empty($desc)){
+                                    if (strlen(strip_tags($desc)) > 180) {
+                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                        $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
+                                                        <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
+                                    } else {
+                                        $html .= '<div class="item-desc"><p>' . strip_tags($desc) . '</p></div>';
+                                    }
+                                }
+
+                                $price_arr = getItemPrice($item['id']);
+                                if (count($price_arr) > 0) {
+                                    $html .= '<ul class="price_ul">';
+                                        foreach ($price_arr as $key => $value) {
+                                            $price = Currency::currency($currency)->format($value['price']);
+                                            $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
+
+                                            $html .= '<li><p>' . $price_label . ' <span>' . $price . '</span></p></li>';
+                                        }
+                                    $html .= '</ul>';
+                                }
 
                                 if ($item['day_special'] == 1) {
                                     if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
@@ -1845,61 +1927,6 @@ class ShopController extends Controller
                                         }
                                     }
                                 }
-
-                                $html .= '<h3 onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer">' . $item_name . '</h3>';
-
-                                if (!empty($item_calories)) {
-                                    $html .= '<p class="m-0 p-0"><strong>Cal: </strong>' . $item_calories . '</p>';
-                                }
-
-                                if ($item['is_new'] == 1) {
-                                    $new_img = asset('public/client_images/bs-icon/new.png');
-                                    $html .= '<img class="is_new tag-img" src="' . $new_img . '">';
-                                }
-
-                                if ($item['as_sign'] == 1) {
-                                    $as_sign_img = asset('public/client_images/bs-icon/signature.png');
-                                    $html .= '<img class="is_sign tag-img" src="' . $as_sign_img . '">';
-                                }
-
-                                if (count($ingrediet_arr) > 0) {
-                                    $html .= '<div>';
-                                    foreach ($ingrediet_arr as $val) {
-                                        $ingredient = getIngredientDetail($val);
-                                        $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
-                                        $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
-
-                                        if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
-                                            if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
-                                                $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
-                                                $html .= '<img src="' . $ing_icon . '" width="60px" height="60px">';
-                                            }
-                                        }
-                                    }
-                                    $html .= '</div>';
-                                }
-
-                                $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? html_entity_decode($item[$description_key]) : "";
-
-                                if (strlen(strip_tags($desc)) > 180) {
-                                    $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                    $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
-                                                    <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
-                                } else {
-                                    $html .= '<div class="item-desc"><p>' . strip_tags($desc) . '</p></div>';
-                                }
-
-                                $html .= '<ul class="price_ul">';
-                                $price_arr = getItemPrice($item['id']);
-                                if (count($price_arr) > 0) {
-                                    foreach ($price_arr as $key => $value) {
-                                        $price = Currency::currency($currency)->format($value['price']);
-                                        $price_label = (isset($value[$price_label_key])) ? $value[$price_label_key] : "";
-
-                                        $html .= '<li><p>' . $price_label . ' <span>' . $price . '</span></p></li>';
-                                    }
-                                }
-                                $html .= '</ul>';
 
                                 if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1) {
                                     $html .= '<div class="cart-symbol" onclick="getItemDetails(' . $item->id . ',' . $shop_id . ')" style="cursor: pointer"><i class="bi bi-cart4"></i></div>';
@@ -2465,7 +2492,7 @@ class ShopController extends Controller
                             }
                             if (!empty($item_calories)) {
                                 $html .='<div class="item_detail_cal">';
-                                $html .= '<p><strong>Cal: </strong>' . $item_calories.'</p>';
+                                    $html .= '<p><strong>Cal: </strong>' . $item_calories.'</p>';
                                 $html .='</div>';
                             }
                         $html .='</div>';

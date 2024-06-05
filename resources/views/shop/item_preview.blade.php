@@ -1819,40 +1819,7 @@
                                                                         @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                             <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
                                                                         @endif
-                                                                        <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                            <i class="fa-solid fa-star"></i>
-                                                                            <i class="fa-solid fa-star"></i>
-                                                                            <i class="fa-solid fa-star"></i>
-                                                                        </a>
                                                                     </div>
-
-                                                                    {{-- Name Section --}}
-                                                                    <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer;">{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
-                                                                    </h3>
-
-                                                                    {{-- Calories Section --}}
-                                                                    @if (isset($item[$calories_key]) && !empty($item[$calories_key]))
-                                                                        <p class="m-0 p-0"><strong>Cal:
-                                                                            </strong>{{ isset($item[$calories_key]) && !empty($item[$calories_key]) ? $item[$calories_key] : '' }}
-                                                                        </p>
-                                                                    @endif
-
-                                                                    {{-- New Product Image --}}
-                                                                    @if ($item['is_new'] == 1)
-                                                                        <img class="is_new tag-img"
-                                                                            src="{{ asset('public/client_images/bs-icon/new.png') }}">
-                                                                    @endif
-
-                                                                    {{-- Signature Image --}}
-                                                                    @if ($item['as_sign'] == 1)
-                                                                        <img class="is_sign tag-img"
-                                                                            src="{{ asset('public/client_images/bs-icon/signature.png') }}">
-                                                                    @endif
-
-                                                                    {{-- Day Special Image --}}
-                                                                    {{-- @if ($item['day_special'] == 1)
-                                                                            <img class="is_special tag-img" src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
-                                                                        @endif --}}
 
                                                                     {{-- Ingredient Section --}}
                                                                     @php
@@ -1860,7 +1827,7 @@
                                                                     @endphp
 
                                                                     @if (count($ingrediet_arr) > 0)
-                                                                        <div>
+                                                                        <div class="mt-3">
                                                                             @foreach ($ingrediet_arr as $val)
                                                                                 @php
                                                                                     $ingredient = getIngredientDetail($val);
@@ -1868,45 +1835,70 @@
                                                                                     $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
                                                                                 @endphp
 
-                                                                                @if (
-                                                                                    (isset($package_permissions['special_icons']) &&
-                                                                                        !empty($package_permissions['special_icons']) &&
-                                                                                        $package_permissions['special_icons'] == 1) ||
-                                                                                        $parent_ing_id != null)
+                                                                                @if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != null)
                                                                                     @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
-                                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}"
-                                                                                            width="60px" height="60px">
+                                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}" width="60px" height="60px">
                                                                                     @endif
                                                                                 @endif
                                                                             @endforeach
                                                                         </div>
                                                                     @endif
+                                                                    
+                                                                    {{-- Star Section --}}
+                                                                    <div class="item_image">
+                                                                        <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                        </a>
+                                                                    </div>
 
-                                                                    {{-- Description Section --}}
+                                                                    {{-- Calories Section --}}
+                                                                    @if (isset($item[$calories_key]) && !empty($item[$calories_key]))
+                                                                        <p class="m-0 p-0 mt-3">
+                                                                            <strong>Cal: </strong>{{ isset($item[$calories_key]) && !empty($item[$calories_key]) ? $item[$calories_key] : '' }}
+                                                                        </p>
+                                                                    @endif
+
+                                                                    {{-- Name Section --}}
+                                                                    <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer;">{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>                                                                    
+
+                                                                    {{-- New Product Image --}}
+                                                                    @if ($item['is_new'] == 1)
+                                                                        <img class="is_new tag-img" src="{{ asset('public/client_images/bs-icon/new.png') }}">
+                                                                    @endif
+
+                                                                    {{-- Signature Image --}}
+                                                                    @if ($item['as_sign'] == 1)
+                                                                        <img class="is_sign tag-img" src="{{ asset('public/client_images/bs-icon/signature.png') }}">
+                                                                    @endif                                                                                                                                  
+
+                                                                    {{-- Description --}}
                                                                     @php
                                                                         $desc = isset($item[$description_key]) && !empty($item[$description_key]) ? $item[$description_key] : '';
                                                                     @endphp
-                                                                    @if (strlen(strip_tags($desc)) > 180)
-                                                                        <div class="item-desc">
-                                                                            <p>
-                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
-                                                                                <a
-                                                                                    class="read-more-desc">{{ $read_more_label }}</a>
-                                                                            </p>
-                                                                        </div>
-                                                                    @else
-                                                                        <div class="item-desc">
-                                                                            <p>{!! $desc !!}</p>
-                                                                        </div>
+                                                                    @if (!empty($desc))                                                                    
+                                                                        @if (strlen(strip_tags($desc)) > 180)
+                                                                            <div class="item-desc">
+                                                                                <p>
+                                                                                    {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
+                                                                                    <a
+                                                                                        class="read-more-desc">{{ $read_more_label }}</a>
+                                                                                </p>
+                                                                            </div>
+                                                                        @else
+                                                                            <div class="item-desc">
+                                                                                <p>{!! $desc !!}</p>
+                                                                            </div>
+                                                                        @endif
                                                                     @endif
 
-                                                                    {{-- Price Section --}}
-                                                                    <ul class="price_ul">
-                                                                        @php
-                                                                            $price_arr = getItemPrice($item['id']);
-                                                                        @endphp
-
-                                                                        @if (count($price_arr) > 0)
+                                                                    {{-- Price --}}
+                                                                    @php
+                                                                        $price_arr = getItemPrice($item['id']);
+                                                                    @endphp
+                                                                    @if (count($price_arr) > 0)
+                                                                        <ul class="price_ul">
                                                                             @foreach ($price_arr as $key => $value)
                                                                                 @php
                                                                                     $price = Currency::currency($currency)->format($value['price']);
@@ -1935,9 +1927,10 @@
                                                                                     @endif
                                                                                 </li>
                                                                             @endforeach
-                                                                        @endif
-                                                                    </ul>
+                                                                        </ul>
+                                                                    @endif
 
+                                                                    {{-- Day Special Image --}}
                                                                     @if ($item['day_special'] == 1)
                                                                         @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
                                                                             <img width="170" class="mt-4" src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
@@ -1949,14 +1942,10 @@
                                                                             @endif
                                                                         @endif
                                                                     @endif
-
-                                                                    @if (isset($package_permissions['ordering']) &&
-                                                                            !empty($package_permissions['ordering']) &&
-                                                                            $package_permissions['ordering'] == 1 &&
-                                                                            count($price_arr) > 0 &&
-                                                                            $item_delivery == 1)
-                                                                        <div class="cart-symbol" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer;"><i
-                                                                                class="bi bi-cart4"></i></div>
+                                                                    
+                                                                    {{-- Order Icon --}}
+                                                                    @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
+                                                                        <div class="cart-symbol" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer;"><i class="bi bi-cart4"></i></div>
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -1968,15 +1957,9 @@
                                                                         {{-- Image Section --}}
                                                                         @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                             <div class="item_image">
-                                                                                <img
-                                                                                    src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}">
+                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}">
                                                                             </div>
                                                                         @endif
-
-                                                                        {{-- Name Section --}}
-                                                                        <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
-                                                                        </h3>
-
 
                                                                         {{-- Ingredient Section --}}
                                                                         @php
@@ -1992,23 +1975,23 @@
                                                                                         $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
                                                                                     @endphp
 
-                                                                                    @if (
-                                                                                        (isset($package_permissions['special_icons']) &&
-                                                                                            !empty($package_permissions['special_icons']) &&
-                                                                                            $package_permissions['special_icons'] == 1) ||
-                                                                                            $parent_ing_id != null)
+                                                                                    @if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != null)
                                                                                         @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
-                                                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}"
-                                                                                                width="60px"
-                                                                                                height="60px">
+                                                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}" width="60px" height="60px">
                                                                                         @endif
                                                                                     @endif
                                                                                 @endforeach
                                                                             </div>
                                                                         @endif
 
+                                                                        {{-- Name Section --}}
+                                                                        <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
+                                                                        </h3>                                                                        
+
                                                                         {{-- Description Section --}}
-                                                                        <div>{!! isset($item[$description_key]) && !empty($item[$description_key]) ? $item[$description_key] : '' !!}</div>
+                                                                        @if (isset($item[$description_key]) && !empty($item[$description_key]))                                                                            
+                                                                            <div>{!! $item[$description_key] !!}</div>
+                                                                        @endif
 
                                                                     </div>
                                                                 </div>
@@ -2057,41 +2040,8 @@
                                                                         <div class="item_image">
                                                                             @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
                                                                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
-                                                                            @endif
-                                                                            <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                                <i class="fa-solid fa-star"></i>
-                                                                                <i class="fa-solid fa-star"></i>
-                                                                                <i class="fa-solid fa-star"></i>
-                                                                            </a>
+                                                                            @endif                                                                            
                                                                         </div>
-
-                                                                        {{-- Name Section --}}
-                                                                        <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ isset($item->product[$name_key]) && !empty($item->product[$name_key]) ? $item->product[$name_key] : '' }}
-                                                                        </h3>
-
-                                                                        {{-- Calories Section --}}
-                                                                        @if (isset($item->product[$calories_key]) && !empty($item->product[$calories_key]))
-                                                                            <p class="m-0 p-0"><strong>Cal :
-                                                                                </strong>{{ isset($item->product[$calories_key]) && !empty($item->product[$calories_key]) ? $item->product[$calories_key] : '' }}
-                                                                            </p>
-                                                                        @endif
-
-                                                                        {{-- New Product Image --}}
-                                                                        @if ($item->product['is_new'] == 1)
-                                                                            <img class="is_new tag-img"
-                                                                                src="{{ asset('public/client_images/bs-icon/new.png') }}">
-                                                                        @endif
-
-                                                                        {{-- Signature Image --}}
-                                                                        @if ($item->product['as_sign'] == 1)
-                                                                            <img class="is_sign tag-img"
-                                                                                src="{{ asset('public/client_images/bs-icon/signature.png') }}">
-                                                                        @endif
-
-                                                                        {{-- Day Special Image --}}
-                                                                        {{-- @if ($item->product['day_special'] == 1)
-                                                                                <img class="is_special tag-img" src="{{ asset('public/client_images/bs-icon/special.png') }}">
-                                                                            @endif --}}
 
                                                                         {{-- Ingredient Section --}}
                                                                         @php
@@ -2099,7 +2049,7 @@
                                                                         @endphp
 
                                                                         @if (count($ingrediet_arr) > 0)
-                                                                            <div>
+                                                                            <div class="m-3">
                                                                                 @foreach ($ingrediet_arr as $val)
                                                                                     @php
                                                                                         $ingredient = getIngredientDetail($val);
@@ -2107,46 +2057,70 @@
                                                                                         $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
                                                                                     @endphp
 
-                                                                                    @if (
-                                                                                        (isset($package_permissions['special_icons']) &&
-                                                                                            !empty($package_permissions['special_icons']) &&
-                                                                                            $package_permissions['special_icons'] == 1) ||
-                                                                                            $parent_ing_id != null)
+                                                                                    @if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != null)
                                                                                         @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
-                                                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}"
-                                                                                                width="60px"
-                                                                                                height="60px">
+                                                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}" width="60px" height="60px">
                                                                                         @endif
                                                                                     @endif
                                                                                 @endforeach
                                                                             </div>
                                                                         @endif
 
+                                                                        {{-- Rating Stars --}}
+                                                                        <div class="item_image">
+                                                                            <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                            </a>
+                                                                        </div>
+
+                                                                        {{-- Calories Section --}}
+                                                                        @if (isset($item->product[$calories_key]) && !empty($item->product[$calories_key]))
+                                                                            <p class="m-0 p-0 mt-3">
+                                                                                <strong>Cal : </strong>{{ isset($item->product[$calories_key]) && !empty($item->product[$calories_key]) ? $item->product[$calories_key] : '' }}
+                                                                            </p>
+                                                                        @endif
+
+                                                                        {{-- Name Section --}}
+                                                                        <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ isset($item->product[$name_key]) && !empty($item->product[$name_key]) ? $item->product[$name_key] : '' }}</h3>                                                                                                                                                
+
+                                                                        {{-- New Product Image --}}
+                                                                        @if ($item->product['is_new'] == 1)
+                                                                            <img class="is_new tag-img" src="{{ asset('public/client_images/bs-icon/new.png') }}">
+                                                                        @endif
+
+                                                                        {{-- Signature Image --}}
+                                                                        @if ($item->product['as_sign'] == 1)
+                                                                            <img class="is_sign tag-img" src="{{ asset('public/client_images/bs-icon/signature.png') }}">
+                                                                        @endif                                                                   
+
                                                                         {{-- Description Section --}}
                                                                         @php
                                                                             $desc = isset($item->product[$description_key]) && !empty($item->product[$description_key]) ? $item->product[$description_key] : '';
                                                                         @endphp
-                                                                        @if (strlen(strip_tags($desc)) > 180)
-                                                                            <div class="item-desc">
-                                                                                <p>
-                                                                                    {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
-                                                                                    <a
-                                                                                        class="read-more-desc">{{ $read_more_label }}</a>
-                                                                                </p>
-                                                                            </div>
-                                                                        @else
-                                                                            <div class="item-desc">
-                                                                                <p>{!! $desc !!}</p>
-                                                                            </div>
+                                                                        @if (!empty($desc))                                                                            
+                                                                            @if (strlen(strip_tags($desc)) > 180)
+                                                                                <div class="item-desc">
+                                                                                    <p>
+                                                                                        {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
+                                                                                        <a
+                                                                                            class="read-more-desc">{{ $read_more_label }}</a>
+                                                                                    </p>
+                                                                                </div>
+                                                                            @else
+                                                                                <div class="item-desc">
+                                                                                    <p>{!! $desc !!}</p>
+                                                                                </div>
+                                                                            @endif
                                                                         @endif
 
                                                                         {{-- Price Section --}}
-                                                                        <ul class="price_ul">
-                                                                            @php
-                                                                                $price_arr = getItemPrice($item['id']);
-                                                                            @endphp
-
-                                                                            @if (count($price_arr) > 0)
+                                                                        @php
+                                                                            $price_arr = getItemPrice($item['id']);
+                                                                        @endphp
+                                                                        @if (count($price_arr) > 0)
+                                                                            <ul class="price_ul">
                                                                                 @foreach ($price_arr as $key => $value)
                                                                                     @php
                                                                                         $price = Currency::currency($currency)->format($value['price']);
@@ -2175,8 +2149,8 @@
                                                                                         @endif
                                                                                     </li>
                                                                                 @endforeach
-                                                                            @endif
-                                                                        </ul>
+                                                                            </ul>
+                                                                        @endif
 
                                                                         @if ($item['day_special'] == 1)
                                                                             @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
@@ -2190,13 +2164,8 @@
                                                                             @endif
                                                                         @endif
 
-                                                                        @if (isset($package_permissions['ordering']) &&
-                                                                                !empty($package_permissions['ordering']) &&
-                                                                                $package_permissions['ordering'] == 1 &&
-                                                                                count($price_arr) > 0 &&
-                                                                                $item_delivery == 1)
-                                                                            <div class="cart-symbol" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer"><i
-                                                                                    class="bi bi-cart4"></i></div>
+                                                                        @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
+                                                                            <div class="cart-symbol" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer"><i class="bi bi-cart4"></i></div>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -2206,18 +2175,11 @@
                                                                         <div class="single_item_inr devider">
 
                                                                             {{-- Image Section --}}
-                                                                            @if (
-                                                                                !empty($item->product['image']) &&
-                                                                                    file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
+                                                                            @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
                                                                                 <div class="item_image">
-                                                                                    <img
-                                                                                        src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}">
+                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}">
                                                                                 </div>
                                                                             @endif
-
-                                                                            {{-- Name Section --}}
-                                                                            <h3>{{ isset($item->product[$name_key]) && !empty($item->product[$name_key]) ? $item->product[$name_key] : '' }}
-                                                                            </h3>
 
                                                                             {{-- Ingredient Section --}}
                                                                             @php
@@ -2233,26 +2195,23 @@
                                                                                             $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
                                                                                         @endphp
 
-                                                                                        @if (
-                                                                                            (isset($package_permissions['special_icons']) &&
-                                                                                                !empty($package_permissions['special_icons']) &&
-                                                                                                $package_permissions['special_icons'] == 1) ||
-                                                                                                $parent_ing_id != null)
+                                                                                        @if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != null)
                                                                                             @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
-                                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}"
-                                                                                                    width="60px"
-                                                                                                    height="60px">
+                                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}" width="60px" height="60px">
                                                                                             @endif
                                                                                         @endif
                                                                                     @endforeach
                                                                                 </div>
                                                                             @endif
 
+                                                                            {{-- Name Section --}}
+                                                                            <h3>{{ isset($item->product[$name_key]) && !empty($item->product[$name_key]) ? $item->product[$name_key] : '' }}</h3>                                                                            
+
                                                                             {{-- Description Section --}}
-                                                                            <div class="item-desc">{!! isset($item->product[$description_key]) && !empty($item->product[$description_key])
-                                                                                ? $item->product[$description_key]
-                                                                                : '' !!}
-                                                                            </div>
+                                                                            @if (isset($item->product[$description_key]) && !empty($item->product[$description_key]))                                                                                
+                                                                                <div class="item-desc">{!! $item->product[$description_key] !!}
+                                                                                </div>
+                                                                            @endif
 
                                                                         </div>
                                                                     </div>
@@ -2283,49 +2242,16 @@
                                                             <div class="item_image">
                                                                 @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                     <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
-                                                                @endif
-                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                    <i class="fa-solid fa-star"></i>
-                                                                    <i class="fa-solid fa-star"></i>
-                                                                    <i class="fa-solid fa-star"></i>
-                                                                </a>
-                                                            </div>                                                            
-
-                                                            {{-- Name Section --}}
-                                                            <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
-                                                            </h3>
-
-                                                            {{-- Calories Section --}}
-                                                            @if (isset($item[$calories_key]) && !empty($item[$calories_key]))
-                                                                <p class="m-0 p-0"><strong>Calories :
-                                                                    </strong>{{ isset($item[$calories_key]) && !empty($item[$calories_key]) ? $item[$calories_key] : '' }}
-                                                                </p>
-                                                            @endif
-
-                                                            {{-- New Product Image --}}
-                                                            @if ($item['is_new'] == 1)
-                                                                <img class="is_new tag-img"
-                                                                    src="{{ asset('public/client_images/bs-icon/new.png') }}">
-                                                            @endif
-
-                                                            {{-- Signature Image --}}
-                                                            @if ($item['as_sign'] == 1)
-                                                                <img class="is_sign tag-img"
-                                                                    src="{{ asset('public/client_images/bs-icon/signature.png') }}">
-                                                            @endif
-
-                                                            {{-- Day Special Image --}}
-                                                            {{-- @if ($item['day_special'] == 1)
-                                                                    <img class="is_special tag-img" src="{{ asset('public/client_images/bs-icon/special.png') }}">
-                                                                @endif --}}
-
+                                                                @endif                                                                
+                                                            </div>
+                                                            
                                                             {{-- Ingredient Section --}}
                                                             @php
                                                                 $ingrediet_arr = isset($item['ingredients']) && !empty($item['ingredients']) ? unserialize($item['ingredients']) : [];
                                                             @endphp
 
                                                             @if (count($ingrediet_arr) > 0)
-                                                                <div>
+                                                                <div class="mt-3">
                                                                     @foreach ($ingrediet_arr as $val)
                                                                         @php
                                                                             $ingredient = getIngredientDetail($val);
@@ -2333,45 +2259,72 @@
                                                                             $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
                                                                         @endphp
 
-                                                                        @if (
-                                                                            (isset($package_permissions['special_icons']) &&
-                                                                                !empty($package_permissions['special_icons']) &&
-                                                                                $package_permissions['special_icons'] == 1) ||
-                                                                                $parent_ing_id != null)
+                                                                        @if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != null)
                                                                             @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
-                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}"
-                                                                                    width="60px" height="60px">
+                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}" width="60px" height="60px">
                                                                             @endif
                                                                         @endif
                                                                     @endforeach
                                                                 </div>
                                                             @endif
 
+                                                            {{-- Stars --}}
+                                                            <div class="item_image">
+                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                </a>
+                                                            </div>
+
+                                                            {{-- Calories Section --}}
+                                                            @if (isset($item[$calories_key]) && !empty($item[$calories_key]))
+                                                                <p class="m-0 p-0 mt-3">
+                                                                    <strong>Calories : </strong>{{ isset($item[$calories_key]) && !empty($item[$calories_key]) ? $item[$calories_key] : '' }}
+                                                                </p>
+                                                            @endif
+
+                                                            {{-- Name Section --}}
+                                                            <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
+                                                            </h3>                                                            
+
+                                                            {{-- New Product Image --}}
+                                                            @if ($item['is_new'] == 1)
+                                                                <img class="is_new tag-img" src="{{ asset('public/client_images/bs-icon/new.png') }}">
+                                                            @endif
+
+                                                            {{-- Signature Image --}}
+                                                            @if ($item['as_sign'] == 1)
+                                                                <img class="is_sign tag-img" src="{{ asset('public/client_images/bs-icon/signature.png') }}">
+                                                            @endif                                                         
+
                                                             {{-- Description Section --}}
                                                             @php
                                                                 $desc = isset($item[$description_key]) && !empty($item[$description_key]) ? $item[$description_key] : '';
                                                             @endphp
-                                                            @if (strlen(strip_tags($desc)) > 180)
-                                                                <div class="item-desc">
-                                                                    <p>
-                                                                        {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
-                                                                        <a
-                                                                            class="read-more-desc">{{ $read_more_label }}</a>
-                                                                    </p>
-                                                                </div>
-                                                            @else
-                                                                <div class="item-desc">
-                                                                    <p>{!! $desc !!}</p>
-                                                                </div>
+                                                            @if (!empty($desc))                                                        
+                                                                @if (strlen(strip_tags($desc)) > 180)
+                                                                    <div class="item-desc">
+                                                                        <p>
+                                                                            {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
+                                                                            <a
+                                                                                class="read-more-desc">{{ $read_more_label }}</a>
+                                                                        </p>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="item-desc">
+                                                                        <p>{!! $desc !!}</p>
+                                                                    </div>
+                                                                @endif
                                                             @endif
 
                                                             {{-- Price Section --}}
-                                                            <ul class="price_ul">
-                                                                @php
-                                                                    $price_arr = getItemPrice($item['id']);
-                                                                @endphp
+                                                            @php
+                                                                $price_arr = getItemPrice($item['id']);
+                                                            @endphp
 
-                                                                @if (count($price_arr) > 0)
+                                                            @if (count($price_arr) > 0)
+                                                                <ul class="price_ul">
                                                                     @foreach ($price_arr as $key => $value)
                                                                         @php
                                                                             $price = Currency::currency($currency)->format($value['price']);
@@ -2400,8 +2353,8 @@
                                                                             @endif
                                                                         </li>
                                                                     @endforeach
-                                                                @endif
-                                                            </ul>
+                                                                </ul>
+                                                            @endif
 
                                                             @if ($item['day_special'] == 1)
                                                                 @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
@@ -2415,11 +2368,7 @@
                                                                 @endif
                                                             @endif
 
-                                                            @if (isset($package_permissions['ordering']) &&
-                                                                    !empty($package_permissions['ordering']) &&
-                                                                    $package_permissions['ordering'] == 1 &&
-                                                                    count($price_arr) > 0 &&
-                                                                    $item_delivery == 1)
+                                                            @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
                                                                 <div class="cart-symbol" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer"><i class="bi bi-cart4"></i></div>
                                                             @endif
                                                         </div>
@@ -2437,10 +2386,6 @@
                                                                     </div>
                                                                 @endif
 
-                                                                {{-- Name Section --}}
-                                                                <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
-                                                                </h3>
-
                                                                 {{-- Ingredient Section --}}
                                                                 @php
                                                                     $ingrediet_arr = isset($item['ingredients']) && !empty($item['ingredients']) ? unserialize($item['ingredients']) : [];
@@ -2455,22 +2400,22 @@
                                                                                 $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
                                                                             @endphp
 
-                                                                            @if (
-                                                                                (isset($package_permissions['special_icons']) &&
-                                                                                    !empty($package_permissions['special_icons']) &&
-                                                                                    $package_permissions['special_icons'] == 1) ||
-                                                                                    $parent_ing_id != null)
+                                                                            @if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != null)
                                                                                 @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
-                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}"
-                                                                                        width="60px" height="60px">
+                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}" width="60px" height="60px">
                                                                                 @endif
                                                                             @endif
                                                                         @endforeach
                                                                     </div>
                                                                 @endif
 
+                                                                {{-- Name Section --}}
+                                                                <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>                                                                
+
                                                                 {{-- Description Section --}}
-                                                                <div class="item-desc">{!! isset($item[$description_key]) && !empty($item[$description_key]) ? $item[$description_key] : '' !!}</div>
+                                                                @if (isset($item[$description_key]) && !empty($item[$description_key]))                                                                    
+                                                                    <div class="item-desc">{!! $item[$description_key] !!}</div>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     @endif
