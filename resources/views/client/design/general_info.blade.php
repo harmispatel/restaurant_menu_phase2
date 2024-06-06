@@ -87,11 +87,17 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="col-md-4 mb-3">
                         <div class="form-group">
                             <label for="form-label" for="shop_start_time">{{ __('Default TimeZone') }}</label>
-                            <input type="text" class="form-control" name="default_timezone" id="default_timezone" value="{{ (isset($client_settings['default_timezone']) && !empty($client_settings['default_timezone'])) ? $client_settings['default_timezone'] : '' }}">
+                            <select name="default_timezone" id="default_timezone" class="form-select form-control ">
+                                @if (count($timezones) > 0)
+                                    @foreach ($timezones as $timezone)
+                                        <option value="{{ $timezone->name }}" {{ (isset($client_settings['default_timezone']) && !empty($client_settings['default_timezone']) && $client_settings['default_timezone'] == $timezone->name) ? 'selected' : '' }}>{{ $timezone->name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
                     </div>
 
@@ -246,6 +252,8 @@
 @section('page-js')
 
     <script type="text/javascript">
+
+        $('#default_timezone').select2();
 
         // Toastr Settings
         toastr.options = {

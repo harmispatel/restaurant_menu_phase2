@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             IngredientSeeder::class,
             CountrySeeder::class,
             CodePageSeeder::class,
+            TimeZoneSeeder::class,
         ]);
     }
 }
