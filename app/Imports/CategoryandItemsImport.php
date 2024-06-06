@@ -71,6 +71,7 @@ class CategoryandItemsImport implements ToCollection
                                 $price_ids_arr = [];
 
                                 foreach ($langs as $key => $item_lang) {
+                                    $item_lang = trim($item_lang);
                                     if ($key <= 0) {
                                         $def_key = 0;
                                         $def_tag_key = 0;
@@ -81,10 +82,10 @@ class CategoryandItemsImport implements ToCollection
 
                                             $item_price_arr = [];
 
-                                            if ($item[1] == $item_lang) {
-                                                $item_name_key = $item[1] . "_name";
-                                                $item_description_key = $item[1] . "_description";
-                                                $item_price_label_key = $item[1] . "_label";
+                                            if (trim($item[1]) == $item_lang) {
+                                                $item_name_key = trim($item[1]) . "_name";
+                                                $item_description_key = trim($item[1]) . "_description";
+                                                $item_price_label_key = trim($item[1]) . "_label";
 
                                                 $published = isset($item[29]) ? $item[29] : 1;
                                                 $item_type = (isset($item[28]) && !empty($item[28])) ? $item[28] : 1;
@@ -140,7 +141,7 @@ class CategoryandItemsImport implements ToCollection
                                                         $max_category_order_key = Category::where('shop_id', $this->shop_id)->max('order_key');
                                                         $category_order = (isset($max_category_order_key) && !empty($max_category_order_key)) ? ($max_category_order_key + 1) : 1;
 
-                                                        $cat_name_key = $item[1] . "_name";
+                                                        $cat_name_key = trim($item[1]) . "_name";
                                                         $cat_exist = Category::where('shop_id', $this->shop_id)->where($cat_name_key, $category_val)->first();
                                                         $cat_exist_id = (isset($cat_exist->id)) ? $cat_exist->id : '';
 
@@ -213,7 +214,7 @@ class CategoryandItemsImport implements ToCollection
                                                 if (count($tags) > 0) {
                                                     foreach ($tags as $key => $tag) {
                                                         $tag = trim($tag);
-                                                        $tag_name_key = $item[1] . "_name";
+                                                        $tag_name_key = trim($item[1]) . "_name";
                                                         // $findTag = Tags::where('shop_id',$this->shop_id)->where('name',$tag)->where($tag_name_key,$tag)->first();
                                                         $findTag = Tags::where('shop_id', $this->shop_id)->where($tag_name_key, $tag)->first();
                                                         $tag_id = (isset($findTag->id) && !empty($findTag->id)) ? $findTag->id : '';
@@ -272,14 +273,14 @@ class CategoryandItemsImport implements ToCollection
                                         $def_price_key = 0;
 
                                         foreach ($rows as $item) {
-                                            if ($item[1] == $item_lang) {
+                                            if (trim($item[1]) == $item_lang) {
                                                 $categories = (isset($categories_ids[$def_key])) ? $categories_ids[$def_key] : [];
                                                 $edit_categories = (isset($item[2]) && !empty($item[2])) ? explode(',', $item[2]) : [];
 
                                                 // Update Category
                                                 if (count($categories) > 0 && count($edit_categories) > 0 && (count($categories) == count($edit_categories))) {
                                                     foreach ($categories as $key => $cat_id) {
-                                                        $cat_name_key = $item[1] . "_name";
+                                                        $cat_name_key = trim($item[1]) . "_name";
                                                         $cat_name = (isset($edit_categories[$key])) ? $edit_categories[$key] : '';
                                                         $category = Category::find($cat_id);
                                                         $category->$cat_name_key = $cat_name;
@@ -289,9 +290,9 @@ class CategoryandItemsImport implements ToCollection
 
                                                 $ins_item_id = $product_ids[$def_key];
 
-                                                $item_name_key = $item[1] . "_name";
-                                                $item_description_key = $item[1] . "_description";
-                                                $item_price_label_key = $item[1] . "_label";
+                                                $item_name_key = trim($item[1]) . "_name";
+                                                $item_description_key = trim($item[1]) . "_description";
+                                                $item_price_label_key = trim($item[1]) . "_label";
                                                 $lang_tags = isset($item[26]) ? explode(',', $item[26]) : [];
 
                                                 $edit_item =  Items::find($ins_item_id);
@@ -374,7 +375,7 @@ class CategoryandItemsImport implements ToCollection
                                                             $ins_tag_id = isset($tag_ids[$def_tag_key]) ? $tag_ids[$def_tag_key] : '';
 
                                                             if (!empty($ins_tag_id)) {
-                                                                $tag_name_key = $item[1] . "_name";
+                                                                $tag_name_key = trim($item[1]) . "_name";
                                                                 $findTag = Tags::where('shop_id', $this->shop_id)->where($tag_name_key, $tag)->where('id', '!=', $ins_tag_id)->first();
                                                                 $tag_id = (isset($findTag->id) && !empty($findTag->id)) ? $findTag->id : '';
 
@@ -414,6 +415,7 @@ class CategoryandItemsImport implements ToCollection
                             $category->link_url = $link_url;
                         }
                         foreach ($langs as $key => $lang) {
+                            $lang = trim($lang);
                             $name_key = $lang . "_name";
                             $lang_category_name = isset($rows[3][$key]) ? $rows[3][$key] : '';
                             $category->$name_key = $lang_category_name;
