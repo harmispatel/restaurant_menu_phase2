@@ -1879,15 +1879,14 @@
                                                                     @endphp
                                                                     @if (!empty($desc))                                                                    
                                                                         @if (strlen(strip_tags($desc)) > 180)
-                                                                            <div class="item-desc">
+                                                                            <div class="item-desc position-relative">
                                                                                 <p>
                                                                                     {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
-                                                                                    <a
-                                                                                        class="read-more-desc">{{ $read_more_label }}</a>
+                                                                                    <a class="read-more-desc" onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})" style="cursor: pointer;">{{ $read_more_label }}</a>
                                                                                 </p>
                                                                             </div>
                                                                         @else
-                                                                            <div class="item-desc">
+                                                                            <div class="item-desc position-relative">
                                                                                 <p>{!! $desc !!}</p>
                                                                             </div>
                                                                         @endif
@@ -2101,15 +2100,14 @@
                                                                         @endphp
                                                                         @if (!empty($desc))                                                                            
                                                                             @if (strlen(strip_tags($desc)) > 180)
-                                                                                <div class="item-desc">
+                                                                                <div class="item-desc position-relative">
                                                                                     <p>
                                                                                         {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
-                                                                                        <a
-                                                                                            class="read-more-desc">{{ $read_more_label }}</a>
+                                                                                        <a class="read-more-desc" onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})" style="cursor: pointer;">{{ $read_more_label }}</a>
                                                                                     </p>
                                                                                 </div>
                                                                             @else
-                                                                                <div class="item-desc">
+                                                                                <div class="item-desc position-relative">
                                                                                     <p>{!! $desc !!}</p>
                                                                                 </div>
                                                                             @endif
@@ -2209,7 +2207,7 @@
 
                                                                             {{-- Description Section --}}
                                                                             @if (isset($item->product[$description_key]) && !empty($item->product[$description_key]))                                                                                
-                                                                                <div class="item-desc">{!! $item->product[$description_key] !!}
+                                                                                <div class="item-desc position-relative">{!! $item->product[$description_key] !!}
                                                                                 </div>
                                                                             @endif
 
@@ -2304,15 +2302,14 @@
                                                             @endphp
                                                             @if (!empty($desc))                                                        
                                                                 @if (strlen(strip_tags($desc)) > 180)
-                                                                    <div class="item-desc">
+                                                                    <div class="item-desc position-relative">
                                                                         <p>
                                                                             {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
-                                                                            <a
-                                                                                class="read-more-desc">{{ $read_more_label }}</a>
+                                                                            <a class="read-more-desc" onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ $read_more_label }}</a>
                                                                         </p>
                                                                     </div>
                                                                 @else
-                                                                    <div class="item-desc">
+                                                                    <div class="item-desc position-relative">
                                                                         <p>{!! $desc !!}</p>
                                                                     </div>
                                                                 @endif
@@ -2414,7 +2411,7 @@
 
                                                                 {{-- Description Section --}}
                                                                 @if (isset($item[$description_key]) && !empty($item[$description_key]))                                                                    
-                                                                    <div class="item-desc">{!! $item[$description_key] !!}</div>
+                                                                    <div class="item-desc position-relative">{!! $item[$description_key] !!}</div>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -2726,17 +2723,15 @@
                                                                     @php
                                                                         $desc = isset($item[$description_key]) && !empty($item[$description_key]) ? $item[$description_key] : '';
                                                                     @endphp
-                                                                    @if (strlen(strip_tags($desc)) > 100)
-                                                                        <div class="item-desc">
+                                                                    @if (strlen(strip_tags($desc)) > 180)
+                                                                        <div class="item-desc position-relative">
                                                                             <p>
-                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 100), "\n")) !!}... <br>
-                                                                                <a class="read-more-desc text-white"
-                                                                                    onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})"
-                                                                                    style="cursor: pointer">{{ $read_more_label }}</a>
+                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
+                                                                                <a class="read-more-desc text-white" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ $read_more_label }}</a>
                                                                             </p>
                                                                         </div>
                                                                     @else
-                                                                        <div class="item-desc">
+                                                                        <div class="item-desc position-relative">
                                                                             <p>{!! $desc !!}</p>
                                                                         </div>
                                                                     @endif
@@ -3067,17 +3062,15 @@
                                                                     @php
                                                                         $desc = isset($item->product[$description_key]) && !empty($item->product[$description_key]) ? $item->product[$description_key] : '';
                                                                     @endphp
-                                                                    @if (strlen(strip_tags($desc)) > 100)
-                                                                        <div class="item-desc">
+                                                                    @if (strlen(strip_tags($desc)) > 180)
+                                                                        <div class="item-desc position-relative">
                                                                             <p>
-                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 120), "\n")) !!}... <br>
-                                                                                <a class="read-more-desc text-white"
-                                                                                    onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})"
-                                                                                    style="cursor: pointer">{{ $read_more_label }}</a>
+                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
+                                                                                <a class="read-more-desc text-white" onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ $read_more_label }}</a>
                                                                             </p>
                                                                         </div>
                                                                     @else
-                                                                        <div class="item-desc">
+                                                                        <div class="item-desc position-relative">
                                                                             <p>{!! $desc !!}</p>
                                                                         </div>
                                                                     @endif

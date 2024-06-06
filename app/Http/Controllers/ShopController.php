@@ -852,10 +852,10 @@ class ShopController extends Controller
                                         if(!empty($desc)){
                                             if (strlen(strip_tags($desc)) > 180) {
                                                 $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                                $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
-                                                            <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
+                                                $html .= '<div class="item-desc position-relative"><p>' . $desc . ' ... <br>
+                                                            <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
                                             } else {
-                                                $html .= '<div class="item-desc"><p>' . strip_tags($desc) . '</p></div>';
+                                                $html .= '<div class="item-desc position-relative"><p>' . strip_tags($desc) . '</p></div>';
                                             }
                                         }
 
@@ -975,12 +975,12 @@ class ShopController extends Controller
                                                              $html .='</div>';
                                                              $html .= '<div class="item_detail_inr' . (!empty($item['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) ? '' : ' no_img_item_detail') . '">';
                                                             $html .='<div class="item_info">';
-                                                                    if (strlen(strip_tags($desc)) > 100) {
-                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 100), "\n"));
-                                                                        $html .='<div class="item-desc"><p>'. $desc . ' ... <br>
-                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')">' . $read_more_label . '</a></p></div>';
+                                                                    if (strlen(strip_tags($desc)) > 180) {
+                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                                                        $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br>
+                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
                                                                     }else{
-                                                                        $html .='<div class="item_desc"><p>'.strip_tags($desc).'</p></div>';
+                                                                        $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
                                                                     }
                                                                     if(count($ingrediet_arr) > 0) {
                                                                         $html .='<div class="item_tag">';
@@ -1418,10 +1418,10 @@ class ShopController extends Controller
                                     if(!empty($desc)){
                                         if (strlen(strip_tags($desc)) > 180) {
                                             $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                            $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
-                                                        <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
+                                            $html .= '<div class="item-desc position-relative"><p>' . $desc . ' ... <br>
+                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
                                         } else {
-                                            $html .= '<div class="item-desc"><p?>' . strip_tags($desc) . '</p></div>';
+                                            $html .= '<div class="item-desc position-relative"><p?>' . strip_tags($desc) . '</p></div>';
                                         }
                                     }
 
@@ -1543,13 +1543,12 @@ class ShopController extends Controller
                                                             $html .='</div>';
                                                             $html .= '<div class="item_detail_inr' . (!empty($item['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) ? '' : ' no_img_item_detail') . '">';
                                                             $html .='<div class="item_info">';
-                                                                // $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
-                                                                    if (strlen(strip_tags($desc)) > 100) {
-                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 100), "\n"));
-                                                                        $html .='<div class="item-desc"><p>'. $desc . ' ... <br>
-                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')">' . $read_more_label . '</a></p></div>';
+                                                                    if (strlen(strip_tags($desc)) > 180) {
+                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                                                        $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br>
+                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
                                                                     }else{
-                                                                        $html .='<div class="item_desc"><p>'.strip_tags($desc).'</p></div>';
+                                                                        $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
                                                                     }
 
                                                                     if(count($ingrediet_arr) > 0) {
@@ -1895,10 +1894,10 @@ class ShopController extends Controller
                                 if(!empty($desc)){
                                     if (strlen(strip_tags($desc)) > 180) {
                                         $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                        $html .= '<div class="item-desc"><p>' . $desc . ' ... <br>
-                                                        <a class="read-more-desc">' . $read_more_label . '</a></p></div>';
+                                        $html .= '<div class="item-desc position-relative"><p>' . $desc . ' ... <br>
+                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
                                     } else {
-                                        $html .= '<div class="item-desc"><p>' . strip_tags($desc) . '</p></div>';
+                                        $html .= '<div class="item-desc position-relative"><p>' . strip_tags($desc) . '</p></div>';
                                     }
                                 }
 
@@ -2021,12 +2020,12 @@ class ShopController extends Controller
                                                         $html .='<div class="item_detail_inr">';
                                                             $html .='<div class="item_info">';
                                                                 // $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
-                                                                    if (strlen(strip_tags($desc)) > 100) {
-                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 100), "\n"));
-                                                                        $html .='<div class="item-desc"><p>'. $desc . ' ... <br>
-                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')">' . $read_more_label . '</a></p></div>';
+                                                                    if (strlen(strip_tags($desc)) > 180) {
+                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                                                        $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br>
+                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
                                                                     }else{
-                                                                        $html .='<div class="item_desc"><p>'.strip_tags($desc).'</p></div>';
+                                                                        $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
                                                                     }
 
                                                                     if(count($ingrediet_arr) > 0) {
