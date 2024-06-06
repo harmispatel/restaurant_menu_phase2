@@ -75,7 +75,7 @@
                                     <tr>
                                         <th>{{ __('Id')}}</th>
                                         <th>{{ __('Name')}}</th>
-                                        <th>{{ __('email')}}</th>
+                                        <th>{{ __('Shop Name')}}</th>
                                         <th>{{ __('Status')}}</th>
                                         <th>{{ __('Favorite')}}</th>
                                         <th>{{ __('Duration') }}</th>
@@ -87,7 +87,7 @@
                                         <tr>
                                             <td>{{ (isset($client->hasOneShop->shop['id'])) ? $client->hasOneShop->shop['id'] : '' }}</td>
                                             <td>{{ $client->firstname }} {{ $client->lastname }}</td>
-                                            <td>{{ $client->email }}</td>
+                                            <td>{{ (isset($client->hasOneShop->shop['name'])) ? $client->hasOneShop->shop['name'] : '' }}</td>
                                             <td>
                                                 @php
                                                     $status = $client->status;

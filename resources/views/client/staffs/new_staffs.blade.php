@@ -93,12 +93,13 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="wp_number" class="form-label">{{ __('Whatsapp Number')}}</label>
-                                            <input type="number" name="wp_number" id="wp_number" class="form-control {{ ($errors->has('wp_number')) ? 'is-invalid' : '' }}" placeholder="Enter Whatsapp Number" value="{{ old('wp_number') }}">
+                                            <input type="text" name="wp_number" id="wp_number" class="form-control {{ ($errors->has('wp_number')) ? 'is-invalid' : '' }}" placeholder="Enter Whatsapp Number" value="{{ old('wp_number') }}">
                                             @if($errors->has('wp_number'))
                                                 <div class="invalid-feedback">
                                                     {{ $errors->first('wp_number') }}
                                                 </div>
                                             @endif
+                                            <code>{{ __('Please enter the pnone with this format: +30xxxxxxxxx') }}</code>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -140,6 +141,20 @@
 {{-- Custom JS --}}
 @section('page-js')
     <script type="text/javascript">
+
+    $(document).ready(function(){
+        $('#wp_number').on('input', function() {
+            let value = $(this).val().replace(/[^0-9+]/g, '').replace(/^\+/, '');
+            $(this).val('+' + value.substring(0, 12));
+        }).on('paste', function(e) {
+            var pastedData = (e.originalEvent.clipboardData || window.clipboardData).getData('Text');
+            if (!/^\+?[0-9]*$/.test(pastedData)) {
+                e.preventDefault();
+            }
+        }).on('focus', function() {
+            if (!$(this).val()) $(this).val('+');
+        });
+    });
 
     </script>
 @endsection

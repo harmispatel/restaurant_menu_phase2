@@ -80,6 +80,21 @@
                             <div class="col-lg-3 col-md-4 label"><b>{{ __('Email') }}</b></div>
                             <div class="col-lg-9 col-md-8">{{ $user->email }}</div>
                         </div>
+
+                        @php
+                            $contact_emails = (isset($user->contact_emails) && !empty($user->contact_emails)) ? unserialize($user->contact_emails) : [];                                
+                        @endphp
+                        @if (count($contact_emails) > 0)                        
+                            <div class="row mb-2">
+                                <div class="col-lg-3 col-md-4 label"><b>{{ __('Contact Emails') }}</b></div>
+                                <div class="col-lg-9 col-md-8">
+                                    @foreach ($contact_emails as $contact_email)
+                                        {{ $contact_email }} <br>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="row mb-2">
                             <div class="col-lg-3 col-md-4 label"><b>{{ __('Joined At') }}</b></div>
                             <div class="col-lg-9 col-md-8">{{ date('d-M-Y',strtotime($user->created_at)) }}</div>
