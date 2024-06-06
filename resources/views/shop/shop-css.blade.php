@@ -194,13 +194,16 @@
                 background-color : {{ $theme_settings['categories_bar_color'] }}!important;
             }
 
-            .category_slider .slick-arrow{
-                color : {{ $theme_settings['categories_bar_color'] }}!important;
-            }
-
             .flipster__button{
                 color : {{ $theme_settings['categories_bar_color'] }}!important;
+            }
+        @endif
 
+        
+        /* Category Bar Slider Buttons Color */
+        @if(isset($theme_settings['category_bar_slider_buttons_color']))
+            .category_slider .slick-arrow,.flipster .flipster__button,.owl-carousel-stacked .owl-prev, .owl-carousel-stacked .owl-next{
+                color : {{ (!empty($theme_settings['category_bar_slider_buttons_color'])) ? $theme_settings['category_bar_slider_buttons_color'] : '#000000' }} !important;
             }
         @endif
 

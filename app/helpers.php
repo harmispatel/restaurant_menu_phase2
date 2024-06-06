@@ -340,6 +340,7 @@
             'rating_star_icon_color',
             'tag_background_color',
             'active_tag_background_color',
+            'category_bar_slider_buttons_color',
         ]);
 
         $settings = [];

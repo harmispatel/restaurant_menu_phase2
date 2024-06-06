@@ -729,8 +729,16 @@ header .cart-btn {
 
 .item_detail_inner_info {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    position: relative;
+}
+
+.item_detail_inner_info .item_detail_cal {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
 }
 
 .item_model_preview .add_to_cart_btn_modal {
@@ -2744,7 +2752,14 @@ header .cart-btn {
     }
 
     .item_detail_inner_info {
-        flex-direction: column;
+        flex-direction: column-reverse;
+        margin-top: 15px;
+    }
+    .item_detail_inner_info .item_detail_cal {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: translate(0, 0);
     }
 
     .item_model_preview .quantity_btn_group .btn-number{

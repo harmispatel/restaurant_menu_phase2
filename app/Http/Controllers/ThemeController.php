@@ -125,6 +125,7 @@ class ThemeController extends Controller
             'rating_star_icon_color',
             'tag_background_color',
             'active_tag_background_color',
+            'category_bar_slider_buttons_color',
         ]);
 
         $settings = [];
@@ -264,6 +265,7 @@ class ThemeController extends Controller
             'rating_star_icon_color'=>$request->rating_star_icon_color,
             'tag_background_color'=>$request->tag_background_color,
             'active_tag_background_color'=>$request->active_tag_background_color,
+            'category_bar_slider_buttons_color'=>$request->category_bar_slider_buttons_color,
         ];        
 
         if($request->hasFile('theme_preview_image'))
@@ -456,6 +458,7 @@ class ThemeController extends Controller
             'rating_star_icon_color'=>$request->rating_star_icon_color,
             'tag_background_color'=>$request->tag_background_color,
             'active_tag_background_color'=>$request->active_tag_background_color,
+            'category_bar_slider_buttons_color'=>$request->category_bar_slider_buttons_color,
         ];
 
         if($request->hasFile('theme_preview_image'))
@@ -595,6 +598,7 @@ class ThemeController extends Controller
             'rating_star_icon_color',
             'tag_background_color',
             'active_tag_background_color',
+            'category_bar_slider_buttons_color',
         ]);
 
         $settings = [];

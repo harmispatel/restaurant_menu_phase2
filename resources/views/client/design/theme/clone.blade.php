@@ -261,6 +261,17 @@
                                                     <div class="main_theme_color">
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
+                                                                <span>{{ __('Cateory Bar Slider Buttons Color')}}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="category_bar_slider_buttons_color" name="category_bar_slider_buttons_color" class="form-control me-2 p-0" value="{{ isset($settings['category_bar_slider_buttons_color']) ? $settings['category_bar_slider_buttons_color'] : '' }}" onchange="changeVal('category_bar_slider_buttons_color','category_bar_slider_buttons_color_input')">
+                                                                    <input id="category_bar_slider_buttons_color_input" type="text" class="form-control" value="{{ isset($settings['category_bar_slider_buttons_color']) ? $settings['category_bar_slider_buttons_color'] : '' }}" onkeyup="changeColor('category_bar_slider_buttons_color_input','category_bar_slider_buttons_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
                                                                 <span>{{ __('Search Arrows')}}</span>
                                                             </div>
                                                             <div class="col-md-4">
