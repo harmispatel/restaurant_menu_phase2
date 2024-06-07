@@ -294,12 +294,67 @@
                                                         </div>
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
-                                                                <span>{{ __('Category Title & Description Fonts Color')}}</span>
+                                                                <span>01. {{ __('Category Title & Description') }}</span>
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <div class="from-group d-flex align-items-center">
                                                                     <input type="color" id="category_title_and_description_color" name="category_title_and_description_color" class="form-control me-2 p-0" value="{{ isset($settings['category_title_and_description_color']) ? $settings['category_title_and_description_color'] : '' }}" onchange="changeVal('category_title_and_description_color','category_title_and_description_color_input')">
                                                                     <input id="category_title_and_description_color_input" type="text" class="form-control" value="{{ isset($settings['category_title_and_description_color']) ? $settings['category_title_and_description_color'] : '' }}" onkeyup="changeColor('category_title_and_description_color_input','category_title_and_description_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>02. {{ __('PC Active Tag Text') }}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="tag_font_color" name="tag_font_color" class="form-control me-2 p-0" value="{{ isset($settings['tag_font_color']) ? $settings['tag_font_color'] : '' }}" onchange="changeVal('tag_font_color','tag_font_color_input')">
+                                                                    <input id="tag_font_color_input" type="text" class="form-control" value="{{ isset($settings['tag_font_color']) ? $settings['tag_font_color'] : '' }}" onkeyup="changeColor('tag_font_color_input','tag_font_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>03. {{ __('PC Active Tag BG') }}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="active_tag_background_color" name="active_tag_background_color" class="form-control me-2 p-0" value="{{ isset($settings['active_tag_background_color']) ? $settings['active_tag_background_color'] : '' }}" onchange="changeVal('active_tag_background_color','active_tag_background_color_input')">
+                                                                    <input id="active_tag_background_color_input" type="text" class="form-control" value="{{ isset($settings['active_tag_background_color']) ? $settings['active_tag_background_color'] : '' }}" onkeyup="changeColor('active_tag_background_color_input','active_tag_background_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>04. {{ __('PC Tag Text') }}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="tag_label_color" name="tag_label_color" class="form-control me-2 p-0" value="{{ isset($settings['tag_label_color']) ? $settings['tag_label_color'] : '' }}" onchange="changeVal('tag_label_color','tag_label_color_input')">
+                                                                    <input id="tag_label_color_input" type="text" class="form-control" value="{{ isset($settings['tag_label_color']) ? $settings['tag_label_color'] : '' }}" onkeyup="changeColor('tag_label_color_input','tag_label_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4">
+                                                            <div class="col-md-8">
+                                                                <span>05. {{ __('PC Tag BG') }}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="tag_background_color" name="tag_background_color" class="form-control me-2 p-0" value="{{ isset($settings['tag_background_color']) ? $settings['tag_background_color'] : '' }}" onchange="changeVal('tag_background_color','tag_background_color_input')">
+                                                                    <input id="tag_background_color_input" type="text" class="form-control" value="{{ isset($settings['tag_background_color']) ? $settings['tag_background_color'] : '' }}" onkeyup="changeColor('tag_background_color_input','tag_background_color')">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center mb-4" id="item-rating-star-icon-colors">
+                                                            <div class="col-md-8">
+                                                                <span>14. {{ __('Rating Stars Icons') }}</span>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="from-group d-flex align-items-center">
+                                                                    <input type="color" id="rating_star_icon_color" name="rating_star_icon_color" class="form-control me-2 p-0" value="{{ isset($settings['rating_star_icon_color']) ? $settings['rating_star_icon_color'] : '' }}" onchange="changeVal('rating_star_icon_color','rating_star_icon_color_input')">
+                                                                    <input id="rating_star_icon_color_input" type="text" class="form-control" value="{{ isset($settings['rating_star_icon_color']) ? $settings['rating_star_icon_color'] : '' }}" onkeyup="changeColor('rating_star_icon_color_input','rating_star_icon_color')">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -465,51 +520,7 @@
                                                                     <input id="item_divider_font_color_input" type="text" class="form-control" value="{{ isset($settings['item_divider_font_color']) ? $settings['item_divider_font_color'] : '' }}" onkeyup="changeColor('item_divider_font_color_input','item_divider_font_color')">
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row align-items-center mb-4">
-                                                            <div class="col-md-8">
-                                                                <span>{{ __('Active Tag Text')}}</span>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="from-group d-flex align-items-center">
-                                                                    <input type="color" id="tag_font_color" name="tag_font_color" class="form-control me-2 p-0" value="{{ isset($settings['tag_font_color']) ? $settings['tag_font_color'] : '' }}" onchange="changeVal('tag_font_color','tag_font_color_input')">
-                                                                    <input id="tag_font_color_input" type="text" class="form-control" value="{{ isset($settings['tag_font_color']) ? $settings['tag_font_color'] : '' }}" onkeyup="changeColor('tag_font_color_input','tag_font_color')">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row align-items-center mb-4">
-                                                            <div class="col-md-8">
-                                                                <span>{{ __('Tag Text')}}</span>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="from-group d-flex align-items-center">
-                                                                    <input type="color" id="tag_label_color" name="tag_label_color" class="form-control me-2 p-0" value="{{ isset($settings['tag_label_color']) ? $settings['tag_label_color'] : '' }}" onchange="changeVal('tag_label_color','tag_label_color_input')">
-                                                                    <input id="tag_label_color_input" type="text" class="form-control" value="{{ isset($settings['tag_label_color']) ? $settings['tag_label_color'] : '' }}" onkeyup="changeColor('tag_label_color_input','tag_label_color')">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row align-items-center mb-4">
-                                                            <div class="col-md-8">
-                                                                <span>{{ __('Tag BG Color')}}</span>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="from-group d-flex align-items-center">
-                                                                    <input type="color" id="tag_background_color" name="tag_background_color" class="form-control me-2 p-0" value="{{ isset($settings['tag_background_color']) ? $settings['tag_background_color'] : '' }}" onchange="changeVal('tag_background_color','tag_background_color_input')">
-                                                                    <input id="tag_background_color_input" type="text" class="form-control" value="{{ isset($settings['tag_background_color']) ? $settings['tag_background_color'] : '' }}" onkeyup="changeColor('tag_background_color_input','tag_background_color')">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row align-items-center mb-4">
-                                                            <div class="col-md-8">
-                                                                <span>{{ __('Active Tag BG Color')}}</span>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="from-group d-flex align-items-center">
-                                                                    <input type="color" id="active_tag_background_color" name="active_tag_background_color" class="form-control me-2 p-0" value="{{ isset($settings['active_tag_background_color']) ? $settings['active_tag_background_color'] : '' }}" onchange="changeVal('active_tag_background_color','active_tag_background_color_input')">
-                                                                    <input id="active_tag_background_color_input" type="text" class="form-control" value="{{ isset($settings['active_tag_background_color']) ? $settings['active_tag_background_color'] : '' }}" onkeyup="changeColor('active_tag_background_color_input','active_tag_background_color')">
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        </div>                                                                                                                                                                        
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-8">
                                                                 <span>{{ __('Read More Link Color')}}</span>
@@ -520,18 +531,7 @@
                                                                     <input id="read_more_link_color_input" type="text" class="form-control" value="{{ isset($settings['read_more_link_color']) ? $settings['read_more_link_color'] : '' }}" onkeyup="changeColor('read_more_link_color_input','read_more_link_color')">
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row align-items-center mb-4" id="item-rating-star-icon-colors">
-                                                            <div class="col-md-8">
-                                                                <span>{{ __('Rating Stars Icons') }}</span>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="from-group d-flex align-items-center">
-                                                                    <input type="color" id="rating_star_icon_color" name="rating_star_icon_color" class="form-control me-2 p-0" value="{{ isset($settings['rating_star_icon_color']) ? $settings['rating_star_icon_color'] : '' }}" onchange="changeVal('rating_star_icon_color','rating_star_icon_color_input')">
-                                                                    <input id="rating_star_icon_color_input" type="text" class="form-control" value="{{ isset($settings['rating_star_icon_color']) ? $settings['rating_star_icon_color'] : '' }}" onkeyup="changeColor('rating_star_icon_color_input','rating_star_icon_color')">
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        </div>                                                        
                                                         <div class="row align-items-center mb-4">
                                                             <div class="col-md-4">
                                                                 <span>{{ __('Theme Preview Image')}}</span>

@@ -28,7 +28,7 @@ class StaffRequest extends FormRequest
             $rules = [
                 'name' => 'required',
                 'email' => 'required|email|unique:staffs,email,'.$this->id,
-                'wp_number' => 'required|numeric|digits:10|unique:staffs,wp_number,'.$this->id,
+                'wp_number' => 'required|unique:staffs,wp_number,'.$this->id,
                 'type' => 'required'
             ];
 
@@ -38,7 +38,7 @@ class StaffRequest extends FormRequest
             $rules = [
                 'name' => 'required',
                 'email' => 'required|email|unique:staffs,email',
-                'wp_number' => 'required|numeric|digits:10|unique:staffs,wp_number',
+                'wp_number' => 'required|unique:staffs,wp_number',
                 'type' => 'required'
             ];
         }

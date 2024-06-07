@@ -471,7 +471,7 @@ class PaypalController extends Controller
                 $order->longitude = $order_details['longitude'];
                 $order->floor = $order_details['floor'];
                 $order->door_bell = $order_details['door_bell'];
-                $order->instructions = $order_details['instructions'];
+                $order->instructions = (isset($order_details['instructions'])) ? $order_details['instructions'] : '';
                 $order->street_number = $order_details['street_number'];
                 $order->checkout_type = $checkout_type;
                 $order->is_new = $is_new;

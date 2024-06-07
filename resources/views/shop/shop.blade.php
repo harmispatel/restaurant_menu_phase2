@@ -2122,10 +2122,14 @@
             <div class="loader">
                     @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
                         <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
-                    @else
-                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
                     @endif
             </div>
+        @else
+            @if (!empty($adminSetting['loader']))    
+                <div class="loader">
+                    <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                </div>
+            @endif
         @endif
         <input type="hidden" name="intro_second" id="intro_second" value="{{ $intro_second }}">
 
@@ -2413,13 +2417,17 @@
         </div>
     </footer>
     @if($is_loader == 1 && isset($package_permissions['loader']) && !empty($package_permissions['loader']) && $package_permissions['loader'] == 1)
-            <div class="loader">
+        <div class="loader">
                 @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
                     <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
-                @else
-                    <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
                 @endif
         </div>
+    @else
+        @if (!empty($adminSetting['loader']))    
+            <div class="loader">
+                <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+            </div>
+        @endif
     @endif
 
     @if($parent != null)
@@ -2431,10 +2439,14 @@
                 <div class="loader">
                         @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
                             <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
-                        @else
-                            <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
                         @endif
                 </div>
+            @else
+                @if (!empty($adminSetting['loader']))    
+                    <div class="loader">
+                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                    </div>
+                @endif
             @endif
 
         @endif
@@ -2859,10 +2871,14 @@
             <div class="loader">
                     @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
                         <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
-                    @else
-                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
                     @endif
             </div>
+        @else
+            @if (!empty($adminSetting['loader']))    
+                <div class="loader">
+                    <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                </div>
+            @endif
         @endif
         <input type="hidden" name="intro_second" id="intro_second" value="{{ $intro_second }}">
         @if(session()->has('is_cover'))

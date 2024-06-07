@@ -714,5 +714,22 @@
 
     "Tag Text":"Tag Text",
     "Special Effect Color":"Special Effect Color",
-    "Rating Stars Icons":"Rating Stars Icons"
+    "Rating Stars Icons":"Rating Stars Icons",
+    "Search Arrows (M.S.)":"Search Arrows (M.S.)",
+
+    "Category Title & Description":"Category Title & Description",
+    "PC Active Tag Text":"PC Active Tag Text",
+    "PC Active Tag BG":"PC Active Tag BG",
+    "PC Tag Text":"PC Tag Text",
+    "PC Tag BG":"PC Tag BG",
+    "PC Category Box Title & Icon":"PC Category Box Title & Icon",
+    "PC Category Box Title BG":"PC Category Box Title BG",
+    "PC Category Box Text":"PC Category Box Text",
+    "PC Category Box BG":"PC Category Box BG",
+    "PC Category Box Shadow":"PC Category Box Shadow",
+    "Active Category BG":"Active Category BG",
+    "\"Back\" Button Icon":"\"Back\" Button Icon",
+    "\"Back\" Button BG":"\"Back\" Button BG",
+    "Select Special Effect":"Select Special Effect",
+    "Special Effect":"Special Effect"
 }

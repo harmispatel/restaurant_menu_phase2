@@ -543,7 +543,7 @@ $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ?
                                                 </div>
                                                 <div class="row align-items-center mb-4" id="categories-bar-slider-buttons-color">
                                                     <div class="col-md-8">
-                                                        <span>{{ __('Cateory Bar Slider Buttons Color') }}</span>
+                                                        <span>{{ __('Search Arrows (M.S.)') }}</span>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="from-group d-flex align-items-center">
@@ -589,7 +589,7 @@ $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ?
                                                 </div>
                                                 <div class="row align-items-center mb-4" id="category-title-and-description-color">
                                                     <div class="col-md-8">
-                                                        <span>{{ __('Category Title & Description Fonts Color') }}</span>
+                                                        <span>01. {{ __('Category Title & Description') }}</span>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="from-group d-flex align-items-center">
@@ -598,6 +598,173 @@ $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ?
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="row align-items-center mb-4" id="tag-font-color">
+                                                    <div class="col-md-8">
+                                                        <span>02. {{ __('PC Active Tag Text') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="tag_font_color" name="tag_font_color" class="form-control me-2 p-0" value="" onchange="changeVal('tag_font_color','tag_font_color_input')">
+                                                            <input id="tag_font_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_font_color_input','tag_font_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="active-tags-background-color">
+                                                    <div class="col-md-8">
+                                                        <span>03. {{ __('PC Active Tag BG') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="active_tag_background_color" name="active_tag_background_color" class="form-control me-2 p-0" value="" onchange="changeVal('active_tag_background_color','active_tag_background_color_input')">
+                                                            <input id="active_tag_background_color_input" type="text" class="form-control" value="" onkeyup="changeColor('active_tag_background_color_input','active_tag_background_color')">
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="row align-items-center mb-4" id="tag-label-color">
+                                                    <div class="col-md-8">
+                                                        <span>04. {{ __('PC Tag Text') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="tag_label_color" name="tag_label_color" class="form-control me-2 p-0" value="" onchange="changeVal('tag_label_color','tag_label_color_input')">
+                                                            <input id="tag_label_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_label_color_input','tag_label_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="tags-background-color">
+                                                    <div class="col-md-8">
+                                                        <span>05. {{ __('PC Tag BG') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="tag_background_color" name="tag_background_color" class="form-control me-2 p-0" value="" onchange="changeVal('tag_background_color','tag_background_color_input')">
+                                                            <input id="tag_background_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_background_color_input','tag_background_color')">
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="row align-items-center mb-4" id="category-box-title-icon-color">
+                                                    <div class="col-md-8">
+                                                        <span>06. {{ __('PC Category Box Title & Icon') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="category_box_title_icon_color" name="category_box_title_icon_color" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_title_icon_color','category_box_title_icon_color_input')">
+                                                            <input id="category_box_title_icon_color_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_title_icon_color_input','category_box_title_icon_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="category-box-title-background">
+                                                    <div class="col-md-8">
+                                                        <span>07. {{ __('PC Category Box Title BG') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="category_box_title_background" name="category_box_title_background" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_title_background','category_box_title_background_input')">
+                                                            <input id="category_box_title_background_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_title_background_input','category_box_title_background')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="category-box-text-color">
+                                                    <div class="col-md-8">
+                                                        <span>08. {{ __('PC Category Box Text') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="category_box_text_color" name="category_box_text_color" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_text_color','category_box_text_color_input')">
+                                                            <input id="category_box_text_color_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_text_color_input','category_box_text_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                                <div class="row align-items-center mb-4" id="category-box-background">
+                                                    <div class="col-md-8">
+                                                        <span>09. {{ __('PC Category Box BG') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="category_box_background" name="category_box_background" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_background','category_box_background_input')">
+                                                            <input id="category_box_background_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_background_input','category_box_background')">
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="row align-items-center mb-4" id="category-box-shadow">
+                                                    <div class="col-md-8">
+                                                        <span>10. {{ __('PC Category Box Shadow') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="category_box_shadow" name="category_box_shadow" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_shadow','category_box_shadow_input')">
+                                                            <input id="category_box_shadow_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_shadow_input','category_box_shadow')">
+                                                        </div>
+                                                    </div>
+                                                </div>  
+                                                <div class="row align-items-center mb-4" id="category-box-act-txt-bg">
+                                                    <div class="col-md-8">
+                                                        <span>11. {{ __('Active Category BG') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="category_box_act_txt_bg" name="category_box_act_txt_bg" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_act_txt_bg','category_box_act_txt_bg_input')">
+                                                            <input id="category_box_act_txt_bg_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_act_txt_bg_input','category_box_act_txt_bg')">
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                                <div class="row align-items-center mb-4" id="back-arrow-icon-color">
+                                                    <div class="col-md-8">
+                                                        <span>12. {{ __('"Back" Button Icon') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="back_arrow_icon_color" name="back_arrow_icon_color" class="form-control me-2 p-0" value="" onchange="changeVal('back_arrow_icon_color','back_arrow_icon_color_input')">
+                                                            <input id="back_arrow_icon_color_input" type="text" class="form-control" value="" onkeyup="changeColor('back_arrow_icon_color_input','back_arrow_icon_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="back-arrow-bg-color">
+                                                    <div class="col-md-8">
+                                                        <span>13. {{ __('"Back" Button BG') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="back_arrow_bg_color" name="back_arrow_bg_color" class="form-control me-2 p-0" value="" onchange="changeVal('back_arrow_bg_color','back_arrow_bg_color_input')">
+                                                            <input id="back_arrow_bg_color_input" type="text" class="form-control" value="" onkeyup="changeColor('back_arrow_bg_color_input','back_arrow_bg_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="item-rating-star-icon-colors">
+                                                    <div class="col-md-8">
+                                                        <span>14. {{ __('Rating Stars Icons') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="rating_star_icon_color" name="rating_star_icon_color" class="form-control me-2 p-0" value="" onchange="changeVal('rating_star_icon_color','rating_star_icon_color_input')">
+                                                            <input id="rating_star_icon_color_input" type="text" class="form-control" value="" onkeyup="changeColor('rating_star_icon_color_input','rating_star_icon_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="special-day-effect-box">
+                                                    <div class="col-md-8">
+                                                        <span>15. {{ __('Select Special Effect') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <select name="special_day_effect_box" id="special_day_effect_box" class="form-select">
+                                                            <option value="blink">
+                                                                Blink</option>
+                                                            <option value="rotate">
+                                                                Rotate</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center mb-4" id="special-day-effect-color">
+                                                    <div class="col-md-8">
+                                                        <span>16. {{ __('Special Effect') }}</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="from-group d-flex align-items-center">
+                                                            <input type="color" id="special_day_effect_color" name="special_day_effect_color" class="form-control me-2 p-0" value="" onchange="changeVal('special_day_effect_color','special_day_effect_color_input')">
+                                                            <input id="special_day_effect_color_input" type="text" class="form-control" value="" onkeyup="changeColor('special_day_effect_color_input','special_day_effect_color')">
+                                                        </div>
+                                                    </div>
+                                                </div>    
                                                 <div class="row align-items-center mb-4" id="price-color">
                                                     <div class="col-md-8">
                                                         <span>{{ __('Price Color') }}</span>
@@ -769,51 +936,7 @@ $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ?
                                                             <input id="item_divider_font_color_input" type="text" class="form-control" value="" onkeyup="changeColor('item_divider_font_color_input','item_divider_font_color')">
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="tag-font-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Active Tag Text') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="tag_font_color" name="tag_font_color" class="form-control me-2 p-0" value="" onchange="changeVal('tag_font_color','tag_font_color_input')">
-                                                            <input id="tag_font_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_font_color_input','tag_font_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>                                                
-                                                <div class="row align-items-center mb-4" id="tag-label-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Tag Text') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="tag_label_color" name="tag_label_color" class="form-control me-2 p-0" value="" onchange="changeVal('tag_label_color','tag_label_color_input')">
-                                                            <input id="tag_label_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_label_color_input','tag_label_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="tags-background-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Tag BG Color') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="tag_background_color" name="tag_background_color" class="form-control me-2 p-0" value="" onchange="changeVal('tag_background_color','tag_background_color_input')">
-                                                            <input id="tag_background_color_input" type="text" class="form-control" value="" onkeyup="changeColor('tag_background_color_input','tag_background_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="active-tags-background-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Active Tag BG Color') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="active_tag_background_color" name="active_tag_background_color" class="form-control me-2 p-0" value="" onchange="changeVal('active_tag_background_color','active_tag_background_color_input')">
-                                                            <input id="active_tag_background_color_input" type="text" class="form-control" value="" onkeyup="changeColor('active_tag_background_color_input','active_tag_background_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </div>                                                                                                                                                                                           
                                                 <div class="row align-items-center mb-4" id="read-more-link-color">
                                                     <div class="col-md-8">
                                                         <span>{{ __('Read More Link Color') }}</span>
@@ -846,130 +969,7 @@ $cart_modal_screen_layout = isset($admin_settings['cart_modal_screen_layout']) ?
                                                             <input id="special_discount_text_color_input" type="text" class="form-control" value="" onkeyup="changeColor('special_discount_text_color_input','special_discount_text_color')">
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="special-day-effect-box">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Special Day Effect Box') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <select name="special_day_effect_box" id="special_day_effect_box" class="form-select">
-                                                            <option value="blink">
-                                                                Blink</option>
-                                                            <option value="rotate">
-                                                                Rotate</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="special-day-effect-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Special Effect Color') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="special_day_effect_color" name="special_day_effect_color" class="form-control me-2 p-0" value="" onchange="changeVal('special_day_effect_color','special_day_effect_color_input')">
-                                                            <input id="special_day_effect_color_input" type="text" class="form-control" value="" onkeyup="changeColor('special_day_effect_color_input','special_day_effect_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="category-box-shadow">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Category Box Shadow') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="category_box_shadow" name="category_box_shadow" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_shadow','category_box_shadow_input')">
-                                                            <input id="category_box_shadow_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_shadow_input','category_box_shadow')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="category-box-title-icon-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Category Box title & icon color') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="category_box_title_icon_color" name="category_box_title_icon_color" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_title_icon_color','category_box_title_icon_color_input')">
-                                                            <input id="category_box_title_icon_color_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_title_icon_color_input','category_box_title_icon_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="category-box-text-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Category Box Text Color') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="category_box_text_color" name="category_box_text_color" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_text_color','category_box_text_color_input')">
-                                                            <input id="category_box_text_color_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_text_color_input','category_box_text_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="category-box-title-background">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Category Box Title Background') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="category_box_title_background" name="category_box_title_background" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_title_background','category_box_title_background_input')">
-                                                            <input id="category_box_title_background_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_title_background_input','category_box_title_background')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="category-box-background">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Category Box background') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="category_box_background" name="category_box_background" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_background','category_box_background_input')">
-                                                            <input id="category_box_background_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_background_input','category_box_background')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="category-box-act-txt-bg">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Category Box Active Text Background') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="category_box_act_txt_bg" name="category_box_act_txt_bg" class="form-control me-2 p-0" value="" onchange="changeVal('category_box_act_txt_bg','category_box_act_txt_bg_input')">
-                                                            <input id="category_box_act_txt_bg_input" type="text" class="form-control" value="" onkeyup="changeColor('category_box_act_txt_bg_input','category_box_act_txt_bg')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="back-arrow-bg-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Back Arrow Backgorund Color') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="back_arrow_bg_color" name="back_arrow_bg_color" class="form-control me-2 p-0" value="" onchange="changeVal('back_arrow_bg_color','back_arrow_bg_color_input')">
-                                                            <input id="back_arrow_bg_color_input" type="text" class="form-control" value="" onkeyup="changeColor('back_arrow_bg_color_input','back_arrow_bg_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="back-arrow-icon-color">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Back Arrow Backgorund Icon Color') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="back_arrow_icon_color" name="back_arrow_icon_color" class="form-control me-2 p-0" value="" onchange="changeVal('back_arrow_icon_color','back_arrow_icon_color_input')">
-                                                            <input id="back_arrow_icon_color_input" type="text" class="form-control" value="" onkeyup="changeColor('back_arrow_icon_color_input','back_arrow_icon_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center mb-4" id="item-rating-star-icon-colors">
-                                                    <div class="col-md-8">
-                                                        <span>{{ __('Rating Stars Icons') }}</span>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="from-group d-flex align-items-center">
-                                                            <input type="color" id="rating_star_icon_color" name="rating_star_icon_color" class="form-control me-2 p-0" value="" onchange="changeVal('rating_star_icon_color','rating_star_icon_color_input')">
-                                                            <input id="rating_star_icon_color_input" type="text" class="form-control" value="" onkeyup="changeColor('rating_star_icon_color_input','rating_star_icon_color')">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </div>                                                                                                                                                                                          
                                                 <div class="row align-items-center mb-4" id="theme-preview-image">
                                                     <div class="col-md-4">
                                                         <span>{{ __('Theme Preview Image') }}</span>

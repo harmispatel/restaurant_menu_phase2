@@ -684,5 +684,22 @@
 
     "Tag Text":"Kείμενο Ετικέτας",
     "Special Effect Color":"Χρώμα Σπέσιαλ Εφέ",
-    "Rating Stars Icons":"Εικονίδια Αστεριών Βαθμολόγησης"
+    "Rating Stars Icons":"Αστέρια Βαθμολόγησης",
+    "Search Arrows (M.S.)":"Βέλη Αναζήτησης (Ο.Κ.)",
+
+    "Category Title & Description":"Τίτλος Κατηγορίας & Περιγραφή",
+    "PC Active Tag Text":"Kείμενο Ενεργής Ετικέτας PC",
+    "PC Active Tag BG":"Φόντο Ενεργής Ετικέτας PC",
+    "PC Tag Text":"Kείμενο Ετικέτας PC",
+    "PC Tag BG":"Φόντο Ετικέτας PC",
+    "PC Category Box Title & Icon":"Τίτλος & Εικονίδιο Πλαισίου Κατηγορίας PC",
+    "PC Category Box Title BG":"Φόντο Πλαισίου Τίτλου Κατηγορίας PC",
+    "PC Category Box Text":"Κείμενο Πλαισίου Κατηγορίας PC",
+    "PC Category Box BG":"Φόντο Πλαισίου Κατηγορίας PC",
+    "PC Category Box Shadow":"Σκιά Πλαισίου Κατηγορίας PC",
+    "Active Category BG":"Φόντο Ενεργής Ετικέτας",
+    "\"Back\" Button Icon":"Eικονίδιο Κουμπιού \"Πίσω\"",
+    "\"Back\" Button BG":"Φόντο Κουμπιού \"Πίσω\"",
+    "Select Special Effect":"Επιλέξτε Ειδικό Εφέ",
+    "Special Effect":"Σπέσιαλ Εφέ"
 }

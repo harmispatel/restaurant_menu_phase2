@@ -732,6 +732,7 @@ header .cart-btn {
     justify-content: center;
     align-items: center;
     position: relative;
+    height: 60px;
 }
 
 .item_detail_inner_info .item_detail_cal {
@@ -2754,6 +2755,7 @@ header .cart-btn {
     .item_detail_inner_info {
         flex-direction: column-reverse;
         margin-top: 15px;
+        height: auto;
     }
     .item_detail_inner_info .item_detail_cal {
         position: relative;
