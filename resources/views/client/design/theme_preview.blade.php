@@ -1103,7 +1103,7 @@
                                                             </div>
                                                             <div class="row align-items-center mb-4" id="tag-label-color">
                                                                 <div class="col-md-8">
-                                                                    <span>{{ __('Tag & Underline Text') }}</span>
+                                                                    <span>{{ __('Tag Text') }}</span>
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <div class="from-group d-flex align-items-center">
@@ -1234,7 +1234,7 @@
                                                             <div class="row align-items-center mb-4"
                                                                 id="special-day-effect-color">
                                                                 <div class="col-md-8">
-                                                                    <span>{{ __('Special Day Effect Color') }}</span>
+                                                                    <span>{{ __('Special Effect Color') }}</span>
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <div class="from-group d-flex align-items-center">
@@ -1414,7 +1414,7 @@
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-rating-star-icon-colors">
                                                                 <div class="col-md-8">
-                                                                    <span>{{ __('Rating Stars Icon Color') }}</span>
+                                                                    <span>{{ __('Rating Stars Icons') }}</span>
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <div class="from-group d-flex align-items-center">
@@ -1860,12 +1860,12 @@
 
             if (layout == 'layout_2') {
                 $('#banner-position,#main_screen,#three_main_screen,#category-slider-effect,#categories-bar-color,#category-screen,#three-category-screen,#category-box-shadow,#category-box-background,#category-box-title-icon-color,#category-box-text-color,#category-box-title-background,#back-arrow-bg-color,#back-arrow-icon-color,#category-box-act-txt-bg').hide();
-                $('#banner-height,#icon-bg-color,#special-discount-text-color,#cart-animation-color,#category-view,#banner-slide-button,#slider-effect,#search-box-icon-color,#category_image_slider,#category-image-slider-delay-time,#second_main_screen,#category-side,#header-image,#category-view,#second-category-screen,#special-discount-backgound-color,#label-font-size,#header-bg-color-opc,#banner-delay-time,#sticky-header,#header-effect-bg-color,#logo-position,#search-box-position,#bar-icon-color,#bar-icon-bg-color,#cover-link-icon-color,#cover-link-bg-color,#category_image_siders').show();
+                $('#banner-height,#icon-bg-color,#special-discount-text-color,#cart-animation-color,#category-view,#banner-slide-button,#slider-effect,#search-box-icon-color,#category_image_slider,#category-image-slider-delay-time,#second_main_screen,#category-side,#header-image,#category-view,#second-category-screen,#special-discount-backgound-color,#label-font-size,#header-bg-color-opc,#banner-delay-time,#sticky-header,#header-effect-bg-color,#logo-position,#search-box-position,#bar-icon-color,#bar-icon-bg-color,#cover-link-icon-color,#cover-link-bg-color,#category_image_siders, #categories-bar-slider-buttons-color').show();
             } else if (layout == 'layout_1') {
-                $('#second_main_screen,#three_main_screen,#header-image,#category-view,#second-category-screen,#three-category-screen#special-discount-backgound-color,#special-discount-text-color,#cart-animation-color,#category-view,#cart-animation-color,#three-category-screen,#category-box-shadow,#category-box-background,#category-box-title-icon-color,#category-box-text-color,#category-box-title-background,#category-side,#back-arrow-bg-color,#back-arrow-icon-color,#category-box-act-txt-bg,#header-bg-color-opc,#header-effect-bg-color,#category_image_siders,#category_image_slider,#category-image-slider-delay-time').hide();
+                $('#second_main_screen,#three_main_screen,#header-image,#category-view,#second-category-screen,#three-category-screen#special-discount-backgound-color,#special-discount-text-color,#cart-animation-color,#category-view,#cart-animation-color,#three-category-screen,#category-box-shadow,#category-box-background,#category-box-title-icon-color,#category-box-text-color,#category-box-title-background,#category-side,#back-arrow-bg-color,#back-arrow-icon-color,#category-box-act-txt-bg,#header-bg-color-opc,#header-effect-bg-color,#category_image_siders,#category_image_slider,#category-image-slider-delay-time,#categories-bar-slider-buttons-color').hide();
                 $('#sticky-header,#logo-position,#search-box-position,#banner-position,#banner-delay-time,#banner-height,#slider-effect,#search-box-icon-color,#main_screen,#category-slider-effect,#categories-bar-color,#category-bar-type,#menu-bar-font-color,#item-box-background-color,#price-color,#item-title-color,#item-description-color,#item-box-shadow,#item-box-shadow-color,#item-box-shadow-thickness,#item-divider,#item-divider-color,#item-divider-thickness,#item-divider-type,#item-divider-position,#item-divider-font-color,#read-more-link-color,#cart-icon-color,#category-screen,#label-font-size,#icon-bg-color,#bar-icon-color,#bar-icon-bg-color,#cover-link-icon-color,#cover-link-bg-color').show();
             } else if (layout == 'layout_3') {
-                $('#language-box-position,#category-view,#logo-position,#search-box-position,#banner-position,#font-color,#label-color,#label-color-transparency,#main_screen,#second_main_screen,#header-image,#special-discount-text-color,#cart-animation-color,#category-slider-effect,#categories-bar-color,#category-bar-type,#menu-bar-font-color,#item-box-background-color,#price-color,#item-title-color,#item-description-color,#item-box-shadow,#item-box-shadow-color,#item-box-shadow-thickness,#item-box-shadow-thickness,#item-divider,#item-divider-color,#item-divider-thickness,#item-divider-type,#item-divider-position,#item-divider-font-color,#read-more-link-color,#cart-icon-color,#category-screen,#second-category-screen,#special-discount-backgound-color,#category-view,#cart-animation-color,#label-font-size,#header-bg-color-opc,#header-effect-bg-color').hide();
+                $('#language-box-position,#category-view,#logo-position,#search-box-position,#banner-position,#font-color,#label-color,#label-color-transparency,#main_screen,#second_main_screen,#header-image,#special-discount-text-color,#cart-animation-color,#category-slider-effect,#categories-bar-color,#category-bar-type,#menu-bar-font-color,#item-box-background-color,#price-color,#item-title-color,#item-description-color,#item-box-shadow,#item-box-shadow-color,#item-box-shadow-thickness,#item-box-shadow-thickness,#item-divider,#item-divider-color,#item-divider-thickness,#item-divider-type,#item-divider-position,#item-divider-font-color,#read-more-link-color,#cart-icon-color,#category-screen,#second-category-screen,#special-discount-backgound-color,#category-view,#cart-animation-color,#label-font-size,#header-bg-color-opc,#header-effect-bg-color,#categories-bar-slider-buttons-color').hide();
                 $('#sticky-header,#banner-slide-button,#banner-delay-time,#banner-height,#slider-effect,#category-side,#category_image_slider,#category-image-slider-delay-time,#three-category-screen,#three_main_screen,#category-box-shadow,#category-box-background,#category-box-title-icon-color,#category-box-text-color,#category-box-title-background,#back-arrow-bg-color,#back-arrow-icon-color,#category-box-act-txt-bg,#icon-bg-color,#search-box-icon-color,#bar-icon-color,#bar-icon-bg-color,#cover-link-icon-color,#cover-link-bg-color,#category_image_siders').show();
             }
         }

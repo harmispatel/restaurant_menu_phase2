@@ -198,14 +198,23 @@
                 color : {{ $theme_settings['categories_bar_color'] }}!important;
             }
         @endif
-
         
-        /* Category Bar Slider Buttons Color */
-        @if(isset($theme_settings['category_bar_slider_buttons_color']))
-            .category_slider .slick-arrow,.flipster .flipster__button,.owl-carousel-stacked .owl-prev, .owl-carousel-stacked .owl-next{
-                color : {{ (!empty($theme_settings['category_bar_slider_buttons_color'])) ? $theme_settings['category_bar_slider_buttons_color'] : '#000000' }} !important;
-            }
+        @if ($layout == "layout_1")    
+            /* Category Bar Slider Buttons Color */
+            @if(isset($theme_settings['categories_bar_color']))
+                .category_slider .slick-arrow,.flipster .flipster__button,.owl-carousel-stacked .owl-prev, .owl-carousel-stacked .owl-next{
+                    color : {{ (!empty($theme_settings['categories_bar_color'])) ? $theme_settings['categories_bar_color'] : '#000000' }} !important;
+                }
+            @endif
+        @elseif($layout == "layout_2")
+            /* Category Bar Slider Buttons Color */
+            @if(isset($theme_settings['category_bar_slider_buttons_color']))
+                .category_slider .slick-arrow,.flipster .flipster__button,.owl-carousel-stacked .owl-prev, .owl-carousel-stacked .owl-next{
+                    color : {{ (!empty($theme_settings['category_bar_slider_buttons_color'])) ? $theme_settings['category_bar_slider_buttons_color'] : '#000000' }} !important;
+                }
+            @endif
         @endif
+        
 
         /* Menu Bar Font Color */
         @if(isset($theme_settings['menu_bar_font_color']) && !empty($theme_settings['menu_bar_font_color']))
