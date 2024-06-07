@@ -498,118 +498,119 @@ class DesignController extends Controller
     // Update General General Info Settings
     public function generalInfoUpdate(Request $request)
     {
-
-        $clientID = isset(Auth::user()->id) ? Auth::user()->id : '';
-        $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
-        $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
-
+        $clientID = Auth::user()->id ?? "";
+        $shop_id = Auth::user()->hasOneShop->shop['id'] ?? "";
+        $shop_slug = Auth::user()->hasOneShop->shop['shop_slug'] ?? "";
 
         $request->validate([
             'business_name' => 'required',
             'default_currency' => 'required',
-            'shop_view_header_logo' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            'logo_layout_1' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'shop_loader' => 'mimes:gif',
         ]);
 
-        $all_data['business_name'] = $request->business_name;
-        $all_data['default_currency'] = $request->default_currency;
-        $all_data['business_telephone'] = $request->business_telephone;
-        // $all_data['business_subtitle'] = $request->business_subtitle;
-        $all_data['is_sub_title'] = $request->is_sub_title;
-        $all_data['instagram_link'] = $request->instagram_link;
-        $all_data['twitter_link'] = $request->twitter_link;
-        $all_data['facebook_link'] = $request->facebook_link;
-        $all_data['foursquare_link'] = $request->foursquare_link;
-        $all_data['tripadvisor_link'] = $request->tripadvisor_link;
-        $all_data['map_url'] = $request->map_url;
-        $all_data['website_url'] = $request->website_url;
-        $all_data['pinterest_link'] = $request->pinterest_link;
-        $all_data['is_loader'] = isset($request->is_loader) ? $request->is_loader : 0;
-        $all_data['shop_start_time'] = $request->shop_start_time;
-        $all_data['shop_end_time'] = $request->shop_end_time;
-        $all_data['default_timezone'] = $request->default_timezone;
-        if($request->hasFile('shop_loader'))
-        {
-            $all_data['shop_loader'] = $request->shop_loader;
-        }
+        try {            
+            $all_data['business_name'] = $request->business_name;
+            $all_data['default_currency'] = $request->default_currency;
+            $all_data['business_telephone'] = $request->business_telephone;
+            $all_data['is_sub_title'] = $request->is_sub_title;
+            $all_data['instagram_link'] = $request->instagram_link;
+            $all_data['twitter_link'] = $request->twitter_link;
+            $all_data['facebook_link'] = $request->facebook_link;
+            $all_data['foursquare_link'] = $request->foursquare_link;
+            $all_data['tripadvisor_link'] = $request->tripadvisor_link;
+            $all_data['map_url'] = $request->map_url;
+            $all_data['website_url'] = $request->website_url;
+            $all_data['pinterest_link'] = $request->pinterest_link;
+            $all_data['is_loader'] = isset($request->is_loader) ? $request->is_loader : 0;
+            $all_data['shop_start_time'] = $request->shop_start_time;
+            $all_data['shop_end_time'] = $request->shop_end_time;
+            $all_data['default_timezone'] = $request->default_timezone;
+            
+            // Update Shop Name
+            Shop::find($shop_id)->update(['name' => $request->business_name]);
 
-        if($request->hasFile('shop_loader'))
-        {
-            $loader_name = "shop_loader_".time().".". $request->file('shop_loader')->getClientOriginalExtension();
-            $request->file('shop_loader')->move(public_path('client_uploads/shops/'.$shop_slug.'/loader/'), $loader_name);
-            $all_data['shop_loader'] = $loader_name;
-        }
+            // Insert Shop Loader
+            if($request->hasFile('shop_loader')){
 
+                $loader = ClientSettings::where(['client_id' => $clientID, 'shop_id' => $shop_id, 'key' => 'shop_loader'])->first();
 
-        // Update Shop Name
-        $shop = Shop::find($shop_id);
-        $shop->name = $request->business_name;
-        $shop->update();
-
-        // Insert or Update Settings
-        foreach($all_data as $key => $value)
-        {
-            $query = ClientSettings::where('client_id',$clientID)->where('shop_id',$shop_id)->where('key',$key)->first();
-            $setting_id = isset($query->id) ? $query->id : '';
-
-            if (!empty($setting_id) || $setting_id != '')  // Update
-            {
-                $settings = ClientSettings::find($setting_id);
-                $settings->value = $value;
-                $settings->update();
-            }
-            else // Insert
-            {
-                $settings = new ClientSettings();
-                $settings->client_id = $clientID;
-                $settings->shop_id = $shop_id;
-                $settings->key = $key;
-                $settings->value = $value;
-                $settings->save();
-            }
-        }
-
-             if($request->hasFile('shop_view_header_logo'))
-                {
-                    $get_logo_setting = ClientSettings::where('client_id',$clientID)->where('shop_id',$shop_id)->where('key','shop_view_header_logo')->first();
-                    $setting_id = isset($get_logo_setting->id) ? $get_logo_setting->id : '';
-
-                    if(!empty($setting_id) || $setting_id != '')
-                    {
-                        // Delete old Logo
-                        $logo = isset($get_logo_setting->value) ? $get_logo_setting->value : '';
-                        if(!empty($logo) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo))
-                        {
-                            unlink('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo);
-                        }
-
-                        // Insert new Logo
-                        $logo_name = "top_logo_".time().".". $request->file('shop_view_header_logo')->getClientOriginalExtension();
-                        $request->file('shop_view_header_logo')->move(public_path('client_uploads/shops/'.$shop_slug.'/top_logos/'), $logo_name);
-                        $new_logo = $logo_name;
-
-                        $logo_setting = ClientSettings::find($setting_id);
-                        $logo_setting->value = $new_logo;
-                        $logo_setting->update();
-
-                    }
-                    else
-                    {
-                        // Insert new Logo
-                        $logo_name = "top_logo_".time().".". $request->file('shop_view_header_logo')->getClientOriginalExtension();
-                        $request->file('shop_view_header_logo')->move(public_path('client_uploads/shops/'.$shop_slug.'/top_logos/'), $logo_name);
-                        $new_logo = $logo_name;
-
-                        $logo_setting = new ClientSettings();
-                        $logo_setting->client_id = $clientID;
-                        $logo_setting->shop_id = $shop_id;
-                        $logo_setting->key = 'shop_view_header_logo';
-                        $logo_setting->value = $new_logo;
-                        $logo_setting->save();
-                    }
-
+                // Delete old Loader if exists
+                if (isset($loader->id) && !empty($loader->value) && file_exists($path = 'public/client_uploads/shops/'.$shop_slug.'/loader/'.$loader->value)) {
+                    unlink($path);
                 }
-        return redirect()->route('design.general-info')->with('success','General Information has been Updated SuccessFully..');
+
+                $loader_name = 'shop_loader_'.time().'.'.$request->file('shop_loader')->getClientOriginalExtension();
+                $request->file('shop_loader')->move(public_path('client_uploads/shops/'.$shop_slug.'/loader/'), $loader_name);
+                $all_data['shop_loader'] = $loader_name;
+            }
+
+            // Insert Layout 1 Logo
+            if($request->hasFile('logo_layout_1')){
+                $logo_layout_1 = ClientSettings::where(['client_id' => $clientID, 'shop_id' => $shop_id, 'key' => 'logo_layout_1'])->first();
+
+                // Delete old Logo if exists
+                if (isset($logo_layout_1->id) && !empty($logo_layout_1->value) && file_exists($path = 'public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1->value)) {
+                    unlink($path);
+                }
+
+                $logo_name = 'top_logo_layout_1_'.time().'.'.$request->file('logo_layout_1')->getClientOriginalExtension();
+                $request->file('logo_layout_1')->move(public_path('client_uploads/shops/'.$shop_slug.'/top_logos/'), $logo_name);
+                $all_data['logo_layout_1'] = $logo_name;
+            }
+
+            // Insert Layout 2 Logo
+            if($request->hasFile('logo_layout_2')){
+                $logo_layout_2 = ClientSettings::where(['client_id' => $clientID, 'shop_id' => $shop_id, 'key' => 'logo_layout_2'])->first();
+
+                // Delete old Logo if exists
+                if (isset($logo_layout_2->id) && !empty($logo_layout_2->value) && file_exists($path = 'public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_2->value)) {
+                    unlink($path);
+                }
+
+                $logo_name = 'top_logo_layout_2_'.time().'.'.$request->file('logo_layout_2')->getClientOriginalExtension();
+                $request->file('logo_layout_2')->move(public_path('client_uploads/shops/'.$shop_slug.'/top_logos/'), $logo_name);
+                $all_data['logo_layout_2'] = $logo_name;
+            }
+
+            // Insert Layout 3 Logo
+            if($request->hasFile('logo_layout_3')){
+                $logo_layout_3 = ClientSettings::where(['client_id' => $clientID, 'shop_id' => $shop_id, 'key' => 'logo_layout_3'])->first();
+
+                // Delete old Logo if exists
+                if (isset($logo_layout_3->id) && !empty($logo_layout_3->value) && file_exists($path = 'public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_3->value)) {
+                    unlink($path);
+                }
+
+                $logo_name = 'top_logo_layout_3_'.time().'.'.$request->file('logo_layout_3')->getClientOriginalExtension();
+                $request->file('logo_layout_3')->move(public_path('client_uploads/shops/'.$shop_slug.'/top_logos/'), $logo_name);
+                $all_data['logo_layout_3'] = $logo_name;
+            }
+
+            // Insert or Update Settings
+            foreach($all_data as $key => $value){
+                $query = ClientSettings::where('client_id',$clientID)->where('shop_id',$shop_id)->where('key',$key)->first();
+                $setting_id = isset($query->id) ? $query->id : '';
+
+                if (!empty($setting_id) || $setting_id != ''){
+                    $settings = ClientSettings::find($setting_id);
+                    $settings->value = $value;
+                    $settings->update();
+                }else{
+                    $settings = new ClientSettings();
+                    $settings->client_id = $clientID;
+                    $settings->shop_id = $shop_id;
+                    $settings->key = $key;
+                    $settings->value = $value;
+                    $settings->save();
+                }
+            }
+
+            return redirect()->route('design.general-info')->with('success','General Information has been Updated.');
+
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error','Oops, Something went wrong!');
+        }       
     }
 
 

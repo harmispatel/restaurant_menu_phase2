@@ -284,13 +284,35 @@ class PaypalController extends Controller
         $shop_url = (isset($data['shop_details']->shop_slug)) ? $data['shop_details']->shop_slug : '';
         $shop_url = asset($shop_url);
         $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
-        $shop_logo = (isset($data['shop_details']->logo)) ? $data['shop_details']->logo : '';
-        $shop_logo = '<img src="'.$shop_logo.'" width="200">';
 
         $shop_user = UserShop::with(['user'])->where('shop_id',$shop_id)->first();
         $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
 
         $shop_settings = getClientSettings($shop_id);
+
+        $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
+        $theme_settings = themeSettings($shop_theme_id);      
+
+        $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : ''; 
+
+        if($layout == 'layout_1'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+        }elseif($layout == 'layout_2'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+        }elseif($layout == 'layout_3'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+        }else{
+            $shop_logo = "";
+        }
+
+        if(!empty($shop_logo)){
+            $shop_logo = '<img src="'.$shop_logo.'" width="200">';
+        }else{
+            $shop_logo = '<img src="'.asset('public/client_images/not-found/your_logo_1.png'). '" width="200">';
+        }
 
         // Get Shop Max ID
         $order_max = Order::where('shop_id',$shop_id)->max('order_id');

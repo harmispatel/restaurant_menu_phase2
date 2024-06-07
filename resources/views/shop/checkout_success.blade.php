@@ -11,8 +11,23 @@
     // Default Image
     $default_image = asset('public/client_images/not-found/no_image_1.jpg');
 
-    // Shop Logo
-    $shop_logo = isset($shop_settings['shop_view_header_logo']) && !empty($shop_settings['shop_view_header_logo']) ? $shop_settings['shop_view_header_logo'] : '';
+    // Theme Settings
+    $theme_settings = themeSettings($shop_theme_id);
+
+    $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : '';
+
+    if($layout == 'layout_1'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+    }elseif($layout == 'layout_2'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+    }elseif($layout == 'layout_3'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+    }else{
+        $shop_logo = "";
+    }
 
     // Language Details
     $language_details = getLangDetailsbyCode($current_lang_code);

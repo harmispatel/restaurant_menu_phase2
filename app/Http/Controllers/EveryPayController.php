@@ -98,8 +98,35 @@ class EveryPayController extends Controller
         $shop_url = (isset($shop_details->shop_slug)) ? $shop_details->shop_slug : '';
         $shop_url = asset($shop_url);
         $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
-        $shop_logo = (isset($shop_details->logo)) ? $shop_details->logo : '';
-        $shop_logo = '<img src="'.$shop_logo.'" width="200">';
+
+        // Shop Details
+        $data['shop_details'] = $shop_details;
+
+        $shop_settings = getClientSettings($shop_id);
+
+        $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
+        $theme_settings = themeSettings($shop_theme_id);      
+
+        $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : ''; 
+
+        if($layout == 'layout_1'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+        }elseif($layout == 'layout_2'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+        }elseif($layout == 'layout_3'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+        }else{
+            $shop_logo = "";
+        }
+
+        if(!empty($shop_logo)){
+            $shop_logo = '<img src="'.$shop_logo.'" width="200">';
+        }else{
+            $shop_logo = '<img src="'.asset('public/client_images/not-found/your_logo_1.png'). '" width="200">';
+        }
 
         $discount_per = session()->get('discount_per');
         $discount_type = session()->get('discount_type');
@@ -149,15 +176,7 @@ class EveryPayController extends Controller
 
             if(isset($payment->is_captured) && $payment->is_captured == 1)
             {
-                $cart = session()->get('cart', []);
-
-                // Shop Details
-                $data['shop_details'] = Shop::where('shop_slug',$shop_slug)->first();
-
-                // Shop ID
-                $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
-
-                $shop_settings = getClientSettings($shop_id);
+                $cart = session()->get('cart', []);                
 
                 // Get Shop Max ID
                 $order_max = Order::where('shop_id',$shop_id)->max('order_id');

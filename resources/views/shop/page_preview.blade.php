@@ -22,9 +22,6 @@
     // Default Image
     $default_image = asset('public/client_images/not-found/no_image_1.jpg');
 
-    // Shop Logo
-    $shop_logo = isset($shop_settings['shop_view_header_logo']) && !empty($shop_settings['shop_view_header_logo']) ? $shop_settings['shop_view_header_logo'] : '';
-
     // Shop Time
     $shop_start_time = isset($shop_settings['shop_start_time']) && !empty($shop_settings['shop_start_time']) ? $shop_settings['shop_start_time'] : '';
     $shop_end_time = isset($shop_settings['shop_end_time']) && !empty($shop_settings['shop_end_time']) ? $shop_settings['shop_end_time'] : '';
@@ -115,6 +112,19 @@
     $header_text_two = moreTranslations($shop_details['id'], 'header_text_2');
     $header_text_two = isset($header_text_two[$current_lang_code. '_value']) && !empty($header_text_two[$current_lang_code . '_value']) ? $header_text_two[$current_lang_code . '_value'] : '';
 
+
+    if($layout == 'layout_1'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+    }elseif($layout == 'layout_2'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+    }elseif($layout == 'layout_3'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+    }else{
+        $shop_logo = "";
+    }
 
 
     // Cart Item
@@ -945,7 +955,7 @@
                             <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}"
                                 height="50px" />
                         @else
-                            <img src="{{ $default_logo }}" class="50px">
+                            <img src="{{ $default_logo }}" height="50px">
                         @endif
                     </a>
                 </div>

@@ -77,7 +77,6 @@
             'intro_icon_duration',
             'business_name',
             'default_currency',
-            // 'business_subtitle',
             'business_telephone',
             'instagram_link',
             'pinterest_link',
@@ -96,8 +95,6 @@
             'label_font_size',
             'shop_start_time',
             'shop_end_time',
-            // 'happy_start_time',
-            // 'happy_end_time',
             'grading-email-required',
             'waiter_call_status',
             'waiter_call_on_off_sound',
@@ -106,6 +103,9 @@
             'table_enable_status',
             'room_enable_status',
             'default_timezone',
+            'logo_layout_1',
+            'logo_layout_2',
+            'logo_layout_3'
         ]);
 
         $settings = [];

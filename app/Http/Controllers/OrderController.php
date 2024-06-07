@@ -779,8 +779,6 @@ class OrderController extends Controller
             $shop_slug = (isset(Auth::user()->hasOneShop->shop['shop_slug'])) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
             $shop_url = asset($shop_url);
             $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
-            $shop_logo = (isset(Auth::user()->hasOneShop->shop['logo'])) ? Auth::user()->hasOneShop->shop['logo'] : '';
-            $shop_logo = '<img src="'.$shop_logo.'" width="200">';
 
             // Update Order Status
             $order = Order::find($order_id);
@@ -790,6 +788,30 @@ class OrderController extends Controller
 
             // Get Shop Settings
             $shop_settings = getClientSettings($shop_id);
+
+            $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
+            $theme_settings = themeSettings($shop_theme_id);      
+
+            $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : ''; 
+
+            if($layout == 'layout_1'){
+                // Shop Logo
+                $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+            }elseif($layout == 'layout_2'){
+                // Shop Logo
+                $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+            }elseif($layout == 'layout_3'){
+                // Shop Logo
+                $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+            }else{
+                $shop_logo = "";
+            }
+
+            if(!empty($shop_logo)){
+                $shop_logo = '<img src="'.$shop_logo.'" width="200">';
+            }else{
+                $shop_logo = '<img src="'.asset('public/client_images/not-found/your_logo_1.png'). '" width="200">';
+            }
 
             $primary_lang_details = clientLanguageSettings($shop_id);
             $language = getLangDetails(isset($primary_lang_details['primary_language']) ? $primary_lang_details['primary_language'] : '');

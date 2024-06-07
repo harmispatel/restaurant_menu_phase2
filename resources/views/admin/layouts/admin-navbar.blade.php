@@ -1,20 +1,17 @@
 @php
     // UserDetails
-    if (auth()->user())
-    {
+    if (auth()->user()){
         $userID = encrypt(auth()->user()->id);
         $userName = auth()->user()->firstname." ".auth()->user()->lastname;
         $userImage = auth()->user()->image;
-    }
-    else
-    {
+    }else{
         $userID = '';
         $userName = '';
         $userImage = '';
     }
 
     $settings = getAdminSettings();
-    $logo = isset($settings['logo']) ? $settings['logo'] : '';
+    $logo = $settings['logo'] ?? "";
 
 @endphp
 

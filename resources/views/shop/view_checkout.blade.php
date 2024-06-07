@@ -17,9 +17,6 @@
     // Default Image
     $default_image = asset('public/client_images/not-found/no_image_1.jpg');
 
-    // Shop Logo
-    $shop_logo = isset($shop_settings['shop_view_header_logo']) && !empty($shop_settings['shop_view_header_logo']) ? $shop_settings['shop_view_header_logo'] : '';
-
     // Language Details
     $language_details = getLangDetailsbyCode($current_lang_code);
 
@@ -145,6 +142,19 @@
     $table_enable_status = (isset($shop_settings['table_enable_status']) && !empty($shop_settings['table_enable_status'])) ? $shop_settings['table_enable_status'] : 0;
     $room_enable_status = (isset($shop_settings['room_enable_status']) && !empty($shop_settings['room_enable_status'])) ? $shop_settings['room_enable_status'] : 0;
 
+    if($layout == 'layout_1'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+    }elseif($layout == 'layout_2'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+    }elseif($layout == 'layout_3'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+    }else{
+        $shop_logo = "";
+    }
+
 @endphp
 
 @extends('shop.shop-layout')
@@ -170,7 +180,7 @@
                             <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}"
                                 height="50px" />
                         @else
-                            <img src="{{ $default_logo }}" class="50px">
+                            <img src="{{ $default_logo }}" height="50px">
                         @endif
                     </a>
                 </div>

@@ -42,10 +42,7 @@
     $shop_desc = isset($shop_details['description']) && !empty($shop_details['description']) ? strip_tags($shop_details['description']) : '';
 
     // Default Logo
-    $default_logo = asset('public/client_images/not-found/your_logo_1.png');
-
-    // Shop Logo
-    $shop_logo = isset($shop_settings['shop_view_header_logo']) && !empty($shop_settings['shop_view_header_logo']) ? $shop_settings['shop_view_header_logo'] : '';
+    $default_logo = asset('public/client_images/not-found/your_logo_1.png');    
 
     // Language Details
     $language_details = getLangDetailsbyCode($current_lang_code);
@@ -70,6 +67,19 @@
     $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : '';
     $effect = isset($theme_settings['slider_effect']) ? $theme_settings['slider_effect'] : 'fabe';
     $stiky_header =  isset($theme_settings['sticky_header']) && !empty($theme_settings['sticky_header']) ? $theme_settings['sticky_header']  : '';
+
+    if($layout == 'layout_1'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+    }elseif($layout == 'layout_2'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+    }elseif($layout == 'layout_3'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+    }else{
+        $shop_logo = "";
+    }
 
     // Get Subscription ID
     $subscription_id = getClientSubscriptionID($shop_details['id']);
@@ -1074,7 +1084,7 @@
                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}"
                                     height="50px" />
                             @else
-                                <img src="{{ $default_logo }}" class="50px">
+                                <img src="{{ $default_logo }}" height="50px">
                             @endif
                         </a>
                     </div>

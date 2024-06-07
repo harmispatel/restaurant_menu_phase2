@@ -27,10 +27,35 @@ class ContactController extends Controller
         $user_details = Auth::user();
         $shop_name = (isset($user_details->hasOneShop->shop['name'])) ? $user_details->hasOneShop->shop['name'] : '';
         $shop_url = (isset($user_details->hasOneShop->shop['shop_slug'])) ? $user_details->hasOneShop->shop['shop_slug'] : '';
+        $shop_id = (isset($user_details->hasOneShop->shop['id'])) ? $user_details->hasOneShop->shop['id'] : '';
         $shop_url = asset($shop_url);
         $shop_name = '<a href="'.$shop_url.'">'.$shop_name.'</a>';
-        $shop_logo = (isset($user_details->hasOneShop->shop['logo'])) ? $user_details->hasOneShop->shop['logo'] : '';
-        $shop_logo = '<img src="'.$shop_logo.'" width="100">';
+
+        $shop_settings = getClientSettings($shop_id);
+
+        $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
+        $theme_settings = themeSettings($shop_theme_id);      
+
+        $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : ''; 
+
+        if($layout == 'layout_1'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+        }elseif($layout == 'layout_2'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+        }elseif($layout == 'layout_3'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+        }else{
+            $shop_logo = "";
+        }
+
+        if(!empty($shop_logo)){
+            $shop_logo = '<img src="'.$shop_logo.'" width="200">';
+        }else{
+            $shop_logo = '<img src="'.asset('public/client_images/not-found/your_logo_1.png'). '" width="200">';
+        }
 
         // Get To Mails & Subject
         $admin_settings = getAdminSettings();
@@ -63,26 +88,12 @@ class ContactController extends Controller
                 $headers .= 'From: <'.$user_details['email'].'>' . "\r\n";
 
                 mail($to,$subject,$message,$headers);
-
-                // $data = [
-                //     'message' => $contact_message,
-                //     'subject' => $subject,
-                //     'client_details' => $user_details,
-                // ];
-
-                // Mail::to($email)->send(new ClientSupport($data));
-
-                // mail($mail,$data['subject'],$data['description']);
             }
         }
         else
         {
             return redirect()->route('contact')->with('error','Internal Server Error!');
         }
-
         return redirect()->route('contact')->with('success','Email has been Sent SuccessFully....');
-
     }
-
-
 }

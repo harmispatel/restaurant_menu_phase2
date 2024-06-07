@@ -1,7 +1,5 @@
 @extends('admin.layouts.admin-layout')
-
 @section('title', __('Clients'))
-
 @section('content')
 
     {{-- Page Title --}}
@@ -53,11 +51,18 @@
                     <div class="card-body">
                         <div class="row">
                             @forelse ($clients as $client)
+                                @php
+                                    $client_settings = getClientSettings($client->hasOneShop->shop['id'] ?? "");
+                                    $logo_layout_1 = $client_settings['logo_layout_1'] ?? "";
+                                    $shop_slug = $client->hasOneShop->shop['shop_slug'] ?? "";
+                                @endphp
                                 <div class="col-md-4 mb-3 mt-3">
                                     <div class="client-box">
                                         <div class="shop_logo_name">
                                             <h3>{{ isset($client->hasOneShop->shop['name']) ? $client->hasOneShop->shop['name'] : '' }}</h3>
-                                            <img  src="{{ isset($client->hasOneShop->shop['logo']) ? $client->hasOneShop->shop['logo'] : '' }}" alt="">
+                                            @if (!empty($logo_layout_1) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1))                                                
+                                                <img  src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1) }}" alt="">
+                                            @endif
                                         </div>
                                         <div class="client-name">
                                             <h2>{{ $client->firstname }} {{  $client->lastname }}</h2>

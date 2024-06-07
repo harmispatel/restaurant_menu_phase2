@@ -12,20 +12,11 @@
     // Default Image
     $default_image = asset('public/client_images/not-found/no_image_1.jpg');
 
-    // Shop Logo
-    $shop_logo =
-        isset($shop_settings['shop_view_header_logo']) && !empty($shop_settings['shop_view_header_logo'])
-            ? $shop_settings['shop_view_header_logo']
-            : '';
-
     // Language Details
     $language_details = getLangDetailsbyCode($current_lang_code);
 
     // Shop Currency
-    $currency =
-        isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])
-            ? $shop_settings['default_currency']
-            : 'EUR';
+    $currency = isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency']) ? $shop_settings['default_currency'] : 'EUR';
 
     // Name Key
     $name_key = $current_lang_code . '_name';
@@ -40,10 +31,7 @@
     $description_key = $current_lang_code . '_description';
 
     // Shop Title
-    $shop_subtitle =
-        isset($shop_settings['business_subtitle']) && !empty($shop_settings['business_subtitle'])
-            ? $shop_settings['business_subtitle']
-            : '';
+    $shop_subtitle = isset($shop_settings['business_subtitle']) && !empty($shop_settings['business_subtitle']) ? $shop_settings['business_subtitle'] : '';
 
     $waiter_call_status = isset($shop_settings['waiter_call_status']) ? $shop_settings['waiter_call_status'] : '0';
 
@@ -55,25 +43,13 @@
 
     // Home Page Intro
     $homepage_intro = moreTranslations($shop_details['id'], 'homepage_intro');
-    $homepage_intro =
-        isset($homepage_intro[$current_lang_code . '_value']) && !empty($homepage_intro[$current_lang_code . '_value'])
-            ? $homepage_intro[$current_lang_code . '_value']
-            : '';
+    $homepage_intro = isset($homepage_intro[$current_lang_code . '_value']) && !empty($homepage_intro[$current_lang_code . '_value']) ? $homepage_intro[$current_lang_code . '_value'] : '';
 
-    $min_amount_for_delivery =
-        isset($order_settings['min_amount_for_delivery']) && !empty($order_settings['min_amount_for_delivery'])
-            ? unserialize($order_settings['min_amount_for_delivery'])
-            : [];
+    $min_amount_for_delivery = isset($order_settings['min_amount_for_delivery']) && !empty($order_settings['min_amount_for_delivery']) ? unserialize($order_settings['min_amount_for_delivery']) : [];
 
     $remain_amount = 0;
 
-    $is_checkout =
-        (isset($order_settings['delivery']) && $order_settings['delivery'] == 1) ||
-        (isset($order_settings['takeaway']) && $order_settings['takeaway'] == 1) ||
-        (isset($order_settings['room_delivery']) && $order_settings['room_delivery'] == 1) ||
-        (isset($order_settings['table_service']) && $order_settings['table_service'] == 1)
-            ? 1
-            : 0;
+    $is_checkout = (isset($order_settings['delivery']) && $order_settings['delivery'] == 1) || (isset($order_settings['takeaway']) && $order_settings['takeaway'] == 1) || (isset($order_settings['room_delivery']) && $order_settings['room_delivery'] == 1) || (isset($order_settings['table_service']) && $order_settings['table_service'] == 1) ? 1 : 0;
 
     if (isset($order_settings['only_cart']) && $order_settings['only_cart'] == 1) {
         $is_checkout = 0;
@@ -99,22 +75,16 @@
 
     // Home Page Intro
     $service_closed_message = moreTranslations($shop_details['id'], 'service_closed_message');
-    $service_closed_message =
-        isset($service_closed_message[$current_lang_code . '_value']) &&
-        !empty($service_closed_message[$current_lang_code . '_value'])
-            ? $service_closed_message[$current_lang_code . '_value']
-            : "Sorry you can't order! The store is closed during these hours.";
+    $service_closed_message = isset($service_closed_message[$current_lang_code . '_value']) && !empty($service_closed_message[$current_lang_code . '_value']) ? $service_closed_message[$current_lang_code . '_value'] : "Sorry you can't order! The store is closed during these hours.";
 
     // Theme Settings
     $theme_settings = themeSettings($shop_theme_id);
     $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : '';
     $effect = isset($theme_settings['slider_effect']) ? $theme_settings['slider_effect'] : 'fabe';
-    $special_day_effect_box =
-        isset($theme_settings['special_day_effect_box']) && !empty($theme_settings['special_day_effect_box'])
-            ? $theme_settings['special_day_effect_box']
-            : 'blink';
+    $special_day_effect_box = isset($theme_settings['special_day_effect_box']) && !empty($theme_settings['special_day_effect_box']) ? $theme_settings['special_day_effect_box'] : 'blink';
 
     $shop_id = isset($shop_details['id']) ? $shop_details['id'] : '';
+
     // Get Language Settings
     $language_settings = clientLanguageSettings($shop_id);
 
@@ -231,6 +201,19 @@
     $table_enable_status = (isset($shop_settings['table_enable_status']) && !empty($shop_settings['table_enable_status'])) ? $shop_settings['table_enable_status'] : 0;
     $room_enable_status = (isset($shop_settings['room_enable_status']) && !empty($shop_settings['room_enable_status'])) ? $shop_settings['room_enable_status'] : 0;
 
+
+    if($layout == 'layout_1'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+    }elseif($layout == 'layout_2'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+    }elseif($layout == 'layout_3'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+    }else{
+        $shop_logo = "";
+    }
 @endphp
 
 @extends('shop.shop-layout')
@@ -256,7 +239,7 @@
                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}"
                                     height="50px" />
                             @else
-                                <img src="{{ $default_logo }}" class="50px">
+                                <img src="{{ $default_logo }}" height="50px">
                             @endif
                         </a>
                     </div>

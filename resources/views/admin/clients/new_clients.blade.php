@@ -12,7 +12,7 @@
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard')}}</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('clients') }}">{{ __('Clients')}}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('clients.list') }}">{{ __('Clients')}}</a></li>
                         <li class="breadcrumb-item active">{{ __('New Clients')}}</li>
                     </ol>
                 </nav>
@@ -156,13 +156,13 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    {{-- <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="shop_logo" class="form-label">{{ __('Shop Logo')}}</label>
                                             <input type="file" name="shop_logo" id="shop_logo" class="form-control">
                                         </div>
                                         <code>Upload Shop Logo (150*80) or (150*150)</code>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="primary_language" class="form-label">{{ __('Primary Language')}}</label>
@@ -181,12 +181,6 @@
                                             @endif
                                         </div>
                                     </div>
-                                    {{-- <div class="col-md-12 mb-3">
-                                        <div class="form-group">
-                                            <label for="shop_description" class="form-label">{{ __('Shop Description')}}</label>
-                                            <textarea name="shop_description" id="shop_description" rows="5" class="form-control">{{ old('shop_description') }}</textarea>
-                                        </div>
-                                    </div> --}}
                                 </div>
                                 <hr>
                                 <div class="row mt-3">

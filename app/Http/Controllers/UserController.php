@@ -123,7 +123,6 @@ class UserController extends Controller
         $status = (isset($request->status)) ? $request->status : 0;
         $shop_name = $request->shop_name;
         $shop_slug = $request->shop_url;
-        // $shop_description = $request->shop_description;
 
         // Insert New Client
         $client = new User();
@@ -159,16 +158,16 @@ class UserController extends Controller
             mkdir(public_path('client_uploads/shops/'.$shop_slug."/background_image"));
 
 
-            if($request->hasFile('shop_logo'))
-            {
-                $path = public_path('client_uploads/shops/').$shop_slug."/";
-                $imgname = time().".". $request->file('shop_logo')->getClientOriginalExtension();
-                $request->file('shop_logo')->move($path, $imgname);
-                $imageurl = asset('public/client_uploads/shops/'.$shop_slug).'/'.$imgname;
-                $shop->logo = $imageurl;
+            // if($request->hasFile('shop_logo'))
+            // {
+            //     $path = public_path('client_uploads/shops/').$shop_slug."/";
+            //     $imgname = time().".". $request->file('shop_logo')->getClientOriginalExtension();
+            //     $request->file('shop_logo')->move($path, $imgname);
+            //     $imageurl = asset('public/client_uploads/shops/'.$shop_slug).'/'.$imgname;
+            //     $shop->logo = $imageurl;
 
-                $shop->directory = $path;
-            }
+            //     $shop->directory = $path;
+            // }
             $shop->save();
 
 

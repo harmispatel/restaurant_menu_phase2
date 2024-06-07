@@ -22,9 +22,6 @@
     // Default Image
     $default_image = asset('public/client_images/not-found/no_image_1.jpg');
 
-    // Shop Logo
-    $shop_logo = isset($shop_settings['shop_view_header_logo']) && !empty($shop_settings['shop_view_header_logo']) ? $shop_settings['shop_view_header_logo'] : '';
-
     // Language Details
     $language_details = getLangDetailsbyCode($current_lang_code);
 
@@ -117,8 +114,18 @@
     $logo_position = isset($theme_settings['logo_position']) ? $theme_settings['logo_position'] : '';
     $search_box_position = isset($theme_settings['search_box_position']) ? $theme_settings['search_box_position'] : '';
 
-    // Shop Logo
-    $shop_logo = isset($shop_settings['shop_view_header_logo']) && !empty($shop_settings['shop_view_header_logo']) ? $shop_settings['shop_view_header_logo'] : '';
+    if($layout == 'layout_1'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+    }elseif($layout == 'layout_2'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+    }elseif($layout == 'layout_3'){
+        // Shop Logo
+        $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+    }else{
+        $shop_logo = "";
+    }
 
     // Cart Quantity
     $total_quantity = getCartQuantity();
@@ -1090,7 +1097,7 @@
                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}"
                                     height="50px" />
                             @else
-                                <img src="{{ $default_logo }}" class="50px">
+                                <img src="{{ $default_logo }}" height="50px">
                             @endif
                         </a>
                     </div>

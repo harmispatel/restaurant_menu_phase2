@@ -1,7 +1,9 @@
 @php
     $client_settings = getClientSettings();
 
-    $logo = isset($client_settings['shop_view_header_logo']) ? $client_settings['shop_view_header_logo'] : '';
+    $logo_layout_1 = $client_settings['logo_layout_1'] ?? "";
+    $logo_layout_2 = $client_settings['logo_layout_2'] ?? "";
+    $logo_layout_3 = $client_settings['logo_layout_3'] ?? "";
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
     $loader = isset($client_settings['shop_loader']) ? $client_settings['shop_loader'] : '';
 
@@ -77,7 +79,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-4 mb-3">
                         <div class="form-group">
                             <label for="form-label" for="shop_start_time">{{ __('Working Hours') }}</label>
@@ -86,8 +87,7 @@
                             <div class="col-6"><input type="time" class="form-control" name="shop_end_time" id="shop_end_time" value="{{ (isset($client_settings['shop_end_time']) && !empty($client_settings['shop_end_time'])) ? $client_settings['shop_end_time'] : '' }}"></div>
                             </div>
                         </div>
-                    </div>
-                    
+                    </div>                    
                     <div class="col-md-4 mb-3">
                         <div class="form-group">
                             <label for="form-label" for="shop_start_time">{{ __('Default TimeZone') }}</label>
@@ -165,6 +165,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -185,27 +186,67 @@
                         </div>
                     </div>
                 </div>
-                <div class="social_media_part">
-                    <div class="socia_media_title">
-                        <h2>{{ __('Logo')}}</h2>
-                        <p>{{ __('Logo will appear on the top of your menu')}}</p>
-                    </div>
-                    <div class="add_logo_sec_body_inr position-relative">
-                        <label for="shop_view_header_logo" class="position-relative" style="cursor: pointer;">
-                            @if(!empty($logo) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo))
-                                <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo) }}" width="200px"/>
-                                <a href="{{ route('design.logo.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
-                            @else
-                                <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
-                            @endif
-                            <div class="logo-loader" style="display: none;">
-                                <img src="{{ asset('public/client_images/loader/loader1.gif') }}">
+
+                <hr>
+
+                <div class="col-md-12 mb-4">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <label for="logo_layout_1" class="form-label">{{ ('Logo Layout 1') }}</label>
+                            <div class="add_logo_sec_body_inr position-relative">
+                                <label for="logo_layout_1" class="position-relative" style="cursor: pointer;">
+                                    @if(!empty($logo_layout_1) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1))
+                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1) }}" width="200px"/>
+                                        <a href="{{ route('design.logo.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
+                                    @else
+                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
+                                    @endif
+                                    <div class="logo-loader" style="display: none;">
+                                        <img src="{{ asset('public/client_images/loader/loader1.gif') }}">
+                                    </div>
+                                </label>
+                                <input type="file" id="logo_layout_1" name="logo_layout_1" style="display: none;" />
                             </div>
-                        </label>
-                        <input type="file" id="shop_view_header_logo" name="shop_view_header_logo" style="display: none;" />
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <label for="logo_layout_2" class="form-label">{{ ('Logo Layout 2') }}</label>
+                            <div class="add_logo_sec_body_inr position-relative">
+                                <label for="logo_layout_2" class="position-relative" style="cursor: pointer;">
+                                    @if(!empty($logo_layout_2) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_2))
+                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_2) }}" width="200px"/>
+                                        <a href="{{ route('design.logo.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
+                                    @else
+                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
+                                    @endif
+                                    <div class="logo-loader" style="display: none;">
+                                        <img src="{{ asset('public/client_images/loader/loader1.gif') }}">
+                                    </div>
+                                </label>
+                                <input type="file" id="logo_layout_2" name="logo_layout_2" style="display: none;" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <label for="logo_layout_3" class="form-label">{{ ('Logo Layout 3') }}</label>
+                            <div class="add_logo_sec_body_inr position-relative">
+                                <label for="logo_layout_3" class="position-relative" style="cursor: pointer;">
+                                    @if(!empty($logo_layout_3) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_3))
+                                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_3) }}" width="200px"/>
+                                        <a href="{{ route('design.logo.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
+                                    @else
+                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
+                                    @endif
+                                    <div class="logo-loader" style="display: none;">
+                                        <img src="{{ asset('public/client_images/loader/loader1.gif') }}">
+                                    </div>
+                                </label>
+                                <input type="file" id="logo_layout_3" name="logo_layout_3" style="display: none;" />
+                            </div>
+                        </div>
                     </div>
                 </div>
+
                 @if(isset($package_permissions['loader']) && !empty($package_permissions['loader']) && $package_permissions['loader'] == 1)
+                    <hr>
                     <div class="social_media_part">
                         <div class="socia_media_title d-flex  justify-content-between">
                             <h2>{{ __('Loader')}}</h2>
@@ -266,6 +307,11 @@
         // Success Message
         @if (Session::has('success'))
             toastr.success('{{ Session::get('success') }}')
+        @endif
+
+        // Error Message
+        @if (Session::has('error'))
+            toastr.error('{{ Session::get('error') }}')
         @endif
 
     </script>

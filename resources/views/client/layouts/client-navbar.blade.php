@@ -1,20 +1,17 @@
 @php
     // UserDetails
-    if (auth()->user())
-    {
+    if (auth()->user()){
         $userID = encrypt(auth()->user()->id);
         $userName = auth()->user()->firstname." ".auth()->user()->lastname;
         $userImage = auth()->user()->image;
-    }
-    else
-    {
+    }else{
         $userID = '';
         $userName = '';
         $userImage = '';
     }
 
     $client_settings = getClientSettings();
-    $logo = isset($client_settings['shop_view_header_logo']) ? $client_settings['shop_view_header_logo'] : '';
+    $logo_layout_1 = $client_settings['logo_layout_1'] ?? "";
 
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
 
@@ -30,8 +27,8 @@
 
     <div class="d-flex align-items-center justify-content-between text-center">
         <a href="{{ route('restaurant',$shop_slug) }}" target="_blank" class="logo d-flex align-items-center justify-content-center">
-            @if(!empty($logo) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo))
-                <img class="w-100" src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo) }}" alt="Logo">
+            @if(!empty($logo_layout_1) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1))
+                <img class="w-100" src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1) }}" alt="Logo">
             @else
                 <span class="d-none d-lg-block">My Logo</span>
             @endif

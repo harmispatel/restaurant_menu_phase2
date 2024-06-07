@@ -2743,16 +2743,38 @@ class ShopController extends Controller
         $shop_name = (isset($shop_details['name'])) ? $shop_details['name'] : '';
         $shop_url = (isset($shop_details['shop_slug'])) ? $shop_details['shop_slug'] : '';
         $shop_url = asset($shop_url);
-        $shop_name = '<a href="' . $shop_url . '">' . $shop_name . '</a>';
-        $shop_logo = (isset($shop_details['logo'])) ? $shop_details['logo'] : '';
-        $shop_logo = '<img src="' . $shop_logo . '" width="200">';
+        $shop_name = '<a href="' . $shop_url . '">' . $shop_name . '</a>';        
 
         $shop_user = UserShop::with(['user'])->where('shop_id', $shop_id)->first();
         $contact_emails = (isset($shop_user->user['contact_emails']) && !empty($shop_user->user['contact_emails'])) ? unserialize($shop_user->user['contact_emails']) : [];
         $client_email = (isset($shop_user->user['email']) && !empty($shop_user->user['email'])) ? $shop_user->user['email'] : '';
 
-
         $shop_settings = getClientSettings($shop_id);
+
+        $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
+        $theme_settings = themeSettings($shop_theme_id);      
+
+        $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : ''; 
+
+        if($layout == 'layout_1'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+        }elseif($layout == 'layout_2'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+        }elseif($layout == 'layout_3'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+        }else{
+            $shop_logo = "";
+        }
+
+        if(!empty($shop_logo)){
+            $shop_logo = '<img src="'.$shop_logo.'" width="200">';
+        }else{
+            $shop_logo = '<img src="'.asset('public/client_images/not-found/your_logo_1.png'). '" width="200">';
+        }
+
 
         // Name Key
         $form_key = $current_lang_code . "_form";
@@ -2780,18 +2802,6 @@ class ShopController extends Controller
         $from_mail = $data['email'];
         $data['subject'] = "New Check In";
         $data['description'] = $data['firstname'] . ' ' . $data['lastname'] . ' has been check in at : ' . date('d-m-Y h:i:s', strtotime($data['arrival_date']));
-
-        // $sendData = [
-        //     'message' => $data['description'],
-        //     'subject' => $data['subject'],
-        //     'firstname' => $data['firstname'],
-        //     'lastname' => $data['lastname'],
-        //     'email' => $data['email'],
-        //     'phone' => $data['phone'],
-        //     'age' => $data['age'],
-        //     'room_number' => $data['room_number'],
-        //     'from_mail' => $from_mail,
-        // ];
 
         try {
             if (count($contact_emails) > 0 && !empty($check_in_mail_form)) {
@@ -3857,11 +3867,31 @@ class ShopController extends Controller
         $shop_url = (isset($data['shop_details']->shop_slug)) ? $data['shop_details']->shop_slug : '';
         $shop_url = asset($shop_url);
         $shop_name = '<a href="' . $shop_url . '">' . $shop_name . '</a>';
-        $shop_logo = (isset($data['shop_details']->logo)) ? $data['shop_details']->logo : '';
-        $shop_logo = '<img src="' . $shop_logo . '" width="200">';
         $shop_settings = getClientSettings($shop_id);
+        
+        $shop_theme_id = isset($shop_settings['shop_active_theme']) ? $shop_settings['shop_active_theme'] : '';
+        $theme_settings = themeSettings($shop_theme_id);      
 
+        $layout = isset($theme_settings['desk_layout']) ? $theme_settings['desk_layout'] : ''; 
 
+        if($layout == 'layout_1'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_1']) && !empty($shop_settings['logo_layout_1'])) ? $shop_settings['logo_layout_1'] : '';
+        }elseif($layout == 'layout_2'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_2']) && !empty($shop_settings['logo_layout_2'])) ? $shop_settings['logo_layout_2'] : '';
+        }elseif($layout == 'layout_3'){
+            // Shop Logo
+            $shop_logo = (isset($shop_settings['logo_layout_3']) && !empty($shop_settings['logo_layout_3'])) ? $shop_settings['logo_layout_3'] : '';
+        }else{
+            $shop_logo = "";
+        }
+
+        if(!empty($shop_logo)){
+            $shop_logo = '<img src="'.$shop_logo.'" width="200">';
+        }else{
+            $shop_logo = '<img src="'.asset('public/client_images/not-found/your_logo_1.png'). '" width="200">';
+        }
 
         // Get Shop Max ID
         $order_max = Order::where('shop_id', $shop_id)->max('order_id');
