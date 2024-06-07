@@ -706,5 +706,9 @@
 
     "Please enter the pnone with this format: +30xxxxxxxxx":"Please enter the pnone with this format: +30xxxxxxxxx",
 
-    "Renew Subscription?":"Renew Subscription?"
+    "Renew Subscription?":"Renew Subscription?",
+
+    "Logo Layout 1": "Logo Layout 1",
+    "Logo Layout 2": "Logo Layout 2",
+    "Logo Layout 3": "Logo Layout 3"
 }

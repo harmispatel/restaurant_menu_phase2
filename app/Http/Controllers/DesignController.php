@@ -100,13 +100,13 @@ class DesignController extends Controller
 
 
     // Delete Logo
-    public function deleteLogo()
+    public function deleteLogo($key)
     {
         $clientID = isset(Auth::user()->id) ? Auth::user()->id : '';
         $shop_id = isset(Auth::user()->hasOneShop->shop['id']) ? Auth::user()->hasOneShop->shop['id'] : '';
         $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
 
-        $get_logo_setting = ClientSettings::where('client_id',$clientID)->where('shop_id',$shop_id)->where('key','shop_view_header_logo')->first();
+        $get_logo_setting = ClientSettings::where('client_id',$clientID)->where('shop_id',$shop_id)->where('key',$key)->first();
         $setting_id = isset($get_logo_setting->id) ? $get_logo_setting->id : '';
         $logo = isset($get_logo_setting->value) ? $get_logo_setting->value : '';
 

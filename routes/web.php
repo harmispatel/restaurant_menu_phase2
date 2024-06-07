@@ -172,7 +172,7 @@ Route::group(['prefix' => 'client'], function()
         // Designs
         Route::get('/design-logo', [DesignController::class,'logo'])->name('design.logo');
         Route::post('/design-logo-upload', [DesignController::class,'logoUpload'])->name('design.logo.upload');
-        Route::get('/design-logo-delete', [DesignController::class,'deleteLogo'])->name('design.logo.delete');
+        Route::get('/design-logo-delete/{key}', [DesignController::class,'deleteLogo'])->name('design.logo.delete');
 
         Route::post('/design-intro-status', [DesignController::class,'introStatus'])->name('design.intro.status');
         Route::post('/design-intro-cube', [DesignController::class,'introCube'])->name('design.intro.cube');

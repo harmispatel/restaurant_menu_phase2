@@ -192,12 +192,12 @@
                 <div class="col-md-12 mb-4">
                     <div class="row">
                         <div class="col-md-4 text-center">
-                            <label for="logo_layout_1" class="form-label">{{ ('Logo Layout 1') }}</label>
+                            <label for="logo_layout_1" class="form-label">{{ __('Logo Layout 1') }}</label>
                             <div class="add_logo_sec_body_inr position-relative">
                                 <label for="logo_layout_1" class="position-relative" style="cursor: pointer;">
                                     @if(!empty($logo_layout_1) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1))
                                         <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_1) }}" width="200px"/>
-                                        <a href="{{ route('design.logo.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
+                                        <a href="{{ route('design.logo.delete','logo_layout_1') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
                                     @else
                                         <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
                                     @endif
@@ -209,12 +209,12 @@
                             </div>
                         </div>
                         <div class="col-md-4 text-center">
-                            <label for="logo_layout_2" class="form-label">{{ ('Logo Layout 2') }}</label>
+                            <label for="logo_layout_2" class="form-label">{{ __('Logo Layout 2') }}</label>
                             <div class="add_logo_sec_body_inr position-relative">
                                 <label for="logo_layout_2" class="position-relative" style="cursor: pointer;">
                                     @if(!empty($logo_layout_2) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_2))
                                         <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_2) }}" width="200px"/>
-                                        <a href="{{ route('design.logo.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
+                                        <a href="{{ route('design.logo.delete','logo_layout_2') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
                                     @else
                                         <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
                                     @endif
@@ -226,12 +226,12 @@
                             </div>
                         </div>
                         <div class="col-md-4 text-center">
-                            <label for="logo_layout_3" class="form-label">{{ ('Logo Layout 3') }}</label>
+                            <label for="logo_layout_3" class="form-label">{{ __('Logo Layout 3') }}</label>
                             <div class="add_logo_sec_body_inr position-relative">
                                 <label for="logo_layout_3" class="position-relative" style="cursor: pointer;">
                                     @if(!empty($logo_layout_3) && file_exists('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_3))
                                         <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/top_logos/'.$logo_layout_3) }}" width="200px"/>
-                                        <a href="{{ route('design.logo.delete') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
+                                        <a href="{{ route('design.logo.delete','logo_layout_3') }}" class="btn btn-sm btn-danger" style="position: absolute; top: -35px; right: 0px;"><i class="bi bi-trash"></i></a>
                                     @else
                                         <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" width="200px"/>
                                     @endif
