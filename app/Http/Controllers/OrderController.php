@@ -137,11 +137,11 @@ class OrderController extends Controller
                 $discount_type = (isset($order->discount_type) && !empty($order->discount_type)) ? $order->discount_type : 'percentage';
                 $coupon_type = (isset($order->coupon_type) && !empty($order->coupon_type)) ? $order->coupon_type : 'percentage';
                 if($order->checkout_type == 'delivery')
-                                {
-                                    $staffs = Staff::where('shop_id',$shop_id)->where('status',1)->where('type',0)->get();
-                                }else{
-                                    $staffs = Staff::where('shop_id',$shop_id)->where('status',1)->where('type',1)->get();
-                                }
+                {
+                    $staffs = Staff::where('shop_id',$shop_id)->where('status',1)->whereIn('type',[0, 2])->get();
+                }else{
+                    $staffs = Staff::where('shop_id',$shop_id)->where('status',1)->whereIn('type',[1,2])->get();
+                }
                 $html .= '<div class="order">';
                     $html .= '<div class="order-btn d-flex align-items-center justify-content-end">';
                         $html .= '<select name="staff_id" id="staff_id" class="form-select me-2 staff_id" style="width:150px" onchange="ChangeStaff(this,'.$order->id.');"'.($order->staff_id != '' ? "disabled" : "").'>';
@@ -1592,18 +1592,19 @@ class OrderController extends Controller
         try {
            $from_email = isset(Auth::user()->email) ? Auth::user()->email : '';
 
-           $delivery= Order::find($request->order_id);
+            $delivery = Order::find($request->order_id);
+            $delivery->staff_id = $request->staff_id;
+            $delivery->save();
 
-           $data['shop_settings'] = getClientSettings($delivery->shop_id);
+            $data['shop_settings'] = getClientSettings($delivery->shop_id);
 
             // Shop Currency
             $currency = (isset($shop_settings['default_currency']) && !empty($shop_settings['default_currency'])) ? $shop_settings['default_currency'] : 'EUR';
 
+            $staff = Staff::find($request->staff_id);
 
-             $staff = Staff::find($request->staff_id);
+            if(!empty($from_email) && !empty($staff) ){
 
-             if(!empty($from_email) && !empty($staff) )
-             {
                 $to = $staff->email;
                 $from = $from_email;
                 $subject = "Order Delivery";
@@ -1760,21 +1761,14 @@ class OrderController extends Controller
                 $headers .= 'From: <'.$from.'>' . "\r\n";
 
                 mail($to,$subject,$message,$headers);
+            }            
 
-             }
-
-             $delivery->staff_id = $request->staff_id;
-             $delivery->save();
-
-
-             return response()->json([
+            return response()->json([
                 'success' => 1,
                 'message' => 'Order Delivery Send SuccessFully...',
             ]);
 
         } catch (\Throwable $th) {
-            //throw $th;
-            dd($th);
             return response()->json([
                 'success' => 0,
                 'message' => "Internal Server Error!",

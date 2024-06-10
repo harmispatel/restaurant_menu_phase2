@@ -114,12 +114,12 @@
                                 if ($order->checkout_type == 'delivery') {
                                     $staffs = App\Models\Staff::where('shop_id', $shop_id)
                                         ->where('status', 1)
-                                        ->where('type', 0)
+                                        ->whereIn('type', [0, 2])
                                         ->get();
                                 } else {
                                     $staffs = App\Models\Staff::where('shop_id', $shop_id)
                                         ->where('status', 1)
-                                        ->where('type', 1)
+                                        ->whereIn('type', [1, 2])
                                         ->get();
                                 }
                             @endphp

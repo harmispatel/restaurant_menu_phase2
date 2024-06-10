@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Staff;
+use App\Models\{Staff,RoomStaff, TableStaff, Order};
 use App\Http\Requests\StaffRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +32,6 @@ class StaffController extends Controller
 
             return redirect()->route('staffs')->with('success','Staff has been Inserted SuccessFully....');
         } catch (\Throwable $th) {
-
             return redirect()->route('staffs')->with('error','Internal Server Error');
         }
 
@@ -86,17 +85,40 @@ class StaffController extends Controller
 
     public function destroy(Request $request)
     {
-        $id = $request->id;
+        $staff_id = $request->id ?? null;
 
         try {
-            Staff::where('id',$id)->delete();
+            $room_staff = RoomStaff::where('staffs_id', $staff_id)->count();
+            $table_staff = TableStaff::where('staffs_id', $staff_id)->count();
+            $orders_staff = Order::where('staff_id', $staff_id)->count();
 
+            if($room_staff > 0){
+                return response()->json([
+                    'success' => 0,
+                    'message' => "You cannot remove staff as long as staff are assigned to Rooms!",
+                ]);
+            }
+
+            if($table_staff > 0){
+                return response()->json([
+                    'success' => 0,
+                    'message' => "You cannot remove staff as long as staff are assigned to Tables!",
+                ]);
+            }
+
+            if($orders_staff > 0){
+                return response()->json([
+                    'success' => 0,
+                    'message' => "You cannot remove staff as long as staff are assigned to Orders!",
+                ]);
+            }
+
+            Staff::where('id', $staff_id)->delete();
             return response()->json([
                 'success' => 1,
-                'message' => "Staff has been Removed SuccessFully..",
+                'message' => "Staff has been Removed.",
             ]);
         } catch (\Throwable $th) {
-            //throw $th;
             return response()->json([
                 'success' => 0,
                 'message' => "Internal Server Error!",

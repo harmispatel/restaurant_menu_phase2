@@ -108,6 +108,7 @@
                                             <select name="type" id="type" class="form-control {{ ($errors->has('type')) ? 'is-invalid' : '' }}">
                                                 <option value="0" {{ $staff->type == 0 ? 'selected' : '' }}>{{ __('Driver') }}</option>
                                                 <option value="1" {{ $staff->type == 1 ? 'selected' : '' }}>{{ __('Waiter') }}</option>
+                                                <option value="2" {{ $staff->type == 2 ? 'selected' : '' }}>{{ __('Both') }}</option>
                                             </select>
                                             @if($errors->has('type'))
                                                 <div class="invalid-feedback">
@@ -142,19 +143,21 @@
 @section('page-js')
     <script type="text/javascript">
 
-    $(document).ready(function(){
-        $('#wp_number').on('input', function() {
-            let value = $(this).val().replace(/[^0-9+]/g, '').replace(/^\+/, '');
-            $(this).val('+' + value.substring(0, 12));
-        }).on('paste', function(e) {
-            var pastedData = (e.originalEvent.clipboardData || window.clipboardData).getData('Text');
-            if (!/^\+?[0-9]*$/.test(pastedData)) {
-                e.preventDefault();
-            }
-        }).on('focus', function() {
-            if (!$(this).val()) $(this).val('+');
+        $(document).ready(function() {
+            $('#wp_number').on('input', function() {
+                var input = $(this).val();
+                
+                // Allow only numbers and the "+" symbol
+                input = input.replace(/[^0-9+]/g, '');
+                
+                // Limit the input to a maximum of 13 characters
+                if (input.length > 13) {
+                    input = input.substring(0, 13);
+                }
+                
+                $(this).val(input);
+            });
         });
-    });
 
     </script>
 @endsection

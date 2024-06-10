@@ -382,16 +382,15 @@ class ItemsController extends Controller
 
         // Primary Language Details
         $primary_language_detail = Languages::where('id',$primary_lang_id)->first();
-        $curr_lang_code = isset($primary_language_detail->code) ? $primary_language_detail->code : 'en';
 
-        // if(session()->has('lang_code'))
-        // {
-        //     $curr_lang_code = session()->get('lang_code');
-        // }
-        // else
-        // {
-        //     $curr_lang_code = 'en';
-        // }
+        if(session()->has('lang_code'))
+        {
+            $curr_lang_code = session()->get('lang_code');
+        }
+        else
+        {
+            $curr_lang_code = 'en';
+        }
 
         try
         {
@@ -414,6 +413,9 @@ class ItemsController extends Controller
 
             if(count($items) > 0)
             {
+                $curr_lang_code = isset($primary_language_detail->code) ? $primary_language_detail->code : 'en';
+                $name_key = $curr_lang_code."_name";
+                
                 foreach($items as $item)
                 {
                     $newStatus = ($item->published == 1) ? 0 : 1;

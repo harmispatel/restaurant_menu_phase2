@@ -20,7 +20,7 @@ class ShopRoomController extends Controller
 
      public function insert()
      {
-        $staffs =  Staff::where('type',1)->where('status',1)->get();
+        $staffs =  Staff::whereIn('type', [1,2])->where('status',1)->where('shop_id',Auth::user()->hasOneShop->shop['id'])->get();
         return view('client.rooms.new_rooms',compact('staffs'));
      }
 
@@ -69,7 +69,7 @@ class ShopRoomController extends Controller
      {
          $shopRoom = ShopRoom::where('id', $id)->first();
          $staffIds = $shopRoom->staffs()->pluck('staffs.id')->toArray();
-         $staffs =  Staff::where('type',1)->where('status',1)->get();
+         $staffs =  Staff::whereIn('type', [1,2])->where('status',1)->where('shop_id',Auth::user()->hasOneShop->shop['id'])->get();
          return view('client.rooms.edit_rooms', compact('shopRoom','staffs','staffIds'));
      }
 

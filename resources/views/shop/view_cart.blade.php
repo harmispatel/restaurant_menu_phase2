@@ -115,66 +115,30 @@
 
     // Theme Settings
     $theme_settings = themeSettings($shop_theme_id);
-    $slider_buttons =
-        isset($theme_settings['banner_slide_button']) && !empty($theme_settings['banner_slide_button'])
-            ? $theme_settings['banner_slide_button']
-            : 0;
-    $slider_delay_time =
-        isset($theme_settings['banner_delay_time']) && !empty($theme_settings['banner_delay_time'])
-            ? $theme_settings['banner_delay_time']
-            : 3000;
-    $banner_height =
-        isset($theme_settings['banner_height']) && !empty($theme_settings['banner_height'])
-            ? $theme_settings['banner_height']
-            : 250;
-    $language_bar_position = isset($theme_settings['language_bar_position'])
-        ? $theme_settings['language_bar_position']
-        : '';
+    $slider_buttons = isset($theme_settings['banner_slide_button']) && !empty($theme_settings['banner_slide_button']) ? $theme_settings['banner_slide_button'] : 0;
+    $slider_delay_time = isset($theme_settings['banner_delay_time']) && !empty($theme_settings['banner_delay_time']) ? $theme_settings['banner_delay_time'] : 3000;
+    $banner_height = isset($theme_settings['banner_height']) && !empty($theme_settings['banner_height']) ? $theme_settings['banner_height'] : 250;
+    $language_bar_position = isset($theme_settings['language_bar_position']) ? $theme_settings['language_bar_position'] : '';
     $logo_position = isset($theme_settings['logo_position']) ? $theme_settings['logo_position'] : '';
     $search_box_position = isset($theme_settings['search_box_position']) ? $theme_settings['search_box_position'] : '';
-    $stiky_header =
-        isset($theme_settings['sticky_header']) && !empty($theme_settings['sticky_header'])
-            ? $theme_settings['sticky_header']
-            : '';
+    $stiky_header = isset($theme_settings['sticky_header']) && !empty($theme_settings['sticky_header']) ? $theme_settings['sticky_header'] : '';
 
     // Shop Time
-    $shop_start_time =
-        isset($shop_settings['shop_start_time']) && !empty($shop_settings['shop_start_time'])
-            ? $shop_settings['shop_start_time']
-            : '';
-    $shop_end_time =
-        isset($shop_settings['shop_end_time']) && !empty($shop_settings['shop_end_time'])
-            ? $shop_settings['shop_end_time']
-            : '';
-    $happy_start_time =
-        isset($shop_settings['happy_start_time']) && !empty($shop_settings['happy_start_time'])
-            ? $shop_settings['happy_start_time']
-            : '';
-    $happy_end_time =
-        isset($shop_settings['happy_end_time']) && !empty($shop_settings['happy_end_time'])
-            ? $shop_settings['happy_end_time']
-            : '';
+    $shop_start_time = isset($shop_settings['shop_start_time']) && !empty($shop_settings['shop_start_time']) ? $shop_settings['shop_start_time'] : '';
+    $shop_end_time = isset($shop_settings['shop_end_time']) && !empty($shop_settings['shop_end_time']) ? $shop_settings['shop_end_time'] : '';
+    $happy_start_time = isset($shop_settings['happy_start_time']) && !empty($shop_settings['happy_start_time']) ? $shop_settings['happy_start_time'] : '';
+    $happy_end_time = isset($shop_settings['happy_end_time']) && !empty($shop_settings['happy_end_time']) ? $shop_settings['happy_end_time'] : '';
 
     // header image
-    $header_img = (isset($theme_settings['header_image']) && !empty($theme_settings['header_image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/header_image/'.$theme_settings['header_image']))
-        ? asset('public/client_uploads/shops/' . $shop_slug . '/header_image/' . $theme_settings['header_image'])
-        : asset('public/client/assets/images2/allo_spritz.jpg');
+    $header_img = (isset($theme_settings['header_image']) && !empty($theme_settings['header_image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/header_image/'.$theme_settings['header_image'])) ? asset('public/client_uploads/shops/' . $shop_slug . '/header_image/' . $theme_settings['header_image']) : asset('public/client/assets/images2/allo_spritz.jpg');
 
     // Header Text One
     $header_text_one = moreTranslations($shop_details['id'], 'header_text_1');
-    $header_text_one =
-        isset($header_text_one[$current_lang_code . '_value']) &&
-        !empty($header_text_one[$current_lang_code . '_value'])
-            ? $header_text_one[$current_lang_code . '_value']
-            : '';
+    $header_text_one = isset($header_text_one[$current_lang_code . '_value']) && !empty($header_text_one[$current_lang_code . '_value']) ? $header_text_one[$current_lang_code . '_value'] : '';
 
     // Header Text Two
     $header_text_two = moreTranslations($shop_details['id'], 'header_text_2');
-    $header_text_two =
-        isset($header_text_two[$current_lang_code . '_value']) &&
-        !empty($header_text_two[$current_lang_code . '_value'])
-            ? $header_text_two[$current_lang_code . '_value']
-            : '';
+    $header_text_two = isset($header_text_two[$current_lang_code . '_value']) && !empty($header_text_two[$current_lang_code . '_value']) ? $header_text_two[$current_lang_code . '_value'] : '';
 
     $is_sub_title = isset($shop_settings['is_sub_title']) ? $shop_settings['is_sub_title'] : '0';
 
@@ -183,11 +147,7 @@
 
     // Read More Label
     $read_more_label = moreTranslations($shop_details['id'], 'read_more_link_label');
-    $read_more_label =
-        isset($read_more_label[$current_lang_code . '_value']) &&
-        !empty($read_more_label[$current_lang_code . '_value'])
-            ? $read_more_label[$current_lang_code . '_value']
-            : 'Read More';
+    $read_more_label = isset($read_more_label[$current_lang_code . '_value']) && !empty($read_more_label[$current_lang_code . '_value']) ? $read_more_label[$current_lang_code . '_value'] : 'Read More';
 
     // Room Number
     $rooms = getShopRooms($shop_details['id']);
@@ -220,11 +180,8 @@
 @section('title', 'Cart')
 @section('header')
     @if ($layout == 'layout_2')
-
-
-
         {{-- desktop view --}}
-        <header class="header side_header">
+        <header class="header side_header head-2">
             <div class="header_inr">
                 <div class="header_top">
                     @if (!empty($shop_start_time) && !empty($shop_end_time))
@@ -236,8 +193,7 @@
                     <div class="shop_logo text-center">
                         <a href="{{ route('restaurant', $shop_details['shop_slug']) }}">
                             @if (!empty($shop_logo) && file_exists('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo))
-                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}"
-                                    height="50px" />
+                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}" height="50px" />
                             @else
                                 <img src="{{ $default_logo }}" height="50px">
                             @endif
@@ -246,41 +202,31 @@
                     @if ($is_sub_title == 1)
                         <div class="happy_time text-center">
                             {!! $header_text_two !!}
-
                         </div>
                     @endif
                 </div>
                 <div class="header_img">
-
                     <div class="header_inr_menu">
                         <ul class="m-0 header_inr_menu_ul">
-
                             <li class="navlink shop_lang_box position-relative">
                                 @if (count($additional_languages) > 0 || $google_translate == 1)
-                                    <a class="lang_bt"> <x-dynamic-component width="35px"
-                                            component="flag-language-{{ $language_details['code'] }}" /> </a>
+                                    <a class="lang_bt"> <x-dynamic-component width="35px" component="flag-language-{{ $language_details['code'] }}" /> </a>
                                 @endif
                                 <div class="lang_select">
                                     <ul>
                                         @if (isset($primary_language_details) && !empty($primary_language_details))
                                             <li>
-                                                <x-dynamic-component width="35px"
-                                                    component="flag-language-{{ $primary_language_details['code'] }}" />
-                                                <a onclick="changeLanguage('{{ $primary_language_details['code'] }}')"
-                                                    style="cursor: pointer;">{{ isset($primary_language_details['name']) ? $primary_language_details['name'] : '' }}</a>
+                                                <x-dynamic-component width="35px" component="flag-language-{{ $primary_language_details['code'] }}" />
+                                                <a onclick="changeLanguage('{{ $primary_language_details['code'] }}')" style="cursor: pointer;">{{ isset($primary_language_details['name']) ? $primary_language_details['name'] : '' }}</a>
                                             </li>
                                         @endif
                                         @foreach ($additional_languages as $language)
                                             @php
-                                                $langCode = isset($language->language['code'])
-                                                    ? $language->language['code']
-                                                    : '';
+                                                $langCode = isset($language->language['code']) ? $language->language['code'] : '';
                                             @endphp
                                             <li>
-                                                <x-dynamic-component width="35px"
-                                                    component="flag-language-{{ $langCode }}" />
-                                                <a onclick="changeLanguage('{{ $langCode }}')"
-                                                    style="cursor: pointer;">{{ isset($language->language['name']) ? $language->language['name'] : '' }}</a>
+                                                <x-dynamic-component width="35px" component="flag-language-{{ $langCode }}" />
+                                                <a onclick="changeLanguage('{{ $langCode }}')" style="cursor: pointer;">{{ isset($language->language['name']) ? $language->language['name'] : '' }}</a>
                                             </li>
                                         @endforeach
                                         @if ($google_translate == 1)
@@ -288,8 +234,7 @@
                                                 <div class="form-group">
                                                     <label class="me-2 text-dark">Auto Translate</label>
                                                     <label class="switch me-2">
-                                                        <input type="checkbox" value="1" name="auto_translate"
-                                                            id="auto_translate_layout_two" value="1">
+                                                        <input type="checkbox" value="1" name="auto_translate" id="auto_translate_layout_two" value="1">
                                                         <span class="slider round">
                                                             <i class="fa-solid fa-circle-check check_icon"></i>
                                                             <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
@@ -300,25 +245,122 @@
                                             </li>
                                         @endif
                                     </ul>
-
                                 </div>
+                                <div id="current-order">
+                                    <div class="cart_title">
+                                        <h2>{{ __('Cart') }}</h2>
+                                        <h6 class="total"> Total: <span id="total_amount">{{ Currency::currency($currency)->format($total_amount) }}</span></h6>
+                                    </div>
+                                    <div class="cart_item_detail">
+                                        @forelse ($cart as $cart_key => $cart_data)
+                                            @foreach ($cart_data as $cart_val)
+                                                @foreach ($cart_val as $cart_item_key => $cart_item)
+                                                    @php
+                                                        $categories_data = $cart_item['categories_data'];
+                                                        $item_dt = itemDetails($cart_item['item_id']);
+                                                        $item_discount = (isset($item_dt['discount'])) ? $item_dt['discount'] : 0;
+                                                        $item_discount_type = (isset($item_dt['discount_type'])) ? $item_dt['discount_type'] : 'percentage';
+                                                        $item_image = (isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image'])) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
+                                                        $item_name = (isset($item_dt[$name_key])) ? $item_dt[$name_key] : '';
+                                                        $item_price_details = App\Models\ItemPrice::where('id',$cart_item['option_id'])->first();
+                                                        $item_price = (isset($item_price_details['price'])) ? Currency::currency($currency)->format($item_price_details['price']) : 0.00;
+                                                        $item_price_label = (isset($item_price_details[$price_label_key])) ? $item_price_details[$price_label_key] : '';
+                                                    @endphp
+                                                    <div class="cart_item">
+                                                        <div class="cart_item_inr">
+                                                            <div class="cart_item_name">
+                                                                <h5>{{ $item_name }}</h5>
+                                                            </div>
+                                                            <div class="cart_item_action">
+                                                                <a href="#" onclick="getCartDetails({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }}, {{ $shop_id }})"><i class="fa-solid fa-pencil"></i></a>
+                                                                <a href="#" onclick="removeCartItem({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }})" class="text-danger"><i class="fa-solid fa-circle-xmark"></i></a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="item_attribute">
+                                                            <div class="item_attribute_inr">
+                                                                @if(count($categories_data) > 0)
+                                                                    @foreach ($categories_data as $option_id)
+                                                                        @php
+                                                                            $my_opt = $option_id;
+                                                                        @endphp
 
+                                                                        @if(is_array($my_opt))
+                                                                            @if(count($my_opt) > 0)
+                                                                                @php
+                                                                                    $options = [];
+                                                                                @endphp
+
+                                                                                @foreach ($my_opt as $optid)
+                                                                                    @php
+                                                                                        $opt_price_dt = App\Models\OptionPrice::where('id', $optid)->with('optionName')->first();
+                                                                                        $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
+                                                                                        $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                        $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                                        $option_id = $opt_price_dt->option_id;
+                                                                                        
+                                                                                        if (!isset($options[$option_id])) {
+                                                                                            $options[$option_id] = [];
+                                                                                        }
+
+                                                                                        if (!empty($opt_title_name)) {
+                                                                                            $options[$option_id][] = $opt_price_name;
+                                                                                        }
+                                                                                    @endphp
+                                                                                @endforeach
+
+                                                                                @foreach ($options as $option)
+                                                                                    <h6><span><b>{{ $opt_title_name }}: </b></span>{{ implode(', ', $option) }}</h6>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        @else
+                                                                            @php
+                                                                                $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->with('optionName')->first();
+                                                                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
+                                                                                $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                            @endphp
+                                                                            <h6>
+                                                                                <span><b>{{ $opt_title_name }} : </b></span>
+                                                                                @if(!empty($opt_price_name))
+                                                                                    {{ $opt_price_name }}
+                                                                                @endif
+                                                                            </h6>
+                                                                        @endif
+                                                                    @endforeach
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="cart_item_qty_price">
+                                                            <div class="cart_item_qty">
+                                                                <button class="btn-number" onclick="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'decrement')"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                                                    <span id="quantity_{{ $cart_item['item_id'] }}">{{ $cart_item['quantity'] }}</span>
+                                                                <button class="btn-number" onclick="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                            </div>
+                                                            <label>{{ $cart_item['total_amount_text'] }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endforeach
+                                        @empty
+                                            <h4 class="text-center">Cart is Empty</h4>
+                                        @endforelse
+                                    </div>
+                                    <div class="cart_order_btn">
+                                        <a href="{{ route('shop.cart', $shop_slug) }}" class="btn orderup_button">Complete Order</a>
+                                    </div>
+                                </div>
                             </li>
-
-
                         </ul>
-
-
                     </div>
                 </div>
                 <div class="header_bottom">
                     <div class="cart_notification">
-                    @if(isset($package_permissions['bell']) && $package_permissions['bell'] == 1 && $waiter_call_status == 1)
-                        @if ($table_enable_status == 1 || $room_enable_status == 1)                            
-                            <a class="waiter_notification" onclick="openWaiter({{ $shop_details['id'] }})">
-                                <i class="fa-solid fa-bell"></i>
-                            </a>
-                        @endif
+                        @if(isset($package_permissions['bell']) && $package_permissions['bell'] == 1 && $waiter_call_status == 1)
+                            @if ($table_enable_status == 1 || $room_enable_status == 1)                            
+                                <a class="waiter_notification" onclick="openWaiter({{ $shop_details['id'] }})">
+                                    <i class="fa-solid fa-bell"></i>
+                                </a>
+                            @endif
                         @endif
                         <a @if($cart != []) href="{{ route('shop.cart', $shop_slug) }}" @endif class="text-white text-decoration-none">
                             <div class="cart_box">
@@ -333,363 +375,278 @@
                                 </div>
                             </div>
                         </a>
-
                     </div>
                 </div>
             </div>
         </header>
     @elseif($layout == 'layout_3')
         <div class="layout3_header @if ($stiky_header) header-sticky @endif">
-            <header class="header">
-                @if (isset($package_permissions['banner']) &&
-                        !empty($package_permissions['banner']) &&
-                        $package_permissions['banner'] == 1)
+            <header class="header head-3">
+                @if (isset($package_permissions['banner']) && !empty($package_permissions['banner']) && $package_permissions['banner'] == 1)
                     @if (count($shop_banners) > 0)
-
                         <section class="banner home_main_slider" style="height: {{ $banner_height }}px;">
-
                             @if (count($shop_banners) == 1)
-                                @if (
-                                    ($shop_banners[0]->display == 'both' || $shop_banners[0]->display == 'image') &&
-                                        (isset($shop_banners[0][$banner_key]) &&
-                                            !empty($shop_banners[0][$banner_key]) &&
-                                            file_exists('public/client_uploads/shops/' . $shop_slug . '/banners/' . $shop_banners[0][$banner_key])))
-                                    <div class="single_img_banner h-100"
-                                        style="background-image: url('{{ asset('public/client_uploads/shops/' . $shop_slug . '/banners/' . $shop_banners[0][$banner_key]) }}')">
-                                    @else
-                                        <div class="single_img_banner h-100"
-                                            style="background-color: {{ $shop_banners[0]->background_color }};">
+                                @if (($shop_banners[0]->display == 'both' || $shop_banners[0]->display == 'image') && (isset($shop_banners[0][$banner_key]) && !empty($shop_banners[0][$banner_key]) && file_exists('public/client_uploads/shops/' . $shop_slug . '/banners/' . $shop_banners[0][$banner_key])))
+                                    <div class="single_img_banner h-100" style="background-image: url('{{ asset('public/client_uploads/shops/' . $shop_slug . '/banners/' . $shop_banners[0][$banner_key]) }}')">
+                                @else
+                                    <div class="single_img_banner h-100" style="background-color: {{ $shop_banners[0]->background_color }};">
                                 @endif
-                                @if ($shop_banners[0]->display == 'both' || $shop_banners[0]->display == 'description')
-                                    @if (isset($shop_banners[0][$banner_text_key]) && !empty($shop_banners[0][$banner_text_key]))
-                                        <div class="swiper-text p-3">
-                                            {!! $shop_banners[0][$banner_text_key] !!}
-                                        </div>
-                                    @endif
-                                @endif
-        </div>
-    @else
-        <div class="swiper-container h-100 position-relative">
-            <div class="swiper-wrapper">
-                @foreach ($shop_banners as $key => $banner)
-                    @if (
-                        ($banner->display == 'both' || $banner->display == 'image') &&
-                            (isset($banner[$banner_key]) &&
-                                !empty($banner[$banner_key]) &&
-                                file_exists('public/client_uploads/shops/' . $shop_slug . '/banners/' . $banner[$banner_key])))
-                        <div class="swiper-slide"
-                            style="background-image: url('{{ asset('public/client_uploads/shops/' . $shop_slug . '/banners/' . $banner[$banner_key]) }}')">
-                        @else
-                            <div class="swiper-slide" style="background-color: {{ $banner->background_color }};">
-                    @endif
-                    @if ($banner->display == 'both' || $banner->display == 'description')
-                        @if (isset($banner[$banner_text_key]) && !empty($banner[$banner_text_key]))
-                            <div class="swiper-text">
-                                {!! $banner[$banner_text_key] !!}
-                            </div>
-                        @endif
-                    @endif
-            </div>
-     @endforeach
-    </div>
-    @if ($slider_buttons == 1)
-        <div class="swiper-button-next swiper-btn"><i class="fa-solid fa-angle-right"></i></div>
-        <div class="swiper-button-prev swiper-btn"><i class="fa-solid fa-angle-left"></i></div>
-    @endif
-    </div>
-    @endif
-    <div class="back_service">
-        <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></a>
-    </div>
-
-    </section>
-    @endif
-    @endif
-    <div class="header_inr">
-        {{-- <div class="container"> --}}
-        <div class="row justify-content-between">
-            <div class="col-lg-4 col-md-6">
-                <div class="header_left">
-                    <div class="shop_info_box">
-                        <a href="{{ route('restaurant', $shop_details['shop_slug']) }}">
-                            <div class="shop_logo">
-                                @if (!empty($shop_logo) && file_exists('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo))
-                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}"
-                                        width="70">
-                                @endif
-                            </div>
-                        </a>
-                        <div class="shop_info">
-                            <h3>{!! $shop_name !!}</h3>
-                            @if ($is_sub_title == 1)
-                                {!! $header_text_two !!}
-                                <!-- <span>{{ $shop_subtitle }}</span> -->
-                            @endif
-                            @if (!empty($shop_start_time) && !empty($shop_end_time))
-                                <label><b>{{ $header_text_one }}: </b>{{ $shop_start_time }} to
-                                    {{ $shop_end_time }}</label>
-                            @endif
-                        </div>
-
-                    </div>
-                    <div class="back_service">
-                        <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i
-                                class="fa-solid fa-arrow-left"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="header_right">
-                @if(isset($package_permissions['bell']) && $package_permissions['bell'] == 1 && $waiter_call_status == 1 || isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
-                    <div class="barger_menu_main">
-                        <div class="barger_menu_inner">
-                            <div class="barger_menu_icon">
-                                <i class="fa-solid fa-bars"></i>
-                            </div>
-                            <div class="barger_menu_list">
-                                <ul>
-                                @if(isset($package_permissions['bell']) && $package_permissions['bell'] == 1 && $waiter_call_status == 1)
-                                    @if ($table_enable_status == 1 || $room_enable_status == 1)                                        
-                                        <li>
-                                            <a class="waiter_notification"
-                                                onclick="openWaiter({{ $shop_details['id'] }})">
-                                                <i class="fa-solid fa-bell"></i>
-                                            </a>
-                                        </li>
-                                    @endif
-                                    @endif
-                                    @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
-                                    <li>
-                                        <a class="star_icon"
-                                            onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i
-                                                class="fa-solid fa-star"></i></a>
-                                    </li>
-                                    @endif
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-                    @if (count($additional_languages) > 0 || $google_translate == 1)
-                        <div class="shop_lang_box">
-                            <a class="lang_bt">
-                                <span>{{ $language_details['code'] }}</span>
-                                <x-dynamic-component width="35px"
-                                    component="flag-language-{{ $language_details['code'] }}" />
-                            </a>
-                            <div class="lang_select">
-                                <ul>
-                                    @if (isset($primary_language_details) && !empty($primary_language_details))
-                                        <li>
-                                            <x-dynamic-component width="35px"
-                                                component="flag-language-{{ $primary_language_details['code'] }}" />
-                                            <a onclick="changeLanguage('{{ $primary_language_details['code'] }}')"
-                                                style="cursor: pointer;">{{ isset($primary_language_details['name']) ? $primary_language_details['name'] : '' }}</a>
-                                        </li>
-                                    @endif
-                                    @foreach ($additional_languages as $language)
-                                        @php
-                                            $langCode = isset($language->language['code'])
-                                                ? $language->language['code']
-                                                : '';
-                                        @endphp
-                                        <li>
-                                            <x-dynamic-component width="35px"
-                                                component="flag-language-{{ $langCode }}" />
-                                            <a onclick="changeLanguage('{{ $langCode }}')"
-                                                style="cursor: pointer;">{{ isset($language->language['name']) ? $language->language['name'] : '' }}</a>
-                                        </li>
-                                    @endforeach
-                                    @if ($google_translate == 1)
-                                        <li>
-                                            <div class="form-group">
-                                                <label class="me-2">Auto Translate</label>
-                                                <label class="switch me-2">
-                                                    <input type="checkbox" value="1" name="auto_translate"
-                                                        id="auto_translate" value="1">
-                                                    <span class="slider round">
-                                                        <i class="fa-solid fa-circle-check check_icon"></i>
-                                                        <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
-                                                    </span>
-                                                </label>
+                                    @if ($shop_banners[0]->display == 'both' || $shop_banners[0]->display == 'description')
+                                        @if (isset($shop_banners[0][$banner_text_key]) && !empty($shop_banners[0][$banner_text_key]))
+                                            <div class="swiper-text p-3">
+                                                {!! $shop_banners[0][$banner_text_key] !!}
                                             </div>
-                                            <div class="form-group mt-3" id="translated_languages"></div>
-                                        </li>
+                                        @endif
                                     @endif
-                                </ul>
-
-                            </div>
-                        </div>
-                    @endif
-                    <!-- <div id="cart-box" class="cart-btn text-decoration-none position-relative">
-                                            <i class="fa-solid fa-basket-shopping"></i>
-                                            <span class="qty-number">{{ $total_quantity }}</span>
-                                        </div> -->
-                    <div id="current-order">
-                        <div class="cart_title">
-                            <h2>{{ __('Cart') }}</h2>
-                            <h6 class="total"> Total: <span
-                                    id="total_amount">{{ Currency::currency($currency)->format($total_amount) }}</span>
-                            </h6>
-                        </div>
-                        <div class="cart_item_detail">
-                            @forelse ($cart as $cart_key => $cart_data)
-                                @foreach ($cart_data as $cart_val)
-                                    @foreach ($cart_val as $cart_item_key => $cart_item)
-                                        @php
-                                            $categories_data = $cart_item['categories_data'];
-
-                                            $item_dt = itemDetails($cart_item['item_id']);
-                                            $item_discount = isset($item_dt['discount']) ? $item_dt['discount'] : 0;
-                                            $item_discount_type = isset($item_dt['discount_type'])
-                                                ? $item_dt['discount_type']
-                                                : 'percentage';
-                                            $item_image =
-                                                isset($item_dt['image']) &&
-                                                !empty($item_dt['image']) &&
-                                                file_exists(
-                                                    'public/client_uploads/shops/' .
-                                                        $shop_slug .
-                                                        '/items/' .
-                                                        $item_dt['image'],
-                                                )
-                                                    ? asset(
-                                                        'public/client_uploads/shops/' .
-                                                            $shop_slug .
-                                                            '/items/' .
-                                                            $item_dt['image'],
-                                                    )
-                                                    : asset('public/client_images/not-found/no_image_1.jpg');
-
-                                            $item_name = isset($item_dt[$name_key]) ? $item_dt[$name_key] : '';
-
-                                            $item_price_details = App\Models\ItemPrice::where(
-                                                'id',
-                                                $cart_item['option_id'],
-                                            )->first();
-                                            $item_price = isset($item_price_details['price'])
-                                                ? Currency::currency($currency)->format($item_price_details['price'])
-                                                : 0.0;
-                                            $item_price_label = isset($item_price_details[$price_label_key])
-                                                ? $item_price_details[$price_label_key]
-                                                : '';
-                                        @endphp
-                                        <div class="cart_item">
-                                            <div class="cart_item_inr">
-                                                <div class="cart_item_name">
-
-                                                    <h5>{{ $item_name }}</h5>
-                                                </div>
-                                                <div class="cart_item_action">
-                                                    <a href="#"
-                                                        onclick="getCartDetails({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }}, {{ $shop_id }})"><i
-                                                            class="fa-solid fa-pencil"></i></a>
-                                                    <a href="#"
-                                                        onclick="removeCartItem({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }})"
-                                                        class="text-danger"><i class="fa-solid fa-circle-xmark"></i></a>
-                                                </div>
-                                            </div>
-                                            <div class="item_attribute">
-                                                <div class="item_attribute_inr">
-
-                                                @if(count($categories_data) > 0)
-                                                    @foreach ($categories_data as $option_id)
-                                                        @php
-                                                            $my_opt = $option_id;
-                                                        @endphp
-                                                        @if(is_array($my_opt))
-                                                        @if(count($my_opt) > 0)
-                                                            @php
-                                                                $options = [];
-                                                            @endphp
-
-                                                            @foreach ($my_opt as $optid)
-                                                                @php
-                                                                    $opt_price_dt = App\Models\OptionPrice::where('id', $optid)->with('optionName')->first();
-                                                                    $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
-                                                                    $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                    $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-                                                                    $option_id = $opt_price_dt->option_id;
-
-                                                                    // Initialize an empty array for the option_id if it doesn't exist yet
-                                                                    if (!isset($options[$option_id])) {
-                                                                        $options[$option_id] = [];
-                                                                    }
-
-                                                                    // Add the name to the array for the option_id
-                                                                    if (!empty($opt_title_name)) {
-                                                                        $options[$option_id][] = $opt_price_name;
-                                                                    }
-                                                                @endphp
-                                                            @endforeach
-
-                                                            @foreach ($options as $option)
-                                                                <h6><span><b>{{ $opt_title_name }}: </b></span>{{ implode(', ', $option) }}</h6>
-                                                            @endforeach
-                                                            @endif
-                                                        @else
-                                                            @php
-                                                                $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->with('optionName')->first();
-                                                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
-                                                                $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-
-                                                            @endphp
-                                                            <h6><span><b>{{ $opt_title_name }} : </b></span>
-                                                                                    @if(!empty($opt_price_name))
-                                                                                        {{ $opt_price_name }}
-                                                                                    @endif
-                                                            </h6>
-                                                        @endif
-                                                    @endforeach
+                                </div>
+                            @else
+                                <div class="swiper-container h-100 position-relative">
+                                    <div class="swiper-wrapper">
+                                        @foreach ($shop_banners as $key => $banner)
+                                            @if (($banner->display == 'both' || $banner->display == 'image') && (isset($banner[$banner_key]) && !empty($banner[$banner_key]) && file_exists('public/client_uploads/shops/' . $shop_slug . '/banners/' . $banner[$banner_key])))
+                                                <div class="swiper-slide" style="background-image: url('{{ asset('public/client_uploads/shops/' . $shop_slug . '/banners/' . $banner[$banner_key]) }}')">
+                                            @else
+                                                <div class="swiper-slide" style="background-color: {{ $banner->background_color }};">
+                                            @endif
+                                            @if ($banner->display == 'both' || $banner->display == 'description')
+                                                @if (isset($banner[$banner_text_key]) && !empty($banner[$banner_text_key]))
+                                                    <div class="swiper-text">
+                                                        {!! $banner[$banner_text_key] !!}
+                                                    </div>
                                                 @endif
-                                                </div>
+                                            @endif
                                             </div>
-                                            <div class="cart_item_qty_price">
-                                                <div class="cart_item_qty">
-                                                    <button class="btn-number"
-                                                        onclick="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'decrement')"><i
-                                                            class="fa fa-minus" aria-hidden="true"></i></button>
-                                                    <span
-                                                        id="quantity_{{ $cart_item['item_id'] }}">{{ $cart_item['quantity'] }}</span>
-                                                    <button class="btn-number"
-                                                        onclick="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i
-                                                            class="fa fa-plus" aria-hidden="true"></i></button>
-                                                </div>
-                                                <label>{{ $cart_item['total_amount_text'] }}</label>
+                                        @endforeach
+                                    </div>
+                                    @if ($slider_buttons == 1)
+                                        <div class="swiper-button-next swiper-btn"><i class="fa-solid fa-angle-right"></i></div>
+                                        <div class="swiper-button-prev swiper-btn"><i class="fa-solid fa-angle-left"></i></div>
+                                    @endif
+                                </div>
+                            @endif
+                            <div class="back_service">
+                                <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></a>
+                            </div>
+                        </section>
+                    @endif
+                @endif
+                <div class="header_inr">
+                    <div class="row justify-content-between">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="header_left">
+                                <div class="shop_info_box">
+                                    <a href="{{ route('restaurant', $shop_details['shop_slug']) }}">
+                                        <div class="shop_logo">
+                                            @if (!empty($shop_logo) && file_exists('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo))
+                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/top_logos/' . $shop_logo) }}" width="70">
+                                            @endif
+                                        </div>
+                                    </a>
+                                    <div class="shop_info">
+                                        <h3>{!! $shop_name !!}</h3>
+                                        @if ($is_sub_title == 1)
+                                            {!! $header_text_two !!}
+                                        @endif
+                                        @if (!empty($shop_start_time) && !empty($shop_end_time))
+                                            <label><b>{{ $header_text_one }}: </b>{{ $shop_start_time }} to {{ $shop_end_time }}</label>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="back_service">
+                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" style="cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="header_right">
+                                @if(isset($package_permissions['bell']) && $package_permissions['bell'] == 1 && $waiter_call_status == 1 || isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                                    <div class="barger_menu_main">
+                                        <div class="barger_menu_inner">
+                                            <div class="barger_menu_icon">
+                                                <i class="fa-solid fa-bars"></i>
+                                            </div>
+                                            <div class="barger_menu_list">
+                                                <ul>
+                                                    @if(isset($package_permissions['bell']) && $package_permissions['bell'] == 1 && $waiter_call_status == 1)
+                                                        @if ($table_enable_status == 1 || $room_enable_status == 1)                                        
+                                                            <li>
+                                                                <a class="waiter_notification" onclick="openWaiter({{ $shop_details['id'] }})">
+                                                                    <i class="fa-solid fa-bell"></i>
+                                                                </a>
+                                                            </li>
+                                                        @endif
+                                                    @endif
+                                                    @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                                                        <li>
+                                                            <a class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star"></i></a>
+                                                        </li>
+                                                    @endif
+                                                </ul>
                                             </div>
                                         </div>
-                                    @endforeach
-                                @endforeach
-                            @empty
-                                <h4 class="text-center">Cart is Empty</h4>
-                            @endforelse
+                                    </div>
+                                @endif
+                                @if (count($additional_languages) > 0 || $google_translate == 1)
+                                    <div class="shop_lang_box">
+                                        <a class="lang_bt">
+                                            <span>{{ $language_details['code'] }}</span>
+                                            <x-dynamic-component width="35px" component="flag-language-{{ $language_details['code'] }}" />
+                                        </a>
+                                        <div class="lang_select">
+                                            <ul>
+                                                @if (isset($primary_language_details) && !empty($primary_language_details))
+                                                    <li>
+                                                        <x-dynamic-component width="35px" component="flag-language-{{ $primary_language_details['code'] }}" />
+                                                        <a onclick="changeLanguage('{{ $primary_language_details['code'] }}')" style="cursor: pointer;">{{ isset($primary_language_details['name']) ? $primary_language_details['name'] : '' }}</a>
+                                                    </li>
+                                                @endif
+                                                @foreach ($additional_languages as $language)
+                                                    @php
+                                                        $langCode = isset($language->language['code']) ? $language->language['code'] : '';
+                                                    @endphp
+                                                    <li>
+                                                        <x-dynamic-component width="35px" component="flag-language-{{ $langCode }}" />
+                                                        <a onclick="changeLanguage('{{ $langCode }}')" style="cursor: pointer;">{{ isset($language->language['name']) ? $language->language['name'] : '' }}</a>
+                                                    </li>
+                                                @endforeach
+                                                @if ($google_translate == 1)
+                                                    <li>
+                                                        <div class="form-group">
+                                                            <label class="me-2">Auto Translate</label>
+                                                            <label class="switch me-2">
+                                                                <input type="checkbox" value="1" name="auto_translate" id="auto_translate" value="1">
+                                                                <span class="slider round">
+                                                                    <i class="fa-solid fa-circle-check check_icon"></i>
+                                                                    <i class="fa-sharp fa-solid fa-circle-xmark uncheck_icon"></i>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group mt-3" id="translated_languages"></div>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @endif
+                                <div id="current-order">
+                                    <div class="cart_title">
+                                        <h2>{{ __('Cart') }}</h2>
+                                        <h6 class="total"> Total: <span id="total_amount">{{ Currency::currency($currency)->format($total_amount) }}</span></h6>
+                                    </div>
+                                    <div class="cart_item_detail">
+                                        @forelse ($cart as $cart_key => $cart_data)
+                                            @foreach ($cart_data as $cart_val)
+                                                @foreach ($cart_val as $cart_item_key => $cart_item)
+                                                    @php
+                                                        $categories_data = $cart_item['categories_data'];
+                                                        $item_dt = itemDetails($cart_item['item_id']);
+                                                        $item_discount = isset($item_dt['discount']) ? $item_dt['discount'] : 0;
+                                                        $item_discount_type = isset($item_dt['discount_type']) ? $item_dt['discount_type'] : 'percentage';
+                                                        $item_image = isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
+                                                        $item_name = isset($item_dt[$name_key]) ? $item_dt[$name_key] : '';
+                                                        $item_price_details = App\Models\ItemPrice::where('id', $cart_item['option_id'])->first();
+                                                        $item_price = isset($item_price_details['price']) ? Currency::currency($currency)->format($item_price_details['price']) : 0.0;
+                                                        $item_price_label = isset($item_price_details[$price_label_key]) ? $item_price_details[$price_label_key] : '';
+                                                    @endphp
+                                                    <div class="cart_item">
+                                                        <div class="cart_item_inr">
+                                                            <div class="cart_item_name">
+                                                                <h5>{{ $item_name }}</h5>
+                                                            </div>
+                                                            <div class="cart_item_action">
+                                                                <a href="#" onclick="getCartDetails({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }}, {{ $shop_id }})"><i class="fa-solid fa-pencil"></i></a>
+                                                                <a href="#" onclick="removeCartItem({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }})" class="text-danger"><i class="fa-solid fa-circle-xmark"></i></a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="item_attribute">
+                                                            <div class="item_attribute_inr">
+                                                                @if(count($categories_data) > 0)
+                                                                    @foreach ($categories_data as $option_id)
+                                                                        @php
+                                                                            $my_opt = $option_id;
+                                                                        @endphp
+                                                                        @if(is_array($my_opt))
+                                                                            @if(count($my_opt) > 0)
+                                                                                @php
+                                                                                    $options = [];
+                                                                                @endphp
+                                                                                @foreach ($my_opt as $optid)
+                                                                                    @php
+                                                                                        $opt_price_dt = App\Models\OptionPrice::where('id', $optid)->with('optionName')->first();
+                                                                                        $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
+                                                                                        $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                        $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                                        $option_id = $opt_price_dt->option_id;
 
-                        </div>
-                        <div class="cart_order_btn">
-                            {{-- <button class="btn orderup_button">Complete Order</button> --}}
-                            <a href="{{ route('shop.cart', $shop_slug) }}" class="btn orderup_button">Complete Order</a>
+                                                                                        // Initialize an empty array for the option_id if it doesn't exist yet
+                                                                                        if (!isset($options[$option_id])) {
+                                                                                            $options[$option_id] = [];
+                                                                                        }
+
+                                                                                        // Add the name to the array for the option_id
+                                                                                        if (!empty($opt_title_name)) {
+                                                                                            $options[$option_id][] = $opt_price_name;
+                                                                                        }
+                                                                                    @endphp
+                                                                                @endforeach
+                                                                                @foreach ($options as $option)
+                                                                                    <h6><span><b>{{ $opt_title_name }}: </b></span>{{ implode(', ', $option) }}</h6>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        @else
+                                                                            @php
+                                                                                $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->with('optionName')->first();
+                                                                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
+                                                                                $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                            @endphp
+                                                                            <h6>
+                                                                                <span><b>{{ $opt_title_name }} : </b></span>
+                                                                                @if(!empty($opt_price_name))
+                                                                                    {{ $opt_price_name }}
+                                                                                @endif
+                                                                            </h6>
+                                                                        @endif
+                                                                    @endforeach
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="cart_item_qty_price">
+                                                            <div class="cart_item_qty">
+                                                                <button class="btn-number" onclick="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'decrement')"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                                                    <span id="quantity_{{ $cart_item['item_id'] }}">{{ $cart_item['quantity'] }}</span>
+                                                                <button class="btn-number" onclick="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                            </div>
+                                                            <label>{{ $cart_item['total_amount_text'] }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endforeach
+                                        @empty
+                                            <h4 class="text-center">Cart is Empty</h4>
+                                        @endforelse
+                                    </div>
+                                    <div class="cart_order_btn">
+                                        {{-- <button class="btn orderup_button">Complete Order</button> --}}
+                                        <a href="{{ route('shop.cart', $shop_slug) }}" class="btn orderup_button">Complete Order</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    {{-- <a href="{{ route('shop.cart', $shop_slug) }}"
-                                class="cart-btn text-white text-decoration-none position-relative">
-                                <i class="fa-solid fa-basket-shopping"></i>
-                                <span class="qty-number">{{ $total_quantity }}</span>
-                                </a> --}}
                 </div>
-            </div>
+            </header>
         </div>
-        {{-- </div> --}}
-    </div>
-    </header>
-    </div>
     @endif
 @endsection
 
 @section('content')
+
+    {{-- Layout 1 and 2 --}}
     @if ($layout == 'layout_1' || $layout == 'layout_2')
         <input type="hidden" name="def_currency" id="def_currency" value="{{ $currency }}">
+
+        {{-- Section --}}
         <section class="py-5">
             <div class="cart_detail">
                 <div class="container">
@@ -698,8 +655,7 @@
                             <div class="cart_info">
                                 <div class="cart_title">
                                     <h2>{{ __('Order Options') }}</h2>
-                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn" style="cursor: pointer;"><i
-                                            class="fa-solid fa-arrow-left-long"></i></a>
+                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn" style="cursor: pointer;"><i class="fa-solid fa-arrow-left-long"></i></a>
                                 </div>
                                 <div class="cart_info_inr">
                                     <div class="checkout_type">
@@ -707,33 +663,19 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     @if ($is_checkout == 1)
-                                                        <select name="checkout_type" id="checkout_type"
-                                                            class="form-select w-100" onchange="checkoutType(this.value)">
-                                                            <option value="0"> {{ __('Select Delivery Method') }}
-                                                            </option>
+                                                        <select name="checkout_type" id="checkout_type" class="form-select w-100" onchange="checkoutType(this.value)">
+                                                            <option value="0"> {{ __('Select Delivery Method') }}</option>
                                                             @if (isset($order_settings['delivery']) && $order_settings['delivery'] == 1)
-                                                                <option value="delivery"
-                                                                    {{ $current_check_type == 'delivery' ? 'selected' : '' }}>
-                                                                    {{ __('Delivery') }}
-                                                                </option>
+                                                                <option value="delivery" {{ $current_check_type == 'delivery' ? 'selected' : '' }}>{{ __('Delivery') }}</option>
                                                             @endif
                                                             @if (isset($order_settings['takeaway']) && $order_settings['takeaway'] == 1)
-                                                                <option value="takeaway"
-                                                                    {{ $current_check_type == 'takeaway' ? 'selected' : '' }}>
-                                                                    {{ __('Takeaway') }}
-                                                                </option>
+                                                                <option value="takeaway" {{ $current_check_type == 'takeaway' ? 'selected' : '' }}>{{ __('Takeaway') }}</option>
                                                             @endif
                                                             @if (isset($order_settings['room_delivery']) && $order_settings['room_delivery'] == 1)
-                                                                <option value="room_delivery"
-                                                                    {{ $current_check_type == 'room_delivery' ? 'selected' : '' }}>
-                                                                    {{ __('Room Delivery') }}
-                                                                </option>
+                                                                <option value="room_delivery" {{ $current_check_type == 'room_delivery' ? 'selected' : '' }}>{{ __('Room Delivery') }}</option>
                                                             @endif
                                                             @if (isset($order_settings['table_service']) && $order_settings['table_service'] == 1)
-                                                                <option value="table_service"
-                                                                    {{ $current_check_type == 'table_service' ? 'selected' : '' }}>
-                                                                    {{ __('Table Service') }}
-                                                                </option>
+                                                                <option value="table_service" {{ $current_check_type == 'table_service' ? 'selected' : '' }}>{{ __('Table Service') }}</option>
                                                             @endif
                                                         </select>
                                                     @endif
@@ -745,13 +687,10 @@
                                         <div class="row align-items-center">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <select name="room" id="room" class="form-select"
-                                                        onchange="getRoom(this.value)">
+                                                    <select name="room" id="room" class="form-select" onchange="getRoom(this.value)">
                                                         <option value="">{{ __('Choose Your Room') }}</option>
                                                         @foreach ($rooms as $room)
-                                                            <option value="{{ $room->room_no }}"
-                                                                {{ $current_room_no == $room->room_no ? 'selected' : '' }}>
-                                                                {{ $room->room_no }}</option>
+                                                            <option value="{{ $room->room_no }}" {{ $current_room_no == $room->room_no ? 'selected' : '' }}>{{ $room->room_no }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -765,8 +704,7 @@
                                                     <select name="table_no" id="table_no" class="form-select">
                                                         <option value="">{{ __('Choose Your Table') }}</option>
                                                         @foreach ($tables as $table)
-                                                            <option value="{{ $table->id }}">
-                                                                {{ $table->table_name }}</option>
+                                                            <option value="{{ $table->id }}">{{ $table->table_name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -781,48 +719,14 @@
                                                         $itemIds[] = $cart_item['item_id'];
                                                         $categories_data = $cart_item['categories_data'];
                                                         $item_dt = itemDetails($cart_item['item_id']);
-                                                        $item_discount = isset($item_dt['discount'])
-                                                            ? $item_dt['discount']
-                                                            : 0;
-                                                        $item_discount_type = isset($item_dt['discount_type'])
-                                                            ? $item_dt['discount_type']
-                                                            : 'percentage';
-                                                        $item_image =
-                                                            isset($item_dt['image']) &&
-                                                            !empty($item_dt['image']) &&
-                                                            file_exists(
-                                                                'public/client_uploads/shops/' .
-                                                                    $shop_slug .
-                                                                    '/items/' .
-                                                                    $item_dt['image'],
-                                                            )
-                                                                ? asset(
-                                                                    'public/client_uploads/shops/' .
-                                                                        $shop_slug .
-                                                                        '/items/' .
-                                                                        $item_dt['image'],
-                                                                )
-                                                                : asset(
-                                                                    'public/client_images/not-found/no_image_1.jpg',
-                                                                );
-                                                        $item_name = isset($item_dt[$name_key])
-                                                            ? $item_dt[$name_key]
-                                                            : '';
-                                                        $item_price_details = App\Models\ItemPrice::where(
-                                                            'id',
-                                                            $cart_item['option_id'],
-                                                        )->first();
-                                                        $item_price = isset($item_price_details['price'])
-                                                            ? Currency::currency($currency)->format(
-                                                                $item_price_details['price'],
-                                                            )
-                                                            : 0.0;
-                                                        $item_price_label = isset($item_price_details[$label_key])
-                                                            ? $item_price_details[$label_key]
-                                                            : '';
-                                                        $cart_total_amount += isset($cart_item['total_amount'])
-                                                            ? $cart_item['total_amount']
-                                                            : 0;
+                                                        $item_discount = isset($item_dt['discount']) ? $item_dt['discount'] : 0;
+                                                        $item_discount_type = isset($item_dt['discount_type']) ? $item_dt['discount_type'] : 'percentage';
+                                                        $item_image = isset($item_dt['image']) && !empty($item_dt['image']) && file_exists( 'public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
+                                                        $item_name = isset($item_dt[$name_key]) ? $item_dt[$name_key] : '';
+                                                        $item_price_details = App\Models\ItemPrice::where('id', $cart_item['option_id'])->first();
+                                                        $item_price = isset($item_price_details['price']) ? Currency::currency($currency)->format($item_price_details['price']) : 0.0;
+                                                        $item_price_label = isset($item_price_details[$label_key]) ? $item_price_details[$label_key] : '';
+                                                        $cart_total_amount += isset($cart_item['total_amount']) ? $cart_item['total_amount'] : 0;
                                                     @endphp
                                                     <div class="cart_item">
                                                         <div class="cart_item_inr">
@@ -834,78 +738,66 @@
                                                         </div>
                                                         <div class="item_attribute">
                                                             <div class="item_attribute_inr">
-                                                            @if(count($categories_data) > 0)
-                                                            @foreach ($categories_data as $option_id)
-                                                                @php
-                                                                    $my_opt = $option_id;
-                                                                @endphp
-                                                                @if(is_array($my_opt))
-                                                                @if(count($my_opt) > 0)
-                                                                    @php
-                                                                        $options = [];
-                                                                    @endphp
-
-                                                                    @foreach ($my_opt as $optid)
+                                                                @if(count($categories_data) > 0)
+                                                                    @foreach ($categories_data as $option_id)
                                                                         @php
-                                                                            $opt_price_dt = App\Models\OptionPrice::where('id', $optid)->with('optionName')->first();
-                                                                            $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
-                                                                            $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                            $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-                                                                            $option_id = $opt_price_dt->option_id;
-
-                                                                            // Initialize an empty array for the option_id if it doesn't exist yet
-                                                                            if (!isset($options[$option_id])) {
-                                                                                $options[$option_id] = [];
-                                                                            }
-
-                                                                            // Add the name to the array for the option_id
-                                                                            if (!empty($opt_title_name)) {
-                                                                                $options[$option_id][] = $opt_price_name;
-                                                                            }
+                                                                            $my_opt = $option_id;
                                                                         @endphp
-                                                                    @endforeach
+                                                                        @if(is_array($my_opt))
+                                                                            @if(count($my_opt) > 0)
+                                                                                @php
+                                                                                    $options = [];
+                                                                                @endphp
+                                                                                @foreach ($my_opt as $optid)
+                                                                                    @php
+                                                                                        $opt_price_dt = App\Models\OptionPrice::where('id', $optid)->with('optionName')->first();
+                                                                                        $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
+                                                                                        $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                        $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                                        $option_id = $opt_price_dt->option_id;
 
-                                                                    @foreach ($options as $option)
-                                                                        <h6><span><b>{{ $opt_title_name }}: </b></span>{{ implode(', ', $option) }}</h6>
-                                                                    @endforeach
-                                                                    @endif
-                                                                @else
-                                                                    @php
-                                                                        $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->with('optionName')->first();
-                                                                        $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                        $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
-                                                                        $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                                        // Initialize an empty array for the option_id if it doesn't exist yet
+                                                                                        if (!isset($options[$option_id])) {
+                                                                                            $options[$option_id] = [];
+                                                                                        }
 
-                                                                    @endphp
-                                                                    <h6><span><b>{{ $opt_title_name }} : </b></span>
-                                                                                            @if(!empty($opt_price_name))
-                                                                                                {{ $opt_price_name }}
-                                                                                            @endif
-                                                                    </h6>
+                                                                                        // Add the name to the array for the option_id
+                                                                                        if (!empty($opt_title_name)) {
+                                                                                            $options[$option_id][] = $opt_price_name;
+                                                                                        }
+                                                                                    @endphp
+                                                                                @endforeach
+
+                                                                                @foreach ($options as $option)
+                                                                                    <h6><span><b>{{ $opt_title_name }}: </b></span>{{ implode(', ', $option) }}</h6>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        @else
+                                                                            @php
+                                                                                $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->with('optionName')->first();
+                                                                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
+                                                                                $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                            @endphp
+                                                                            <h6>
+                                                                                <span><b>{{ $opt_title_name }} : </b></span>
+                                                                                @if(!empty($opt_price_name))
+                                                                                    {{ $opt_price_name }}
+                                                                                @endif
+                                                                            </h6>
+                                                                        @endif
+                                                                    @endforeach
                                                                 @endif
-                                                            @endforeach
-                                                        @endif
                                                             </div>
                                                         </div>
                                                         <div class="cart_qty_action">
                                                             <div class="cart_item_qty">
-                                                                <button class="btn-number"
-                                                                    onclick="updateCartPage({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'decrement')"><i
-                                                                        class="fa fa-minus"
-                                                                        aria-hidden="true"></i></button>
-                                                                <button class="btn-number"
-                                                                    onclick="updateCartPage({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i
-                                                                        class="fa fa-plus"
-                                                                        aria-hidden="true"></i></button>
+                                                                <button class="btn-number" onclick="updateCartPage({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'decrement')"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                                                <button class="btn-number" onclick="updateCartPage({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i class="fa fa-plus" aria-hidden="true"></i></button>
                                                             </div>
                                                             <div class="cart_item_action">
-                                                                <a href="#"
-                                                                    onclick="getCartDetails({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }}, {{ $shop_id }})"><i
-                                                                        class="fa-solid fa-pencil"></i></a>
-                                                                <a href="#"
-                                                                    onclick="removeCartItem({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }})"
-                                                                    class="text-danger"><i
-                                                                        class="fa-solid fa-circle-xmark"></i></a>
+                                                                <a href="#" onclick="getCartDetails({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }}, {{ $shop_id }})"><i class="fa-solid fa-pencil"></i></a>
+                                                                <a href="#" onclick="removeCartItem({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }})" class="text-danger"><i class="fa-solid fa-circle-xmark"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -916,24 +808,15 @@
                                         @endforelse
                                     </div>
                                     @php
-                                        $categoryIds = App\Models\Items::whereIn('id', $itemIds)
-                                            ->pluck('recomendation_items')
-                                            ->toArray();
+                                        $categoryIds = App\Models\Items::whereIn('id', $itemIds)->pluck('recomendation_items')->toArray();
                                         $recommendationItems = [];
                                         foreach ($categoryIds as $category) {
-                                            if (
-                                                is_string($category) &&
-                                                ($unserialized = unserialize($category)) !== false &&
-                                                is_array($unserialized)
-                                            ) {
+                                            if (is_string($category) && ($unserialized = unserialize($category)) !== false && is_array($unserialized)) {
                                                 $recommendationItems = array_merge($recommendationItems, $unserialized);
                                             }
                                         }
                                         $recommendationItems = array_unique($recommendationItems);
-                                        $relatedItems = App\Models\Items::whereIn('id', $recommendationItems)
-                                            ->whereNotIn('id', $itemIds)
-                                            ->where('type', 1)
-                                            ->get();
+                                        $relatedItems = App\Models\Items::whereIn('id', $recommendationItems)->whereNotIn('id', $itemIds)->where('type', 1)->get();
                                     @endphp
                                     @if (count($relatedItems) > 0)
                                         <div id="recommended_items" class="recommended_items">
@@ -941,257 +824,149 @@
                                                 <h3>{{ __('Recommended') }}</h3>
                                             </div>
                                             <div class="swiper-container h-100 position-relative">
-                                                    <div class="swiper-wrapper">
-
-                                                            @foreach ($relatedItems as $item)
-                                                                @php
-                                                                    $item_delivery = isset($item['delivery']) && $item['delivery'] == 1 ? $item['delivery'] : 0;
-                                                                @endphp
-                                                                <div class="swiper-slide">
-                                                                    <div class="recommended_product" >
-                                                                        <a onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})">
-                                                                        <div class="recommended_product_img">
-                                                                            {{-- Image Section --}}
-                                                                                @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" alt="" class="w-100">
-                                                                                @else
-                                                                                <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                                                @endif
-                                                                            <div class="recommended_special_tag">
-                                                                                {{-- New Product Image --}}
-                                                                                @if ($item['is_new'] == 1)
-                                                                                    <span>new</span>
-                                                                                @endif
-                                                                                {{-- Signature Image --}}
-                                                                                @if ($item['as_sign'] == 1)
-                                                                                    <span>Signature</span>
-                                                                                @endif
-                                                                            </div>
-
-                                                                        </div>
-                                                                        <div class="recommended_product_info">
-                                                                                {{-- Price --}}
-                                                                                @php
-                                                                                    $price_arr = getItemPrice($item['id']);
-                                                                                @endphp
-
-                                                                            @if (count($price_arr) > 0)
-                                                                                @php
-                                                                                    $price = Currency::currency($currency)->format(
-                                                                                        $price_arr[0]['price'],
-                                                                                    );
-                                                                                    $price_label = isset(
-                                                                                        $price_arr[0][$price_label_key],
-                                                                                    )
-                                                                                        ? $price_arr[0][$price_label_key]
-                                                                                        : '';
-                                                                                @endphp
-                                                                                @if ($item_discount > 0)
-                                                                                    @php
-                                                                                        if ($item_discount_type == 'fixed') {
-                                                                                            $new_amount = number_format(
-                                                                                                $price_arr[0]['price'] -
-                                                                                                    $item_discount,
-                                                                                                2,
-                                                                                            );
-                                                                                        } else {
-                                                                                            $per_value =
-                                                                                                ($price_arr[0]['price'] *
-                                                                                                    $item_discount) /
-                                                                                                100;
-                                                                                            $new_amount = number_format(
-                                                                                                $price_arr[0]['price'] - $per_value,
-                                                                                                2,
-                                                                                            );
-                                                                                        }
-                                                                                    @endphp
-                                                                                    <p>
-                                                                                        {{ $price }}
-                                                                                    </p>
-                                                                                @else
-                                                                                    <p>
-                                                                                    {{ $price }}
-                                                                                    </p>
-                                                                                @endif
-                                                                            @endif
-                                                                            <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>
-                                                                        </div>
-                                                                        </a>
-                                                                        @if (isset($package_permissions['ordering']) &&
-                                                                                !empty($package_permissions['ordering']) &&
-                                                                                $package_permissions['ordering'] == 1 &&
-                                                                                count($price_arr) > 0 &&
-                                                                                $item_delivery == 1)
-                                                                                <div class="recommended_product_add_cart">
-                                                                                    <a onclick="cartAdd({{ $item->id }},{{ $shop_details['id'] }})"><i class="fa-solid fa-plus"></i></a>
-                                                                                </div>
+                                                <div class="swiper-wrapper">
+                                                    @foreach ($relatedItems as $item)
+                                                        @php
+                                                            $item_delivery = isset($item['delivery']) && $item['delivery'] == 1 ? $item['delivery'] : 0;
+                                                        @endphp
+                                                        <div class="swiper-slide">
+                                                            <div class="recommended_product" >
+                                                                <a onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})">
+                                                                    <div class="recommended_product_img">
+                                                                        {{-- Image Section --}}
+                                                                        @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
+                                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" alt="" class="w-100">
+                                                                        @else
+                                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
                                                                         @endif
+                                                                        <div class="recommended_special_tag">
+                                                                            {{-- New Product Image --}}
+                                                                            @if ($item['is_new'] == 1)
+                                                                                <span>new</span>
+                                                                            @endif
+                                                                            {{-- Signature Image --}}
+                                                                            @if ($item['as_sign'] == 1)
+                                                                                <span>Signature</span>
+                                                                            @endif
+                                                                        </div>
                                                                     </div>
-                                                                </div>
+                                                                    <div class="recommended_product_info">
+                                                                        {{-- Price --}}
+                                                                        @php
+                                                                            $price_arr = getItemPrice($item['id']);
+                                                                        @endphp
 
-                                                            @endforeach
-
-                                                    </div>
+                                                                        @if (count($price_arr) > 0)
+                                                                            @php
+                                                                                $price = Currency::currency($currency)->format($price_arr[0]['price']);
+                                                                                $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
+                                                                            @endphp
+                                                                            @if ($item_discount > 0)
+                                                                                @php
+                                                                                    if ($item_discount_type == 'fixed') {
+                                                                                        $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
+                                                                                    } else {
+                                                                                        $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
+                                                                                        $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
+                                                                                    }
+                                                                                @endphp
+                                                                                <p>{{ $price }}</p>
+                                                                            @else
+                                                                                <p>{{ $price }}</p>
+                                                                            @endif
+                                                                        @endif
+                                                                        <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>
+                                                                    </div>
+                                                                </a>
+                                                                @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
+                                                                    <div class="recommended_product_add_cart">
+                                                                        <a onclick="cartAdd({{ $item->id }},{{ $shop_details['id'] }})"><i class="fa-solid fa-plus"></i></a>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         </div>
                                     @endif
-                                        <div class="order_comment">
-                                            <textarea name="instructions" id="instructions" rows="3" class="form-control" placeholder="{{ __('Order Comments') }}"></textarea>
-                                        </div>
+                                    <div class="order_comment">
+                                        <textarea name="instructions" id="instructions" rows="3" class="form-control" placeholder="{{ __('Order Comments') }}"></textarea>
                                     </div>
-
+                                </div>
                                 <div class="cart_footer">
-                                        <div class="price_table">
-                                            <table class="table">
-                                                <tbody>
-                                                    <tr>
+                                    <div class="price_table">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
                                                     @php
                                                         $total_discount = 0;
                                                         $coupon_discount = 0;
                                                     @endphp
                                                     <td>
-                                                    @if ($discount_per > 0 || $coupon_value > 0)
-                                                        <h3><b>{{ __('SubTotal') }}: </b>{{ Currency::currency($currency)->format($cart_total_amount) }}</h3>
+                                                        @if ($discount_per > 0 || $coupon_value > 0)
+                                                            <h3><b>{{ __('SubTotal') }}: </b>{{ Currency::currency($currency)->format($cart_total_amount) }}</h3>
                                                         @endif
                                                     </td>
                                                     @if ($discount_per > 0 || $coupon_value > 0)
                                                         @if ($discount_per > 0)
                                                             @php
-                                                                        if ($discount_type == 'fixed') {
-                                                                            $total_discount += $discount_per;
-                                                                        } else {
-                                                                            $total_discount +=
-                                                                                ($cart_total_amount * $discount_per) / 100;
-                                                                        }
+                                                                if ($discount_type == 'fixed') {
+                                                                    $total_discount += $discount_per;
+                                                                } else {
+                                                                    $total_discount += ($cart_total_amount * $discount_per) / 100;
+                                                                }
                                                             @endphp
                                                         @endif
                                                         @if ($coupon_value > 0)
                                                             @php
-                                                                        if ($coupon_type == 'fixed') {
-                                                                            $coupon_discount += $coupon_value;
-                                                                        } else {
-                                                                            $coupon_discount +=
-                                                                                ($cart_total_amount * $coupon_value) / 100;
-                                                                        }
+                                                                if ($coupon_type == 'fixed') {
+                                                                    $coupon_discount += $coupon_value;
+                                                                } else {
+                                                                    $coupon_discount += ($cart_total_amount * $coupon_value) / 100;
+                                                                }
                                                             @endphp
                                                         @endif
                                                         @php
-                                                                // Calculate final amount after discounts
-                                                                $final_amount =
-                                                                    $cart_total_amount -
-                                                                    ($total_discount + $coupon_discount);
-                                                            @endphp
+                                                            // Calculate final amount after discounts
+                                                            $final_amount = $cart_total_amount - ($total_discount + $coupon_discount);
+                                                        @endphp
                                                     @endif
-                                                        <td class="text-end">
-                                                            @isset($final_amount)
-                                                        <h3><b>{{ __('Total') }}: </b>{{ Currency::currency($currency)->format($final_amount) }}</h3>
-                                                    @else
-                                                        <h3><b>{{ __('Total') }}: </b>{{ Currency::currency($currency)->format($cart_total_amount) }}
-                                                        </h3>
-                                                    @endisset
-                                                        </td>
-                                                    </tr>
-                                                    <!-- <tr>
-                                                        <td><b>{{ __('Total Amount') }}</b></td>
-                                                        <td class="text-end">
-                                                            {{ Currency::currency($currency)->format($cart_total_amount) }}
-
-                                                        </td>
-                                                        <input type="hidden" name="total_cart_amount" id="total_cart_amount"
-                                                            value="{{ $cart_total_amount }}">
-                                                    </tr> -->
-                                                    <!-- @php
-                                                        $total_discount = 0;
-                                                        $coupon_discount = 0;
-                                                    @endphp
-                                                    @if ($discount_per > 0 || $coupon_value > 0)
-                                                        @if ($discount_per > 0)
-                                                            <tr>
-                                                                <td><b>{{ __('Discount') }}</b></td>
-                                                                @php
-                                                                    if ($discount_type == 'fixed') {
-                                                                        $total_discount += $discount_per;
-                                                                    } else {
-                                                                        $total_discount +=
-                                                                            ($cart_total_amount * $discount_per) / 100;
-                                                                    }
-                                                                @endphp
-                                                                @if ($discount_type == 'fixed')
-                                                                    <td class="text-end">-
-                                                                        {{ Currency::currency($currency)->format($discount_per) }}
-                                                                    </td>
-                                                                @else
-                                                                    <td class="text-end">- {{ $discount_per }}%</td>
-                                                                @endif
-                                                            </tr>
-                                                        @endif
-                                                        @if ($coupon_value > 0)
-                                                            <tr>
-                                                                <td><b>{{ __('Coupon Discount') }}</b></td>
-                                                                @php
-                                                                    if ($coupon_type == 'fixed') {
-                                                                        $coupon_discount += $coupon_value;
-                                                                    } else {
-                                                                        $coupon_discount +=
-                                                                            ($cart_total_amount * $coupon_value) / 100;
-                                                                    }
-                                                                @endphp
-                                                                @if ($coupon_type == 'fixed')
-                                                                    <td class="text-end">-
-                                                                        {{ Currency::currency($currency)->format($coupon_value) }}
-                                                                        <a id="removeCoupon" class="btn text-danger p-0"><i
-                                                                                class="fa-solid fa-times"></i></a>
-                                                                    </td>
-                                                                @else
-                                                                    <td class="text-end">- {{ $coupon_value }}% <a
-                                                                            id="removeCoupon" class="btn text-danger p-0"><i
-                                                                                class="fa-solid fa-circle-xmark"></i></a></td>
-                                                                @endif
-                                                            </tr>
-                                                        @endif
-                                                        <tr class="text-end">
-                                                            @php
-                                                                // Calculate final amount after discounts
-                                                                $final_amount =
-                                                                    $cart_total_amount -
-                                                                    ($total_discount + $coupon_discount);
-                                                            @endphp
-                                                            <td colspan="2">
-                                                                <strong>{{ Currency::currency($currency)->format($final_amount) }}</strong>
-                                                            </td>
-                                                        </tr>
-                                                    @endif -->
-                                                </tbody>
-                                            </table>
+                                                    <td class="text-end">
+                                                        @isset($final_amount)
+                                                            <h3><b>{{ __('Total') }}: </b>{{ Currency::currency($currency)->format($final_amount) }}</h3>
+                                                        @else
+                                                            <h3><b>{{ __('Total') }}: </b>{{ Currency::currency($currency)->format($cart_total_amount) }}</h3>
+                                                        @endisset
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="apply_coupon">
+                                        <div id="couponInputGroup"  style="display: none;">
+                                            <input type="text" name="code" id="code" class="form-control" placeholder="{{ __('Insert Coupon Number...') }}">
+                                            <input type="hidden" name="shop_id" id="shop_id" value="{{ $shop_id }}">
+                                            <a class="btn btn-success" id="applyCouponButton"><i class="fa-solid fa-check"></i></a>
                                         </div>
-                                        <div class="apply_coupon">
-                                            <div id="couponInputGroup"  style="display: none;">
-                                                <input type="text" name="code" id="code"
-                                                    class="form-control"
-                                                    placeholder="{{ __('Insert Coupon Number...') }}">
-                                                <input type="hidden" name="shop_id" id="shop_id"
-                                                    value="{{ $shop_id }}">
-                                                <a class="btn btn-success" id="applyCouponButton"><i class="fa-solid fa-check"></i></a>
-                                            </div>
-                                        </div>
-                                        @if ($is_checkout == 1)
-                                            <div class="place_order_btn">
+                                    </div>
+                                    @if ($is_checkout == 1)
+                                        <div class="place_order_btn">
                                             @if(count($coupon) > 0)
-                                                 <a id="couponApplyButton" class="btn coupon-btn">{{ __('Coupon') }}</a>
+                                                <a id="couponApplyButton" class="btn coupon-btn">{{ __('Coupon') }}</a>
                                             @endif
-                                                <button class="btn order-btn" id="check-btn">{{ __('Continue') }}</button>
-                                            </div>
-                                        @endif
+                                            <button class="btn order-btn" id="check-btn">{{ __('Continue') }}</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-
-
                         </div>
-
                     </div>
                 </div>
             </div>
         </section>
+
+        {{-- Footer --}}
         <footer class="footer text-center">
             <div class="container">
                 <div class="footer-inr">
@@ -1201,73 +976,63 @@
                             {{-- Phone Link --}}
                             @if (isset($shop_settings['business_telephone']) && !empty($shop_settings['business_telephone']))
                                 <li>
-                                    <a href="tel:{{ $shop_settings['business_telephone'] }}"><i
-                                            class="fa-solid fa-phone"></i></a>
+                                    <a href="tel:{{ $shop_settings['business_telephone'] }}"><i class="fa-solid fa-phone"></i></a>
                                 </li>
                             @endif
 
                             {{-- Instagram Link --}}
                             @if (isset($shop_settings['instagram_link']) && !empty($shop_settings['instagram_link']))
                                 <li>
-                                    <a target="_blank" href="{{ $shop_settings['instagram_link'] }}"><i
-                                            class="fa-brands fa-square-instagram"></i></a>
+                                    <a target="_blank" href="{{ $shop_settings['instagram_link'] }}"><i class="fa-brands fa-square-instagram"></i></a>
                                 </li>
                             @endif
 
                             {{-- Twitter Link --}}
                             @if (isset($shop_settings['twitter_link']) && !empty($shop_settings['twitter_link']))
                                 <li>
-                                    <a target="_blank" href="{{ $shop_settings['twitter_link'] }}"><i
-                                            class="fa-brands fa-square-twitter"></i></a>
+                                    <a target="_blank" href="{{ $shop_settings['twitter_link'] }}"><i class="fa-brands fa-square-twitter"></i></a>
                                 </li>
                             @endif
 
                             {{-- Facebook Link --}}
                             @if (isset($shop_settings['facebook_link']) && !empty($shop_settings['facebook_link']))
                                 <li>
-                                    <a target="_blank" href="{{ $shop_settings['facebook_link'] }}"><i
-                                            class="fa-brands fa-square-facebook"></i></a>
+                                    <a target="_blank" href="{{ $shop_settings['facebook_link'] }}"><i class="fa-brands fa-square-facebook"></i></a>
                                 </li>
                             @endif
 
                             {{-- Pinterest Link --}}
                             @if (isset($shop_settings['pinterest_link']) && !empty($shop_settings['pinterest_link']))
                                 <li>
-                                    <a target="_blank" href="{{ $shop_settings['pinterest_link'] }}"><i
-                                            class="fa-brands fa-pinterest"></i></a>
+                                    <a target="_blank" href="{{ $shop_settings['pinterest_link'] }}"><i class="fa-brands fa-pinterest"></i></a>
                                 </li>
                             @endif
 
                             {{-- FourSquare Link --}}
                             @if (isset($shop_settings['foursquare_link']) && !empty($shop_settings['foursquare_link']))
                                 <li>
-                                    <a target="_blank" href="{{ $shop_settings['foursquare_link'] }}"><i
-                                            class="fa-brands fa-foursquare"></i></a>
+                                    <a target="_blank" href="{{ $shop_settings['foursquare_link'] }}"><i class="fa-brands fa-foursquare"></i></a>
                                 </li>
                             @endif
 
                             {{-- TripAdvisor Link --}}
                             @if (isset($shop_settings['tripadvisor_link']) && !empty($shop_settings['tripadvisor_link']))
                                 <li>
-                                    <a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><a
-                                            target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><i
-                                                class="fa-solid fa-mask"></i></a></a>
+                                    <a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><i class="fa-solid fa-mask"></i></a></a>
                                 </li>
                             @endif
 
                             {{-- Website Link --}}
                             @if (isset($shop_settings['website_url']) && !empty($shop_settings['website_url']))
                                 <li>
-                                    <a target="_blank" href="{{ $shop_settings['website_url'] }}"><i
-                                            class="fa-solid fa-globe"></i></a>
+                                    <a target="_blank" href="{{ $shop_settings['website_url'] }}"><i class="fa-solid fa-globe"></i></a>
                                 </li>
                             @endif
 
                             {{-- Gmap Link --}}
                             @if (isset($shop_settings['map_url']) && !empty($shop_settings['map_url']))
                                 <li>
-                                    <a target="_blank" href="{{ $shop_settings['map_url'] }}"><i
-                                            class="fa-solid fa-location-dot"></i></a>
+                                    <a target="_blank" href="{{ $shop_settings['map_url'] }}"><i class="fa-solid fa-location-dot"></i></a>
                                 </li>
                             @endif
                         </ul>
@@ -1279,15 +1044,11 @@
                         @php
                             $current_year = \Carbon\Carbon::now()->format('Y');
                             $settings = getAdminSettings();
-                            $copyright_text =
-                                isset($settings['copyright_text']) && !empty($settings['copyright_text'])
-                                    ? $settings['copyright_text']
-                                    : '';
+                            $copyright_text = isset($settings['copyright_text']) && !empty($settings['copyright_text']) ? $settings['copyright_text'] : '';
                             $copyright_text = str_replace('[year]', $current_year, $copyright_text);
                         @endphp
                         <p>{!! $copyright_text !!}</p>
                     @endif
-
                 </div>
             </div>
         </footer>
@@ -1300,8 +1061,7 @@
                             <div class="cart_info">
                                 <div class="cart_title">
                                     <h2>{{ __('Order Options') }}</h2>
-                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn" style="cursor: pointer;"><i
-                                            class="fa-solid fa-arrow-left-long"></i></a>
+                                    <a onclick="homePage('{{ $shop_details['shop_slug'] }}')" class="text-dark cart-back-btn" style="cursor: pointer;"><i class="fa-solid fa-arrow-left-long"></i></a>
                                 </div>
                                 <div class="cart_info_inr">
                                     <div class="checkout_type">
@@ -1309,33 +1069,19 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     @if ($is_checkout == 1)
-                                                        <select name="checkout_type" id="checkout_type"
-                                                            class="form-select w-100" onchange="checkoutType(this.value)">
-                                                            <option value="0"> {{ __('Select Delivery Method') }}
-                                                            </option>
+                                                        <select name="checkout_type" id="checkout_type" class="form-select w-100" onchange="checkoutType(this.value)">
+                                                            <option value="0"> {{ __('Select Delivery Method') }}</option>
                                                             @if (isset($order_settings['delivery']) && $order_settings['delivery'] == 1)
-                                                                <option value="delivery"
-                                                                    {{ $current_check_type == 'delivery' ? 'selected' : '' }}>
-                                                                    {{ __('Delivery') }}
-                                                                </option>
+                                                                <option value="delivery"{{ $current_check_type == 'delivery' ? 'selected' : '' }}>{{ __('Delivery') }}</option>
                                                             @endif
                                                             @if (isset($order_settings['takeaway']) && $order_settings['takeaway'] == 1)
-                                                                <option value="takeaway"
-                                                                    {{ $current_check_type == 'takeaway' ? 'selected' : '' }}>
-                                                                    {{ __('Takeaway') }}
-                                                                </option>
+                                                                <option value="takeaway"{{ $current_check_type == 'takeaway' ? 'selected' : '' }}>{{ __('Takeaway') }}</option>
                                                             @endif
                                                             @if (isset($order_settings['room_delivery']) && $order_settings['room_delivery'] == 1)
-                                                                <option value="room_delivery"
-                                                                    {{ $current_check_type == 'room_delivery' ? 'selected' : '' }}>
-                                                                    {{ __('Room Delivery') }}
-                                                                </option>
+                                                                <option value="room_delivery"{{ $current_check_type == 'room_delivery' ? 'selected' : '' }}>{{ __('Room Delivery') }}</option>
                                                             @endif
                                                             @if (isset($order_settings['table_service']) && $order_settings['table_service'] == 1)
-                                                                <option value="table_service"
-                                                                    {{ $current_check_type == 'table_service' ? 'selected' : '' }}>
-                                                                    {{ __('Table Service') }}
-                                                                </option>
+                                                                <option value="table_service"{{ $current_check_type == 'table_service' ? 'selected' : '' }}>{{ __('Table Service') }}</option>
                                                             @endif
                                                         </select>
                                                     @endif
@@ -1347,13 +1093,10 @@
                                         <div class="row align-items-center">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <select name="room" id="room" class="form-select"
-                                                        onchange="getRoom(this.value)">
+                                                    <select name="room" id="room" class="form-select" onchange="getRoom(this.value)">
                                                         <option value="">{{ __('Choose Your Room') }}</option>
                                                         @foreach ($rooms as $room)
-                                                            <option value="{{ $room->room_no }}"
-                                                                {{ $current_room_no == $room->room_no ? 'selected' : '' }}>
-                                                                {{ $room->room_no }}</option>
+                                                            <option value="{{ $room->room_no }}" {{ $current_room_no == $room->room_no ? 'selected' : '' }}>{{ $room->room_no }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -1367,8 +1110,7 @@
                                                     <select name="table_no" id="table_no" class="form-select">
                                                         <option value="">{{ __('Choose Your Table') }}</option>
                                                         @foreach ($tables as $table)
-                                                            <option value="{{ $table->id }}">
-                                                                {{ $table->table_name }}</option>
+                                                            <option value="{{ $table->id }}">{{ $table->table_name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -1383,48 +1125,14 @@
                                                         $itemIds[] = $cart_item['item_id'];
                                                         $categories_data = $cart_item['categories_data'];
                                                         $item_dt = itemDetails($cart_item['item_id']);
-                                                        $item_discount = isset($item_dt['discount'])
-                                                            ? $item_dt['discount']
-                                                            : 0;
-                                                        $item_discount_type = isset($item_dt['discount_type'])
-                                                            ? $item_dt['discount_type']
-                                                            : 'percentage';
-                                                        $item_image =
-                                                            isset($item_dt['image']) &&
-                                                            !empty($item_dt['image']) &&
-                                                            file_exists(
-                                                                'public/client_uploads/shops/' .
-                                                                    $shop_slug .
-                                                                    '/items/' .
-                                                                    $item_dt['image'],
-                                                            )
-                                                                ? asset(
-                                                                    'public/client_uploads/shops/' .
-                                                                        $shop_slug .
-                                                                        '/items/' .
-                                                                        $item_dt['image'],
-                                                                )
-                                                                : asset(
-                                                                    'public/client_images/not-found/no_image_1.jpg',
-                                                                );
-                                                        $item_name = isset($item_dt[$name_key])
-                                                            ? $item_dt[$name_key]
-                                                            : '';
-                                                        $item_price_details = App\Models\ItemPrice::where(
-                                                            'id',
-                                                            $cart_item['option_id'],
-                                                        )->first();
-                                                        $item_price = isset($item_price_details['price'])
-                                                            ? Currency::currency($currency)->format(
-                                                                $item_price_details['price'],
-                                                            )
-                                                            : 0.0;
-                                                        $item_price_label = isset($item_price_details[$label_key])
-                                                            ? $item_price_details[$label_key]
-                                                            : '';
-                                                        $cart_total_amount += isset($cart_item['total_amount'])
-                                                            ? $cart_item['total_amount']
-                                                            : 0;
+                                                        $item_discount = isset($item_dt['discount']) ? $item_dt['discount'] : 0;
+                                                        $item_discount_type = isset($item_dt['discount_type']) ? $item_dt['discount_type'] : 'percentage';
+                                                        $item_image = isset($item_dt['image']) && !empty($item_dt['image']) && file_exists('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) ? asset('public/client_uploads/shops/'.$shop_slug.'/items/'.$item_dt['image']) : asset('public/client_images/not-found/no_image_1.jpg');
+                                                        $item_name = isset($item_dt[$name_key]) ? $item_dt[$name_key] : '';
+                                                        $item_price_details = App\Models\ItemPrice::where('id', $cart_item['option_id'])->first();
+                                                        $item_price = isset($item_price_details['price']) ? Currency::currency($currency)->format($item_price_details['price']) : 0.0;
+                                                        $item_price_label = isset($item_price_details[$label_key]) ? $item_price_details[$label_key] : '';
+                                                        $cart_total_amount += isset($cart_item['total_amount']) ? $cart_item['total_amount'] : 0;
                                                     @endphp
                                                     <div class="cart_item">
                                                         <div class="cart_item_inr">
@@ -1436,78 +1144,68 @@
                                                         </div>
                                                         <div class="item_attribute">
                                                             <div class="item_attribute_inr">
-                                                            @if(count($categories_data) > 0)
-                                                            @foreach ($categories_data as $option_id)
-                                                                @php
-                                                                    $my_opt = $option_id;
-                                                                @endphp
-                                                                @if(is_array($my_opt))
-                                                                @if(count($my_opt) > 0)
-                                                                    @php
-                                                                        $options = [];
-                                                                    @endphp
-
-                                                                    @foreach ($my_opt as $optid)
+                                                                @if(count($categories_data) > 0)
+                                                                    @foreach ($categories_data as $option_id)
                                                                         @php
-                                                                            $opt_price_dt = App\Models\OptionPrice::where('id', $optid)->with('optionName')->first();
-                                                                            $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
-                                                                            $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                            $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
-                                                                            $option_id = $opt_price_dt->option_id;
-
-                                                                            // Initialize an empty array for the option_id if it doesn't exist yet
-                                                                            if (!isset($options[$option_id])) {
-                                                                                $options[$option_id] = [];
-                                                                            }
-
-                                                                            // Add the name to the array for the option_id
-                                                                            if (!empty($opt_title_name)) {
-                                                                                $options[$option_id][] = $opt_price_name;
-                                                                            }
+                                                                            $my_opt = $option_id;
                                                                         @endphp
-                                                                    @endforeach
 
-                                                                    @foreach ($options as $option)
-                                                                        <h6><span><b>{{ $opt_title_name }}: </b></span>{{ implode(', ', $option) }}</h6>
-                                                                    @endforeach
-                                                                    @endif
-                                                                @else
-                                                                    @php
-                                                                        $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->with('optionName')->first();
-                                                                        $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
-                                                                        $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
-                                                                        $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                        @if(is_array($my_opt))
+                                                                            @if(count($my_opt) > 0)
+                                                                                @php
+                                                                                    $options = [];
+                                                                                @endphp
 
-                                                                    @endphp
-                                                                    <h6><span><b>{{ $opt_title_name }} : </b></span>
-                                                                                            @if(!empty($opt_price_name))
-                                                                                                {{ $opt_price_name }}
-                                                                                            @endif
-                                                                    </h6>
+                                                                                @foreach ($my_opt as $optid)
+                                                                                    @php
+                                                                                        $opt_price_dt = App\Models\OptionPrice::where('id', $optid)->with('optionName')->first();
+                                                                                        $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
+                                                                                        $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                        $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                                        $option_id = $opt_price_dt->option_id;
+
+                                                                                        // Initialize an empty array for the option_id if it doesn't exist yet
+                                                                                        if (!isset($options[$option_id])) {
+                                                                                            $options[$option_id] = [];
+                                                                                        }
+
+                                                                                        // Add the name to the array for the option_id
+                                                                                        if (!empty($opt_title_name)) {
+                                                                                            $options[$option_id][] = $opt_price_name;
+                                                                                        }
+                                                                                    @endphp
+                                                                                @endforeach
+
+                                                                                @foreach ($options as $option)
+                                                                                    <h6><span><b>{{ $opt_title_name }}: </b></span>{{ implode(', ', $option) }}</h6>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        @else
+                                                                            @php
+                                                                                $opt_price_dt = App\Models\OptionPrice::where('id',$my_opt)->with('optionName')->first();
+                                                                                $opt_price_name = (isset($opt_price_dt[$name_key])) ? $opt_price_dt[$name_key] : '';
+                                                                                $opt_title_name = (isset($opt_price_dt->optionName[$title_key])) ? $opt_price_dt->optionName[$title_key] : '';
+                                                                                $opt_price = (isset($opt_price_dt['price'])) ? Currency::currency($currency)->format($opt_price_dt['price']) : 0.00;
+                                                                            @endphp
+                                                                            <h6>
+                                                                                <span><b>{{ $opt_title_name }} : </b></span>
+                                                                                @if(!empty($opt_price_name))
+                                                                                    {{ $opt_price_name }}
+                                                                                @endif
+                                                                            </h6>
+                                                                        @endif
+                                                                    @endforeach
                                                                 @endif
-                                                            @endforeach
-                                                        @endif
                                                             </div>
                                                         </div>
                                                         <div class="cart_qty_action">
                                                             <div class="cart_item_qty">
-                                                                <button class="btn-number"
-                                                                    onclick="updateCartPage({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'decrement')"><i
-                                                                        class="fa fa-minus"
-                                                                        aria-hidden="true"></i></button>
-                                                                <button class="btn-number"
-                                                                    onclick="updateCartPage({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i
-                                                                        class="fa fa-plus"
-                                                                        aria-hidden="true"></i></button>
+                                                                <button class="btn-number" onclick="updateCartPage({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'decrement')"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                                                <button class="btn-number" onclick="updateCartPage({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i class="fa fa-plus" aria-hidden="true"></i></button>
                                                             </div>
                                                             <div class="cart_item_action">
-                                                                <a href="#"
-                                                                    onclick="getCartDetails({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }}, {{ $shop_id }})"><i
-                                                                        class="fa-solid fa-pencil"></i></a>
-                                                                <a href="#"
-                                                                    onclick="removeCartItem({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }})"
-                                                                    class="text-danger"><i
-                                                                        class="fa-solid fa-circle-xmark"></i></a>
+                                                                <a href="#" onclick="getCartDetails({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }}, {{ $shop_id }})"><i class="fa-solid fa-pencil"></i></a>
+                                                                <a href="#" onclick="removeCartItem({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }})" class="text-danger"><i class="fa-solid fa-circle-xmark"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1518,26 +1216,15 @@
                                         @endforelse
                                     </div>
                                     @php
-                                        $categoryIds = App\Models\Items::whereIn('id', $itemIds)
-                                            ->pluck('recomendation_items')
-                                            ->toArray();
+                                        $categoryIds = App\Models\Items::whereIn('id', $itemIds)->pluck('recomendation_items')->toArray();
                                         $recommendationItems = [];
                                         foreach ($categoryIds as $category) {
-                                            if (
-                                                is_string($category) &&
-                                                ($unserialized = unserialize($category)) !== false &&
-                                                is_array($unserialized)
-                                            ) {
+                                            if (is_string($category) && ($unserialized = unserialize($category)) !== false && is_array($unserialized)) {
                                                 $recommendationItems = array_merge($recommendationItems, $unserialized);
                                             }
                                         }
                                         $recommendationItems = array_unique($recommendationItems);
-                                        $relatedItems = App\Models\Items::whereIn('id', $recommendationItems)
-                                            ->whereNotIn('id', $itemIds)
-                                            ->where('type', 1)
-                                            ->get();
-
-
+                                        $relatedItems = App\Models\Items::whereIn('id', $recommendationItems)->whereNotIn('id', $itemIds)->where('type', 1)->get();
                                     @endphp
                                     @if (count($relatedItems) > 0)
                                         <div id="recommended_items" class="recommended_items">
@@ -1545,246 +1232,146 @@
                                                 <h3>{{ __('Recommended') }}</h3>
                                             </div>
                                             <div class="swiper-container h-100 position-relative">
-                                                    <div class="swiper-wrapper">
-                                                            @foreach ($relatedItems as $item)
-                                                                @php
-                                                                    $item_delivery = isset($item['delivery']) && $item['delivery'] == 1 ? $item['delivery'] : 0;
-                                                                @endphp
-                                                                <div class="swiper-slide">
-                                                                    <div class="recommended_product" >
-                                                                        <a onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})">
-                                                                        <div class="recommended_product_img">
-                                                                            {{-- Image Section --}}
-                                                                                @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" alt="" class="w-100">
-                                                                                @else
-                                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                                                @endif
-                                                                            <div class="recommended_special_tag">
-                                                                                {{-- New Product Image --}}
-                                                                                @if ($item['is_new'] == 1)
-                                                                                    <span>new</span>
-                                                                                @endif
-                                                                                {{-- Signature Image --}}
-                                                                                @if ($item['as_sign'] == 1)
-                                                                                    <span>Signature</span>
-                                                                                @endif
-                                                                            </div>
-
-                                                                        </div>
-                                                                        <div class="recommended_product_info">
-                                                                                {{-- Price --}}
-                                                                                @php
-                                                                                    $price_arr = getItemPrice($item['id']);
-                                                                                @endphp
-
-                                                                            @if (count($price_arr) > 0)
-                                                                                @php
-                                                                                    $price = Currency::currency($currency)->format(
-                                                                                        $price_arr[0]['price'],
-                                                                                    );
-                                                                                    $price_label = isset(
-                                                                                        $price_arr[0][$price_label_key],
-                                                                                    )
-                                                                                        ? $price_arr[0][$price_label_key]
-                                                                                        : '';
-                                                                                @endphp
-                                                                                @if ($item_discount > 0)
-                                                                                    @php
-                                                                                        if ($item_discount_type == 'fixed') {
-                                                                                            $new_amount = number_format(
-                                                                                                $price_arr[0]['price'] -
-                                                                                                    $item_discount,
-                                                                                                2,
-                                                                                            );
-                                                                                        } else {
-                                                                                            $per_value =
-                                                                                                ($price_arr[0]['price'] *
-                                                                                                    $item_discount) /
-                                                                                                100;
-                                                                                            $new_amount = number_format(
-                                                                                                $price_arr[0]['price'] - $per_value,
-                                                                                                2,
-                                                                                            );
-                                                                                        }
-                                                                                    @endphp
-                                                                                    <p>
-                                                                                        {{ $price }}
-                                                                                    </p>
-                                                                                @else
-                                                                                    <p>
-                                                                                    {{ $price }}
-                                                                                    </p>
-                                                                                @endif
-                                                                            @endif
-                                                                            <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>
-                                                                        </div>
-                                                                        </a>
-                                                                        @if (isset($package_permissions['ordering']) &&
-                                                                                !empty($package_permissions['ordering']) &&
-                                                                                $package_permissions['ordering'] == 1 &&
-                                                                                count($price_arr) > 0 &&
-                                                                                $item_delivery == 1)
-                                                                                <div class="recommended_product_add_cart">
-                                                                                    <a onclick="cartAdd({{ $item->id }},{{ $shop_details['id'] }})"><i class="fa-solid fa-plus"></i></a>
-                                                                                </div>
+                                                <div class="swiper-wrapper">
+                                                    @foreach ($relatedItems as $item)
+                                                        @php
+                                                            $item_delivery = isset($item['delivery']) && $item['delivery'] == 1 ? $item['delivery'] : 0;
+                                                        @endphp
+                                                        <div class="swiper-slide">
+                                                            <div class="recommended_product" >
+                                                                <a onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})">
+                                                                    <div class="recommended_product_img">
+                                                                        {{-- Image Section --}}
+                                                                        @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
+                                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" alt="" class="w-100">
+                                                                        @else
+                                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
                                                                         @endif
+                                                                        <div class="recommended_special_tag">
+                                                                            {{-- New Product Image --}}
+                                                                            @if ($item['is_new'] == 1)
+                                                                                <span>new</span>
+                                                                            @endif
+                                                                            {{-- Signature Image --}}
+                                                                            @if ($item['as_sign'] == 1)
+                                                                                <span>Signature</span>
+                                                                            @endif
+                                                                        </div>
                                                                     </div>
-                                                                </div>
+                                                                    <div class="recommended_product_info">
+                                                                        {{-- Price --}}
+                                                                        @php
+                                                                            $price_arr = getItemPrice($item['id']);
+                                                                        @endphp
 
-                                                            @endforeach
-                                                    </div>
+                                                                        @if (count($price_arr) > 0)
+                                                                            @php
+                                                                                $price = Currency::currency($currency)->format($price_arr[0]['price']);
+                                                                                $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
+                                                                            @endphp
+                                                                            @if ($item_discount > 0)
+                                                                                @php
+                                                                                    if ($item_discount_type == 'fixed') {
+                                                                                        $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
+                                                                                    } else {
+                                                                                        $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
+                                                                                        $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
+                                                                                    }
+                                                                                @endphp
+                                                                                <p>{{ $price }}</p>
+                                                                            @else
+                                                                                <p>{{ $price }}</p>
+                                                                            @endif
+                                                                        @endif
+                                                                        <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>
+                                                                    </div>
+                                                                </a>
+                                                                @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
+                                                                    <div class="recommended_product_add_cart">
+                                                                        <a onclick="cartAdd({{ $item->id }},{{ $shop_details['id'] }})"><i class="fa-solid fa-plus"></i></a>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         </div>
                                     @endif
 
-                                        <div class="order_comment">
-                                            <textarea name="instructions" id="instructions" rows="3" class="form-control" placeholder="{{ __('Order Comments') }}"></textarea>
-                                        </div>
+                                    <div class="order_comment">
+                                        <textarea name="instructions" id="instructions" rows="3" class="form-control" placeholder="{{ __('Order Comments') }}"></textarea>
                                     </div>
-
+                                </div>
                                 <div class="cart_footer">
-                                        <div class="price_table">
-                                            <table class="table">
-                                                <tbody>
-                                                    <tr>
+                                    <div class="price_table">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
                                                     @php
                                                         $total_discount = 0;
                                                         $coupon_discount = 0;
                                                     @endphp
+
                                                     <td>
-                                                    @if ($discount_per > 0 || $coupon_value > 0)
-                                                        <h3><b>{{ __('SubTotal') }}: </b>{{ Currency::currency($currency)->format($cart_total_amount) }}</h3>
+                                                        @if ($discount_per > 0 || $coupon_value > 0)
+                                                            <h3><b>{{ __('SubTotal') }}: </b>{{ Currency::currency($currency)->format($cart_total_amount) }}</h3>
                                                         @endif
                                                     </td>
-                                                    @if ($discount_per > 0 || $coupon_value > 0)
-                                                        @if ($discount_per > 0)
-                                                            @php
-                                                                        if ($discount_type == 'fixed') {
-                                                                            $total_discount += $discount_per;
-                                                                        } else {
-                                                                            $total_discount +=
-                                                                                ($cart_total_amount * $discount_per) / 100;
-                                                                        }
-                                                            @endphp
-                                                        @endif
-                                                        @if ($coupon_value > 0)
-                                                            @php
-                                                                        if ($coupon_type == 'fixed') {
-                                                                            $coupon_discount += $coupon_value;
-                                                                        } else {
-                                                                            $coupon_discount +=
-                                                                                ($cart_total_amount * $coupon_value) / 100;
-                                                                        }
-                                                            @endphp
-                                                        @endif
-                                                        @php
-                                                                // Calculate final amount after discounts
-                                                                $final_amount =
-                                                                    $cart_total_amount -
-                                                                    ($total_discount + $coupon_discount);
-                                                            @endphp
-                                                    @endif
-                                                        <td class="text-end">
-                                                            @isset($final_amount)
-                                                        <h3><b>{{ __('Total') }}: </b>{{ Currency::currency($currency)->format($final_amount) }}</h3>
-                                                    @else
-                                                        <h3><b>{{ __('Total') }}: </b>{{ Currency::currency($currency)->format($cart_total_amount) }}
-                                                        </h3>
-                                                    @endisset
-                                                        </td>
-                                                    </tr>
-                                                    <!-- <tr>
-                                                        <td><b>{{ __('Total Amount') }}</b></td>
-                                                        <td class="text-end">
-                                                            {{ Currency::currency($currency)->format($cart_total_amount) }}
 
-                                                        </td>
-                                                        <input type="hidden" name="total_cart_amount" id="total_cart_amount"
-                                                            value="{{ $cart_total_amount }}">
-                                                    </tr> -->
-                                                    <!-- @php
-                                                        $total_discount = 0;
-                                                        $coupon_discount = 0;
-                                                    @endphp
                                                     @if ($discount_per > 0 || $coupon_value > 0)
                                                         @if ($discount_per > 0)
-                                                            <tr>
-                                                                <td><b>{{ __('Discount') }}</b></td>
-                                                                @php
-                                                                    if ($discount_type == 'fixed') {
-                                                                        $total_discount += $discount_per;
-                                                                    } else {
-                                                                        $total_discount +=
-                                                                            ($cart_total_amount * $discount_per) / 100;
-                                                                    }
-                                                                @endphp
-                                                                @if ($discount_type == 'fixed')
-                                                                    <td class="text-end">-
-                                                                        {{ Currency::currency($currency)->format($discount_per) }}
-                                                                    </td>
-                                                                @else
-                                                                    <td class="text-end">- {{ $discount_per }}%</td>
-                                                                @endif
-                                                            </tr>
-                                                        @endif
-                                                        @if ($coupon_value > 0)
-                                                            <tr>
-                                                                <td><b>{{ __('Coupon Discount') }}</b></td>
-                                                                @php
-                                                                    if ($coupon_type == 'fixed') {
-                                                                        $coupon_discount += $coupon_value;
-                                                                    } else {
-                                                                        $coupon_discount +=
-                                                                            ($cart_total_amount * $coupon_value) / 100;
-                                                                    }
-                                                                @endphp
-                                                                @if ($coupon_type == 'fixed')
-                                                                    <td class="text-end">-
-                                                                        {{ Currency::currency($currency)->format($coupon_value) }}
-                                                                        <a id="removeCoupon" class="btn text-danger p-0"><i
-                                                                                class="fa-solid fa-times"></i></a>
-                                                                    </td>
-                                                                @else
-                                                                    <td class="text-end">- {{ $coupon_value }}% <a
-                                                                            id="removeCoupon" class="btn text-danger p-0"><i
-                                                                                class="fa-solid fa-circle-xmark"></i></a></td>
-                                                                @endif
-                                                            </tr>
-                                                        @endif
-                                                        <tr class="text-end">
                                                             @php
-                                                                // Calculate final amount after discounts
-                                                                $final_amount =
-                                                                    $cart_total_amount -
-                                                                    ($total_discount + $coupon_discount);
+                                                                if ($discount_type == 'fixed') {
+                                                                    $total_discount += $discount_per;
+                                                                } else {
+                                                                    $total_discount += ($cart_total_amount * $discount_per) / 100;
+                                                                }
                                                             @endphp
-                                                            <td colspan="2">
-                                                                <strong>{{ Currency::currency($currency)->format($final_amount) }}</strong>
-                                                            </td>
-                                                        </tr>
-                                                    @endif -->
-                                                </tbody>
-                                            </table>
+                                                        @endif
+
+                                                        @if ($coupon_value > 0)
+                                                            @php
+                                                                if ($coupon_type == 'fixed') {
+                                                                    $coupon_discount += $coupon_value;
+                                                                } else {
+                                                                    $coupon_discount += ($cart_total_amount * $coupon_value) / 100;
+                                                                }
+                                                            @endphp
+                                                        @endif
+
+                                                        @php
+                                                            // Calculate final amount after discounts
+                                                            $final_amount = $cart_total_amount - ($total_discount + $coupon_discount);
+                                                        @endphp
+                                                    @endif
+
+                                                    <td class="text-end">
+                                                        @isset($final_amount)
+                                                            <h3><b>{{ __('Total') }}: </b>{{ Currency::currency($currency)->format($final_amount) }}</h3>
+                                                        @else
+                                                            <h3><b>{{ __('Total') }}: </b>{{ Currency::currency($currency)->format($cart_total_amount) }}</h3>
+                                                        @endisset
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="apply_coupon">
+                                        <div id="couponInputGroup"  style="display: none;">
+                                            <input type="text" name="code" id="code" class="form-control" placeholder="{{ __('Insert Coupon Number...') }}">
+                                            <input type="hidden" name="shop_id" id="shop_id" value="{{ $shop_id }}">
+                                            <a class="btn btn-success" id="applyCouponButton"><i class="fa-solid fa-check"></i></a>
                                         </div>
-                                        <div class="apply_coupon">
-                                            <div id="couponInputGroup"  style="display: none;">
-                                                <input type="text" name="code" id="code"
-                                                    class="form-control"
-                                                    placeholder="{{ __('Insert Coupon Number...') }}">
-                                                <input type="hidden" name="shop_id" id="shop_id"
-                                                    value="{{ $shop_id }}">
-                                                <a class="btn btn-success" id="applyCouponButton"><i class="fa-solid fa-check"></i></a>
-                                            </div>
-                                        </div>
-                                        @if ($is_checkout == 1)
-                                            <div class="place_order_btn">
+                                    </div>
+                                    @if ($is_checkout == 1)
+                                        <div class="place_order_btn">
                                             @if(count($coupon) > 0)
                                                 <a id="couponApplyButton" class="btn coupon-btn">{{ __('Coupon') }}</a>
                                             @endif
-                                                <button class="btn order-btn" id="check-btn">{{ __('Continue') }}</button>
-                                            </div>
-                                        @endif
+                                            <button class="btn order-btn" id="check-btn">{{ __('Continue') }}</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -1800,73 +1387,63 @@
                                     {{-- Phone Link --}}
                                     @if (isset($shop_settings['business_telephone']) && !empty($shop_settings['business_telephone']))
                                         <li>
-                                            <a href="tel:{{ $shop_settings['business_telephone'] }}"><i
-                                                    class="fa-solid fa-phone"></i></a>
+                                            <a href="tel:{{ $shop_settings['business_telephone'] }}"><i class="fa-solid fa-phone"></i></a>
                                         </li>
                                     @endif
 
                                     {{-- Instagram Link --}}
                                     @if (isset($shop_settings['instagram_link']) && !empty($shop_settings['instagram_link']))
                                         <li>
-                                            <a target="_blank" href="{{ $shop_settings['instagram_link'] }}"><i
-                                                    class="fa-brands fa-square-instagram"></i></a>
+                                            <a target="_blank" href="{{ $shop_settings['instagram_link'] }}"><i class="fa-brands fa-square-instagram"></i></a>
                                         </li>
                                     @endif
 
                                     {{-- Twitter Link --}}
                                     @if (isset($shop_settings['twitter_link']) && !empty($shop_settings['twitter_link']))
                                         <li>
-                                            <a target="_blank" href="{{ $shop_settings['twitter_link'] }}"><i
-                                                    class="fa-brands fa-square-twitter"></i></a>
+                                            <a target="_blank" href="{{ $shop_settings['twitter_link'] }}"><i class="fa-brands fa-square-twitter"></i></a>
                                         </li>
                                     @endif
 
                                     {{-- Facebook Link --}}
                                     @if (isset($shop_settings['facebook_link']) && !empty($shop_settings['facebook_link']))
                                         <li>
-                                            <a target="_blank" href="{{ $shop_settings['facebook_link'] }}"><i
-                                                    class="fa-brands fa-square-facebook"></i></a>
+                                            <a target="_blank" href="{{ $shop_settings['facebook_link'] }}"><i class="fa-brands fa-square-facebook"></i></a>
                                         </li>
                                     @endif
 
                                     {{-- Pinterest Link --}}
                                     @if (isset($shop_settings['pinterest_link']) && !empty($shop_settings['pinterest_link']))
                                         <li>
-                                            <a target="_blank" href="{{ $shop_settings['pinterest_link'] }}"><i
-                                                    class="fa-brands fa-pinterest"></i></a>
+                                            <a target="_blank" href="{{ $shop_settings['pinterest_link'] }}"><i class="fa-brands fa-pinterest"></i></a>
                                         </li>
                                     @endif
 
                                     {{-- FourSquare Link --}}
                                     @if (isset($shop_settings['foursquare_link']) && !empty($shop_settings['foursquare_link']))
                                         <li>
-                                            <a target="_blank" href="{{ $shop_settings['foursquare_link'] }}"><i
-                                                    class="fa-brands fa-foursquare"></i></a>
+                                            <a target="_blank" href="{{ $shop_settings['foursquare_link'] }}"><i class="fa-brands fa-foursquare"></i></a>
                                         </li>
                                     @endif
 
                                     {{-- TripAdvisor Link --}}
                                     @if (isset($shop_settings['tripadvisor_link']) && !empty($shop_settings['tripadvisor_link']))
                                         <li>
-                                            <a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><a
-                                                    target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><i
-                                                        class="fa-solid fa-mask"></i></a></a>
+                                            <a target="_blank" href="{{ $shop_settings['tripadvisor_link'] }}"><i class="fa-solid fa-mask"></i></a>
                                         </li>
                                     @endif
 
                                     {{-- Website Link --}}
                                     @if (isset($shop_settings['website_url']) && !empty($shop_settings['website_url']))
                                         <li>
-                                            <a target="_blank" href="{{ $shop_settings['website_url'] }}"><i
-                                                    class="fa-solid fa-globe"></i></a>
+                                            <a target="_blank" href="{{ $shop_settings['website_url'] }}"><i class="fa-solid fa-globe"></i></a>
                                         </li>
                                     @endif
 
                                     {{-- Gmap Link --}}
                                     @if (isset($shop_settings['map_url']) && !empty($shop_settings['map_url']))
                                         <li>
-                                            <a target="_blank" href="{{ $shop_settings['map_url'] }}"><i
-                                                    class="fa-solid fa-location-dot"></i></a>
+                                            <a target="_blank" href="{{ $shop_settings['map_url'] }}"><i class="fa-solid fa-location-dot"></i></a>
                                         </li>
                                     @endif
                                 </ul>
@@ -1878,10 +1455,7 @@
                                 @php
                                     $current_year = \Carbon\Carbon::now()->format('Y');
                                     $settings = getAdminSettings();
-                                    $copyright_text =
-                                        isset($settings['copyright_text']) && !empty($settings['copyright_text'])
-                                            ? $settings['copyright_text']
-                                            : '';
+                                    $copyright_text = isset($settings['copyright_text']) && !empty($settings['copyright_text']) ? $settings['copyright_text'] : '';
                                     $copyright_text = str_replace('[year]', $current_year, $copyright_text);
                                 @endphp
                                 <p>{!! $copyright_text !!}</p>
@@ -1892,11 +1466,13 @@
             </div>
         </div>
     @endif
+
 @endsection
 
 {{-- Page JS Function --}}
 @section('page-js')
     <script type="text/javascript">
+
         var total_qty = @json($total_cart_qty);
         var shop_slug = @json($shop_slug);
         var empty_redirect = @json(url('restaurant')) + '/' + shop_slug;
@@ -2391,11 +1967,8 @@
                 $('.main').removeClass("shop_cart");
                 $('.header').show();
                 $('.header_preview').show();
-
             }
         });
-
-
 
     </script>
 @endsection

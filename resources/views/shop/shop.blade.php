@@ -2120,9 +2120,13 @@
         </footer>
         @if($is_loader == 1 && isset($package_permissions['loader']) && !empty($package_permissions['loader']) && $package_permissions['loader'] == 1)
             <div class="loader">
-                    @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
-                        <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
-                    @endif
+                @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
+                    <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
+                @else
+                    <div class="loader">
+                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                    </div>
+                @endif
             </div>
         @else
             @if (!empty($adminSetting['loader']))    
@@ -2420,6 +2424,10 @@
         <div class="loader">
                 @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
                     <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
+                @else
+                    <div class="loader">
+                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                    </div>
                 @endif
         </div>
     @else
@@ -2439,6 +2447,10 @@
                 <div class="loader">
                         @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
                             <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
+                        @else
+                            <div class="loader">
+                                <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                            </div>
                         @endif
                 </div>
             @else
@@ -2871,6 +2883,10 @@
             <div class="loader">
                     @if(!empty($shop_loader) && file_exists('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader))
                         <img src="{{ asset('public/client_uploads/shops/'.$shop_slug.'/loader/'.$shop_loader) }}" width="200px"/>
+                    @else
+                        <div class="loader">
+                            <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                        </div>
                     @endif
             </div>
         @else

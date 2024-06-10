@@ -19,7 +19,7 @@ class ShopTableController extends Controller
     // Show the form for creating a new resource.
     public function create()
     {
-        $staffs =  Staff::where('type',1)->where('status',1)->get();
+        $staffs =  Staff::whereIn('type', [1, 2])->where('status',1)->where('shop_id', Auth::user()->hasOneShop->shop['id'])->get();
         return view('client.tables.new_tables',compact('staffs'));
     }
 
@@ -33,7 +33,6 @@ class ShopTableController extends Controller
 
             return redirect()->route('tables')->with('success','Table has been Created.');
         } catch (\Throwable $th) {
-            dd($th);
             return redirect()->route('tables')->with('error','Internal Server Error');
         }
     }
@@ -43,7 +42,7 @@ class ShopTableController extends Controller
     {
         $shopTable = ShopTable::where('id', $id)->first();
         $staffIds = $shopTable->staffs()->pluck('staffs.id')->toArray();
-        $staffs =  Staff::where('type',1)->where('status',1)->get();
+        $staffs =  Staff::whereIn('type', [1, 2])->where('status',1)->where('shop_id', Auth::user()->hasOneShop->shop['id'])->get();
 
         return view('client.tables.edit_table', compact('shopTable','staffs','staffIds'));
     }

@@ -70,7 +70,7 @@
 @endphp
 
 @if ($layout == 'layout_1')
-    <header class="header_preview header-sticky">
+    <header class="header_preview header-sticky head">
         <nav class="navbar navbar-light bg-light">
             <div class="container">
                 @if ($language_bar_position != $logo_position && $language_bar_position != $search_box_position && $logo_position != $search_box_position && $logo_position != $language_bar_position && $search_box_position != $language_bar_position && $search_box_position != $logo_position)

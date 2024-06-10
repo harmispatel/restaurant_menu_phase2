@@ -56,23 +56,6 @@
                 </div>
             @endif
 
-            {{-- <div class="col-md-12 mb-2">
-                <div class="row">
-                    <div class="col-md-6"></div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4">
-                        <select name="subscription" id="subscription" class="form-select">
-                            <option value=""> -- Filter By Subscriptions -- </option>
-                            @if(count($subscriptions) > 0)
-                                @foreach ($subscriptions as $subscription)
-                                    <option value="{{ $subscription->name }}" {{ ($subscription->name == $filter_id) ? 'selected' : '' }}>{{ $subscription->name }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div>
-            </div> --}}
-
             {{-- Clients Card --}}
             <div class="col-md-12">
                 <div class="card">
@@ -98,8 +81,10 @@
                                             <td>
                                                 @if ($staff->type == 0)
                                                     Driver
-                                                    @else
+                                                @elseif($staff->type == 1)
                                                     Waiter
+                                                @else
+                                                    Both
                                                 @endif
                                             </td>
                                             <td>
@@ -143,8 +128,7 @@
     <script type="text/javascript">
 
         // Function for Change Status of Client
-        function changeStatus(status, id)
-        {
+        function changeStatus(status, id){
             $.ajax({
                 type: "POST",
                 url: "{{ route('staffs.status') }}",
@@ -169,39 +153,7 @@
             });
         }
 
-
-        // // Function for Change Status of Favourite
-        // function addToisFav(is_fav, id)
-        // {
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "{{ route('clients.addtofav') }}",
-        //         data: {
-        //             "_token": "{{ csrf_token() }}",
-        //             'status': is_fav,
-        //             'id': id
-        //         },
-        //         dataType: 'JSON',
-        //         success: function(response)
-        //         {
-        //             if (response.success == 1)
-        //             {
-        //                 toastr.success("Add to Favourite SuccessFully");
-        //                 setTimeout(() => {
-        //                     window.location.href = "{{ route('clients.list')}}";
-        //                 }, 1000);
-        //             }
-        //             else
-        //             {
-        //                 toastr.error("Internal Serve Errors");
-        //                 location.reload();
-        //             }
-        //         }
-        //     });
-        // }
-
-
-        // // Function for Delete Client
+        // Function for Delete Client
         function deleteStaff(staffID)
         {
             swal({
@@ -224,18 +176,17 @@
                         dataType: 'JSON',
                         success: function(response)
                         {
-                            if (response.success == 1)
-                            {
+                            if (response.success == 1){
                                 swal(response.message, {
                                     icon: "success",
                                 });
                                 setTimeout(() => {
                                     location.reload();
                                 }, 1200);
-                            }
-                            else
-                            {
-                                toastr.error(response.message);
+                            }else{
+                                swal(response.message, {
+                                    icon: "error",
+                                });
                             }
                         }
                     });

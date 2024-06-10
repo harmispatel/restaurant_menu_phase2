@@ -17,7 +17,7 @@ class CreateStaffsTable extends Migration
             $table->id();
             $table->integer('shop_id');
             $table->string('name',30)->nullable();
-            $table->string('wp_number')->unique();
+            $table->string('wp_number')->unique()->nullable();
             $table->string('email')->unique();
             $table->tinyInteger('type')->default(0);
             $table->tinyInteger('status')->default(0);
