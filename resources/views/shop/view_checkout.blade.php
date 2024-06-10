@@ -155,6 +155,8 @@
         $shop_logo = "";
     }
 
+    $total_grading = App\Models\ShopRateServies::where('shop_id', $shop_details['id'])->where('status', 1)->count();
+
 @endphp
 
 @extends('shop.shop-layout')
@@ -409,7 +411,7 @@
                                         </li>
                                     @endif
                                     @endif
-                                    @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                                    @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1 && $total_grading > 0)
                                     <li>
                                         <a class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star" ></i></a>
                                     </li>

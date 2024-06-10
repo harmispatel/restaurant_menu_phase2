@@ -164,6 +164,8 @@
     $table_enable_status = (isset($shop_settings['table_enable_status']) && !empty($shop_settings['table_enable_status'])) ? $shop_settings['table_enable_status'] : 0;
     $room_enable_status = (isset($shop_settings['room_enable_status']) && !empty($shop_settings['room_enable_status'])) ? $shop_settings['room_enable_status'] : 0;
 
+    $total_grading = App\Models\ShopRateServies::where('shop_id', $shop_id)->where('status', 1)->count();
+
 @endphp
 
 
@@ -401,7 +403,7 @@
                                                         </li>
                                                     @endif
                                                 @endif
-                                            @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                                            @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1 && $total_grading > 0)
                                                 <li>
                                                     <a class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star" ></i></a>
                                                 </li>
@@ -578,7 +580,7 @@
                                                         </li>
                                                     @endif
                                                 @endif
-                                                @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                                                @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1 && $total_grading > 0)
                                                     <li>
                                                         <a class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star" ></i></a>
                                                     </li>
@@ -811,7 +813,7 @@
                                                         </li>
                                                     @endif
                                                 @endif
-                                                @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                                                @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1 && $total_grading > 0)
                                                     <li>
                                                         <a class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star" ></i></a>
                                                     </li>
@@ -1044,7 +1046,7 @@
                                                         </li>
                                                     @endif
                                                 @endif
-                                                @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                                                @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1 && $total_grading > 0)
                                                     <li>
                                                         <a class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star" ></i></a>
                                                     </li>
@@ -1252,7 +1254,7 @@
                             <a href="#" class="btn search_bt d-none" id="closeSearchInnerPage"><i
                                     class="fa-solid fa-times"></i></a>
                         </li>
-                        @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                        @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1 && $total_grading > 0)
                         <li class="navlink">
                                 <a href="#" class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star" ></i></a>
                         </li>
@@ -1410,7 +1412,7 @@
                                                         </li>
                                                     @endif
                                                 @endif
-                                                @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                                                @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1 && $total_grading > 0)
                                                     <li>
                                                         <a class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star" ></i></a>
                                                     </li>
@@ -3834,7 +3836,7 @@
                             </li>
                         @endif
                         @endif
-                        @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1)
+                        @if(isset($package_permissions['grading']) && !empty($package_permissions['grading']) && $package_permissions['grading'] == 1 && $total_grading > 0)
                         <li>
                             <a class="star_icon" onclick="openServiceRatingmodel({{ $shop_details['id'] }})"><i class="fa-solid fa-star" ></i></a>
                         </li>
