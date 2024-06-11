@@ -817,12 +817,17 @@ button:focus {
 }
 
 .category_title .category_title_img {
-    width: 150px;
-    height: 150px;
+    /* width: 150px;
+    height: 150px; */
     overflow: hidden;
     /* border-radius: 50%;   */
     /* border: 2px solid #fff; */
     margin-bottom: 30px;
+}
+
+.category_title .img-devider {
+    width: 700px;
+    height: auto;
 }
 
 .category_title h3 {
@@ -1536,6 +1541,10 @@ button:focus {
     color: #000;
     font-size: 20px;
     margin-bottom: 5px;
+}
+
+.item_model_preview .item_info{
+    color: #000;
 }
 
 .rating_service h3 {

@@ -276,7 +276,7 @@
 
         /* Item Description Color */
         @if(isset($theme_settings['item_description_color']) && !empty($theme_settings['item_description_color']))
-            .single_item_inr .item-desc p{
+            .single_item_inr .item-desc, .single_item_inr .item-desc p{
                 color : {{ $theme_settings['item_description_color'] }}!important;
             }
         @endif

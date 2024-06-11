@@ -1965,7 +1965,7 @@
                                                                         {{-- Image Section --}}
                                                                         @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                             <div class="item_image">
-                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}">
+                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">
                                                                             </div>
                                                                         @endif
 
@@ -2184,7 +2184,7 @@
                                                                             {{-- Image Section --}}
                                                                             @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
                                                                                 <div class="item_image">
-                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}">
+                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">
                                                                                 </div>
                                                                             @endif
 
@@ -2388,7 +2388,7 @@
                                                                 @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                     <div class="item_image">
                                                                         <img
-                                                                            src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}">
+                                                                            src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">
                                                                     </div>
                                                                 @endif
 
@@ -2853,18 +2853,16 @@
                                                 </div>
                                             @else
                                                 @if ($item_devider == 1)
-                                                        <div class="category_title">
-                                                            <div class="category_title_img">
-                                                                @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                                      <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" class="w-100">
-                                                                @else
-                                                                      <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                                @endif
+                                                    <div class="category_title">
+                                                        @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
+                                                            <div class="category_title_img img-devider text-center">
+                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" class="w-100" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">                                                                
                                                             </div>
-                                                            <div class="category_title_name">
-                                                                <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>
-                                                            </div>
+                                                        @endif
+                                                        <div class="category_title_name">
+                                                            <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>
                                                         </div>
+                                                    </div>
                                                 @endif
                                             @endif
                                         @endforeach
@@ -3195,13 +3193,11 @@
                                                 @else
                                                     @if ($item_devider == 1)
                                                         <div class="category_title">
-                                                            <div class="category_title_img">
-                                                                @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
-                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" class="w-100">
-                                                                @else
-                                                                <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                                @endif
-                                                            </div>
+                                                            @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
+                                                                <div class="category_title_img img-devider text-center">
+                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" class="w-100" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">
+                                                                </div>
+                                                            @endif
                                                             <div class="category_title_name">
                                                                 <h3>{{ isset($item->product[$name_key]) && !empty($item->product[$name_key]) ? $item->product[$name_key] : '' }}</h3>
                                                             </div>

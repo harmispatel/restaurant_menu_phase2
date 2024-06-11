@@ -2130,10 +2130,18 @@
                 @endif
             </div>
         @else
-            @if (!empty($adminSetting['loader']))    
-                <div class="loader">
-                    <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
-                </div>
+            @if (!empty($adminSetting['loader']))
+                @if (isset($package_permissions['loader']) && !empty($package_permissions['loader']) && $package_permissions['loader'] == 1)
+                    @if ($is_loader == 1)
+                        <div class="loader">
+                            <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                        </div>
+                    @endif
+                @else
+                    <div class="loader">
+                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                    </div>
+                @endif
             @endif
         @endif
         <input type="hidden" name="intro_second" id="intro_second" value="{{ $intro_second }}">
@@ -2432,10 +2440,18 @@
                 @endif
         </div>
     @else
-        @if (!empty($adminSetting['loader']))    
-            <div class="loader">
-                <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
-            </div>
+        @if (!empty($adminSetting['loader']))
+            @if (isset($package_permissions['loader']) && !empty($package_permissions['loader']) && $package_permissions['loader'] == 1)
+                @if ($is_loader == 1)
+                    <div class="loader">
+                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                    </div>
+                @endif
+            @else
+                <div class="loader">
+                    <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                </div>
+            @endif
         @endif
     @endif
 
@@ -2455,10 +2471,18 @@
                         @endif
                 </div>
             @else
-                @if (!empty($adminSetting['loader']))    
-                    <div class="loader">
-                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
-                    </div>
+                @if (!empty($adminSetting['loader']))
+                    @if (isset($package_permissions['loader']) && !empty($package_permissions['loader']) && $package_permissions['loader'] == 1)
+                        @if ($is_loader == 1)
+                            <div class="loader">
+                                <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                            </div>
+                        @endif
+                    @else
+                        <div class="loader">
+                            <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                        </div>
+                    @endif
                 @endif
             @endif
 
@@ -2891,10 +2915,18 @@
                     @endif
             </div>
         @else
-            @if (!empty($adminSetting['loader']))    
-                <div class="loader">
-                    <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
-                </div>
+            @if (!empty($adminSetting['loader']))
+                @if (isset($package_permissions['loader']) && !empty($package_permissions['loader']) && $package_permissions['loader'] == 1)
+                    @if ($is_loader == 1)
+                        <div class="loader">
+                            <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                        </div>
+                    @endif
+                @else
+                    <div class="loader">
+                        <img src="{{ $adminSetting['loader'] }}" alt="" width="200px">
+                    </div>
+                @endif
             @endif
         @endif
         <input type="hidden" name="intro_second" id="intro_second" value="{{ $intro_second }}">

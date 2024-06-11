@@ -405,8 +405,9 @@ header .cart-btn {
 }
 
 
-.menu_item_list a {
+.menu_item_list a, .menu_item_list a:hover {
     text-decoration: none;
+    color: #000;
 }
 
 .menu_item_box {
@@ -441,7 +442,7 @@ header .cart-btn {
     list-style: none;
 }
 
-.menu_item_name p {
+.menu_item_name p, .menu_item_name {
     font-size: 16px;
     color: #808080;
     margin-bottom: 5px;
