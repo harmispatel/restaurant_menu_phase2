@@ -817,8 +817,8 @@ button:focus {
 }
 
 .category_title .category_title_img {
-    /* width: 150px;
-    height: 150px; */
+    width: 150px;
+    height: 150px;
     overflow: hidden;
     /* border-radius: 50%;   */
     /* border: 2px solid #fff; */
@@ -3056,6 +3056,10 @@ span.qty-number {
     .checkout_close_btn {
         display: flex;
     }
+
+    .category_title .img-devider{
+        width: 100%;
+    }
 }
 
 @media (max-width: 767px) {
@@ -3353,6 +3357,10 @@ span.qty-number {
 
     .category_header .nav button.nav-link{
         font-size: 15px!important;
+    }
+
+    .category_title .img-devider {
+        width: 100%;
     }
 }
 

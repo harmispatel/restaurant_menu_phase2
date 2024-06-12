@@ -166,6 +166,8 @@
 
     $total_grading = App\Models\ShopRateServies::where('shop_id', $shop_id)->where('status', 1)->count();
 
+    $scrollToSection = (isset($theme_settings['sticky_header']) && !empty($theme_settings['sticky_header']) && $theme_settings['sticky_header'] == 1) ? 300 : 150;
+
 @endphp
 
 
@@ -1965,7 +1967,7 @@
                                                                         {{-- Image Section --}}
                                                                         @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                             <div class="item_image">
-                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">
+                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}">
                                                                             </div>
                                                                         @endif
 
@@ -2184,7 +2186,7 @@
                                                                             {{-- Image Section --}}
                                                                             @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
                                                                                 <div class="item_image">
-                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">
+                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}">
                                                                                 </div>
                                                                             @endif
 
@@ -2388,7 +2390,7 @@
                                                                 @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                     <div class="item_image">
                                                                         <img
-                                                                            src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">
+                                                                            src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}">
                                                                     </div>
                                                                 @endif
 
@@ -2559,11 +2561,11 @@
 
                                     </div>
                                         <div class="category_title">
-                                            <div class="category_title_img">
+                                            <div class="category_title_img img-devider">
                                                 @if (!empty($all_items[0]['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']))
-                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']) }}" class="w-100">
+                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']) }}" class="w-100">
                                                 @else
-                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
                                                 @endif
                                             </div>
                                             <div class="category_title_name">
@@ -2856,7 +2858,7 @@
                                                     <div class="category_title">
                                                         @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                             <div class="category_title_img img-devider text-center">
-                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" class="w-100" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">                                                                
+                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" class="w-100">                                                                
                                                             </div>
                                                         @endif
                                                         <div class="category_title_name">
@@ -3195,7 +3197,7 @@
                                                         <div class="category_title">
                                                             @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
                                                                 <div class="category_title_img img-devider text-center">
-                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" class="w-100" style="width: {{ (isset($item['divider_img_size']) && !empty($item['divider_img_size'])) ? $item['divider_img_size'] : '400' }}px!important">
+                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" class="w-100">
                                                                 </div>
                                                             @endif
                                                             <div class="category_title_name">
@@ -3849,33 +3851,6 @@
                                     <i class="fa-solid fa-arrow-left back_icon"></i>
                                 </a>
                             </div>
-                        <!-- <div class="side_menu_inr">
-                            <ul>
-                                @if (count($categories) > 0)
-                                    @foreach ($categories as $category)
-                                        @if ($category->category_type == 'product_category')
-                                            @php
-                                                $active_cat = checkCategorySchedule($category->id, $category->shop_id);
-                                                $name_code = $current_lang_code . '_name';
-                                                $nameId = str_replace(' ', '_', $category->en_name);
-                                                $check_cat_type_permission = checkCatTypePermission($category->category_type, $shop_details['id']);
-                                            @endphp
-                                            @if ($active_cat == 1)
-                                                @if ($check_cat_type_permission == 1)
-                                                    <li>
-                                                            <a onclick="scrollToSection('{{ $nameId }}', 150)" class="{{ $nameId }} scrollTab">
-                                                            <span></span>
-                                                            {{ isset($category->$name_code) ? $category->$name_code : '' }}
-                                                        </a>
-                                                    </li>
-                                                @endif
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                @endif
-
-                            </ul>
-                        </div> -->
                             <div class="side_menu_inr">
                                 <ul id="par_cats">
                                         @php
@@ -3896,7 +3871,7 @@
                                                     <li>
                                                         @if($category->category_type == 'product_category')
                                                             @if($category->parent_id == $cat_parent_id)
-                                                                <a onclick="scrollToSection('{{ $nameId }}', 150)" class="{{ $nameId }} scrollTab">
+                                                                <a onclick="scrollToSection('{{ $nameId }}', {{ $scrollToSection }})" class="{{ $nameId }} scrollTab">
                                                             @else
                                                                 <a href="{{ route('items.preview', [$shop_details['shop_slug'], $category->id]) }}" class="{{ $nameId }} scrollTab">
                                                             @endif
@@ -3918,11 +3893,10 @@
                                                                     @if ($active_child_cat == 1 && $check_child_cat_type_permission == 1)
                                                                         <li>
                                                                              @if($child_category->parent_id == $cat_parent_id)
-                                                                                <a onclick="scrollToSection('{{ $child_nameId }}', 150)" class="{{ $child_nameId }} scrollTab">
+                                                                                <a onclick="scrollToSection('{{ $child_nameId }}', {{ $scrollToSection }})" class="{{ $child_nameId }} scrollTab">
                                                                              @else
                                                                                 <a href="{{ route('items.preview', [$shop_details['shop_slug'], $child_category->id]) }}" class="{{ $child_nameId }} scrollTab">
-                                                                             @endif
-                                                                            <!-- <a onclick="scrollToSection('{{ $child_nameId }}', 150)" class="{{ $child_nameId }} scrollTab"> -->
+                                                                             @endif                                                                            
                                                                                 <span></span>
                                                                                 {{ isset($child_category->$child_name_code) ? $child_category->$child_name_code : '' }}
                                                                             </a>
@@ -3956,7 +3930,7 @@
                                                     <li>
                                                         @if($category->category_type == 'product_category')
                                                             @if($category->parent_id == $cat_parent_id)
-                                                                <a onclick="scrollToSection('{{ $nameId }}', 150)" class="{{ $nameId }} scrollTab">
+                                                                <a onclick="scrollToSection('{{ $nameId }}', {{ $scrollToSection }})" class="{{ $nameId }} scrollTab">
                                                             @else
                                                                 <a href="{{ route('items.preview', [$shop_details['shop_slug'], $category->id]) }}" class="{{ $nameId }} scrollTab">
                                                             @endif
@@ -3978,11 +3952,10 @@
                                                                     @if ($active_child_cat == 1 && $check_child_cat_type_permission == 1)
                                                                         <li>
                                                                             @if($child_category->parent_id == $cat_parent_id)
-                                                                                <a onclick="scrollToSection('{{ $child_nameId }}', 150)" class="{{ $child_nameId }} scrollTab">
+                                                                                <a onclick="scrollToSection('{{ $child_nameId }}', {{ $scrollToSection }})" class="{{ $child_nameId }} scrollTab">
                                                                             @else
                                                                                 <a href="{{ route('items.preview', [$shop_details['shop_slug'], $child_category->id]) }}" class="{{ $child_nameId }} scrollTab">
-                                                                            @endif
-                                                                            <!-- <a onclick="scrollToSection('{{ $child_nameId }}', 150)" class="{{ $child_nameId }} scrollTab"> -->
+                                                                            @endif                                                                            
                                                                                 <span></span>
                                                                                 {{ isset($child_category->$child_name_code) ? $child_category->$child_name_code : '' }}
                                                                             </a>
@@ -4515,13 +4488,12 @@
 
                 // Check if the window width is less than or equal to 768px (tablet and mobile views)
                 if ($(window).width() <= 1199) {
-                    if ($(this).scrollTop() > 160) {
-
+                    // if ($(this).scrollTop() > 300) {
+                    if ($(this).scrollTop() > 25) {
                         $('.side_menu').addClass('openmenu');
                         $('.back_service').addClass('d-none');
                         $('.header_right .barger_menu_main').addClass('d-none');
                         $('.banner .waiter_notification').addClass('d-none');
-
                     } else {
                         $('.side_menu').removeClass('openmenu');
                         $('.back_service').removeClass('d-none');
@@ -4594,7 +4566,7 @@
 
         $( document ).ready(function() {
             var defCat = $("#def_cat").val();
-            scrollToSection(defCat,150);
+            scrollToSection(defCat, @json($scrollToSection));
         });
 
         function scrollToSection(sectionId, offset) {
