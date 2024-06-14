@@ -225,11 +225,13 @@
                     </li>
                 @endif
 
-                <li>
-                    <a href="{{ route('coupons') }}" class="{{ (($routeName == 'coupons') || ($routeName == 'coupons.add') || ($routeName == 'coupons.edit')) ? 'active-link' : '' }}">
-                        <span>{{ __('Coupons') }}</span>
-                    </a>
-                </li>
+                @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                    <li>
+                        <a href="{{ route('coupons') }}" class="{{ (($routeName == 'coupons') || ($routeName == 'coupons.add') || ($routeName == 'coupons.edit')) ? 'active-link' : '' }}">
+                            <span>{{ __('Coupons') }}</span>
+                        </a>
+                    </li>
+                @endif
 
                 @if(isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
                     <li>

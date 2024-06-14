@@ -830,6 +830,10 @@ button:focus {
     height: auto;
 }
 
+.category_title.devider{
+    padding: 20px 0;
+}
+
 .category_title h3 {
     font-size: 25px;
     line-height: 25px;

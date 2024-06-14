@@ -544,12 +544,12 @@
         /* Item Devider */
         @if (isset($theme_settings['item_divider']) && !empty($theme_settings['item_divider']) && $theme_settings['item_divider'] == 1)
             @if (isset($theme_settings['item_divider_position']) && !empty($theme_settings['item_divider_position']) && $theme_settings['item_divider_position'] == 'top')
-                .item_inr_info_sec .devider{
+                .item_inr_info_sec .devider, .category_title.devider{
                     border-top : {{ $theme_settings['item_divider_thickness'] }}px {{ $theme_settings['item_divider_type'] }} {{ $theme_settings['item_divider_color'] }} !important;
                     margin-top: 30px;
                 }
             @elseif (isset($theme_settings['item_divider_position']) && !empty($theme_settings['item_divider_position']) && $theme_settings['item_divider_position'] == 'bottom')
-                .item_inr_info_sec .devider{
+                .item_inr_info_sec .devider, .category_title.devider{
                     border-bottom : {{ $theme_settings['item_divider_thickness'] }}px {{ $theme_settings['item_divider_type'] }} {{ $theme_settings['item_divider_color'] }} !important;
                 }
             @endif

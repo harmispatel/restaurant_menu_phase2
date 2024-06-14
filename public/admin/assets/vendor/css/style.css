@@ -1268,7 +1268,7 @@ h6 {
 }
 
 #editItemModal .modal-dialog.modal-dialog-scrollable,
-#addItemModal.modal-dialog.modal-dialog-scrollable {
+#addItemModal .modal-dialog.modal-dialog-scrollable {
     max-width: 700px;
 }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -29,7 +30,6 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-
         $request->validate([
             'email' => 'required',
             'password' => 'required'
@@ -37,19 +37,28 @@ class AuthController extends Controller
 
         $input = $request->except('_token');
 
-        if (Auth::attempt($input))
-        {
-            if (Auth::user()->user_type == 1)
-            {
+        if (Auth::attempt($input)){
+            if (Auth::user()->user_type == 1){
                 $username = Auth::user()->firstname." ".Auth::user()->lastname;
                 return redirect()->route('admin.dashboard')->with('success', 'Welcome '.$username);
-            }
-            else
-            {
+            }else{
                 $username = Auth::user()->firstname." ".Auth::user()->lastname;
-                return redirect()->route('client.dashboard')->with('success', 'Welcome '.$username);
+                $is_active = Auth::user()->status ?? "";
+                $end_date = Auth::user()->hasOneSubscription->end_date ?? "";
+                $end_date = Carbon::now()->diffInDays($end_date, false);
+
+                if($end_date > 0){
+                    if($is_active == 1){
+                        return redirect()->route('client.dashboard')->with('success', 'Welcome '.$username);                        
+                    }else{
+                        Auth::logout();
+                        return redirect()->route('login')->with('error', 'Your Account has been Deactivated!');
+                    }
+                }else{
+                    Auth::logout();
+                    return redirect()->route('login')->with('error', 'Your Pack has been Expired!');
+                }        
             }
-            // return back()->with('error', 'Kindly Login with Active Admin User.');
         }
 
         return back()->with('error', 'Please Enter Valid Email & Password');

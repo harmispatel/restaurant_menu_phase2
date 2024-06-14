@@ -166,7 +166,7 @@
 
     $total_grading = App\Models\ShopRateServies::where('shop_id', $shop_id)->where('status', 1)->count();
 
-    $scrollToSection = (isset($theme_settings['sticky_header']) && !empty($theme_settings['sticky_header']) && $theme_settings['sticky_header'] == 1) ? 300 : 150;
+    $scrollToSection = (isset($theme_settings['sticky_header']) && !empty($theme_settings['sticky_header']) && $theme_settings['sticky_header'] == 1) ? $banner_height : 150;
 
 @endphp
 
@@ -1856,13 +1856,15 @@
                                                                     @endif
                                                                     
                                                                     {{-- Star Section --}}
-                                                                    <div class="item_image">
-                                                                        <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                            <i class="fa-solid fa-star"></i>
-                                                                            <i class="fa-solid fa-star"></i>
-                                                                            <i class="fa-solid fa-star"></i>
-                                                                        </a>
-                                                                    </div>
+                                                                    @if ($item['review'] == 1)                                                                        
+                                                                        <div class="item_image">
+                                                                            <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    @endif
 
                                                                     {{-- Calories Section --}}
                                                                     @if (isset($item[$calories_key]) && !empty($item[$calories_key]))
@@ -2077,13 +2079,15 @@
                                                                         @endif
 
                                                                         {{-- Rating Stars --}}
-                                                                        <div class="item_image">
-                                                                            <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                                <i class="fa-solid fa-star"></i>
-                                                                                <i class="fa-solid fa-star"></i>
-                                                                                <i class="fa-solid fa-star"></i>
-                                                                            </a>
-                                                                        </div>
+                                                                        @if ($item['review'] == 1)                                                                        
+                                                                            <div class="item_image">
+                                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                </a>
+                                                                            </div>
+                                                                        @endif
 
                                                                         {{-- Calories Section --}}
                                                                         @if (isset($item->product[$calories_key]) && !empty($item->product[$calories_key]))
@@ -2278,13 +2282,15 @@
                                                             @endif
 
                                                             {{-- Stars --}}
-                                                            <div class="item_image">
-                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                    <i class="fa-solid fa-star"></i>
-                                                                    <i class="fa-solid fa-star"></i>
-                                                                    <i class="fa-solid fa-star"></i>
-                                                                </a>
-                                                            </div>
+                                                            @if ($item['review'] == 1)                                                                        
+                                                                <div class="item_image">
+                                                                    <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                        <i class="fa-solid fa-star"></i>
+                                                                        <i class="fa-solid fa-star"></i>
+                                                                        <i class="fa-solid fa-star"></i>
+                                                                    </a>
+                                                                </div>
+                                                            @endif
 
                                                             {{-- Calories Section --}}
                                                             @if (isset($item[$calories_key]) && !empty($item[$calories_key]))
@@ -2560,12 +2566,12 @@
                                         <div class="col-md-3"></div>
 
                                     </div>
-                                        <div class="category_title">
-                                            <div class="category_title_img img-devider">
-                                                @if (!empty($all_items[0]['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']))
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']) }}" class="w-100">                                               
-                                                @endif
-                                            </div>
+                                        <div class="category_title devider">
+                                            @if (!empty($all_items[0]['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']))
+                                                <div class="category_title_img img-devider">
+                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']) }}" class="w-100"> 
+                                                </div>
+                                            @endif
                                             <div class="category_title_name">
                                                 <h3>{{ isset($all_items[0][$name_key]) && !empty($all_items[0][$name_key]) ? $all_items[0][$name_key] : '' }}</h3>
                                             </div>
@@ -2787,11 +2793,14 @@
                                                                             onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})"
                                                                             style="cursor: pointer">
                                                                     @endif
-                                                                    <a  class="review_btn"
-                                                                        onclick="openRatingModel({{ $item['id'] }})"><i
-                                                                            class="fa-solid fa-star"></i> <i
-                                                                            class="fa-solid fa-star"></i> <i
-                                                                            class="fa-solid fa-star"></i></a>
+
+                                                                    @if ($item['review'] == 1)                                                                        
+                                                                        <a  class="review_btn"
+                                                                            onclick="openRatingModel({{ $item['id'] }})"><i
+                                                                                class="fa-solid fa-star"></i> <i
+                                                                                class="fa-solid fa-star"></i> <i
+                                                                                class="fa-solid fa-star"></i></a>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                             <div class="special_day_item_gif text-center">
@@ -2853,7 +2862,7 @@
                                                 </div>
                                             @else
                                                 @if ($item_devider == 1)
-                                                    <div class="category_title">
+                                                    <div class="category_title devider">
                                                         @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                             <div class="category_title_img img-devider text-center">
                                                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" class="w-100">                                                                
@@ -3126,11 +3135,13 @@
                                                                         <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}"
                                                                             onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})"
                                                                             style="cursor: pointer">
-                                                                        <a  class="review_btn"
-                                                                            onclick="openRatingModel({{ $item['id'] }})"><i
-                                                                                class="fa-solid fa-star"></i> <i
-                                                                                class="fa-solid fa-star"></i> <i
-                                                                                class="fa-solid fa-star"></i></a>
+
+                                                                            @if ($item['review'] == 1)                                                                        
+                                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})"><i
+                                                                                    class="fa-solid fa-star"></i> <i
+                                                                                    class="fa-solid fa-star"></i> <i
+                                                                                    class="fa-solid fa-star"></i></a>
+                                                                            @endif
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -3192,7 +3203,7 @@
                                                     </div>
                                                 @else
                                                     @if ($item_devider == 1)
-                                                        <div class="category_title">
+                                                        <div class="category_title devider">
                                                             @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
                                                                 <div class="category_title_img img-devider text-center">
                                                                     <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" class="w-100">
@@ -3444,11 +3455,14 @@
                                                                                                 alt="" srcset=""
                                                                                                 class="w-100">
                                                                                             </div>
-                                                                                            <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                                                <i class="fa-solid fa-star"></i>
-                                                                                                <i class="fa-solid fa-star"></i>
-                                                                                                <i class="fa-solid fa-star"></i>
-                                                                                            </a>
+
+                                                                                            @if ($item['review'] == 1)                                                                        
+                                                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                                </a>
+                                                                                            @endif
                                                                                     </div>
                                                                                     @endif
                                                                                 </div>
@@ -3612,11 +3626,14 @@
                                                                                                 srcset=""
                                                                                                 class="w-100">
                                                                                             </div>
-                                                                                            <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                                                <i class="fa-solid fa-star"></i>
-                                                                                                <i class="fa-solid fa-star"></i>
-                                                                                                <i class="fa-solid fa-star"></i>
-                                                                                            </a>
+
+                                                                                            @if ($item['review'] == 1)                                                                        
+                                                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                                    <i class="fa-solid fa-star"></i>
+                                                                                                </a>
+                                                                                            @endif
                                                                                     </div>
                                                                                     @endif
                                                                                 </div>
@@ -3757,11 +3774,14 @@
                                                                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}"
                                                                                     alt="" srcset="" class="w-100">
                                                                                 </div>
-                                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
-                                                                                    <i class="fa-solid fa-star"></i>
-                                                                                    <i class="fa-solid fa-star"></i>
-                                                                                    <i class="fa-solid fa-star"></i>
-                                                                                </a>
+
+                                                                                @if ($item['review'] == 1)                                                                                    
+                                                                                    <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                                        <i class="fa-solid fa-star"></i>
+                                                                                        <i class="fa-solid fa-star"></i>
+                                                                                        <i class="fa-solid fa-star"></i>
+                                                                                    </a>
+                                                                                @endif
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -3869,7 +3889,7 @@
                                                     <li>
                                                         @if($category->category_type == 'product_category')
                                                             @if($category->parent_id == $cat_parent_id)
-                                                                <a onclick="scrollToSection('{{ $nameId }}', {{ $scrollToSection }})" class="{{ $nameId }} scrollTab">
+                                                                <a onclick="scrollToSection('{{ $nameId }}')" class="{{ $nameId }} scrollTab">
                                                             @else
                                                                 <a href="{{ route('items.preview', [$shop_details['shop_slug'], $category->id]) }}" class="{{ $nameId }} scrollTab">
                                                             @endif
@@ -3891,7 +3911,7 @@
                                                                     @if ($active_child_cat == 1 && $check_child_cat_type_permission == 1)
                                                                         <li>
                                                                              @if($child_category->parent_id == $cat_parent_id)
-                                                                                <a onclick="scrollToSection('{{ $child_nameId }}', {{ $scrollToSection }})" class="{{ $child_nameId }} scrollTab">
+                                                                                <a onclick="scrollToSection('{{ $child_nameId }}')" class="{{ $child_nameId }} scrollTab">
                                                                              @else
                                                                                 <a href="{{ route('items.preview', [$shop_details['shop_slug'], $child_category->id]) }}" class="{{ $child_nameId }} scrollTab">
                                                                              @endif                                                                            
@@ -3928,7 +3948,7 @@
                                                     <li>
                                                         @if($category->category_type == 'product_category')
                                                             @if($category->parent_id == $cat_parent_id)
-                                                                <a onclick="scrollToSection('{{ $nameId }}', {{ $scrollToSection }})" class="{{ $nameId }} scrollTab">
+                                                                <a onclick="scrollToSection('{{ $nameId }}')" class="{{ $nameId }} scrollTab">
                                                             @else
                                                                 <a href="{{ route('items.preview', [$shop_details['shop_slug'], $category->id]) }}" class="{{ $nameId }} scrollTab">
                                                             @endif
@@ -3950,7 +3970,7 @@
                                                                     @if ($active_child_cat == 1 && $check_child_cat_type_permission == 1)
                                                                         <li>
                                                                             @if($child_category->parent_id == $cat_parent_id)
-                                                                                <a onclick="scrollToSection('{{ $child_nameId }}', {{ $scrollToSection }})" class="{{ $child_nameId }} scrollTab">
+                                                                                <a onclick="scrollToSection('{{ $child_nameId }}')" class="{{ $child_nameId }} scrollTab">
                                                                             @else
                                                                                 <a href="{{ route('items.preview', [$shop_details['shop_slug'], $child_category->id]) }}" class="{{ $child_nameId }} scrollTab">
                                                                             @endif                                                                            
@@ -4094,24 +4114,222 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
 
     <script type="text/javascript">
-     var layout = "{{ $layout }}";
 
-     var BannerSpeed = {{ $slider_delay_time }};
+        var layout = "{{ $layout }}";
+        var BannerSpeed = {{ $slider_delay_time }};        
+        var winWidth = window.window.innerWidth;
+        var win = $(window);
+        var sideMenu = $(".side_menu_inr .child-cats");
+        var activeTab = sideMenu.find('.active');
+        var isPageReloaded = true;
+        if(window.innerWidth <= 768){
+            var scrollToSec = parseInt(@json($scrollToSection)) + 80;
+        }else{
+            var scrollToSec = parseInt(@json($scrollToSection)) + 35;
+        }
+
+        // Function for Toggle Cats Bar for Mobile
+        function checkScroll() {
+            // Check if the window width is less than or equal to 768px (tablet and mobile views)
+            if ($(window).width() <= 1199) {
+                // if ($(this).scrollTop() > 300) {
+                if ($(this).scrollTop() > 25) {
+                    $('.side_menu').addClass('openmenu');
+                    $('.back_service').addClass('d-none');
+                    $('.header_right .barger_menu_main').addClass('d-none');
+                    $('.banner .waiter_notification').addClass('d-none');
+                } else {
+                    $('.side_menu').removeClass('openmenu');
+                    $('.back_service').removeClass('d-none');
+                    $('.header_right .barger_menu_main').removeClass('d-none');
+                    $('.banner .waiter_notification').removeClass('d-none');
+
+                }
+            } else {
+                // If the window width is greater than 768px, remove the class
+                $('.side_menu').removeClass('openmenu');
+                $('.back_service').removeClass('d-none');
+                $('.header_right .barger_menu_main').removeClass('d-none');
+                $('.banner .waiter_notification').removeClass('d-none');
+            }
+        }
+
+
+        // Function for Scroll to Section
+        function scrollToSection(sectionId, offset = null) {
+            $('.scrollTab').removeClass('active');
+            $('.' + sectionId).addClass('active');
+
+            var targetSection = document.getElementById(sectionId);
+
+            if(offset == null){
+                var topOffset = targetSection?.offsetTop - scrollToSec;
+            }else{
+                var topOffset = targetSection?.offsetTop - offset;
+            }
+            window.scrollTo({ top: topOffset, behavior: 'smooth',});
+        }
+
+
+        // Function to scroll to center of active tab within viewport
+        function scrollToActiveTab() {
+            if (activeTab.length > 0) {
+                var scrollOffset = activeTab.offset().left + activeTab.outerWidth() / 2 - win.width() / 2;
+                var scrollTo = sideMenu.scrollLeft() + scrollOffset;
+                sideMenu.stop().animate({ scrollLeft: scrollTo }, scrollToSec);
+            }
+        }
+
 
         $('document').ready(function() {
 
             var totalTab = $('#is_cat_tab').val();
+            var slider_effect = "{{ $effect }}";
+            var BannerSpeed = {{ $slider_delay_time }};
+            var defCat = $("#def_cat").val();
+            var layout = "{{ $layout }}";
+            var size = $(window).width();            
+
+            // Set Current Tab ID
             if (totalTab > 0) {
                 $('#current_tab_id').val('all');
             }
-        });
 
+
+            // Swiper
+            var swiper = new Swiper(".home_main_slider .swiper-container", {
+	            slidesPerView: 1,
+	            effect: slider_effect,
+                navigation: {
+                    nextEl: ".home_main_slider .swiper-button-next",
+                    prevEl: ".home_main_slider .swiper-button-prev"
+                    },
+                loop: true,
+                autoplay: {
+                    delay: BannerSpeed,
+                    disableOnInteraction: false
+                },
+	            speed: 2000
+            });
+
+
+            // Get Selected Index
+            @if ($layout == 'layout_2')
+                var selectedIndex = {{ json_encode(array_keys($categories->pluck('id')->toArray(), $current_cat_id)[0] ?? 0) }};
+            @else
+                var selectedIndex = 0;
+            @endif            
+
+
+            // Owl Carousel
+            $(".owl-carousel-stacked").on("dragged.owl.carousel translated.owl.carousel initialized.owl.carousel", function(e) {
+                $(".center").prev().addClass("left-of-center");
+                $(".center").next().addClass("right-of-center");
+            });
+            $(".owl-carousel-stacked").on("drag.owl.carousel", function(e) {
+                $(".left-of-center").removeClass("left-of-center");
+                $(".right-of-center").removeClass("right-of-center");
+            });
+            $(".owl-carousel-stacked").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                items: 3,
+                center: true,
+                mouseDrag: true,
+                touchDrag: true,
+                click: true,
+                keyboard: true,
+                1: true,
+                touch: true,
+                pullDrag: false,
+                autoplay: false,
+                navText: [
+                    '<span class="fa-stack fa-lg"><i class="fa fa-caret-left fa-stack-2x"></i></span>',
+                    '<span class="fa-stack fa-lg"><i class="fa fa-caret-right fa-stack-2x"></i></span>'
+                ],
+                startPosition: selectedIndex
+            });
+            $(".owl-carousel-stacked").on("translate.owl.carousel", function(e) {
+                $(".left-of-center").removeClass("left-of-center");
+                $(".right-of-center").removeClass("right-of-center");
+            });
+            $(".owl-carousel-stacked").on("mousewheel", function (event) {
+                if (event.originalEvent.deltaY < 0) {
+                    $(this).trigger("next.owl.carousel");
+                } else {
+                    $(this).trigger("prev.owl.carousel");
+                }
+                event.preventDefault();
+            });
+
+            // Initial check on page load
+            checkScroll();
+
+
+            // Listen for scroll and resize events
+            $(window).on('scroll resize', checkScroll);
+
+
+            // Scroll to Selected Section
+            scrollToSection(defCat, parseInt(scrollToSec + 20));
+            
+            
+            // Tags button Event for Layout 2
+            if(layout == 'layout_2'){
+                $('.tags-btn').click(function () {
+                    var tabPaneId = $(this).attr('data-bs-target');
+                    var tabId = $(this).attr('id');
+                    $('.tags-btn').removeClass('active');
+
+                    // Show the selected tab content
+                    $('.' + tabId).addClass('active');
+                    var isActive = $(this).hasClass('active');
+                    if (!isActive) {
+                        $('.' + tabId).addClass('active');
+                    }
+                    $('.tab-pane').removeClass('show active');
+                    $(tabPaneId).addClass('show active');
+                });
+            }
+
+
+            // Toggle Categories Div
+            if(size > 768){
+                $('#par_cats').removeClass('d-none');
+                $('.child-cats').addClass('d-none');
+            }else{
+                $('#par_cats').addClass('d-none');
+                $('.child-cats').removeClass('d-none');
+            }            
+            
+
+            // Scroll to center active tab initially
+            scrollToActiveTab();
+
+
+            // Update active tab and center it on scroll
+            win.on("scroll", function () {
+                if (isPageReloaded) {
+                    scrollToSection(defCat, parseInt(scrollToSec + 20));
+                    isPageReloaded = false; // Update the flag to false after calling scrollToSection
+                }
+                $(".menu_info_inr").each(function () {
+                    if (win.scrollTop() >= $(this).offset().top - parseInt(scrollToSec + 45)) {
+                        $("."+$(this).attr("id")).addClass("active").parent().siblings().find("a").removeClass("active");
+                        activeTab = sideMenu.find('.active');
+                        scrollToActiveTab()
+                    }
+                });
+            });
+        });
 
 
         // Remove Item Details from Model
         $('#itemDetailsModal .btn-close').on('click', function() {
             $('#itemDetailsModal #item_dt_div').html('');
         });
+
 
         // Function for get Filterd Categories layout 2 Home Page
         $('#search_btn').on('click', function() {
@@ -4144,6 +4362,7 @@
                 }
             });
         });
+
 
         // Function for get Filterd Categories layout 2 Home Page
         $('.src_btn_inner').on('click', function() {
@@ -4185,45 +4404,50 @@
                 }
             });
         });
+
+
         // Function for clear search input layout_2 inner page
         $('.clr_btn_inner').on('click', function() {
-                $('.search_layout').val('');
-                location.reload();
-                // $('.src_btn_inner').click();
-            });
+            $('.search_layout').val('');
+            location.reload();
+        });
+
 
         // Function for clear search input layout_3 inner page
         $('.clr_btn_inner_layout_three').on('click', function() {
             $('.search_layout').val('');
                 location.reload();
         })
-        // Function for clear search input
-           $('#clear_btn').on('click', function() {
-                $('#search_layout').val('');
-                $('#search_btn').click();
-            });
 
-            if(layout == 'layout_2'){
-                $('#closeSearchBox').on('click',function()
-                {
-                    $("#closeSearchBox").addClass("d-none");
-                    $('#openSearchBox').removeClass("d-none");
-                    $(".search_input").removeClass("d-block");
-                    $('#search').val('');
-                    $('#search').trigger('keyup');
-                    location.reload();
-                });
-            }else{
-                $('#closeSearchBox').on('click',function()
-                {
-                    $("#closeSearchBox").addClass("d-none");
-                    $('#openSearchBox').removeClass("d-none");
-                    $(".search_input").removeClass("d-block");
-                    $('#search').val('');
-                    $('#search').trigger('keyup');
-                    // location.reload();
-                });
-            }
+
+        // Function for clear search input
+        $('#clear_btn').on('click', function() {
+            $('#search_layout').val('');
+            $('#search_btn').click();
+        });
+
+
+        // Add Remove Class Based on Layout
+        if(layout == 'layout_2'){
+            $('#closeSearchBox').on('click',function() {
+                $("#closeSearchBox").addClass("d-none");
+                $('#openSearchBox').removeClass("d-none");
+                $(".search_input").removeClass("d-block");
+                $('#search').val('');
+                $('#search').trigger('keyup');
+                location.reload();
+            });
+        }else{
+            $('#closeSearchBox').on('click',function() {
+                $("#closeSearchBox").addClass("d-none");
+                $('#openSearchBox').removeClass("d-none");
+                $(".search_input").removeClass("d-block");
+                $('#search').val('');
+                $('#search').trigger('keyup');
+                // location.reload();
+            });
+        }
+
 
         // Function for Search Items
         $('#search').on('keyup', function() {
@@ -4278,35 +4502,16 @@
 
         });
 
+
+        // Function for Set Tab Key
         function setTabKey(key, tagID) {
             $('#current_tab_id').val(key);
             $('#tag_id').val(tagID);
         }
 
-        $(document).ready(function() {
-            var slider_effect = "{{ $effect }}";
-             var BannerSpeed = {{ $slider_delay_time }};
 
-            var swiper = new Swiper(".home_main_slider .swiper-container", {
-	            slidesPerView: 1,
-	            effect: slider_effect,
-                navigation: {
-                    nextEl: ".home_main_slider .swiper-button-next",
-                    prevEl: ".home_main_slider .swiper-button-prev"
-                    },
-                loop: true,
-                autoplay: {
-                    delay: BannerSpeed,
-                    disableOnInteraction: false
-                },
-	            speed: 2000
-            });
-
-
-        });
-
+        // Coverflow Slider
         $(function() {
-
             var category_effect = "{{ $category_effect }}";
             if(category_effect == 'coverflow'){
                 var spacing = -0.7;
@@ -4317,14 +4522,10 @@
             }else if(category_effect == 'flat'){
                 var spacing = -0.25;
             }
-
             var selectedCategoryId = "{{ $current_cat_id }}";
 
             $("#coverflow").flipster({
-
-                // Container for the flippin' items.
                 itemContainer: 'ul',
-                // Selector for children of itemContainer to flip
                 itemSelector: 'li',
                 style: category_effect,
                 fadeIn: 400,
@@ -4368,7 +4569,6 @@
 
             slider.on("wheel", function (e) {
                 e.preventDefault();
-
                 if (e.originalEvent.deltaY < 0) {
                     $(this).slick("slickPrev");
                 } else {
@@ -4377,19 +4577,13 @@
             });
 
             $('.item_box_main').removeClass('d-none');
-
         });
+
 
         // layout 2 slider
         $(function() {
-
-            // Find the index of the selected category in the array
-
             $("#coverflow-layout-two").flipster({
-
-                // Container for the flippin' items.
                 itemContainer: 'ul',
-                // Selector for children of itemContainer to flip
                 itemSelector: 'li',
                 style: 'coverflow',
                 // start:'center',
@@ -4410,114 +4604,21 @@
                 buttonPrev: 'Previous',
                 buttonNext: 'next',
                 onItemSwitch: $.noop,
-
             });
         });
 
-        $(document).ready(function() {
 
-            @if ($layout == 'layout_2')
-                var selectedIndex = {{ json_encode(array_keys($categories->pluck('id')->toArray(), $current_cat_id)[0] ?? 0) }};
-            @else
-                var selectedIndex = 0;
-            @endif
-
-            $(".owl-carousel-stacked").on(
-                "dragged.owl.carousel translated.owl.carousel initialized.owl.carousel",
-                function(e) {
-                    $(".center").prev().addClass("left-of-center");
-                    $(".center").next().addClass("right-of-center");
-            });
-
-            $(".owl-carousel-stacked").on("drag.owl.carousel", function(e) {
-                $(".left-of-center").removeClass("left-of-center");
-                $(".right-of-center").removeClass("right-of-center");
-            });
-
-            $(".owl-carousel-stacked").owlCarousel({
-                loop: true,
-                margin: 10,
-                nav: true,
-                items: 3,
-                center: true,
-                mouseDrag: true,
-                touchDrag: true,
-                click: true,
-                keyboard: true,
-                1: true,
-                touch: true,
-                pullDrag: false,
-                autoplay: false,
-                navText: [
-                    '<span class="fa-stack fa-lg"><i class="fa fa-caret-left fa-stack-2x"></i></span>',
-                    '<span class="fa-stack fa-lg"><i class="fa fa-caret-right fa-stack-2x"></i></span>'
-                ],
-                startPosition: selectedIndex
-            });
-
-            $(".owl-carousel-stacked").on("translate.owl.carousel", function(e) {
-                $(".left-of-center").removeClass("left-of-center");
-                $(".right-of-center").removeClass("right-of-center");
-            });
-
-            $(".owl-carousel-stacked").on("mousewheel", function (event) {
-                if (event.originalEvent.deltaY < 0) {
-                    $(this).trigger("next.owl.carousel");
-                } else {
-                    $(this).trigger("prev.owl.carousel");
-                }
-                event.preventDefault();
-            });
-        });
-
+        // Tab Box Change Events
         $('.tagSelectBox').on('change', function() {
             var selectedTab = $(this).val();
-
             $('#'+selectedTab).parent().children('.tab-pane').removeClass('active');
-
             // Show the selected tab content
             $('#'+selectedTab).addClass('active');
         });
 
 
-        $(document).ready(function() {
-
-            function checkScroll() {
-
-                // Check if the window width is less than or equal to 768px (tablet and mobile views)
-                if ($(window).width() <= 1199) {
-                    // if ($(this).scrollTop() > 300) {
-                    if ($(this).scrollTop() > 25) {
-                        $('.side_menu').addClass('openmenu');
-                        $('.back_service').addClass('d-none');
-                        $('.header_right .barger_menu_main').addClass('d-none');
-                        $('.banner .waiter_notification').addClass('d-none');
-                    } else {
-                        $('.side_menu').removeClass('openmenu');
-                        $('.back_service').removeClass('d-none');
-                        $('.header_right .barger_menu_main').removeClass('d-none');
-                        $('.banner .waiter_notification').removeClass('d-none');
-
-                    }
-                } else {
-                    // If the window width is greater than 768px, remove the class
-                    $('.side_menu').removeClass('openmenu');
-                    $('.back_service').removeClass('d-none');
-                    $('.header_right .barger_menu_main').removeClass('d-none');
-                    $('.banner .waiter_notification').removeClass('d-none');
-                }
-            }
-
-            // Initial check on page load
-            checkScroll();
-
-            // Listen for scroll and resize events
-            $(window).on('scroll resize', checkScroll);
-        });
-
         // Function for Remove Cart Items
-        function removeCartItem(itemID,priceID,item_key)
-        {
+        function removeCartItem(itemID,priceID,item_key){
             $.ajax({
                 type: "POST",
                 url: "{{ route('shop.remove.cart.item') }}",
@@ -4548,6 +4649,8 @@
             });
         }
 
+
+        // Toggle Heade Layout wise
         @if ($layout == 'layout_2')
             $(window).resize(function() {
                 if ($(window).width() < 991) {
@@ -4561,27 +4664,9 @@
                 }
             });
         @endif
+        
 
-        $( document ).ready(function() {
-            var defCat = $("#def_cat").val();
-            scrollToSection(defCat, @json($scrollToSection));
-        });
-
-        function scrollToSection(sectionId, offset) {
-
-            $('.scrollTab').removeClass('active');
-
-            $('.'+sectionId).addClass('active');
-
-            var targetSection = document.getElementById(sectionId);
-            var topOffset = targetSection?.offsetTop - offset;
-
-            window.scrollTo({ top: topOffset, behavior: 'smooth',});
-        }
-
-
-
-
+        // Function for Update Cart
         function updateCart(itemID, priceID, item_key,action) {
 
             var currency = @json($currency);
@@ -4623,61 +4708,24 @@
         }
 
 
-        $(document).ready(function(){
-            var layout = "{{ $layout }}";
-            if(layout == 'layout_2'){
-                $('.tags-btn').click(function () {
-                    var tabPaneId = $(this).attr('data-bs-target');
-                    var tabId = $(this).attr('id');
-
-                    $('.tags-btn').removeClass('active');
-
-                // Show the selected tab content
-                $('.'+tabId).addClass('active');
-                    var isActive = $(this).hasClass('active');
-                    // $('.tags-btn').removeClass('active');
-                    if (!isActive) {
-                        $('.' + tabId).addClass('active');
-                    }
-                    $('.tab-pane').removeClass('show active');
-                    $(tabPaneId).addClass('show active');
-                });
-            }
-        });
-
+        // Scroll Function for Layout 3
         if(layout == 'layout_3'){
-
             $(window).scroll(function() {
-                    var scroll = $(window).scrollTop(); // Get the vertical scroll position
+                var scroll = $(window).scrollTop(); // Get the vertical scroll position
 
-                    // Define a threshold scroll position where you want to add the class
-                    var threshold = 100; // Change this value according to your requirement
+                // Define a threshold scroll position where you want to add the class
+                var threshold = 100; // Change this value according to your requirement
 
-                    // Check if the scroll position is beyond the threshold
-                    if (scroll >= threshold) {
-                        // If scroll position is beyond the threshold, add the class to the element
-                        $('.header_inr').addClass('fix-btn');
-
-
-                    } else {
-                        // If scroll position is not beyond the threshold, remove the class from the element
-                        $('.header_inr').removeClass('fix-btn');
-                    }
+                // Check if the scroll position is beyond the threshold
+                if (scroll >= threshold) {
+                    // If scroll position is beyond the threshold, add the class to the element
+                    $('.header_inr').addClass('fix-btn');
+                } else {
+                    // If scroll position is not beyond the threshold, remove the class from the element
+                    $('.header_inr').removeClass('fix-btn');
+                }
             });
-
-
         }
-
-        $(document).ready(function () {
-            var size = $(window).width(); 
-           if(size > 768){
-                $('#par_cats').removeClass('d-none');
-                $('.child-cats').addClass('d-none');
-           }else{
-                $('#par_cats').addClass('d-none');
-                $('.child-cats').removeClass('d-none');
-           }
-        });
 
     </script>
 

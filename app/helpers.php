@@ -33,6 +33,7 @@
             'subscription_expiry_mails',
             'cart_modal_screen_layout',
             'is_client_loader',
+            'disable_menu_url',
         ]);
 
         $settings = [];
@@ -946,6 +947,30 @@
         $cat = Category::with(['categoryImages', 'items'])->where('id', $id)->first();
 
         return $cat;
+    }
+
+    function checkShopStatus($shop_id) {        
+        $users_shop = UserShop::where('shop_id', $shop_id)->first();
+        $user_id = $users_shop['user_id'] ?? "";
+        $user_details = User::where('id', $user_id)->first();
+        $is_active = $user_details['status'] ?? 0;
+        $user_subscription = UsersSubscriptions::where('user_id', $user_id)->first();
+        
+        if(isset($user_subscription['end_date']) && !empty($user_subscription['end_date'])){
+            $end_date = $user_subscription['end_date'];
+            $end_date = Carbon::now()->diffInDays($end_date, false);
+            if($end_date > 0){
+                if($is_active == 1){
+                    return 1;                     
+                }else{                    
+                    return 0;
+                }
+            }else{
+                return 0;
+            }        
+        }else{
+            return 0;
+        }
     }
 
 ?>

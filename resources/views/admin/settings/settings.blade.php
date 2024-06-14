@@ -550,6 +550,14 @@
                                     <input type="text" name="google_map_api" id="google_map_api" class="form-control" value="{{ isset($settings['google_map_api']) ? $settings['google_map_api'] : '' }}">
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <b>{{ __('Disabled Menu URL:') }}</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" name="disable_menu_url" id="disable_menu_url" class="form-control" value="{{ isset($settings['disable_menu_url']) ? $settings['disable_menu_url'] : '' }}">
+                                </div>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <button class="btn btn-success">{{ __('Update')}}</button>

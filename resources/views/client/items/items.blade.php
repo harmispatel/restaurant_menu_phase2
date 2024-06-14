@@ -125,7 +125,7 @@
                         <div id="more_details" style="display: none;">
 
                             {{-- Discount Type --}}
-                            <div class="row mb-3">
+                            <div class="row mb-3 discount-div">
                                 <div class="col-md-12">
                                     <label for="description" class="form-label">{{ __('Discount Type')}}</label>
                                     <select name="discount_type" id="discount_type" class="form-select">
@@ -136,7 +136,7 @@
                             </div>
 
                             {{-- Discount Value --}}
-                            <div class="row mb-3">
+                            <div class="row mb-3 discount-div">
                                 <div class="col-md-12">
                                     <label for="discount" class="form-label">{{ __('Discount') }}</label>
                                     <input type="number" name="discount" id="discount" value="0" class="form-control">
@@ -253,7 +253,7 @@
                             </div>
 
                              {{-- Recomendation Item --}}
-                             <div class="row mb-3">
+                             <div class="row mb-3 recomendation_items_div">
                                 <div class="col-md-12">
                                     <label for="recomendation_items" class="form-label">{{ __('Recomendation Items')}}</label>
                                     <select name="recomendation_items[]" id="recomendation_items" class="form-control" multiple>
@@ -583,156 +583,156 @@
         var addItemEditor;
         var editItemEditor;
 
-    function newItemBtn(){
-         // Reset addItemForm
-        $('#addItemForm').trigger('reset');
+        function newItemBtn(){
+            // Reset addItemForm
+            $('#addItemForm').trigger('reset');
 
-        // Remove Validation Class
-        $('#addItemForm #name').removeClass('is-invalid');
-        $('#addItemForm #category').removeClass('is-invalid');
-        $('#addItemForm #image').removeClass('is-invalid');
+            // Remove Validation Class
+            $('#addItemForm #name').removeClass('is-invalid');
+            $('#addItemForm #category').removeClass('is-invalid');
+            $('#addItemForm #image').removeClass('is-invalid');
 
-        // Clear all Toastr Messages
-        toastr.clear();
+            // Clear all Toastr Messages
+            toastr.clear();
 
-        // Intialized Ingredients SelectBox
-        $("#addItemForm #categories").select2({
-            dropdownParent: $("#addItemModal"),
-            placeholder: "Choose Categtory",
-        });
+            // Intialized Ingredients SelectBox
+            $("#addItemForm #categories").select2({
+                dropdownParent: $("#addItemModal"),
+                placeholder: "Choose Categtory",
+            });
 
-        // Intialized Ingredients SelectBox
-        $("#addItemForm #ingredients").select2({
-            dropdownParent: $("#addItemModal"),
-            placeholder: "Select Indicative Icons",
-        });
+            // Intialized Ingredients SelectBox
+            $("#addItemForm #ingredients").select2({
+                dropdownParent: $("#addItemModal"),
+                placeholder: "Select Indicative Icons",
+            });
 
-        // Intialized Recomendation Name SelectBox
-        $("#addItemForm #recomendation_items").select2({
-            dropdownParent: $("#addItemModal"),
-            placeholder: "Select Recomendation Items",
-        });
+            // Intialized Recomendation Name SelectBox
+            $("#addItemForm #recomendation_items").select2({
+                dropdownParent: $("#addItemModal"),
+                placeholder: "Select Recomendation Items",
+            });
 
-        // Intialized Options SelectBox
-        $("#addItemForm #options").select2({
-            dropdownParent: $("#addItemModal"),
-            placeholder: "Select Attributes",
-        });
+            // Intialized Options SelectBox
+            $("#addItemForm #options").select2({
+                dropdownParent: $("#addItemModal"),
+                placeholder: "Select Attributes",
+            });
 
-        // Intialized Tags SelectBox
-        $("#addItemForm #tags").select2({
-            dropdownParent: $("#addItemModal"),
-            placeholder: "Select Tags",
-            tags: true,
-            // tokenSeparators: [',', ' ']
-        });
+            // Intialized Tags SelectBox
+            $("#addItemForm #tags").select2({
+                dropdownParent: $("#addItemModal"),
+                placeholder: "Select Tags",
+                tags: true,
+                // tokenSeparators: [',', ' ']
+            });
 
-        $('.ck-editor').remove();
-        addItemEditor = "";
+            $('.ck-editor').remove();
+            addItemEditor = "";
 
-        var item_textarea = $('#addItemForm #description')[0];
+            var item_textarea = $('#addItemForm #description')[0];
 
 
-        // Text Editor
-        CKEDITOR.ClassicEditor.create(item_textarea,
-        {
-            toolbar: {
-                items: [
-                    'heading', '|',
-                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                    'bulletedList', 'numberedList', 'todoList', '|',
-                    'outdent', 'indent', '|',
-                    'undo', 'redo',
-                    '-',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-                    'alignment', '|',
-                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                    'sourceEditing'
-                ],
-                shouldNotGroupWhenFull: true
-            },
-            list: {
-                properties: {
-                    styles: true,
-                    startIndex: true,
-                    reversed: true
-                }
-            },
-            'height':500,
-            fontSize: {
-                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
-                supportAllValues: true
-            },
-            htmlSupport: {
-                allow: [
-                    {
-                        name: /.*/,
-                        attributes: true,
-                        classes: true,
-                        styles: true
+            // Text Editor
+            CKEDITOR.ClassicEditor.create(item_textarea,
+            {
+                toolbar: {
+                    items: [
+                        'heading', '|',
+                        'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                        'bulletedList', 'numberedList', 'todoList', '|',
+                        'outdent', 'indent', '|',
+                        'undo', 'redo',
+                        '-',
+                        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                        'alignment', '|',
+                        'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                        'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                        'sourceEditing'
+                    ],
+                    shouldNotGroupWhenFull: true
+                },
+                list: {
+                    properties: {
+                        styles: true,
+                        startIndex: true,
+                        reversed: true
                     }
-                ]
-            },
-            htmlEmbed: {
-                showPreviews: true
-            },
-            link: {
-                decorators: {
-                    addTargetToExternalLinks: true,
-                    defaultProtocol: 'https://',
-                    toggleDownloadable: {
-                        mode: 'manual',
-                        label: 'Downloadable',
-                        attributes: {
-                            download: 'file'
+                },
+                'height':500,
+                fontSize: {
+                    options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                    supportAllValues: true
+                },
+                htmlSupport: {
+                    allow: [
+                        {
+                            name: /.*/,
+                            attributes: true,
+                            classes: true,
+                            styles: true
+                        }
+                    ]
+                },
+                htmlEmbed: {
+                    showPreviews: true
+                },
+                link: {
+                    decorators: {
+                        addTargetToExternalLinks: true,
+                        defaultProtocol: 'https://',
+                        toggleDownloadable: {
+                            mode: 'manual',
+                            label: 'Downloadable',
+                            attributes: {
+                                download: 'file'
+                            }
                         }
                     }
-                }
-            },
-            mention: {
-                feeds: [
-                    {
-                        marker: '@',
-                        feed: [
-                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
-                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
-                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
-                            '@sugar', '@sweet', '@topping', '@wafer'
-                        ],
-                        minimumCharacters: 1
-                    }
+                },
+                mention: {
+                    feeds: [
+                        {
+                            marker: '@',
+                            feed: [
+                                '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                '@sugar', '@sweet', '@topping', '@wafer'
+                            ],
+                            minimumCharacters: 1
+                        }
+                    ]
+                },
+                removePlugins: [
+                    'CKBox',
+                    'CKFinder',
+                    'EasyImage',
+                    'RealTimeCollaborativeComments',
+                    'RealTimeCollaborativeTrackChanges',
+                    'RealTimeCollaborativeRevisionHistory',
+                    'PresenceList',
+                    'Comments',
+                    'TrackChanges',
+                    'TrackChangesData',
+                    'RevisionHistory',
+                    'Pagination',
+                    'WProofreader',
+                    'MathType'
                 ]
-            },
-            removePlugins: [
-                'CKBox',
-                'CKFinder',
-                'EasyImage',
-                'RealTimeCollaborativeComments',
-                'RealTimeCollaborativeTrackChanges',
-                'RealTimeCollaborativeRevisionHistory',
-                'PresenceList',
-                'Comments',
-                'TrackChanges',
-                'TrackChangesData',
-                'RevisionHistory',
-                'Pagination',
-                'WProofreader',
-                'MathType'
-            ]
-        }).then( editor => {
-            addItemEditor = editor;
-        });
+            }).then( editor => {
+                addItemEditor = editor;
+            });
 
-        if(cropper)
-        {
-            cancelCropper('addItemForm');
+            if(cropper)
+            {
+                cancelCropper('addItemForm');
+            }
+            if(cropperDetail)
+            {
+                cancelDetailCropper('addItemForm');
+            }
         }
-        if(cropperDetail)
-        {
-            cancelDetailCropper('addItemForm');
-        }
-    }
 
         // Reset AddItem Modal & Form
         $('#NewItemBtn').on('click',function()
@@ -1284,7 +1284,8 @@
                             $('#editItemModal .delivery').hide();
                             $('#editItemModal .crop_size').show();
                             $('#editItemModal .image-detail').hide();
-
+                            $('#editItemModal .discount-div').hide();
+                            $('#editItemModal .recomendation_items_div').hide();
                         }
                         else
                         {
@@ -1297,8 +1298,8 @@
                             $('#editItemModal .delivery').show();
                             $('#editItemModal .crop_size').hide();
                             $('#editItemModal .image-detail').show();
-
-
+                            $('#editItemModal .discount-div').show();
+                            $('#editItemModal .recomendation_items_div').show();
                         }
 
                         var categoriesEle = "#editItemModal #categories";
@@ -1483,7 +1484,8 @@
                             $('#editItemModal .delivery').hide();
                             $('#editItemModal .crop_size').show();
                             $('#editItemModal .image-detail').hide();
-
+                            $('#editItemModal .discount-div').hide();
+                            $('#editItemModal .recomendation_items_div').hide();
                         }
                         else
                         {
@@ -1496,8 +1498,8 @@
                             $('#editItemModal .delivery').show();
                             $('#editItemModal .crop_size').hide();
                             $('#editItemModal .image-detail').show();
-
-
+                            $('#editItemModal .discount-div').show();
+                            $('#editItemModal .recomendation_items_div').show();
                         }
 
                         var categoriesEle = "#editItemModal #categories";
@@ -1719,6 +1721,8 @@
                 $("#"+ModalName+" .delivery").hide();
                 $("#"+ModalName+" .crop_size").show();
                 $("#"+ModalName+" .image-detail").hide();
+                $("#"+ModalName+" .discount-div").hide();
+                $("#"+ModalName+" .recomendation_items_div").hide();
             }
             else
             {
@@ -1731,7 +1735,8 @@
                 $("#"+ModalName+" .delivery").show();
                 $("#"+ModalName+" .crop_size").show();
                 $("#"+ModalName+" .image-detail").show();
-
+                $("#"+ModalName+" .discount-div").show();
+                $("#"+ModalName+" .recomendation_items_div").show();
             }
         }
 
@@ -2300,84 +2305,82 @@
             }
         }
 
+        // Save Cropper Image for Image Detail
+        function saveDetailCropper(formID) {
 
+                var item_type = $('#' + formID + " #type").val();
 
-            // Save Cropper Image for Image Detail
-            function saveDetailCropper(formID) {
-
-                    var item_type = $('#' + formID + " #type").val();
-
-                    var canvas = cropperDetail.getCroppedCanvas({
-                        width: 700,
-                        height: 400 // Adjust dimensions as needed
-                    });
-
-                canvas.toBlob(function(blob) {
-                    $('#' + formID + " #crp-img-detail-prw").attr('src', URL.createObjectURL(blob));
-                    var reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = function() {
-                        var base64data = reader.result;
-                        $('#' + formID + ' #og_image_detail').val(base64data);
-                    };
+                var canvas = cropperDetail.getCroppedCanvas({
+                    width: 700,
+                    height: 400 // Adjust dimensions as needed
                 });
 
-                cropperDetail.destroy();
-                $('#' + formID + ' #resize-image-detail').attr('src', "");
-                $('#' + formID + ' .img-detail-crop-sec').hide();
+            canvas.toBlob(function(blob) {
+                $('#' + formID + " #crp-img-detail-prw").attr('src', URL.createObjectURL(blob));
+                var reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = function() {
+                    var base64data = reader.result;
+                    $('#' + formID + ' #og_image_detail').val(base64data);
+                };
+            });
 
-                    if(formID == 'addItemForm')
-                    {
-                        $('#'+formID+" #img-detail-label").append('<a class="btn btn-sm btn-danger" id="del-img-detail" style="border-radius:50%" onclick="deleteDetailCropper(\''+formID+'\')"><i class="fa fa-trash"></i></a>');
-                    }
-                    else
-                    {
-                        $('#'+formID+' #edit-img-detail').hide();
-                        $('#'+formID+" #img-detail-label").append('<a class="btn btn-sm btn-danger" id="del-img-detail" style="border-radius:50%" onclick="deleteDetailCropper(\''+formID+'\')"><i class="fa fa-trash"></i></a>');
-                        $('#'+formID+' #rep-image-detail').show();
-                    }
-
-            }
-
-            function resetDetailCropper(){
-                cropperDetail.reset();
-            }
-
-            // Cancel Cropper for Image Detail
-            function cancelDetailCropper(formID) {
-                cropperDetail.destroy();
-                $('#' + formID + ' #resize-image-detail').attr('src', "");
-                $('#' + formID + ' .img-detail-crop-sec').hide();
-                $('#' + formID + ' #image_detail').val('');
-                $('#' + formID + ' #og_image_detail').val('');
-            }
-
-            // Delete Cropper for Image Detail
-            function deleteDetailCropper(formID) {
-                if (cropperDetail) {
-
-                    cropperDetail.destroy();
-
-                }
-
-                $('#'+formID+' #resize-image-detail').attr('src',"");
-                $('#'+formID+' .img-detail-crop-sec').hide();
-                $('#'+formID+' #og_image_detail').val('');
-                $('#'+formID+" #del-img-detail").remove();
+            cropperDetail.destroy();
+            $('#' + formID + ' #resize-image-detail').attr('src', "");
+            $('#' + formID + ' .img-detail-crop-sec').hide();
 
                 if(formID == 'addItemForm')
                 {
-                    $('#'+formID+' #image_detail').val('');
-                    $('#'+formID+" #crp-img-det-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+                    $('#'+formID+" #img-detail-label").append('<a class="btn btn-sm btn-danger" id="del-img-detail" style="border-radius:50%" onclick="deleteDetailCropper(\''+formID+'\')"><i class="fa fa-trash"></i></a>');
                 }
                 else
                 {
-                    $('#'+formID+' #image_detail').val('');
-                    $('#'+formID+" #crp-img-det-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
-                    $('#'+formID+' #edit-img-detail').show();
-                    $('#'+formID+' #rep-image-detail').hide();
+                    $('#'+formID+' #edit-img-detail').hide();
+                    $('#'+formID+" #img-detail-label").append('<a class="btn btn-sm btn-danger" id="del-img-detail" style="border-radius:50%" onclick="deleteDetailCropper(\''+formID+'\')"><i class="fa fa-trash"></i></a>');
+                    $('#'+formID+' #rep-image-detail').show();
                 }
+
+        }
+
+        function resetDetailCropper(){
+            cropperDetail.reset();
+        }
+
+        // Cancel Cropper for Image Detail
+        function cancelDetailCropper(formID) {
+            cropperDetail.destroy();
+            $('#' + formID + ' #resize-image-detail').attr('src', "");
+            $('#' + formID + ' .img-detail-crop-sec').hide();
+            $('#' + formID + ' #image_detail').val('');
+            $('#' + formID + ' #og_image_detail').val('');
+        }
+
+        // Delete Cropper for Image Detail
+        function deleteDetailCropper(formID) {
+            if (cropperDetail) {
+
+                cropperDetail.destroy();
+
             }
+
+            $('#'+formID+' #resize-image-detail').attr('src',"");
+            $('#'+formID+' .img-detail-crop-sec').hide();
+            $('#'+formID+' #og_image_detail').val('');
+            $('#'+formID+" #del-img-detail").remove();
+
+            if(formID == 'addItemForm')
+            {
+                $('#'+formID+' #image_detail').val('');
+                $('#'+formID+" #crp-img-det-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+            }
+            else
+            {
+                $('#'+formID+' #image_detail').val('');
+                $('#'+formID+" #crp-img-det-prw").attr('src',"{{ asset('public/client_images/not-found/no_image_1.jpg') }}");
+                $('#'+formID+' #edit-img-detail').show();
+                $('#'+formID+' #rep-image-detail').hide();
+            }
+        }
 
 
 

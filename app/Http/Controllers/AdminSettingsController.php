@@ -36,6 +36,7 @@ class AdminSettingsController extends Controller
             'subscription_expiry_mails',
             'cart_modal_screen_layout',
             'is_client_loader',
+            'disable_menu_url',
         ]);
 
         $settings = [];
@@ -81,6 +82,7 @@ class AdminSettingsController extends Controller
         $explode_subscription_expiry_mails = explode(',',str_replace(' ','',$request->subscription_expiry_mails));
 
         $all_data['favourite_client_limit'] = $request->favourite_client_limit;
+        $all_data['disable_menu_url'] = $request->disable_menu_url;
         $all_data['copyright_text'] = $request->copyright_text;
         $all_data['contact_us_email'] = serialize($explode_contact_us_email);
         $all_data['google_map_api'] = $request->google_map_api;

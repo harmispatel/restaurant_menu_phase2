@@ -723,8 +723,8 @@ class ItemsController extends Controller
                             $html .= '<div class="row" id="more_details" style="display: none;">';
 
                                 // Discount Type
-                                $html .= '<div class="col-md-12 mb-3">';
-                                    $html .= '<label class="form-label" for="item_description">'.__('Discount Type').'</label>';
+                                $html .= '<div class="col-md-12 mb-3 discount-div">';
+                                    $html .= '<label class="form-label" for="discount_type">'.__('Discount Type').'</label>';
                                     $html .= '<select name="discount_type" id="discount_type" class="form-control">';
                                         $html .= '<option value="percentage" ';
                                             if($item['discount_type'] == 'percentage')
@@ -742,7 +742,7 @@ class ItemsController extends Controller
                                 $html .= '</div>';
 
                                 // Discount
-                                $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<div class="col-md-12 mb-3 discount-div">';
                                     $html .= '<label class="form-label" for="item_description">'.__('Discount').'</label>';
                                     $html .= '<input type="number" name="discount" id="discount" class="form-control" value="'.$discount.'">';
                                 $html .= '</div>';
@@ -901,7 +901,7 @@ class ItemsController extends Controller
                                 $html .= '</div>';
 
                                 //Recommended Items
-                                $html .='<div class="col-md-12 mb-3">';
+                                $html .='<div class="col-md-12 mb-3 recomendation_items_div">';
                                     $html .= '<label class="form-label" for="recomendation_items">'.__('Recommended Items').'</label>';
                                     $html .= '<select name="recomendation_items[]" id="recomendation_items" class="form-select" multiple>';
                                         if(count($recomendation_items) > 0)
@@ -1167,7 +1167,7 @@ class ItemsController extends Controller
                             $html .= '<div class="row" id="more_details" style="display: none;">';
 
                                 // Discount Type
-                                $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<div class="col-md-12 mb-3 discount-div">';
                                     $html .= '<label class="form-label" for="item_description">'.__('Discount Type').'</label>';
                                     $html .= '<select name="discount_type" id="discount_type" class="form-control">';
                                         $html .= '<option value="percentage" ';
@@ -1186,7 +1186,7 @@ class ItemsController extends Controller
                                 $html .= '</div>';
 
                                 // Discount
-                                $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<div class="col-md-12 mb-3 discount-div">';
                                     $html .= '<label class="form-label" for="item_description">'.__('Discount').'</label>';
                                     $html .= '<input type="number" name="discount" id="discount" class="form-control" value="'.$discount.'">';
                                 $html .= '</div>';
@@ -1347,7 +1347,7 @@ class ItemsController extends Controller
                                 $html .= '</div>';
 
                                 //Recommended Items
-                                $html .='<div class="col-md-12 mb-3">';
+                                $html .='<div class="col-md-12 mb-3 recomendation_items_div">';
                                     $html .= '<label class="form-label" for="recomendation_items">'.__('Recommended Items').'</label>';
                                     $html .= '<select name="recomendation_items[]" id="recomendation_items" class="form-select" multiple>';
                                         if(count($recomendation_items) > 0)
@@ -2194,7 +2194,7 @@ class ItemsController extends Controller
                         $html .= '<div class="row" id="more_details" style="display: none;">';
 
                             // Discount Type
-                            $html .= '<div class="col-md-12 mb-3">';
+                            $html .= '<div class="col-md-12 mb-3 discount-div">';
                                 $html .= '<label class="form-label" for="item_description">'.__('Discount Type').'</label>';
                                 $html .= '<select name="discount_type" id="discount_type" class="form-control">';
                                     $html .= '<option value="percentage" ';
@@ -2213,7 +2213,7 @@ class ItemsController extends Controller
                             $html .= '</div>';
 
                             // Discount
-                            $html .= '<div class="col-md-12 mb-3">';
+                            $html .= '<div class="col-md-12 mb-3 discount-div">';
                                 $html .= '<label class="form-label" for="item_description">'.__('Discount').'</label>';
                                 $html .= '<input type="number" name="discount" id="discount" class="form-control" value="'.$discount.'">';
                             $html .= '</div>';
@@ -2372,7 +2372,7 @@ class ItemsController extends Controller
                             $html .= '</div>';
 
                             //Recommended Items
-                            $html .='<div class="col-md-12 mb-3">';
+                            $html .='<div class="col-md-12 mb-3 recomendation_items_div">';
                             $html .= '<label class="form-label" for="recomendation_items">'.__('Recommended Items').'</label>';
                             $html .= '<select name="recomendation_items[]" id="recomendation_items" class="form-select" multiple>';
                                 if(count($recomendation_items) > 0)
@@ -2636,7 +2636,7 @@ class ItemsController extends Controller
                         $html .= '<div class="row" id="more_details" style="display: none;">';
 
                             // Discount Type
-                            $html .= '<div class="col-md-12 mb-3">';
+                            $html .= '<div class="col-md-12 mb-3 discount-div">';
                                 $html .= '<label class="form-label" for="item_description">'.__('Discount Type').'</label>';
                                 $html .= '<select name="discount_type" id="discount_type" class="form-control">';
                                     $html .= '<option value="percentage" ';
@@ -2655,7 +2655,7 @@ class ItemsController extends Controller
                             $html .= '</div>';
 
                             // Discount
-                            $html .= '<div class="col-md-12 mb-3">';
+                            $html .= '<div class="col-md-12 mb-3 discount-div">';
                                 $html .= '<label class="form-label" for="item_description">'.__('Discount').'</label>';
                                 $html .= '<input type="number" name="discount" id="discount" class="form-control" value="'.$discount.'">';
                             $html .= '</div>';
@@ -2815,7 +2815,7 @@ class ItemsController extends Controller
                             $html .= '</div>';
 
                             //Recommended Items
-                            $html .='<div class="col-md-12 mb-3">';
+                            $html .='<div class="col-md-12 mb-3 recomendation_items_div">';
                             $html .= '<label class="form-label" for="recomendation_items">'.__('Recommended Items').'</label>';
                             $html .= '<select name="recomendation_items[]" id="recomendation_items" class="form-select" multiple>';
                                 if(count($recomendation_items) > 0)

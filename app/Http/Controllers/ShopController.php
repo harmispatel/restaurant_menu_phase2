@@ -27,6 +27,13 @@ class ShopController extends Controller
 
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
 
+        $isShopActive = checkShopStatus($shop_id);
+        $admin_settings = getAdminSettings();
+        $disable_menu_url = (isset($admin_settings['disable_menu_url']) && !empty($admin_settings['disable_menu_url'])) ? $admin_settings['disable_menu_url'] : "https://www.thesmartqr.gr/";
+
+        if($isShopActive == 0){
+            return redirect($disable_menu_url);
+        }
 
         if (empty($shop_id)) {
             return redirect()->route('home')->with('error', 'This Action is Unauthorized!');
@@ -104,7 +111,6 @@ class ShopController extends Controller
     // function for shop's Items Preview
     public function itemPreview($shop_slug, $cat_id)
     {
-
         $current_date = Carbon::now()->format('Y-m-d');
 
         // Shop Details
@@ -112,6 +118,14 @@ class ShopController extends Controller
 
         // Shop ID
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
+
+        $isShopActive = checkShopStatus($shop_id);
+        $admin_settings = getAdminSettings();
+        $disable_menu_url = (isset($admin_settings['disable_menu_url']) && !empty($admin_settings['disable_menu_url'])) ? $admin_settings['disable_menu_url'] : "https://www.thesmartqr.gr/";
+
+        if($isShopActive == 0){
+            return redirect($disable_menu_url);
+        }
 
         // Shop Settings
         $shop_settings = getClientSettings($shop_id);
@@ -823,13 +837,15 @@ class ShopController extends Controller
                                             $html .= '</div>';
                                         }
 
-                                        $html .= '<div class="item_image">';
-                                            $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
-                                                $html .= '<i class="fa-solid fa-star"></i>';
-                                                $html .= '<i class="fa-solid fa-star"></i>';
-                                                $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '</a>';
-                                        $html .= '</div>';
+                                        if($item['review'] == 1){
+                                            $html .= '<div class="item_image">';
+                                                $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
+                                                    $html .= '<i class="fa-solid fa-star"></i>';
+                                                    $html .= '<i class="fa-solid fa-star"></i>';
+                                                    $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '</a>';
+                                            $html .= '</div>';
+                                        }
 
                                         if (!empty($item_calories)) {
                                             $html .= '<p class="m-0 p-0 mt-3"><strong>Cal: ' . $item_calories . '</strong></p>';
@@ -1009,10 +1025,13 @@ class ShopController extends Controller
                                                                     $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
                                                                     $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
                                                                 }
-                                                                $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
-                                                                class="fa-solid fa-star"></i> <i
-                                                                class="fa-solid fa-star"></i> <i
-                                                                class="fa-solid fa-star"></i></a>';
+
+                                                                if($item['review'] == 1){
+                                                                    $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
+                                                                    class="fa-solid fa-star"></i> <i
+                                                                    class="fa-solid fa-star"></i> <i
+                                                                    class="fa-solid fa-star"></i></a>';
+                                                                }       
 
                                                             $html .='</div>';
                                                         $html .='</div>';
@@ -1167,11 +1186,14 @@ class ShopController extends Controller
                                                 </div>';
                                         $html .= '<img src="' . $item_image . '" class="w-100">';
                                         $html .= '</div>';
-                                        $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                        $html .= '</a>';
+
+                                        if($item['review'] == 1){
+                                            $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                            $html .= '</a>';
+                                        }
                                         $html .='</div>';
                                     }
                                     $html .= '</div>';
@@ -1389,13 +1411,15 @@ class ShopController extends Controller
                                         $html .= '</div>';
                                     }
 
-                                    $html .= '<div class="item_image">';
-                                        $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                        $html .= '</a>';
-                                    $html .= '</div>';
+                                    if($item['review'] == 1){
+                                        $html .= '<div class="item_image">';
+                                            $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                            $html .= '</a>';
+                                        $html .= '</div>';
+                                    }
 
                                     if (!empty($item_calories)) {
                                         $html .= '<p class="m-0 p-0 mt-3"><strong>Cal: </strong>' . $item_calories . '</p>';
@@ -1578,10 +1602,13 @@ class ShopController extends Controller
                                                                     $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
                                                                     $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
                                                                 }
-                                                                $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
-                                                                class="fa-solid fa-star"></i> <i
-                                                                class="fa-solid fa-star"></i> <i
-                                                                class="fa-solid fa-star"></i></a>';
+
+                                                                if($item['review'] == 1){
+                                                                    $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
+                                                                    class="fa-solid fa-star"></i> <i
+                                                                    class="fa-solid fa-star"></i> <i
+                                                                    class="fa-solid fa-star"></i></a>';
+                                                                }
 
                                                             $html .='</div>';
                                                         $html .='</div>';
@@ -1739,11 +1766,14 @@ class ShopController extends Controller
                                                 </div>';
                                         $html .= '<img src="' . $item_image . '" class="w-100">';
                                         $html .= '</div>';
+
+                                        if($item['review'] == 1){
                                             $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
                                                 $html .= '<i class="fa-solid fa-star"></i>';
                                                 $html .= '<i class="fa-solid fa-star"></i>';
                                                 $html .= '<i class="fa-solid fa-star"></i>';
                                             $html .= '</a>';
+                                        }
                                         $html .='</div>';
                                     }
 
@@ -1865,13 +1895,15 @@ class ShopController extends Controller
                                     $html .= '</div>';
                                 }
 
-                                $html .= '<div class="item_image">';
-                                    $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
-                                        $html .= '<i class="fa-solid fa-star"></i>';
-                                        $html .= '<i class="fa-solid fa-star"></i>';
-                                        $html .= '<i class="fa-solid fa-star"></i>';
-                                    $html .= '</a>';
-                                $html .= '</div>';
+                                if($item['review'] == 1){
+                                    $html .= '<div class="item_image">';
+                                        $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
+                                            $html .= '<i class="fa-solid fa-star"></i>';
+                                            $html .= '<i class="fa-solid fa-star"></i>';
+                                            $html .= '<i class="fa-solid fa-star"></i>';
+                                        $html .= '</a>';
+                                    $html .= '</div>';
+                                }
 
                                 if (!empty($item_calories)) {
                                     $html .= '<p class="m-0 p-0 mt-3"><strong>Cal: </strong>' . $item_calories . '</p>';
@@ -2055,10 +2087,13 @@ class ShopController extends Controller
                                                                     $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
                                                                     $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
                                                                 }
-                                                                $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
-                                                                class="fa-solid fa-star"></i> <i
-                                                                class="fa-solid fa-star"></i> <i
-                                                                class="fa-solid fa-star"></i></a>';
+
+                                                                if($item['review'] == 1){
+                                                                    $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
+                                                                    class="fa-solid fa-star"></i> <i
+                                                                    class="fa-solid fa-star"></i> <i
+                                                                    class="fa-solid fa-star"></i></a>';
+                                                                }
 
                                                             $html .='</div>';
                                                         $html .='</div>';
@@ -2203,11 +2238,14 @@ class ShopController extends Controller
                                         $html .= '<div class="menu_item_image">';
                                         $html .= '<img src="' . $item_image . '" class="w-100">';
                                         $html .= '</div>';
-                                        $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                            $html .= '<i class="fa-solid fa-star"></i>';
-                                        $html .= '</a>';
+
+                                        if($item['review'] == 1){
+                                            $html .= '<a  class="review_btn" onclick="openRatingModel('.$item['id'].')">';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                                $html .= '<i class="fa-solid fa-star"></i>';
+                                            $html .= '</a>';
+                                        }
                                     $html .= '</div>';
                                 }
 
@@ -3661,6 +3699,14 @@ class ShopController extends Controller
         // Shop ID
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
 
+        $isShopActive = checkShopStatus($shop_id);
+        $admin_settings = getAdminSettings();
+        $disable_menu_url = (isset($admin_settings['disable_menu_url']) && !empty($admin_settings['disable_menu_url'])) ? $admin_settings['disable_menu_url'] : "https://www.thesmartqr.gr/";
+
+        if($isShopActive == 0){
+            return redirect($disable_menu_url);
+        }
+
         // Order Settings
         $order_settings = getOrderSettings($shop_id);
 
@@ -3757,6 +3803,14 @@ class ShopController extends Controller
 
         // Shop ID
         $shop_id = isset($data['shop_details']->id) ? $data['shop_details']->id : '';
+
+        $isShopActive = checkShopStatus($shop_id);
+        $admin_settings = getAdminSettings();
+        $disable_menu_url = (isset($admin_settings['disable_menu_url']) && !empty($admin_settings['disable_menu_url'])) ? $admin_settings['disable_menu_url'] : "https://www.thesmartqr.gr/";
+
+        if($isShopActive == 0){
+            return redirect($disable_menu_url);
+        }
 
         // Get Subscription ID
         $subscription_id = getClientSubscriptionID($shop_id);
