@@ -2542,20 +2542,20 @@
                                                         class="fa-solid fa-circle-chevron-left me-2"></i>
                                                     <span>{{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}</span>
                                                     @php
-                                                    $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
+                                                        $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
                                                     @endphp
                                                     @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
-                                                @endif
+                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
+                                                    @endif
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="d-none search_input_inner">
-                                                            <input type="text" class="form-control search_layout" name="search" id="search_layout" placeholder="Search Items">
-                                                            <button class="btn btn-secondary src_btn_inner"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                            <button class="btn btn-danger clr_btn_inner"><i class="fa-solid fa-x"></i></button>
-                                                </div>
+                                                <input type="text" class="form-control search_layout" name="search" id="search_layout" placeholder="Search Items">
+                                                <button class="btn btn-secondary src_btn_inner"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                                <button class="btn btn-danger clr_btn_inner"><i class="fa-solid fa-x"></i></button>
+                                            </div>
                                         </div>
                                         <div class="col-md-3"></div>
 
@@ -2563,9 +2563,7 @@
                                         <div class="category_title">
                                             <div class="category_title_img img-devider">
                                                 @if (!empty($all_items[0]['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']))
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']) }}" class="w-100">
-                                                @else
-                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']) }}" class="w-100">                                               
                                                 @endif
                                             </div>
                                             <div class="category_title_name">

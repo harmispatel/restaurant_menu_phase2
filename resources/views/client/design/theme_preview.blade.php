@@ -478,6 +478,46 @@
                                                                 </div>
                                                             </div>
 
+                                                            {{-- Category View --}}
+                                                            <div class="row align-item-center mb-4" id="category-view">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('Category View') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <select name="category_view" id="category_view" class="form-select" onchange="categoryLayout();">
+                                                                        <option value="grid" {{ isset($settings['category_view']) && $settings['category_view'] == 'grid' ? 'selected' : '' }}>Grid</option>
+                                                                        <option value="tiles" {{ isset($settings['category_view']) && $settings['category_view'] == 'tiles' ? 'selected' : '' }}>Tiles</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div> 
+
+                                                            {{-- Category View Position --}}
+                                                            <div class="row align-items-center mb-4" id="category-side">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('Category Side') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="form-group">
+                                                                        <select name="category_side" id="category_side"
+                                                                            class="form-control">
+                                                                            <option value="left"
+                                                                                {{ isset($settings['category_side']) && $settings['category_side'] == 'left' ? 'selected' : '' }}>
+                                                                                Left</option>
+                                                                            <option value="right"
+                                                                                {{ isset($settings['category_side']) && $settings['category_side'] == 'right' ? 'selected' : '' }}>
+                                                                                Right</option>
+                                                                            <option value="alternatively_even"
+                                                                                {{ isset($settings['category_side']) && $settings['category_side'] == 'alternatively_even' ? 'selected' : '' }}>
+                                                                                Alternatively Even</option>
+                                                                            <option value="alternatively_odd"
+                                                                                {{ isset($settings['category_side']) && $settings['category_side'] == 'alternatively_odd' ? 'selected' : '' }}>
+                                                                                Alternatively Odd</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
                                                             {{-- Categories Effect --}}
                                                             <div class="row align-items-center mb-4" id="category_image_slider">
                                                                 <div class="col-md-7">
@@ -656,45 +696,6 @@
                                                                 </div>
                                                             </div>
 
-
-                                                            <div class="row align-item-center mb-4" id="category-view">
-                                                                <div class="col-md-7">
-                                                                    <span>{{ __('Category View') }}</span>
-                                                                </div>
-                                                                <div class="col-md-5">
-                                                                    <select name="category_view" id="category_view" class="form-select" onchange="categoryLayout();">
-                                                                        <option value="grid" {{ isset($settings['category_view']) && $settings['category_view'] == 'grid' ? 'selected' : '' }}>Grid</option>
-                                                                        <option value="tiles" {{ isset($settings['category_view']) && $settings['category_view'] == 'tiles' ? 'selected' : '' }}>Tiles</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                                                                                                                                                                                                   
-                                                            <div class="row align-items-center mb-4" id="category-side">
-                                                                <div class="col-md-7">
-                                                                    <span>{{ __('Category Side') }}</span>
-                                                                </div>
-                                                                <div class="col-md-5">
-                                                                    <div class="form-group">
-                                                                        <select name="category_side" id="category_side"
-                                                                            class="form-control">
-                                                                            <option value="left"
-                                                                                {{ isset($settings['category_side']) && $settings['category_side'] == 'left' ? 'selected' : '' }}>
-                                                                                Left</option>
-                                                                            <option value="right"
-                                                                                {{ isset($settings['category_side']) && $settings['category_side'] == 'right' ? 'selected' : '' }}>
-                                                                                Right</option>
-                                                                            <option value="alternatively_even"
-                                                                                {{ $settings['category_side'] == 'alternatively_even' ? 'selected' : '' }}>
-                                                                                Alternatively Even</option>
-                                                                            <option value="alternatively_odd"
-                                                                                {{ $settings['category_side'] == 'alternatively_odd' ? 'selected' : '' }}>
-                                                                                Alternatively Odd</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                            
                                                         </div>
                                                     </div>
                                                     <div class="col-md-5">
@@ -735,13 +736,187 @@
                                                     <div class="col-md-7">
                                                         <div class="main_theme_color">
 
+                                                            {{-- PC Category Box Title & Icon Color for Layout 3 --}}
+                                                            <div class="row align-items-center mb-4" id="category-box-title-icon-color">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('PC Category Box Title & Icon') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="category_box_title_icon_color"
+                                                                            name="category_box_title_icon_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['category_box_title_icon_color']) ? $settings['category_box_title_icon_color'] : '' }}"
+                                                                            onchange="changeVal('category_box_title_icon_color','category_box_title_icon_color_input')">
+                                                                        <input id="category_box_title_icon_color_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['category_box_title_icon_color']) ? $settings['category_box_title_icon_color'] : '' }}"
+                                                                            onkeyup="changeColor('category_box_title_icon_color_input','category_box_title_icon_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- PC Category Box Title Background Color for Layout 3 --}}
+                                                            <div class="row align-items-center mb-4" id="category-box-title-background">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('PC Category Box Title BG') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="category_box_title_background"
+                                                                            name="category_box_title_background"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['category_box_title_background']) ? $settings['category_box_title_background'] : '' }}"
+                                                                            onchange="changeVal('category_box_title_background','category_box_title_background_input')">
+                                                                        <input id="category_box_title_background_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['category_box_title_background']) ? $settings['category_box_title_background'] : '' }}"
+                                                                            onkeyup="changeColor('category_box_title_background_input','category_box_title_background')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- PC Category Box Text Color for Layout 3 --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="category-box-text-color">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('PC Category Box Text') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="category_box_text_color"
+                                                                            name="category_box_text_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['category_box_text_color']) ? $settings['category_box_text_color'] : '' }}"
+                                                                            onchange="changeVal('category_box_text_color','category_box_text_color_input')">
+                                                                        <input id="category_box_text_color_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['category_box_text_color']) ? $settings['category_box_text_color'] : '' }}"
+                                                                            onkeyup="changeColor('category_box_text_color_input','category_box_text_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            {{-- PC Category Box Background Color for Layout 3 --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="category-box-background">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('PC Category Box BG') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="category_box_background"
+                                                                            name="category_box_background"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['category_box_background']) ? $settings['category_box_background'] : '' }}"
+                                                                            onchange="changeVal('category_box_background','category_box_background_input')">
+                                                                        <input id="category_box_background_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['category_box_background']) ? $settings['category_box_background'] : '' }}"
+                                                                            onkeyup="changeColor('category_box_background_input','category_box_background')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- PC Category Box Shadow Color for Layout 3 --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="category-box-shadow">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('PC Category Box Shadow') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="category_box_shadow"
+                                                                            name="category_box_shadow"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['category_box_shadow']) ? $settings['category_box_shadow'] : '' }}"
+                                                                            onchange="changeVal('category_box_shadow','category_box_shadow_input')">
+                                                                        <input id="category_box_shadow_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['category_box_shadow']) ? $settings['category_box_shadow'] : '' }}"
+                                                                            onkeyup="changeColor('category_box_shadow_input','category_box_shadow')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- Active Category Background Color for Layout 3 --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="category-box-act-txt-bg">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('Active Category BG') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="category_box_act_txt_bg"
+                                                                            name="category_box_act_txt_bg"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['category_box_act_txt_bg']) ? $settings['category_box_act_txt_bg'] : '' }}"
+                                                                            onchange="changeVal('category_box_act_txt_bg','category_box_act_txt_bg_input')">
+                                                                        <input id="category_box_act_txt_bg_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['category_box_act_txt_bg']) ? $settings['category_box_act_txt_bg'] : '' }}"
+                                                                            onkeyup="changeColor('category_box_act_txt_bg_input','category_box_act_txt_bg')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- Back Button Icon Color --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="back-arrow-icon-color">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('"Back" Button Icon') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="back_arrow_icon_color"
+                                                                            name="back_arrow_icon_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['back_arrow_icon_color']) ? $settings['back_arrow_icon_color'] : '' }}"
+                                                                            onchange="changeVal('back_arrow_icon_color','back_arrow_icon_color_input')">
+                                                                        <input id="back_arrow_icon_color_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['back_arrow_icon_color']) ? $settings['back_arrow_icon_color'] : '' }}"
+                                                                            onkeyup="changeColor('back_arrow_icon_color_input','back_arrow_icon_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- Back Button Background Color --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="back-arrow-bg-color">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('"Back" Button BG') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="back_arrow_bg_color"
+                                                                            name="back_arrow_bg_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['back_arrow_bg_color']) ? $settings['back_arrow_bg_color'] : '' }}"
+                                                                            onchange="changeVal('back_arrow_bg_color','back_arrow_bg_color_input')">
+                                                                        <input id="back_arrow_bg_color_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['back_arrow_bg_color']) ? $settings['back_arrow_bg_color'] : '' }}"
+                                                                            onkeyup="changeColor('back_arrow_bg_color_input','back_arrow_bg_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>   
+
                                                             {{-- Category Bar Style --}}
                                                             <div class="row align-item-center mb-4"
                                                                 id="category-slider-effect">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Categories Search Style') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <select name="category_slider_effect"
                                                                             id="category_slider_effect"
@@ -767,13 +942,99 @@
                                                                 </div>
                                                             </div>
 
+                                                            {{-- Header Effect Background Color for Layout 2 --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="header-effect-bg-color">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('Header Effect Background Color') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="header_effect_bg_color"
+                                                                            name="header_effect_bg_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['header_effect_bg_color']) ? $settings['header_effect_bg_color'] : '' }}"
+                                                                            onchange="changeVal('header_effect_bg_color','header_effect_bg_color_input')">
+                                                                        <input id="header_effect_bg_color_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['header_effect_bg_color']) ? $settings['header_effect_bg_color'] : '' }}"
+                                                                            onkeyup="changeColor('header_effect_bg_color_input','header_effect_bg_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- Header Effect Background Color Opacity for Layout 2 --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="header-bg-color-opc">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('Header Background Color Opacity') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="range"
+                                                                            id="header_bg_color_opc" min="0"
+                                                                            max="1" step="0.1"
+                                                                            value="{{ isset($settings['header_bg_color_opc']) && !empty($settings['header_bg_color_opc']) ? $settings['header_bg_color_opc'] : 1 }}"
+                                                                            name="header_bg_color_opc">
+                                                                        <output class="ms-1"
+                                                                            for="header_bg_color_opc"
+                                                                            id="header-opacity">{{ isset($settings['header_bg_color_opc']) && !empty($settings['header_bg_color_opc']) ? $settings['header_bg_color_opc'] : 1 }}</output>
+                                                                    </div>
+                                                                </div>
+                                                            </div>  
+                                                            
+                                                            {{-- Special Discount Background Color for Layout 2  --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="special-discount-backgound-color">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('Special Discount Backgound color') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="special_discount_backgound_color"
+                                                                            name="special_discount_backgound_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['special_discount_backgound_color']) ? $settings['special_discount_backgound_color'] : '' }}"
+                                                                            onchange="changeVal('special_discount_backgound_color','special_discount_backgound_color_input')">
+                                                                        <input id="special_discount_backgound_color_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['special_discount_backgound_color']) ? $settings['special_discount_backgound_color'] : '' }}"
+                                                                            onkeyup="changeColor('special_discount_backgound_color_input','special_discount_backgound_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- Special Discount Text Color for Layout 2  --}}
+                                                            <div class="row align-items-center mb-4"
+                                                                id="special-discount-text-color">
+                                                                <div class="col-md-7">
+                                                                    <span>{{ __('Special Discount text color') }}</span>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="from-group d-flex align-items-center">
+                                                                        <input type="color"
+                                                                            id="special_discount_text_color"
+                                                                            name="special_discount_text_color"
+                                                                            class="form-control me-2 p-0"
+                                                                            value="{{ isset($settings['special_discount_text_color']) ? $settings['special_discount_text_color'] : '' }}"
+                                                                            onchange="changeVal('special_discount_text_color','special_discount_text_color_input')">
+                                                                        <input id="special_discount_text_color_input"
+                                                                            type="text" class="form-control"
+                                                                            value="{{ isset($settings['special_discount_text_color']) ? $settings['special_discount_text_color'] : '' }}"
+                                                                            onkeyup="changeColor('special_discount_text_color_input','special_discount_text_color')">
+                                                                    </div>
+                                                                </div>
+                                                            </div>   
+
                                                             {{-- Category Bar Slider Buttons Color for Mobile --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="categories-bar-slider-buttons-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Search Arrows (M.S.)') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="category_bar_slider_buttons_color"
                                                                             name="category_bar_slider_buttons_color"
@@ -791,10 +1052,10 @@
                                                             {{-- Category Bar Slider Buttons Color for Web --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="categories-bar-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Search Arrows') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="categories_bar_color"
                                                                             name="categories_bar_color"
@@ -812,10 +1073,10 @@
                                                             {{-- Category Bar Images --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="category-bar-type">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Category Images') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <select name="category_bar_type"
                                                                         id="category_bar_type" class="form-select">
                                                                         <option value="8px"
@@ -831,10 +1092,10 @@
                                                             {{-- Category bar Fonts Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="menu-bar-font-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Category Bar Fonts Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="menu_bar_font_color"
                                                                             name="menu_bar_font_color"
@@ -852,10 +1113,10 @@
                                                             {{-- Category Tile & Description Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="category-title-and-description-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Category Title & Description') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color"
                                                                             id="category_title_and_description_color"
@@ -874,10 +1135,10 @@
 
                                                             {{-- Tag Text Color --}}
                                                             <div class="row align-items-center mb-4" id="tag-label-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('PC Tag Text') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="tag_label_color"
                                                                             name="tag_label_color"
@@ -894,10 +1155,10 @@
 
                                                             {{-- Tag Text Background Color --}}
                                                             <div class="row align-items-center mb-4" id="tags-background-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('PC Tag BG') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="tag_background_color"
                                                                             name="tag_background_color"
@@ -914,10 +1175,10 @@
 
                                                             {{-- Active Tag Text Color --}}
                                                             <div class="row align-items-center mb-4" id="tag-font-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('PC Active Tag Text') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="tag_font_color"
                                                                             name="tag_font_color"
@@ -934,10 +1195,10 @@
 
                                                             {{-- Active Tag Background Color --}}
                                                             <div class="row align-items-center mb-4" id="active-tags-background-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('PC Active Tag BG') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="active_tag_background_color"
                                                                             name="active_tag_background_color"
@@ -955,10 +1216,10 @@
                                                             {{-- Item Box Background Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-box-background-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Box Background Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color"
                                                                             id="item_box_background_color"
@@ -976,10 +1237,10 @@
 
                                                             {{-- Item Box Shadow --}}
                                                             <div class="row align-items-center mb-4" id="item-box-shadow">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Box Shadow') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <label class="switch">
                                                                         <input type="checkbox" name="item_box_shadow"
                                                                             id="item_box_shadow"
@@ -998,10 +1259,10 @@
                                                             {{-- Item Box Shadow Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-box-shadow-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Box Shadow Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="item_box_shadow_color"
                                                                             name="item_box_shadow_color"
@@ -1019,10 +1280,10 @@
                                                             {{-- Item Box Shadow Thickness --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-box-shadow-thickness">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Box Shadow Thickness') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <select name="item_box_shadow_thickness"
                                                                         id="item_box_shadow_thickness"
                                                                         class="form-select">
@@ -1042,18 +1303,13 @@
                                                             {{-- Select Special Effect --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="special-day-effect-box">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Select Special Effect') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <select name="special_day_effect_box"
-                                                                        id="special_day_effect_box" class="form-select">
-                                                                        <option value="blink"
-                                                                            {{ $settings['special_day_effect_box'] == 'blink' ? 'selected' : '' }}>
-                                                                            Blink</option>
-                                                                        <option value="rotate"
-                                                                            {{ $settings['special_day_effect_box'] == 'rotate' ? 'selected' : '' }}>
-                                                                            Rotate</option>
+                                                                <div class="col-md-5">
+                                                                    <select name="special_day_effect_box" id="special_day_effect_box" class="form-select">
+                                                                        <option value="blink" {{ isset($settings['special_day_effect_box']) && $settings['special_day_effect_box'] == 'blink' ? 'selected' : '' }}>Blink</option>
+                                                                        <option value="rotate" {{ isset($settings['special_day_effect_box']) && $settings['special_day_effect_box'] == 'rotate' ? 'selected' : '' }}>Rotate</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -1061,10 +1317,10 @@
                                                             {{-- Special Effect --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="special-day-effect-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Special Effect') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color"
                                                                             id="special_day_effect_color"
@@ -1083,10 +1339,10 @@
                                                             {{-- Rating Star Icon Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-rating-star-icon-colors">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Rating Stars Icons') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color"
                                                                             id="rating_star_icon_color"
@@ -1105,10 +1361,10 @@
                                                             {{-- Title Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-title-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Title Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="item_title_color"
                                                                             name="item_title_color"
@@ -1126,10 +1382,10 @@
                                                             {{-- Description Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-description-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Description Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="item_description_color"
                                                                             name="item_description_color"
@@ -1147,10 +1403,10 @@
                                                             {{-- Read More Link Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="read-more-link-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Read More Link Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="read_more_link_color"
                                                                             name="read_more_link_color"
@@ -1167,10 +1423,10 @@
 
                                                             {{-- Price Color --}}
                                                             <div class="row align-items-center mb-4" id="price-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Price Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="price_color"
                                                                             name="price_color"
@@ -1187,10 +1443,10 @@
 
                                                             {{-- Cart Icon Color --}}
                                                             <div class="row align-items-center mb-4" id="cart-icon-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Cart Icon Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="cart_icon_color"
                                                                             name="cart_icon_color"
@@ -1207,10 +1463,10 @@
 
                                                             {{-- Item Divider --}}
                                                             <div class="row align-items-center mb-4" id="item-divider">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Divider') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <label class="switch">
                                                                         <input type="checkbox" name="item_divider"
                                                                             id="item_divider" value="1"
@@ -1228,10 +1484,10 @@
                                                             {{-- Item Divider Type --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-divider-type">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Divider Type') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <select name="item_divider_type"
                                                                         id="item_divider_type" class="form-select">
                                                                         <option value="solid"
@@ -1253,10 +1509,10 @@
                                                             {{-- Item Divider Position --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-divider-position">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Divider Position') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <select name="item_divider_position"
                                                                         id="item_divider_position" class="form-select">
                                                                         <option value="top"
@@ -1272,10 +1528,10 @@
                                                             {{-- Item Divider Thickness --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-divider-thickness">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Divider Thickness') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="form-group">
                                                                         <input type="number"
                                                                             name="item_divider_thickness"
@@ -1290,10 +1546,10 @@
                                                             {{-- Item Divider Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-divider-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Divider Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="item_divider_color"
                                                                             name="item_divider_color"
@@ -1311,10 +1567,10 @@
                                                             {{-- Item Divider Font Color --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="item-divider-font-color">
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Item Divider Font Color') }}</span>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-5">
                                                                     <div class="from-group d-flex align-items-center">
                                                                         <input type="color" id="item_divider_font_color"
                                                                             name="item_divider_font_color"
@@ -1332,10 +1588,10 @@
                                                             {{-- Theme Preview Image --}}
                                                             <div class="row align-items-center mb-4"
                                                                 id="theme-preview-image">
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-7">
                                                                     <span>{{ __('Theme Preview Image') }}</span>
                                                                 </div>
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-5">
                                                                     <div class="form-group align-items-center">
                                                                         <input type="file" name="theme_preview_image"
                                                                             id="theme_preview_image"
@@ -1357,259 +1613,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            
-                                                            
-                                                            <div class="row align-items-center mb-4"
-                                                                id="category-box-title-icon-color">
-                                                                <div class="col-md-8">
-                                                                    <span>06. {{ __('PC Category Box Title & Icon') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="category_box_title_icon_color"
-                                                                            name="category_box_title_icon_color"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['category_box_title_icon_color']) ? $settings['category_box_title_icon_color'] : '' }}"
-                                                                            onchange="changeVal('category_box_title_icon_color','category_box_title_icon_color_input')">
-                                                                        <input id="category_box_title_icon_color_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['category_box_title_icon_color']) ? $settings['category_box_title_icon_color'] : '' }}"
-                                                                            onkeyup="changeColor('category_box_title_icon_color_input','category_box_title_icon_color')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row align-items-center mb-4"
-                                                                id="category-box-title-background">
-                                                                <div class="col-md-8">
-                                                                    <span>07. {{ __('PC Category Box Title BG') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="category_box_title_background"
-                                                                            name="category_box_title_background"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['category_box_title_background']) ? $settings['category_box_title_background'] : '' }}"
-                                                                            onchange="changeVal('category_box_title_background','category_box_title_background_input')">
-                                                                        <input id="category_box_title_background_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['category_box_title_background']) ? $settings['category_box_title_background'] : '' }}"
-                                                                            onkeyup="changeColor('category_box_title_background_input','category_box_title_background')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row align-items-center mb-4"
-                                                                id="category-box-text-color">
-                                                                <div class="col-md-8">
-                                                                    <span>08. {{ __('PC Category Box Text') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="category_box_text_color"
-                                                                            name="category_box_text_color"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['category_box_text_color']) ? $settings['category_box_text_color'] : '' }}"
-                                                                            onchange="changeVal('category_box_text_color','category_box_text_color_input')">
-                                                                        <input id="category_box_text_color_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['category_box_text_color']) ? $settings['category_box_text_color'] : '' }}"
-                                                                            onkeyup="changeColor('category_box_text_color_input','category_box_text_color')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>                                                            
-                                                            <div class="row align-items-center mb-4"
-                                                                id="category-box-background">
-                                                                <div class="col-md-8">
-                                                                    <span>09. {{ __('PC Category Box BG') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="category_box_background"
-                                                                            name="category_box_background"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['category_box_background']) ? $settings['category_box_background'] : '' }}"
-                                                                            onchange="changeVal('category_box_background','category_box_background_input')">
-                                                                        <input id="category_box_background_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['category_box_background']) ? $settings['category_box_background'] : '' }}"
-                                                                            onkeyup="changeColor('category_box_background_input','category_box_background')">
-                                                                    </div>
-                                                                </div>
-                                                            </div> 
-                                                            <div class="row align-items-center mb-4"
-                                                                id="category-box-shadow">
-                                                                <div class="col-md-8">
-                                                                    <span>10. {{ __('PC Category Box Shadow') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="category_box_shadow"
-                                                                            name="category_box_shadow"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['category_box_shadow']) ? $settings['category_box_shadow'] : '' }}"
-                                                                            onchange="changeVal('category_box_shadow','category_box_shadow_input')">
-                                                                        <input id="category_box_shadow_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['category_box_shadow']) ? $settings['category_box_shadow'] : '' }}"
-                                                                            onkeyup="changeColor('category_box_shadow_input','category_box_shadow')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>  
 
-
-                                                            <div class="row align-items-center mb-4"
-                                                                id="category-box-act-txt-bg">
-                                                                <div class="col-md-8">
-                                                                    <span>11. {{ __('Active Category BG') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="category_box_act_txt_bg"
-                                                                            name="category_box_act_txt_bg"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['category_box_act_txt_bg']) ? $settings['category_box_act_txt_bg'] : '' }}"
-                                                                            onchange="changeVal('category_box_act_txt_bg','category_box_act_txt_bg_input')">
-                                                                        <input id="category_box_act_txt_bg_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['category_box_act_txt_bg']) ? $settings['category_box_act_txt_bg'] : '' }}"
-                                                                            onkeyup="changeColor('category_box_act_txt_bg_input','category_box_act_txt_bg')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row align-items-center mb-4"
-                                                                id="back-arrow-icon-color">
-                                                                <div class="col-md-8">
-                                                                    <span>12. {{ __('"Back" Button Icon') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="back_arrow_icon_color"
-                                                                            name="back_arrow_icon_color"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['back_arrow_icon_color']) ? $settings['back_arrow_icon_color'] : '' }}"
-                                                                            onchange="changeVal('back_arrow_icon_color','back_arrow_icon_color_input')">
-                                                                        <input id="back_arrow_icon_color_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['back_arrow_icon_color']) ? $settings['back_arrow_icon_color'] : '' }}"
-                                                                            onkeyup="changeColor('back_arrow_icon_color_input','back_arrow_icon_color')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row align-items-center mb-4"
-                                                                id="back-arrow-bg-color">
-                                                                <div class="col-md-8">
-                                                                    <span>13. {{ __('"Back" Button BG') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="back_arrow_bg_color"
-                                                                            name="back_arrow_bg_color"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['back_arrow_bg_color']) ? $settings['back_arrow_bg_color'] : '' }}"
-                                                                            onchange="changeVal('back_arrow_bg_color','back_arrow_bg_color_input')">
-                                                                        <input id="back_arrow_bg_color_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['back_arrow_bg_color']) ? $settings['back_arrow_bg_color'] : '' }}"
-                                                                            onkeyup="changeColor('back_arrow_bg_color_input','back_arrow_bg_color')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>                                                            
-                                                            
-                                                            
-                                                            
-                                                            
-                                                            
-                                                            
-                                                            
-                                                            
-                                                                                                                                                                                                                                     
-                                                            
-                                                            <div class="row align-items-center mb-4"
-                                                                id="special-discount-backgound-color">
-                                                                <div class="col-md-8">
-                                                                    <span>{{ __('Special Discount Backgound color') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="special_discount_backgound_color"
-                                                                            name="special_discount_backgound_color"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['special_discount_backgound_color']) ? $settings['special_discount_backgound_color'] : '' }}"
-                                                                            onchange="changeVal('special_discount_backgound_color','special_discount_backgound_color_input')">
-                                                                        <input id="special_discount_backgound_color_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['special_discount_backgound_color']) ? $settings['special_discount_backgound_color'] : '' }}"
-                                                                            onkeyup="changeColor('special_discount_backgound_color_input','special_discount_backgound_color')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row align-items-center mb-4"
-                                                                id="special-discount-text-color">
-                                                                <div class="col-md-8">
-                                                                    <span>{{ __('Special Discount text color') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="special_discount_text_color"
-                                                                            name="special_discount_text_color"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['special_discount_text_color']) ? $settings['special_discount_text_color'] : '' }}"
-                                                                            onchange="changeVal('special_discount_text_color','special_discount_text_color_input')">
-                                                                        <input id="special_discount_text_color_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['special_discount_text_color']) ? $settings['special_discount_text_color'] : '' }}"
-                                                                            onkeyup="changeColor('special_discount_text_color_input','special_discount_text_color')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>                                                                                                                                                                                                                                          
-                                                            
-                                                            <div class="row align-items-center mb-4"
-                                                                id="header-effect-bg-color">
-                                                                <div class="col-md-8">
-                                                                    <span>{{ __('Header Effect Background Color') }}</span>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="color"
-                                                                            id="header_effect_bg_color"
-                                                                            name="header_effect_bg_color"
-                                                                            class="form-control me-2 p-0"
-                                                                            value="{{ isset($settings['header_effect_bg_color']) ? $settings['header_effect_bg_color'] : '' }}"
-                                                                            onchange="changeVal('header_effect_bg_color','header_effect_bg_color_input')">
-                                                                        <input id="header_effect_bg_color_input"
-                                                                            type="text" class="form-control"
-                                                                            value="{{ isset($settings['header_effect_bg_color']) ? $settings['header_effect_bg_color'] : '' }}"
-                                                                            onkeyup="changeColor('header_effect_bg_color_input','header_effect_bg_color')">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row align-items-center mb-4"
-                                                                id="header-bg-color-opc">
-                                                                <div class="col-md-7">
-                                                                    <span>{{ __('Header Background Color Opacity') }}</span>
-                                                                </div>
-                                                                <div class="col-md-5">
-                                                                    <div class="from-group d-flex align-items-center">
-                                                                        <input type="range"
-                                                                            id="header_bg_color_opc" min="0"
-                                                                            max="1" step="0.1"
-                                                                            value="{{ isset($settings['header_bg_color_opc']) && !empty($settings['header_bg_color_opc']) ? $settings['header_bg_color_opc'] : 1 }}"
-                                                                            name="header_bg_color_opc">
-                                                                        <output class="ms-1"
-                                                                            for="header_bg_color_opc"
-                                                                            id="header-opacity">{{ isset($settings['header_bg_color_opc']) && !empty($settings['header_bg_color_opc']) ? $settings['header_bg_color_opc'] : 1 }}</output>
-                                                                    </div>
-                                                                </div>
-                                                            </div>                                                            
                                                         </div>
                                                     </div>
                                                     <div class="col-md-5">
@@ -1956,6 +1960,7 @@
 @section('page-js')
 
     <script type="text/javascript">
+    
         $(document).ready(function() {
             changeLayout();
             changeSlider();
@@ -1971,7 +1976,6 @@
             $("input, select, .updatebtn").prop("disabled", true);
         }
 
-
         // Function for Insert Value into ColorPicker's TextBox
         function changeVal(colorPickerID, textID) {
             var value = $('#' + colorPickerID).val();
@@ -1984,8 +1988,8 @@
             $('#' + colorPickerID).val(value);
         }
 
-         // Function for Label Color Opacity
-         $('#label_color_transparency').on("change mousemove", function() {
+        // Function for Label Color Opacity
+        $('#label_color_transparency').on("change mousemove", function() {
             $('#slider-value').html($(this).val());
         });
 
@@ -1996,20 +2000,29 @@
 
         // Fuction layout Change
         function changeLayout() {
-            var layout = $('#desk_layout').val();
-
+            const layout = $('#desk_layout').val();
             if (layout == 'layout_2') {
-                $('#banner-position,#main_screen,#three_main_screen,#category-slider-effect,#categories-bar-color,#category-screen,#three-category-screen,#category-box-shadow,#category-box-background,#category-box-title-icon-color,#category-box-text-color,#category-box-title-background,#back-arrow-bg-color,#back-arrow-icon-color,#category-box-act-txt-bg, #category-view').hide();
-                $('#banner-height,#icon-bg-color,#special-discount-text-color,#cart-animation-color,#banner-slide-button,#slider-effect,#search-box-icon-color,#category_image_slider,#category-image-slider-delay-time,#second_main_screen,#category-side,#header-image,#second-category-screen,#special-discount-backgound-color,#label-font-size,#header-bg-color-opc,#banner-delay-time,#sticky-header,#header-effect-bg-color,#logo-position,#search-box-position,#bar-icon-color,#bar-icon-bg-color,#cover-link-icon-color,#cover-link-bg-color,#category_image_siders, #categories-bar-slider-buttons-color').show();
+                // Hide Elements when 2nd Layout Select
+                $('#banner-position, #main_screen, #three_main_screen, #category-slider-effect, #categories-bar-color, #category-screen, #three-category-screen, #category-box-shadow, #category-box-background, #category-box-title-icon-color, #category-box-text-color, #category-box-title-background, #back-arrow-bg-color, #back-arrow-icon-color, #category-box-act-txt-bg').hide();
+
+                // Show Elements when 2nd Layout Select
+                $('#banner-height, #icon-bg-color, #special-discount-text-color, #cart-animation-color, #banner-slide-button, #slider-effect, #search-box-icon-color, #category_image_slider, #category-image-slider-delay-time, #second_main_screen, #category-side, #header-image, #second-category-screen, #special-discount-backgound-color, #label-font-size, #header-bg-color-opc, #banner-delay-time, #sticky-header, #header-effect-bg-color, #logo-position, #search-box-position, #bar-icon-color, #bar-icon-bg-color, #cover-link-icon-color, #cover-link-bg-color, #category_image_siders, #categories-bar-slider-buttons-color, #category-view, #language-box-position, #font-color, #label-color, #label-color-transparency, #category-bar-type').show();
+                
             } else if (layout == 'layout_1') {
-                $('#second_main_screen,#three_main_screen,#header-image,#category-view,#second-category-screen,#three-category-screen,#special-discount-backgound-color,#special-discount-text-color,#cart-animation-color,#cart-animation-color,#three-category-screen,#category-box-shadow,#category-box-background,#category-box-title-icon-color,#category-box-text-color,#category-box-title-background,#category-side,#back-arrow-bg-color,#back-arrow-icon-color,#category-box-act-txt-bg,#header-bg-color-opc,#header-effect-bg-color,#category_image_siders,#category_image_slider,#category-image-slider-delay-time,#categories-bar-slider-buttons-color').hide();
-                $('#sticky-header,#logo-position,#search-box-position,#banner-position,#banner-delay-time,#banner-height,#slider-effect,#search-box-icon-color,#main_screen,#category-slider-effect,#categories-bar-color,#category-bar-type,#menu-bar-font-color,#item-box-background-color,#price-color,#item-title-color,#item-description-color,#item-box-shadow,#item-box-shadow-color,#item-box-shadow-thickness,#item-divider,#item-divider-color,#item-divider-thickness,#item-divider-type,#item-divider-position,#item-divider-font-color,#read-more-link-color,#cart-icon-color,#category-screen,#label-font-size,#icon-bg-color,#bar-icon-color,#bar-icon-bg-color,#cover-link-icon-color,#cover-link-bg-color').show();
+                // Hide Elements when 1st Layout Select
+                $('#second_main_screen, #three_main_screen, #header-image, #category-view, #second-category-screen, #three-category-screen, #special-discount-backgound-color, #special-discount-text-color, #cart-animation-color, #cart-animation-color, #three-category-screen, #category-box-shadow, #category-box-background, #category-box-title-icon-color, #category-box-text-color, #category-box-title-background, #category-side, #back-arrow-bg-color, #back-arrow-icon-color, #category-box-act-txt-bg, #header-bg-color-opc, #header-effect-bg-color, #category_image_siders, #category_image_slider, #category-image-slider-delay-time, #categories-bar-slider-buttons-color').hide();
+
+                // Show Elements when 1st Layout Select
+                $('#sticky-header, #logo-position, #search-box-position, #banner-position, #banner-delay-time, #banner-height, #slider-effect, #search-box-icon-color, #main_screen, #category-slider-effect, #categories-bar-color, #category-bar-type, #menu-bar-font-color, #item-box-background-color, #price-color, #item-title-color, #item-description-color, #item-box-shadow, #item-box-shadow-color, #item-box-shadow-thickness, #item-divider, #item-divider-color, #item-divider-thickness, #item-divider-type, #item-divider-position, #item-divider-font-color, #read-more-link-color, #cart-icon-color, #category-screen, #label-font-size, #icon-bg-color, #bar-icon-color, #bar-icon-bg-color, #cover-link-icon-color, #cover-link-bg-color, #language-box-position, #font-color, #label-color, #label-color-transparency').show();
+
             } else if (layout == 'layout_3') {
-                $('#language-box-position,#logo-position,#search-box-position,#banner-position,#font-color,#label-color,#label-color-transparency,#main_screen,#second_main_screen,#header-image,#special-discount-text-color,#cart-animation-color,#category-slider-effect,#categories-bar-color,#category-bar-type,#menu-bar-font-color,#item-box-background-color,#price-color,#item-title-color,#item-description-color,#item-box-shadow,#item-box-shadow-color,#item-box-shadow-thickness,#item-box-shadow-thickness,#item-divider,#item-divider-color,#item-divider-thickness,#item-divider-type,#item-divider-position,#item-divider-font-color,#read-more-link-color,#cart-icon-color,#category-screen,#second-category-screen,#special-discount-backgound-color,#cart-animation-color,#label-font-size,#header-bg-color-opc,#header-effect-bg-color,#categories-bar-slider-buttons-color').hide();
-                $('#sticky-header,#banner-slide-button,#banner-delay-time,#banner-height,#slider-effect,#category-side,#category_image_slider,#category-image-slider-delay-time,#three-category-screen,#three_main_screen,#category-box-shadow,#category-box-background,#category-box-title-icon-color,#category-box-text-color,#category-box-title-background,#back-arrow-bg-color,#back-arrow-icon-color,#category-box-act-txt-bg,#icon-bg-color,#search-box-icon-color,#bar-icon-color,#bar-icon-bg-color,#cover-link-icon-color,#cover-link-bg-color,#category_image_siders, #category-view').show();
+                // Hide Elements when 3rd Layout Select
+                $('#language-box-position, #logo-position, #search-box-position, #banner-position, #font-color, #label-color, #label-color-transparency, #main_screen, #second_main_screen, #header-image, #special-discount-text-color, #cart-animation-color, #category-slider-effect, #categories-bar-color, #category-bar-type, #menu-bar-font-color, #item-box-background-color, #price-color, #item-title-color, #item-description-color, #item-box-shadow, #item-box-shadow-color, #item-box-shadow-thickness, #item-box-shadow-thickness, #item-divider, #item-divider-color, #item-divider-thickness, #item-divider-type, #item-divider-position, #item-divider-font-color, #read-more-link-color, #cart-icon-color, #category-screen, #second-category-screen, #special-discount-backgound-color, #cart-animation-color, #label-font-size, #header-bg-color-opc, #header-effect-bg-color, #categories-bar-slider-buttons-color,  #category-view').hide();
+
+                // Show Elements when 3rd Layout Select
+                $('#sticky-header, #banner-slide-button, #banner-delay-time, #banner-height, #slider-effect, #category-side, #category_image_slider, #category-image-slider-delay-time, #three-category-screen, #three_main_screen, #category-box-shadow, #category-box-background, #category-box-title-icon-color, #category-box-text-color, #category-box-title-background, #back-arrow-bg-color, #back-arrow-icon-color, #category-box-act-txt-bg, #icon-bg-color, #search-box-icon-color, #bar-icon-color, #bar-icon-bg-color, #cover-link-icon-color, #cover-link-bg-color, #category_image_siders').show();
             }
         }
-
 
         function changeSlider() {
             var sliderType = $("#category_image_siders").val();
@@ -2032,8 +2045,6 @@
                 }
             }
         }
-
-
 
         // Success Toastr Message
         @if (Session::has('success'))
