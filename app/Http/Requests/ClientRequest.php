@@ -34,7 +34,7 @@ class ClientRequest extends FormRequest
         {
             $rules += [
                 'email' => 'required|email|unique:users,email,'.$this->client_id,
-                // 'shop_url' => 'required|regex:/^[a-zA-Z]+$/|unique:shops,shop_slug,'.$this->shop_id,
+                'shop_url' => 'required|regex:/^[a-zA-Z-]+$/|unique:shops,shop_slug,'.$this->shop_id,
                 'confirm_password' => 'same:password',
             ];
         }

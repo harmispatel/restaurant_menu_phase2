@@ -150,7 +150,7 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group">
                                             <label for="shop_url" class="form-label">{{ __('Shop URL')}}</label>
-                                            <input type="text" name="shop_url" id="shop_url" class="form-control" value="{{ $client->hasOneShop->shop['shop_slug'] }}" disabled>
+                                            <input type="text" name="shop_url" id="shop_url" class="form-control" value="{{ $client->hasOneShop->shop['shop_slug'] }}">
                                         </div>
                                     </div>
                                     {{-- <div class="col-md-6 mb-3">

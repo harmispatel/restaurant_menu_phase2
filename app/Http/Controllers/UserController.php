@@ -552,7 +552,7 @@ class UserController extends Controller
 
     public function update(ClientRequest $request)
     {
-
+        
         $subscription_id = $request->subscription;
 
         $subscription = Subscriptions::where('id',$subscription_id)->first();
@@ -571,6 +571,7 @@ class UserController extends Controller
         $status = isset($request->status) ? $request->status : 0;
         $shop_id = $request->shop_id;
         $shop_name = $request->shop_name;
+        $shop_slug = $request->shop_url;
         // $shop_description = $request->shop_description;
 
         // Update New Client
@@ -606,24 +607,51 @@ class UserController extends Controller
         $shop->name = $shop_name;
         // $shop->description = $shop_description;
 
-        if($request->hasFile('shop_logo'))
-        {
-            $old_image = isset($shop->logo) ? $shop->logo : '';
-            if(!empty($old_image))
-            {
-                if(file_exists($old_image))
-                {
-                    unlink($old_image);
-                }
-            }
+        if( $shop->shop_slug != $shop_slug){
+            $shop->shop_slug = $shop_slug;
 
-            $path = public_path('admin_uploads/shops/').$shop->shop_slug."/";
-            $imgname = time().".". $request->file('shop_logo')->getClientOriginalExtension();
-            $request->file('shop_logo')->move($path, $imgname);
-            $imageurl = asset('public/admin_uploads/shops/'.$shop->shop_slug).'/'.$imgname;
-            $shop->logo = $imageurl;
-            $shop->directory = $path;
+            // Make Shop Directory
+            mkdir(public_path('client_uploads/shops/'.$shop_slug));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/banners"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/ingredients"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/categories"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/intro_icons"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/items"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/theme_preview_image"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/today_special_icon"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/top_logos"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/header_image"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/loader"));
+            mkdir(public_path('client_uploads/shops/'.$shop_slug."/background_image"));
+
+            // Generate Shop Qr
+            $new_shop_url = URL::to('/')."/".$shop_slug;
+            $qr_name = $shop_slug."_".time()."_qr.png";
+            $upload_path = public_path('admin_uploads/shops_qr/'.$qr_name);
+
+            QrCode::format('png')->margin(2)->size(200)->generate($new_shop_url, $upload_path);
+
+            $shop->qr_code = $qr_name;
         }
+
+        // if($request->hasFile('shop_logo'))
+        // {
+        //     $old_image = isset($shop->logo) ? $shop->logo : '';
+        //     if(!empty($old_image))
+        //     {
+        //         if(file_exists($old_image))
+        //         {
+        //             unlink($old_image);
+        //         }
+        //     }
+
+        //     $path = public_path('admin_uploads/shops/').$shop->shop_slug."/";
+        //     $imgname = time().".". $request->file('shop_logo')->getClientOriginalExtension();
+        //     $request->file('shop_logo')->move($path, $imgname);
+        //     $imageurl = asset('public/admin_uploads/shops/'.$shop->shop_slug).'/'.$imgname;
+        //     $shop->logo = $imageurl;
+        //     $shop->directory = $path;
+        // }
         $shop->update();
 
         return redirect()->route('clients.list')->with('success','Client has been Updated SuccessFully....');
