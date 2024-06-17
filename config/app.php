@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://192.168.1.203/smartqr'),
+    'url' => env('APP_URL', 'http://192.168.1.217/smartqr'),
 
     'asset_url' => env('ASSET_URL', null),
 
