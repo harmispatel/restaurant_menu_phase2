@@ -1471,7 +1471,6 @@
                         // Item Type
                         const itemType = response.item_type;
 
-
                         // If Item Type is Divider Then Hide Price Divs
                         if(itemType == 2)
                         {
@@ -1671,21 +1670,188 @@
                 processData: false,
                 success: function (response)
                 {
-                    if(response.success == 1)
-                    {
-                        // $('#editItemModal').modal('hide');
+                    // Old Code
+                    // if(response.success == 1){
+                    //     toastr.success(response.message);
+                    // }else{
+                    //     $('#editItemModal').modal('hide');
+                    //     toastr.error(response.message);
+                    //     setTimeout(() => {
+                    //         location.reload();
+                    //     }, 1000);
+                    // }
+
+                    // New Code
+                    if(response.success == 1){
+                        $('#editItemModal #item_lang_div').html('');
+                        $('#editItemModal #item_lang_div').append(response.data);
+
+                        // Item Type
+                        const itemType = response.item_type;
+
+                        // If Item Type is Divider Then Hide Price Divs
+                        if(itemType == 2){
+                            $('#editItemModal .price_div').hide();
+                            $('#editItemModal .calories_div').hide();
+                            $('#editItemModal .day_special').hide();
+                            $('#editItemModal .mark_sign').hide();
+                            $('#editItemModal .mark_new').hide();
+                            $('#editItemModal .review_rating').hide();
+                            $('#editItemModal .delivery').hide();
+                            $('#editItemModal .crop_size').show();
+                            $('#editItemModal .image-detail').hide();
+                            $('#editItemModal .discount-div').hide();
+                            $('#editItemModal .recomendation_items_div').hide();
+                        }else{
+                            $('#editItemModal .price_div').show();
+                            $('#editItemModal .calories_div').show();
+                            $('#editItemModal .day_special').show();
+                            $('#editItemModal .mark_sign').show();
+                            $('#editItemModal .mark_new').show();
+                            $('#editItemModal .review_rating').show();
+                            $('#editItemModal .delivery').show();
+                            $('#editItemModal .crop_size').hide();
+                            $('#editItemModal .image-detail').show();
+                            $('#editItemModal .discount-div').show();
+                            $('#editItemModal .recomendation_items_div').show();
+                        }
+
+                        var categoriesEle = "#editItemModal #categories";
+                        $(categoriesEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Categories",
+                        });
+
+                        // Intialized Ingredients SelectBox
+                        var ingredientsEle = "#editItemModal #ingredients";
+                        $(ingredientsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Indicative Icons",
+                        });
+
+                        // Intialized Recomendation Items SelectBox
+                        var recomendationitems = '#editItemModal #recomendation_items';
+                        $(recomendationitems).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Recomendation Items",
+                        })
+
+                        // Intialized Tags SelectBox
+                        var tagsEle = "#editItemModal #tags";
+                        $(tagsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Add New Tags",
+                            tags: true,
+                        });
+
+                        // Intialized Options SelectBox
+                        var optionsEle = "#editItemModal #options";
+                        $(optionsEle).select2({
+                            dropdownParent: $("#editItemModal"),
+                            placeholder: "Select Attributes",
+                        });
+
+                        // Description Text Editor
+                        $('.ck-editor').remove();
+                        editItemEditor = "";
+                        var my_item_textarea = $('#item_description')[0];
+                        CKEDITOR.ClassicEditor.create(my_item_textarea,
+                        {
+                            toolbar: {
+                                items: [
+                                    'heading', '|',
+                                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                                    'bulletedList', 'numberedList', 'todoList', '|',
+                                    'outdent', 'indent', '|',
+                                    'undo', 'redo',
+                                    '-',
+                                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                                    'alignment', '|',
+                                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                                    'sourceEditing'
+                                ],
+                                shouldNotGroupWhenFull: true
+                            },
+                            list: {
+                                properties: {
+                                    styles: true,
+                                    startIndex: true,
+                                    reversed: true
+                                }
+                            },
+                            'height':500,
+                            fontSize: {
+                                options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+                                supportAllValues: true
+                            },
+                            htmlSupport: {
+                                allow: [
+                                    {
+                                        name: /.*/,
+                                        attributes: true,
+                                        classes: true,
+                                        styles: true
+                                    }
+                                ]
+                            },
+                            htmlEmbed: {
+                                showPreviews: true
+                            },
+                            link: {
+                                decorators: {
+                                    addTargetToExternalLinks: true,
+                                    defaultProtocol: 'https://',
+                                    toggleDownloadable: {
+                                        mode: 'manual',
+                                        label: 'Downloadable',
+                                        attributes: {
+                                            download: 'file'
+                                        }
+                                    }
+                                }
+                            },
+                            mention: {
+                                feeds: [
+                                    {
+                                        marker: '@',
+                                        feed: [
+                                            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                                            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                                            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+                                            '@sugar', '@sweet', '@topping', '@wafer'
+                                        ],
+                                        minimumCharacters: 1
+                                    }
+                                ]
+                            },
+                            removePlugins: [
+                                'CKBox',
+                                'CKFinder',
+                                'EasyImage',
+                                'RealTimeCollaborativeComments',
+                                'RealTimeCollaborativeTrackChanges',
+                                'RealTimeCollaborativeRevisionHistory',
+                                'PresenceList',
+                                'Comments',
+                                'TrackChanges',
+                                'TrackChangesData',
+                                'RevisionHistory',
+                                'Pagination',
+                                'WProofreader',
+                                'MathType'
+                            ]
+                        }).then( editor => {
+                            editItemEditor = editor;
+                        });
+
                         toastr.success(response.message);
-                        // setTimeout(() => {
-                        //     location.reload();
-                        // }, 1000);
                     }
                     else
                     {
                         $('#editItemModal').modal('hide');
+                        $('#editItemModal #item_lang_div').html('');
                         toastr.error(response.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
                     }
                 },
                 error: function(response)

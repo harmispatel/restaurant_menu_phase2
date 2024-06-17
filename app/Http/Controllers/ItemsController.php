@@ -1703,9 +1703,14 @@ class ItemsController extends Controller
 
             }
 
+            // Get HTML Data
+            $html_data = $this->getEditItemData($active_lang_code, $item_id);
+
             return response()->json([
                 'success' => 1,
                 'message' => "Item has been Updated SuccessFully....",
+                'data' => $html_data,
+                'item_type'=> $item_type,
             ]);
 
         }
