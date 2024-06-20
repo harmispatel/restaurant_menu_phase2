@@ -290,7 +290,7 @@
 
                             {{-- Attributes --}}
                             @if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
-                                <div class="row mb-3">
+                                <div class="row mb-3 attributes-div">
                                     <div class="col-md-12">
                                         <label for="options" class="form-label">{{ __('Attributes')}}</label>
                                         <select name="options[]" id="options" class="form-control" multiple>
@@ -1286,6 +1286,7 @@
                             $('#editItemModal .image-detail').hide();
                             $('#editItemModal .discount-div').hide();
                             $('#editItemModal .recomendation_items_div').hide();
+                            $('#editItemModal .attributes-div').hide();
                         }
                         else
                         {
@@ -1300,6 +1301,7 @@
                             $('#editItemModal .image-detail').show();
                             $('#editItemModal .discount-div').show();
                             $('#editItemModal .recomendation_items_div').show();
+                            $('#editItemModal .attributes-div').show();
                         }
 
                         var categoriesEle = "#editItemModal #categories";
@@ -1485,6 +1487,7 @@
                             $('#editItemModal .image-detail').hide();
                             $('#editItemModal .discount-div').hide();
                             $('#editItemModal .recomendation_items_div').hide();
+                            $('#editItemModal .attributes-div').hide();
                         }
                         else
                         {
@@ -1499,6 +1502,7 @@
                             $('#editItemModal .image-detail').show();
                             $('#editItemModal .discount-div').show();
                             $('#editItemModal .recomendation_items_div').show();
+                            $('#editItemModal .attributes-div').show();
                         }
 
                         var categoriesEle = "#editItemModal #categories";
@@ -1889,6 +1893,7 @@
                 $("#"+ModalName+" .image-detail").hide();
                 $("#"+ModalName+" .discount-div").hide();
                 $("#"+ModalName+" .recomendation_items_div").hide();
+                $("#"+ModalName+" .attributes-div").hide();
             }
             else
             {
@@ -1903,6 +1908,7 @@
                 $("#"+ModalName+" .image-detail").show();
                 $("#"+ModalName+" .discount-div").show();
                 $("#"+ModalName+" .recomendation_items_div").show();
+                $("#"+ModalName+" .attributes-div").show();
             }
         }
 

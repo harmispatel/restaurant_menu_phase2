@@ -105,9 +105,6 @@ class ShopController extends Controller
     }
 
 
-
-
-
     // function for shop's Items Preview
     public function itemPreview($shop_slug, $cat_id)
     {
@@ -275,15 +272,11 @@ class ShopController extends Controller
     // Search Categories
     public function searchCategories(Request $request)
     {
-
         $shop_id = decrypt($request->shopID);
-
         $keyword = $request->keywords;
         $current_cat_id = $request->current_cat_id;
         $layout_width = $request->layout_width;
         $categories_ids = [];
-
-
         $sub_cat = Category::select('id')->where('shop_id', $shop_id)->where('parent_id', $current_cat_id)->get();
 
         if (count($sub_cat) > 0) {
@@ -323,9 +316,6 @@ class ShopController extends Controller
         $category_view = isset($theme_settings['category_view']) && !empty($theme_settings['category_view']) ? $theme_settings['category_view'] : 'grid';
         $category_image_slider = isset($theme_settings['category_image_sider']) && !empty($theme_settings['category_image_sider']) ? $theme_settings['category_image_sider'] : 'stop';
 
-
-
-
         // Today Special Icon
         $today_special_icon = moreTranslations($shop_id, 'today_special_icon');
         $today_special_icon = (isset($today_special_icon[$current_lang_code . "_value"]) && !empty($today_special_icon[$current_lang_code . "_value"])) ? $today_special_icon[$current_lang_code . "_value"] : '';
@@ -343,11 +333,9 @@ class ShopController extends Controller
         try {
             $categories = Category::with(['categoryImages'])->where("$name_key", 'LIKE', '%' . $keyword . '%')->where('shop_id', $shop_id)->where('parent_id', $current_cat_id)->where('published', 1)->orderBy('order_key')->get();
 
-
             $html = '';
-            if (empty($keyword))
-             {
 
+            if (empty($keyword)){
                 if ($active_layout == 'layout_1') {
 
                     if(count($categories) > 0){
@@ -481,9 +469,7 @@ class ShopController extends Controller
                     } else {
                         $html .= '<h3 class="text-center">Categories not Found.</h3>';
                     }
-                }
-                elseif ($active_layout == 'layout_2' && $layout_width < 767)
-                {
+                }elseif ($active_layout == 'layout_2' && $layout_width < 767){
                     if($category_view ==  "grid"){
                         $html .='<div class="category_inr search_grid">';
                             if(count($categories) > 0){
@@ -656,96 +642,91 @@ class ShopController extends Controller
                         $html .='</div>';
                     }
                 }else{
+                    $html .='<div class="category_inr search_grid">';
+                        if(count($categories) > 0){
+                            foreach($categories as $category){
+                                $default_cat_img = asset('public/client_images/not-found/no_image_1.jpg');
+                                $name_code = $current_lang_code . '_name';
+                                $cat_image = isset($category->categoryImages[0]['image']) ? $category->categoryImages[0]['image'] : '';
+                                $thumb_image = isset($category->cover) ? $category->cover : '';
+                                $active_cat = checkCategorySchedule($category->id, $category->shop_id);
+                                $check_cat_type_permission = checkCatTypePermission($category->category_type, $shop_details['id']);
+                                $items = $category->items;
+                                $categoryName = isset($category->$name_code) ? $category->$name_code : "";
+                                $googleLink = isset($category->link_url) && !empty($category->link_url) ? $category->link_url : "#";
 
-                     $html .='<div class="category_inr search_grid">';
-                            if(count($categories) > 0){
-                                foreach($categories as $category){
+                                if (count($items) > 0) {
+                                    $img_array = [];
 
-                                     $default_cat_img = asset('public/client_images/not-found/no_image_1.jpg');
-                                        $name_code = $current_lang_code . '_name';
-                                        $cat_image = isset($category->categoryImages[0]['image']) ? $category->categoryImages[0]['image'] : '';
-                                        $thumb_image = isset($category->cover) ? $category->cover : '';
-
-                                        $active_cat = checkCategorySchedule($category->id, $category->shop_id);
-
-                                        $check_cat_type_permission = checkCatTypePermission($category->category_type, $shop_details['id']);
-                                        $items = $category->items;
-
-                                        $categoryName = isset($category->$name_code) ? $category->$name_code : "";
-                                        $googleLink = isset($category->link_url) && !empty($category->link_url) ? $category->link_url : "#";
-                                        if (count($items) > 0) {
-                                            $img_array = [];
-
-                                            foreach ($items as $key => $value) {
-                                                if($value->type == 1){
-                                                    $img_array[] = $value->image;
-                                                }
-                                            }
-                                            $item_images = array_filter($img_array);
-                                        }else{
-                                            $item_images = [];
+                                    foreach ($items as $key => $value) {
+                                        if($value->type == 1){
+                                            $img_array[] = $value->image;
                                         }
-                                        if ($active_cat == 1) {
-                                            if ($check_cat_type_permission == 1) {
-                                                $html .= '<div class="category_box">';
-                                                    if ($category->category_type == 'link') {
-                                                        $html .= '<a href="'.$googleLink.'" target="_blank">';
-                                                    }elseif($category->category_type == 'parent_category'){
-                                                        $html .='<a href="'.route('restaurant', [$shop_details['shop_slug'], $category->id]).'">';
-                                                    }else{
-                                                        $html .='<a href="'.route('items.preview', [$shop_details['shop_slug'], $category->id]).'">';
-                                                    }
-                                                        $html .='<div class="category_img">';
-                                                            $html .='<div id="demo" class="carousel slide" data-bs-ride="carousel">';
-                                                                $html .='<div class="carousel-inner">';
-                                                                    if($category->category_type == 'product_category'){
-                                                                        $html .='<div class="carousel-item active">';
-                                                                            if(!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image)){
-                                                                                $html .='<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image).'" class="w-100">';
-                                                                            }else{
-                                                                                $html .='<img src="'.$default_cat_img.'" class="w-100">';
-                                                                            }
-                                                                        $html .='</div>';
+                                    }
+                                    $item_images = array_filter($img_array);
+                                }else{
+                                    $item_images = [];
+                                }
+
+                                if ($active_cat == 1) {
+                                    if ($check_cat_type_permission == 1) {
+                                        $html .= '<div class="category_box">';
+                                            if ($category->category_type == 'link') {
+                                                $html .= '<a href="'.$googleLink.'" target="_blank">';
+                                            }elseif($category->category_type == 'parent_category'){
+                                                $html .='<a href="'.route('restaurant', [$shop_details['shop_slug'], $category->id]).'">';
+                                            }else{
+                                                $html .='<a href="'.route('items.preview', [$shop_details['shop_slug'], $category->id]).'">';
+                                            }
+                                                $html .='<div class="category_img">';
+                                                    $html .='<div id="demo" class="carousel slide" data-bs-ride="carousel">';
+                                                        $html .='<div class="carousel-inner">';
+                                                            if($category->category_type == 'product_category'){
+                                                                $html .='<div class="carousel-item active">';
+                                                                    if(!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image)){
+                                                                        $html .='<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/categories/'.$cat_image).'" class="w-100">';
                                                                     }else{
-                                                                        if(!empty($thumb_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $thumb_image)){
-                                                                            $html .='<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/categories/'. $thumb_image).'" class="w-100">';
-                                                                        }else{
-                                                                            $html .='<img src="'.$default_cat_img.'" class="w-100">';
-                                                                        }
-                                                                    }
-                                                                    if($category_image_slider == 'slider'){
-                                                                        if(count($item_images) > 0){
-                                                                            foreach($item_images as $item_image){
-                                                                                $html .='<div class="carousel-item">';
-                                                                                    if(!empty($item_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item_image)){
-                                                                                        $html .='<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/items/'. $item_image).'" class="w-100">';
-                                                                                    }
-                                                                                $html .='</div>';
-                                                                            }
-                                                                        }
+                                                                        $html .='<img src="'.$default_cat_img.'" class="w-100">';
                                                                     }
                                                                 $html .='</div>';
-                                                            $html .='</div>';
+                                                            }else{
+                                                                if(!empty($thumb_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $thumb_image)){
+                                                                    $html .='<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/categories/'. $thumb_image).'" class="w-100">';
+                                                                }else{
+                                                                    $html .='<img src="'.$default_cat_img.'" class="w-100">';
+                                                                }
+                                                            }
+                                                            if($category_image_slider == 'slider'){
+                                                                if(count($item_images) > 0){
+                                                                    foreach($item_images as $item_image){
+                                                                        $html .='<div class="carousel-item">';
+                                                                            if(!empty($item_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item_image)){
+                                                                                $html .='<img src="'.asset('public/client_uploads/shops/'.$shop_slug.'/items/'. $item_image).'" class="w-100">';
+                                                                            }
+                                                                        $html .='</div>';
+                                                                    }
+                                                                }
+                                                            }
                                                         $html .='</div>';
-                                                            $html .='<div class="cate_name">'.$categoryName.'</div>';
-                                                    $html .='</a>';
-                                                $html .= '</div>';
-                                            }
-                                        }
+                                                    $html .='</div>';
+                                                $html .='</div>';
+                                                    $html .='<div class="cate_name">'.$categoryName.'</div>';
+                                            $html .='</a>';
+                                        $html .= '</div>';
+                                    }
                                 }
-                            } else {
-                                $html .='<h3 class="text-center">Categories not Found.</h3>';
                             }
-                        $html .='</div>';
+                        } else {
+                            $html .='<h3 class="text-center">Categories not Found.</h3>';
+                        }
+                    $html .='</div>';
                 }
             } else {
-                $items = Items::where("$name_key", 'LIKE', '%' . $keyword . '%')
-                                ->where('shop_id', $shop_id)
-                                ->where('published', 1)
-                                ->whereHas('categories', function ($query) use ($categories_ids) {
-                                    $query->whereIn('category_id', $categories_ids);
-                                })
-                                ->get();
+
+                $items = Items::where("$name_key", 'LIKE', '%' . $keyword . '%')->where('shop_id', $shop_id)->where('published', 1)->whereHas('categories', function ($query) use ($categories_ids) {
+                    $query->whereIn('category_id', $categories_ids);
+                })->get();
+
                 if ($active_layout == "layout_1"){
                     if (count($items) > 0) {
                             $html .= '<div class="item_inr_info_sec">';
@@ -922,163 +903,158 @@ class ShopController extends Controller
 
                     if (count($items) > 0){
                         $html .= '<div class="category_inr_list_item category_item_list">';
-                        $html .= '<div class="row">';
-                        foreach ($items as $item)
-                            {
+                            $html .= '<div class="row">';
 
-                                        $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
+                                foreach ($items as $item){
 
-                                        $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
-                                        $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
-                                        $active_cat = checkCategorySchedule($item->category_id, $item->shop_id);
-                                        $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
-                                        $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
-                                        $tag_name = getTagName($item['id']);
-                                        $tagName = isset($tag_name->hasOneTag->$name_key) ? $tag_name->hasOneTag->$name_key : '';
-                                        $price_arr = getItemPrice($item['id']);
+                                    $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
+                                    $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
+                                    $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
+                                    $active_cat = checkCategorySchedule($item->category_id, $item->shop_id);
+                                    $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
+                                    $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
+                                    $tag_name = getTagName($item['id']);
+                                    $tagName = isset($tag_name->hasOneTag->$name_key) ? $tag_name->hasOneTag->$name_key : '';
+                                    $price_arr = getItemPrice($item['id']);
+                                    $item_discount = isset($item['discount']) ? $item['discount'] : 0;
+                                    $item_discount_type = isset($item['discount_type']) ? $item['discount_type'] : 'percentage';
 
-                                        $item_discount = isset($item['discount']) ? $item['discount'] : 0;
-                                                $item_discount_type = isset($item['discount_type']) ? $item['discount_type'] : 'percentage';
-                                        if ($active_cat == 1) {
-
-                                            if ($item['type'] == 2) {
-
-                                                $html .= '<div class="category_title">';
-                                                    $html .= '<div class="category_title_img">';
-                                                        if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                        {
-                                                                $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                                                $html .='<img src="'.$item_divider_image.'" class="w-100">';
-                                                        }else{
-                                                            $noImage = asset('public/client_images/not-found/no_image_1.jpg');
-                                                            $html .= '<img src="'.$noImage.'" class="w-100">';
-                                                        }
+                                    if ($active_cat == 1) {
+                                        if ($item['type'] == 2) {
+                                            $html .= '<div class="col-md-12">';
+                                                $html .= '<div class="category_title devider">';
+                                                    if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])){
+                                                        $html .= '<div class="category_title_img img-devider text-center">';
+                                                            $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                                            $html .='<img src="'.$item_divider_image.'" style="width: '.$item['divider_img_size'].'px;">';
                                                         $html .=  '</div>';
-                                                        $html .= '<div class="category_title_name">';
-                                                            $html .= '<h3>'.$item_name.'</h3>';
-                                                        $html .= '</div>';
+                                                    }
+                                                    $html .= '<div class="category_title_name">';
+                                                        $html .= '<h3>'.$item_name.'</h3>';
+                                                    $html .= '</div>';
                                                 $html .= '</div>';
-                                            }else{
+                                            $html .= '</div>';
+                                        }else{
 
-                                                $html .='<div class="col-xl-4 col-lg-6 col-md-6">';
-                                                $html .= '<div class="item_detail single_item_inr devider-border';
-                                                if (($item['day_special'] == 1 && $special_day_effect_box == 'blink') || ($item['as_sign'] == 1 && $special_day_effect_box == 'blink')) {
-                                                    $html .= ' special_day_blink';
-                                                } elseif (($item['day_special'] == 1 && $special_day_effect_box == 'rotate') || ($item['as_sign'] == 1 && $special_day_effect_box == 'rotate')) {
-                                                    $html .= ' special_day_rotate';
-                                                }
-                                                if($item['is_new'] == 1 || $item['as_sign'] == 1){
-                                                    $html .=' tag_item_detail';
-                                                }
-                                                $html .= '">';
-                                                    $html .='<div class="special">
-                                                             <label ></label>
-                                                             <label ></label>
-                                                             <label ></label>
-                                                             <label ></label>
-                                                             </div>';
-                                                             if ($item['is_new'] == 1) {
-                                                                $new_img = asset('public/client_images/bs-icon/new.png');
-                                                                $html .= '<img class="is_new tag-img position-absolute" src="' . $new_img . '" style="top:0; left:0; width:70px;">';
-                                                            }
+                                            $html .='<div class="col-xl-4 col-lg-6 col-md-6">';
+                                            $html .= '<div class="item_detail single_item_inr devider-border';
+                                            if (($item['day_special'] == 1 && $special_day_effect_box == 'blink') || ($item['as_sign'] == 1 && $special_day_effect_box == 'blink')) {
+                                                $html .= ' special_day_blink';
+                                            } elseif (($item['day_special'] == 1 && $special_day_effect_box == 'rotate') || ($item['as_sign'] == 1 && $special_day_effect_box == 'rotate')) {
+                                                $html .= ' special_day_rotate';
+                                            }
+                                            if($item['is_new'] == 1 || $item['as_sign'] == 1){
+                                                $html .=' tag_item_detail';
+                                            }
+                                            $html .= '">';
+                                                $html .='<div class="special">
+                                                            <label ></label>
+                                                            <label ></label>
+                                                            <label ></label>
+                                                            <label ></label>
+                                                            </div>';
+                                                            if ($item['is_new'] == 1) {
+                                                            $new_img = asset('public/client_images/bs-icon/new.png');
+                                                            $html .= '<img class="is_new tag-img position-absolute" src="' . $new_img . '" style="top:0; left:0; width:70px;">';
+                                                        }
 
-                                                            if ($item['as_sign'] == 1) {
-                                                                $as_sign_img = asset('public/client_images/bs-icon/signature.png');
-                                                                $html .= '<img class="is_sign tag-img position-absolute" src="' . $as_sign_img . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
-                                                            }
-                                                             $html .='<div class="category_item_name">';
-                                                                $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
-                                                             $html .='</div>';
-                                                             $html .= '<div class="item_detail_inr' . (!empty($item['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) ? '' : ' no_img_item_detail') . '">';
-                                                            $html .='<div class="item_info">';
-                                                                    if (strlen(strip_tags($desc)) > 180) {
-                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                                                        $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br>
-                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
-                                                                    }else{
-                                                                        $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
-                                                                    }
-                                                                    if(count($ingrediet_arr) > 0) {
-                                                                        $html .='<div class="item_tag">';
-                                                                            foreach ($ingrediet_arr as $val) {
-                                                                                $ingredient = getIngredientDetail($val);
-                                                                                $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
-                                                                                $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
+                                                        if ($item['as_sign'] == 1) {
+                                                            $as_sign_img = asset('public/client_images/bs-icon/signature.png');
+                                                            $html .= '<img class="is_sign tag-img position-absolute" src="' . $as_sign_img . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
+                                                        }
+                                                            $html .='<div class="category_item_name">';
+                                                            $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
+                                                            $html .='</div>';
+                                                            $html .= '<div class="item_detail_inr' . (!empty($item['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) ? '' : ' no_img_item_detail') . '">';
+                                                        $html .='<div class="item_info">';
+                                                                if (strlen(strip_tags($desc)) > 180) {
+                                                                    $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                                                    $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br>
+                                                                                    <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
+                                                                }else{
+                                                                    $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
+                                                                }
+                                                                if(count($ingrediet_arr) > 0) {
+                                                                    $html .='<div class="item_tag">';
+                                                                        foreach ($ingrediet_arr as $val) {
+                                                                            $ingredient = getIngredientDetail($val);
+                                                                            $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                            $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
 
-                                                                                if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
-                                                                                    if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
-                                                                                            $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
-                                                                                            $html .= '<img src="' . $ing_icon . '" width="45px" height="45px">';
-                                                                                    }
+                                                                            if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
+                                                                                if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
+                                                                                        $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
+                                                                                        $html .= '<img src="' . $ing_icon . '" width="45px" height="45px">';
                                                                                 }
                                                                             }
-                                                                        $html .='</div>';
-                                                                    }
-                                                                    if(isset($item_calories) && !empty($item_calories))
-                                                                    {
-                                                                            $html .='<p class="m-0 p-2 text-dark"><strong>Cal:</strong>'.$item_calories.'</p>';
-                                                                    }
-                                                            $html .='</div>';
-                                                            $html .='<div class="item_image">';
-                                                                if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
+                                                                        }
+                                                                    $html .='</div>';
+                                                                }
+                                                                if(isset($item_calories) && !empty($item_calories))
                                                                 {
-                                                                    $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                                                    $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
+                                                                        $html .='<p class="m-0 p-2 text-dark"><strong>Cal:</strong>'.$item_calories.'</p>';
                                                                 }
-
-                                                                if($item['review'] == 1){
-                                                                    $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
-                                                                    class="fa-solid fa-star"></i> <i
-                                                                    class="fa-solid fa-star"></i> <i
-                                                                    class="fa-solid fa-star"></i></a>';
-                                                                }       
-
-                                                            $html .='</div>';
                                                         $html .='</div>';
-                                                        $html .='<div class="special_day_item_gif text-center">';
-                                                        if ($item['day_special'] == 1) {
-                                                            if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
-                                                                $today_spec_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
-                                                                $html .= '<img width="170"  src="' . $today_spec_icon . '">';
-                                                            } else {
-                                                                if (!empty($default_special_image)) {
-                                                                    $html .= '<img width="170"  src="' . $default_special_image . '" alt="Special">';
-                                                                } else {
-                                                                    $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
-                                                                    $html .= '<img width="170"  src="' . $def_tds_img . '">';
-                                                                }
+                                                        $html .='<div class="item_image">';
+                                                            if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
+                                                            {
+                                                                $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                                                $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
                                                             }
-                                                        }
-                                                        $html .='</div>';
-                                                        $html .='<div class="item_footer">';
-                                                            if($tagName){
-                                                                $html .='<span>'.$tagName.'</span>';
-                                                            }
-                                                            if (count($price_arr) > 0){
-                                                                $price = Currency::currency($currency)->format($price_arr[0]['price']);
-                                                                $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
-                                                                if ($item_discount > 0){
-                                                                    if ($item_discount_type == 'fixed') {
-                                                                        $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
-                                                                        $newAmount = Currency::currency($currency)->format($new_amount);
-                                                                    } else {
-                                                                        $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
-                                                                        $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
-                                                                        $newAmount = Currency::currency($currency)->format($new_amount);
-                                                                    }
-                                                                    $html .='<h4>'.$price_label.' '.$newAmount.'<span>'.$price.'</span></h4>';
-                                                                }else{
-                                                                    $html .='<h4>'.$price_label.' '.$price.'</h4>';
-                                                                }
-                                                            }
-                                                        if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1) {
-                                                            $html .='<button class="item_cart_btn" onclick="getItemDetails('.$item['id'].','.$shop_id.')"><i class="fa-solid fa-cart-plus"></i></button>';
-                                                        }
+
+                                                            if($item['review'] == 1){
+                                                                $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
+                                                                class="fa-solid fa-star"></i> <i
+                                                                class="fa-solid fa-star"></i> <i
+                                                                class="fa-solid fa-star"></i></a>';
+                                                            }       
+
                                                         $html .='</div>';
                                                     $html .='</div>';
+                                                    $html .='<div class="special_day_item_gif text-center">';
+                                                    if ($item['day_special'] == 1) {
+                                                        if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
+                                                            $today_spec_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
+                                                            $html .= '<img width="170"  src="' . $today_spec_icon . '">';
+                                                        } else {
+                                                            if (!empty($default_special_image)) {
+                                                                $html .= '<img width="170"  src="' . $default_special_image . '" alt="Special">';
+                                                            } else {
+                                                                $def_tds_img = asset('public/client_images/bs-icon/today_special.gif');
+                                                                $html .= '<img width="170"  src="' . $def_tds_img . '">';
+                                                            }
+                                                        }
+                                                    }
+                                                    $html .='</div>';
+                                                    $html .='<div class="item_footer">';
+                                                        if($tagName){
+                                                            $html .='<span>'.$tagName.'</span>';
+                                                        }
+                                                        if (count($price_arr) > 0){
+                                                            $price = Currency::currency($currency)->format($price_arr[0]['price']);
+                                                            $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
+                                                            if ($item_discount > 0){
+                                                                if ($item_discount_type == 'fixed') {
+                                                                    $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
+                                                                    $newAmount = Currency::currency($currency)->format($new_amount);
+                                                                } else {
+                                                                    $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
+                                                                    $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
+                                                                    $newAmount = Currency::currency($currency)->format($new_amount);
+                                                                }
+                                                                $html .='<h4>'.$price_label.' '.$newAmount.'<span>'.$price.'</span></h4>';
+                                                            }else{
+                                                                $html .='<h4>'.$price_label.' '.$price.'</h4>';
+                                                            }
+                                                        }
+                                                    if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1) {
+                                                        $html .='<button class="item_cart_btn" onclick="getItemDetails('.$item['id'].','.$shop_id.')"><i class="fa-solid fa-cart-plus"></i></button>';
+                                                    }
+                                                    $html .='</div>';
                                                 $html .='</div>';
-                                            }
+                                            $html .='</div>';
                                         }
+                                    }
                                 }
                             $html .= '</div>';
                         $html .= '</div>';
@@ -1242,7 +1218,6 @@ class ShopController extends Controller
     // Search Itens
     public function searchItems(Request $request)
     {
-
         $category_id = $request->category_id;
         $tab_id = $request->tab_id;
         $keyword = $request->keyword;
@@ -1294,32 +1269,23 @@ class ShopController extends Controller
         $package_permissions = getPackagePermission($subscription_id);
 
         try {
+            
             if ($tab_id == 'all' || $tab_id == 'no_tab') {
+
                 $html = '';
+                if ($keyword == '') {
+                    $items = Items::where("$name_key", 'LIKE', '%' . $keyword . '%')->where('published', 1)->whereHas('categories', function ($query) use ($category_id) {
+                        $query->where('id', $category_id);
+                    })->orderBy('order_key', 'ASC') ->get();
 
-                    if ($keyword == '') {
-                        $items = Items::where("$name_key", 'LIKE', '%' . $keyword . '%')
-                                    ->where('published', 1)
-                                    ->whereHas('categories', function ($query) use ($category_id) {
-                                        $query->where('id', $category_id);
-                                    })
-                                    ->orderBy('order_key', 'ASC')
-                                    ->get();
-
-                    } else {
-                        $items = Items::whereHas('categories', function ($q) use ($parent_id) {
-                            $q->where('parent_id', $parent_id);
-                        })
-                        ->where("$name_key", 'LIKE', '%' . $keyword . '%')
-                        ->where('shop_id', $shop_id)
-                        ->where('published', 1)
-                        ->orderBy('order_key', 'ASC')
-                        ->get();
-                    }
+                } else {
+                    $items = Items::whereHas('categories', function ($q) use ($parent_id) {
+                        $q->where('parent_id', $parent_id);
+                    })->where("$name_key", 'LIKE', '%' . $keyword . '%')->where('shop_id', $shop_id)->where('published', 1)->orderBy('order_key', 'ASC')->get();
+                }
 
                 if (count($items) > 0) {
-                    if($active_layout == 'layout_1')
-                    {
+                    if($active_layout == 'layout_1'){
                         $html .= '<div class="item_inr_info_sec">';
                         $html .= '<div class="row">';
 
@@ -1491,128 +1457,124 @@ class ShopController extends Controller
                             'success' => 1,
                             'data'    => $html,
                         ]);
-                    } elseif($active_layout == 'layout_2')
-                    {
-                        if($keyword == ''){
-                            if($items[0]['type'] == 2){
-                                $items = $items->slice(1);
-                            }
+                    } elseif($active_layout == 'layout_2'){
+                        if($items[0]['type'] == 2){
+                            $items = $items->slice(1);
                         }
+
                         $html .= '<div class="category_inr_list_item">';
-                        $html .= '<div class="row">';
+                            $html .= '<div class="row">';
 
-                        foreach ($items as $item){
+                                foreach ($items as $item){
 
+                                    $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
+                                    $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
+                                    $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
+                                    $active_cat = checkCategorySchedule($item->category_id, $item->shop_id);
+                                    $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
+                                    $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
+                                    $tag_name = getTagName($item['id']);
+                                    $tagName = isset($tag_name->hasOneTag->$name_key) ? $tag_name->hasOneTag->$name_key : '';
+                                    $price_arr = getItemPrice($item['id']);
+                                    $item_discount = isset($item['discount']) ? $item['discount'] : 0;
+                                    $item_discount_type = isset($item['discount_type']) ? $item['discount_type'] : 'percentage';
 
-                                        $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
-
-                                        $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
-                                        $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
-                                        $active_cat = checkCategorySchedule($item->category_id, $item->shop_id);
-                                        $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
-                                        $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
-                                        $tag_name = getTagName($item['id']);
-                                        $tagName = isset($tag_name->hasOneTag->$name_key) ? $tag_name->hasOneTag->$name_key : '';
-                                        $price_arr = getItemPrice($item['id']);
-
-                                        $item_discount = isset($item['discount']) ? $item['discount'] : 0;
-                                                $item_discount_type = isset($item['discount_type']) ? $item['discount_type'] : 'percentage';
-                                        if ($active_cat == 1) {
-                                            if ($item['type'] == 2) {
-                                                $html .='<div class="category_title">';
-                                                    $html .='<div class="category_title_img">';
-                                                    if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                    {
-                                                        $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                                        $html .='<img src="'.$item_divider_image.'" class="w-100">';
-
-                                                    }else{
-                                                        $no_img = asset('public/client_images/not-found/no_image_1.jpg');
-                                                        $html .= '<img src="'.$no_img.'" class="w-100">';
+                                    if ($active_cat == 1) {
+                                        if ($item['type'] == 2) {
+                                            $html .='<div class="col-md-12">';
+                                                $html .='<div class="category_title devider">';
+                                                    if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])){
+                                                        $html .='<div class="category_title_img img-devider text-center">';
+                                                            $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                                            $html .='<img src="'.$item_divider_image.'" style="width: '.$item['divider_img_size'].'px;">';
+                                                        $html .='</div>';
                                                     }
-                                                    $html .='</div>';
                                                     $html .='<div class="category_title_name">';
-                                                    $html .='<h3>'.$item_name.'</h3>';
+                                                        $html .='<h3>'.$item_name.'</h3>';
                                                     $html .='</div>';
                                                 $html .='</div>';
-                                            }else{
-                                                $html .='<div class="col-xl-4 col-lg-6 col-md-6">';
+                                            $html .='</div>';
+                                        }else{
+                                            $html .='<div class="col-xl-4 col-lg-6 col-md-6">';
                                                 $html .= '<div class="item_detail single_item_inr devider-border';
-                                                if (($item['day_special'] == 1 && $special_day_effect_box == 'blink') || ($item['as_sign'] == 1 && $special_day_effect_box == 'blink')) {
-                                                    $html .= ' special_day_blink';
-                                                } elseif (($item['day_special'] == 1 && $special_day_effect_box == 'rotate') || ($item['as_sign'] == 1 && $special_day_effect_box == 'rotate')) {
-                                                    $html .= ' special_day_rotate';
-                                                }
-                                                if($item['is_new'] == 1 || $item['as_sign'] == 1){
-                                                    $html .=' tag_item_detail';
-                                                }
+                                                    if (($item['day_special'] == 1 && $special_day_effect_box == 'blink') || ($item['as_sign'] == 1 && $special_day_effect_box == 'blink')) {
+                                                        $html .= ' special_day_blink';
+                                                    } elseif (($item['day_special'] == 1 && $special_day_effect_box == 'rotate') || ($item['as_sign'] == 1 && $special_day_effect_box == 'rotate')) {
+                                                        $html .= ' special_day_rotate';
+                                                    }
+
+                                                    if($item['is_new'] == 1 || $item['as_sign'] == 1){
+                                                        $html .=' tag_item_detail';
+                                                    }
                                                 $html .= '">';
-                                                    $html .='<div class="special">
-                                                            <label ></label>
-                                                            <label ></label>
-                                                            <label ></label>
-                                                            <label ></label>
-                                                            </div>';
-                                                            if ($item['is_new'] == 1) {
-                                                                $new_img = asset('public/client_images/bs-icon/new.png');
-                                                                $html .= '<img class="is_new tag-img position-absolute" src="' . $new_img . '" style="top:0; left:0; width:70px;">';
+
+                                                    $html .='<div class="special"><label ></label><label ></label><label ></label><label ></label></div>';
+
+                                                    if ($item['is_new'] == 1) {
+                                                        $new_img = asset('public/client_images/bs-icon/new.png');
+                                                        $html .= '<img class="is_new tag-img position-absolute" src="' . $new_img . '" style="top:0; left:0; width:70px;">';
+                                                    }
+
+                                                    if ($item['as_sign'] == 1) {
+                                                        $as_sign_img = asset('public/client_images/bs-icon/signature.png');
+                                                        $html .= '<img class="is_sign tag-img position-absolute" src="' . $as_sign_img . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
+                                                    }
+
+                                                    $html .='<div class="category_item_name">';
+                                                        $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
+                                                    $html .='</div>';
+
+                                                    $html .= '<div class="item_detail_inr' . (!empty($item['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) ? '' : ' no_img_item_detail') . '">';
+
+                                                        $html .='<div class="item_info">';
+
+                                                            if (strlen(strip_tags($desc)) > 180) {
+                                                                $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                                                $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br><a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
+                                                            }else{
+                                                                $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
                                                             }
 
-                                                            if ($item['as_sign'] == 1) {
-                                                                $as_sign_img = asset('public/client_images/bs-icon/signature.png');
-                                                                $html .= '<img class="is_sign tag-img position-absolute" src="' . $as_sign_img . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
-                                                            }
-                                                            $html .='<div class="category_item_name">';
-                                                                $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
-                                                            $html .='</div>';
-                                                            $html .= '<div class="item_detail_inr' . (!empty($item['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])) ? '' : ' no_img_item_detail') . '">';
-                                                            $html .='<div class="item_info">';
-                                                                    if (strlen(strip_tags($desc)) > 180) {
-                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                                                        $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br>
-                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
-                                                                    }else{
-                                                                        $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
-                                                                    }
+                                                            if(count($ingrediet_arr) > 0) {
+                                                                $html .='<div class="item_tag">';
+                                                                    foreach ($ingrediet_arr as $val) {
+                                                                        $ingredient = getIngredientDetail($val);
+                                                                        $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                        $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
 
-                                                                    if(count($ingrediet_arr) > 0) {
-                                                                        $html .='<div class="item_tag">';
-                                                                            foreach ($ingrediet_arr as $val) {
-                                                                                $ingredient = getIngredientDetail($val);
-                                                                                $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
-                                                                                $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
-
-                                                                                if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
-                                                                                    if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
-                                                                                            $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
-                                                                                            $html .= '<img src="' . $ing_icon . '" width="45px" height="45px">';
-                                                                                    }
-                                                                                }
+                                                                        if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
+                                                                            if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
+                                                                                    $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
+                                                                                    $html .= '<img src="' . $ing_icon . '" width="45px" height="45px">';
                                                                             }
-                                                                        $html .='</div>';
+                                                                        }
                                                                     }
-                                                                    if(isset($item_calories) && !empty($item_calories))
-                                                                    {
-                                                                        $html .='<p class="m-0 p-2"><strong>Cal:</strong>'.$item_calories.'</p>';
-                                                                    }
-                                                            $html .='</div>';
-                                                            $html .='<div class="item_image">';
-                                                                if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                                {
-                                                                    $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                                                    $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
-                                                                }
+                                                                $html .='</div>';
+                                                            }
 
-                                                                if($item['review'] == 1){
-                                                                    $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
-                                                                    class="fa-solid fa-star"></i> <i
-                                                                    class="fa-solid fa-star"></i> <i
-                                                                    class="fa-solid fa-star"></i></a>';
-                                                                }
+                                                            if(isset($item_calories) && !empty($item_calories)){
+                                                                $html .='<p class="m-0 p-2"><strong>Cal:</strong>'.$item_calories.'</p>';
+                                                            }
 
-                                                            $html .='</div>';
                                                         $html .='</div>';
-                                                        $html .='<div class="special_day_item_gif text-center">';
+
+                                                        $html .='<div class="item_image">';
+                                                            if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])){
+                                                                $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                                                $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
+                                                            }
+
+                                                            if($item['review'] == 1){
+                                                                $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
+                                                                class="fa-solid fa-star"></i> <i
+                                                                class="fa-solid fa-star"></i> <i
+                                                                class="fa-solid fa-star"></i></a>';
+                                                            }
+                                                        $html .='</div>';
+
+                                                    $html .= '</div>';
+
+                                                    $html .='<div class="special_day_item_gif text-center">';
                                                         if ($item['day_special'] == 1) {
                                                             if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
                                                                 $today_spec_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
@@ -1626,37 +1588,43 @@ class ShopController extends Controller
                                                                 }
                                                             }
                                                         }
-                                                        $html .='</div>';
-                                                        $html .='<div class="item_footer">';
-                                                            if($tagName){
-                                                                $html .='<span>'.$tagName.'</span>';
-                                                            }
-                                                            if (count($price_arr) > 0){
-                                                                $price = Currency::currency($currency)->format($price_arr[0]['price']);
-                                                                $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
-                                                                if ($item_discount > 0){
-                                                                    if ($item_discount_type == 'fixed') {
-                                                                        $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
-                                                                        $newAmount = Currency::currency($currency)->format($new_amount);
-                                                                    } else {
-                                                                        $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
-                                                                        $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
-                                                                        $newAmount = Currency::currency($currency)->format($new_amount);
-                                                                    }
-                                                                    $html .='<h4>'.$price_label.' '.$newAmount.'<span>'.$price.'</span></h4>';
-                                                                }else{
-                                                                    $html .='<h4>'.$price_label.' '.$price.'</h4>';
+                                                    $html .='</div>';
+
+                                                    $html .='<div class="item_footer">';
+
+                                                        if($tagName){
+                                                            $html .='<span>'.$tagName.'</span>';
+                                                        }
+
+                                                        if (count($price_arr) > 0){
+                                                            $price = Currency::currency($currency)->format($price_arr[0]['price']);
+                                                            $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
+
+                                                            if ($item_discount > 0){
+                                                                if ($item_discount_type == 'fixed') {
+                                                                    $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
+                                                                    $newAmount = Currency::currency($currency)->format($new_amount);
+                                                                } else {
+                                                                    $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
+                                                                    $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
+                                                                    $newAmount = Currency::currency($currency)->format($new_amount);
                                                                 }
+                                                                $html .='<h4>'.$price_label.' '.$newAmount.'<span>'.$price.'</span></h4>';
+                                                            }else{
+                                                                $html .='<h4>'.$price_label.' '.$price.'</h4>';
                                                             }
+                                                        }
+
                                                         if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1) {
                                                             $html .='<button class="item_cart_btn" onclick="getItemDetails('.$item['id'].','.$shop_id.')"><i class="fa-solid fa-cart-plus"></i></button>';
-                                                            }
-                                                        $html .='</div>';
+                                                        }
                                                     $html .='</div>';
                                                 $html .='</div>';
-                                            }
+                                            $html .='</div>';
                                         }
                                     }
+                                }
+
                             $html .= '</div>';
                         $html .= '</div>';
                         return response()->json([
@@ -1976,128 +1944,125 @@ class ShopController extends Controller
                             'data'    => $html,
                         ]);
                     }elseif($active_layout == 'layout_2'){
-
-                        if($keyword == ''){
-                            if($items[0]['type'] == 2){
-                                $items = $items->slice(1);
-                            }
+                        if($items[0]['type'] == 2){
+                            $items = $items->slice(1);
                         }
+
                         $html .=  '<div class="category_inr_list_item">';
-                        $html .= '<div class="row">';
+                            $html .= '<div class="row">';
 
-                        foreach ($items as $item){
+                                foreach ($items as $item){
+                                    $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
+                                    $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
+                                    $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
+                                    $active_cat = checkCategorySchedule($item->category_id, $item->shop_id);
+                                    $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
+                                    $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
+                                    $tag_name = getTagName($item['id']);
+                                    $tagName = isset($tag_name->hasOneTag->$name_key) ? $tag_name->hasOneTag->$name_key : '';
+                                    $price_arr = getItemPrice($item['id']);
+                                    $item_discount = isset($item['discount']) ? $item['discount'] : 0;
+                                    $item_discount_type = isset($item['discount_type']) ? $item['discount_type'] : 'percentage';
 
-
-                                        $item_name = (isset($item[$name_key]) && !empty($item[$name_key])) ? $item[$name_key] : "";
-
-                                        $item_calories = (isset($item[$calories_key]) && !empty($item[$calories_key])) ? $item[$calories_key] : "";
-                                        $ingrediet_arr = (isset($item['ingredients']) && !empty($item['ingredients'])) ? unserialize($item['ingredients']) : [];
-                                        $active_cat = checkCategorySchedule($item->category_id, $item->shop_id);
-                                        $item_delivery = (isset($item['delivery']) && $item['delivery'] == 1) ? $item['delivery'] : 0;
-                                        $desc = (isset($item[$description_key]) && !empty($item[$description_key])) ? $item[$description_key] : "";
-                                        $tag_name = getTagName($item['id']);
-                                        $tagName = isset($tag_name->hasOneTag->$name_key) ? $tag_name->hasOneTag->$name_key : '';
-                                        $price_arr = getItemPrice($item['id']);
-
-                                        $item_discount = isset($item['discount']) ? $item['discount'] : 0;
-                                                $item_discount_type = isset($item['discount_type']) ? $item['discount_type'] : 'percentage';
-                                        if ($active_cat == 1) {
-                                            if ($item['type'] == 2) {
-                                                $html .='<div class="category_title">';
-                                                    $html .='<div class="category_title_img">';
-                                                    if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                    {
-                                                        $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                                        $html .='<img src="'.$item_divider_image.'" class="w-100">';
-
-                                                    }else{
-                                                        $no_img = asset('public/client_images/not-found/no_image_1.jpg');
-                                                        $html .= '<img src="'.$no_img.'" class="w-100">';
+                                    if ($active_cat == 1) {
+                                        if ($item['type'] == 2) {
+                                            $html .='<div class="col-md-12">';
+                                                $html .='<div class="category_title devider">';
+                                                    if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])){
+                                                        $html .='<div class="category_title_img img-devider text-center">';
+                                                            $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                                            $html .='<img src="'.$item_divider_image.'" style="width: '.$item['divider_img_size'].'px;">';
+                                                        $html .='</div>';
                                                     }
-                                                    $html .='</div>';
                                                     $html .='<div class="category_title_name">';
-                                                    $html .='<h3>'.$item_name.'</h3>';
+                                                        $html .='<h3>'.$item_name.'</h3>';
                                                     $html .='</div>';
                                                 $html .='</div>';
-                                            }else{
-                                                $html .='<div class="col-xl-4 col-lg-6 col-md-6">';
-                                                    $html .='<div class="item_detail single_item_inr devider-border';
-                                                        if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink'){
-                                                            $html .= ' special_day_blink';
-                                                        }elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate'){
-                                                            $html .= ' special_day_rotate';
-                                                        }
-                                                        if($item['is_new'] == 1 || $item['as_sign'] == 1){
-                                                            $html .=' tag_item_detail';
-                                                        }
-                                                    $html .='">';
-                                                        $html .='<div class="special">
-                                                            <label ></label>
-                                                            <label ></label>
-                                                            <label ></label>
-                                                            <label ></label>
-                                                            </div>';
-                                                            if ($item['is_new'] == 1) {
-                                                                $new_img = asset('public/client_images/bs-icon/new.png');
-                                                                $html .= '<img class="is_new tag-img position-absolute" src="' . $new_img . '" style="top:0; left:0; width:70px;">';
-                                                            }
+                                            $html .='</div>';
+                                        }else{
+                                            $html .='<div class="col-xl-4 col-lg-6 col-md-6">';
+                                                $html .='<div class="item_detail single_item_inr devider-border';
 
-                                                            if ($item['as_sign'] == 1) {
-                                                                $as_sign_img = asset('public/client_images/bs-icon/signature.png');
-                                                                $html .= '<img class="is_sign tag-img position-absolute" src="' . $as_sign_img . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
-                                                            }
-                                                            $html .='<div class="category_item_name">';
-                                                                $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
-                                                            $html .='</div>';
-                                                        $html .='<div class="item_detail_inr">';
-                                                            $html .='<div class="item_info">';
-                                                                // $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
-                                                                    if (strlen(strip_tags($desc)) > 180) {
-                                                                        $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
-                                                                        $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br>
-                                                                                        <a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
-                                                                    }else{
-                                                                        $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
-                                                                    }
+                                                    if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink'){
+                                                        $html .= ' special_day_blink';
+                                                    }elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate'){
+                                                        $html .= ' special_day_rotate';
+                                                    }
 
-                                                                    if(count($ingrediet_arr) > 0) {
-                                                                        $html .='<div class="item_tag">';
-                                                                            foreach ($ingrediet_arr as $val) {
-                                                                                $ingredient = getIngredientDetail($val);
-                                                                                $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
-                                                                                $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
+                                                    if($item['is_new'] == 1 || $item['as_sign'] == 1){
+                                                        $html .=' tag_item_detail';
+                                                    }
+                                                $html .='">';
 
-                                                                                if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
-                                                                                    if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
-                                                                                            $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
-                                                                                            $html .= '<img src="' . $ing_icon . '" width="45px" height="45px">';
-                                                                                    }
+                                                    $html .='<div class="special"><label ></label><label ></label><label ></label><label ></label></div>';
+
+                                                    if ($item['is_new'] == 1) {
+                                                        $new_img = asset('public/client_images/bs-icon/new.png');
+                                                        $html .= '<img class="is_new tag-img position-absolute" src="' . $new_img . '" style="top:0; left:0; width:70px;">';
+                                                    }
+
+                                                    if ($item['as_sign'] == 1) {
+                                                        $as_sign_img = asset('public/client_images/bs-icon/signature.png');
+                                                        $html .= '<img class="is_sign tag-img position-absolute" src="' . $as_sign_img . '" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">';
+                                                    }
+
+                                                    $html .='<div class="category_item_name">';
+                                                        $html .='<h3 onclick="getItemDetails('.$item['id'].','.$shop_id.')">'.$item_name.'</h3>';
+                                                    $html .='</div>';
+                                                    
+                                                    $html .='<div class="item_detail_inr">';
+
+                                                        $html .='<div class="item_info">';
+
+                                                                if (strlen(strip_tags($desc)) > 180) {
+                                                                    $desc = substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n"));
+                                                                    $html .='<div class="item-desc position-relative"><p>'. $desc . ' ... <br><a class="read-more-desc" onclick="getItemDetails('.$item['id'].','.$shop_id.')" style="cursor:pointer">' . $read_more_label . '</a></p></div>';
+                                                                }else{
+                                                                    $html .='<div class="item_desc position-relative"><p>'.strip_tags($desc).'</p></div>';
+                                                                }
+
+                                                                if(count($ingrediet_arr) > 0) {
+                                                                    $html .='<div class="item_tag">';
+                                                                        foreach ($ingrediet_arr as $val) {
+                                                                            $ingredient = getIngredientDetail($val);
+                                                                            $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                            $parent_ing_id = (isset($ingredient['parent_id'])) ? $ingredient['parent_id'] : NULL;
+
+                                                                            if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != NULL) {
+                                                                                if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon)) {
+                                                                                        $ing_icon = asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon);
+                                                                                        $html .= '<img src="' . $ing_icon . '" width="45px" height="45px">';
                                                                                 }
                                                                             }
-                                                                        $html .='</div>';
-                                                                    }
-                                                                    if(isset($item_calories) && !empty($item_calories))
-                                                                    {
-                                                                        $html .='<p class="m-0 p-2"><strong>Cal:</strong>'.$item_calories.'</p>';
-                                                                    }
-                                                            $html .='</div>';
-                                                            $html .='<div class="item_image">';
-                                                                if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                                {
-                                                                    $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
-                                                                    $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
+                                                                        }
+                                                                    $html .='</div>';
                                                                 }
 
-                                                                if($item['review'] == 1){
-                                                                    $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
-                                                                    class="fa-solid fa-star"></i> <i
-                                                                    class="fa-solid fa-star"></i> <i
-                                                                    class="fa-solid fa-star"></i></a>';
+                                                                if(isset($item_calories) && !empty($item_calories)){
+                                                                    $html .='<p class="m-0 p-2"><strong>Cal:</strong>'.$item_calories.'</p>';
                                                                 }
 
-                                                            $html .='</div>';
                                                         $html .='</div>';
-                                                        $html .='<div class="special_day_item_gif text-center">';
+
+                                                        $html .='<div class="item_image">';
+                                                        
+                                                            if(!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image'])){
+                                                                $item_divider_image = asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']);
+                                                                $html .='<img src="'.$item_divider_image.'" onclick="getItemDetails('.$item['id'].','.$shop_id.')">';
+                                                            }
+
+                                                            if($item['review'] == 1){
+                                                                $html .='<a href="#" class="review_btn" onclick="openRatingModel('.$item['id'].')"><i
+                                                                class="fa-solid fa-star"></i> <i
+                                                                class="fa-solid fa-star"></i> <i
+                                                                class="fa-solid fa-star"></i></a>';
+                                                            }
+
+                                                        $html .='</div>';
+
+                                                    $html .='</div>';
+
+                                                    $html .='<div class="special_day_item_gif text-center">';
                                                         if ($item['day_special'] == 1) {
                                                             if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon)) {
                                                                 $today_spec_icon = asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon);
@@ -2111,42 +2076,46 @@ class ShopController extends Controller
                                                                 }
                                                             }
                                                         }
-                                                        $html .='</div>';
-                                                        $html .='<div class="item_footer">';
-                                                            $html .='<span>'.$tagName.'</span>';
-                                                            if (count($price_arr) > 0){
-                                                                $price = Currency::currency($currency)->format($price_arr[0]['price']);
-                                                                $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
-                                                                if ($item_discount > 0){
-                                                                    if ($item_discount_type == 'fixed') {
-                                                                        $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
-                                                                        $newAmount = Currency::currency($currency)->format($new_amount);
-                                                                    } else {
-                                                                        $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
-                                                                        $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
-                                                                        $newAmount = Currency::currency($currency)->format($new_amount);
-                                                                    }
-                                                                    $html .='<h4>'.$price_label.' '.$newAmount.'<span>'.$price.'</span></h4>';
-                                                                }else{
-                                                                    $html .='<h4>'.$price_label.' '.$price.'</h4>';
+                                                    $html .='</div>';
+
+                                                    $html .='<div class="item_footer">';
+
+                                                        $html .='<span>'.$tagName.'</span>';
+
+                                                        if (count($price_arr) > 0){
+                                                            $price = Currency::currency($currency)->format($price_arr[0]['price']);
+                                                            $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
+                                                            if ($item_discount > 0){
+                                                                if ($item_discount_type == 'fixed') {
+                                                                    $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
+                                                                    $newAmount = Currency::currency($currency)->format($new_amount);
+                                                                } else {
+                                                                    $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
+                                                                    $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
+                                                                    $newAmount = Currency::currency($currency)->format($new_amount);
                                                                 }
+                                                                $html .='<h4>'.$price_label.' '.$newAmount.'<span>'.$price.'</span></h4>';
+                                                            }else{
+                                                                $html .='<h4>'.$price_label.' '.$price.'</h4>';
                                                             }
+                                                        }
+
                                                         if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1) {
                                                             $html .='<button class="item_cart_btn" onclick="getItemDetails('.$item['id'].','.$shop_id.')"><i class="fa-solid fa-cart-plus"></i></button>';
-                                                            }
-                                                        $html .='</div>';
+                                                        }
                                                     $html .='</div>';
                                                 $html .='</div>';
-                                            }
+                                            $html .='</div>';
                                         }
                                     }
+                                }
                             $html .= '</div>';
-                            $html .= '</div>';
+                        $html .= '</div>';
 
-                            return response()->json([
-                                'success' => 1,
-                                'data'    => $html,
-                            ]);
+                        return response()->json([
+                            'success' => 1,
+                            'data'    => $html,
+                        ]);
 
                     }elseif($active_layout == 'layout_3'){
                         $html .= '<div class="menu_info">';
@@ -4884,15 +4853,19 @@ class ShopController extends Controller
                             $child_categories = getChildCategories($parent_category->id); // Assuming a function to get child categories
                             if($active_parent_cat == 1 && $check_parent_cat_type_permission == 1)
                             {
+                                $nameId = str_replace(' ', '_', $parent_category->en_name);
+
                                 $html .= '<li>';
                                 if ($parent_category->category_type == 'link') {
                                     $html .= '<a href="' . (isset($parent_category->link_url) && !empty($parent_category->link_url) ? $parent_category->link_url : '#') . '" target="_blank">';
+                                } elseif($parent_category->category_type == 'pdf_page'){
+                                    $html .= '<a href="' . route('items.preview', [$shop_slug, $parent_category->id]) . '" target="_blank">';
+                                }elseif($parent_category->category_type == 'check_in'){
+                                    $html .= '<a href="' . route('items.preview', [$shop_slug, $parent_category->id]) . '">';
                                 } elseif ($parent_category->category_type == 'parent_category') {
                                     $html .= '<a href="' . route('restaurant', [$shop_slug, $parent_category->id]) . '">';
                                 } else {
-                                    $html .= '<a href="' . route('items.preview', [$shop_details['shop_slug'], $parent_category->id]) . '#' . $parent_nameId . '">';
-
-
+                                    $html .= '<a onclick="scrollToSection(\''.$nameId.'\')" class="'.$nameId.' scrollTab">';
                                 }
                                 $html .= isset($parent_category->$parent_name_code) ? $parent_category->$parent_name_code : '';
                                 $html .= '</a>';
@@ -4910,7 +4883,6 @@ class ShopController extends Controller
                                                     $html .= '<a href="' . $child_category->link_url . '" target="_blank" class="cat-btn">';
                                                 } elseif ($child_category->category_type == 'parent_category') {
                                                     $html .= '<a href="' . route('items.preview', [$shop_details['shop_slug'], $child_category->id]) . '" class="cat-btn';
-                                                    // $html .= $child_category->id == $current_cat_id ? ' active' : '';
                                                     $html .= '">';
                                                 } else {
                                                     $html .= '<a href="' . route('items.preview', [$shop_details['shop_slug'], $child_category->id]) . '">';

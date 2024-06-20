@@ -947,7 +947,7 @@ class ItemsController extends Controller
                                 // Order Attributes
                                 if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
                                 {
-                                    $html .= '<div class="col-md-12 mb-3">';
+                                    $html .= '<div class="col-md-12 mb-3 attributes-div">';
                                         $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
                                         $html .= '<select name="options[]" id="options" class="form-select" multiple>';
                                             if(count($options) > 0)
@@ -1393,7 +1393,7 @@ class ItemsController extends Controller
                                 // Order Attributes
                                 if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
                                 {
-                                    $html .= '<div class="col-md-12 mb-3">';
+                                    $html .= '<div class="col-md-12 mb-3 attributes-div">';
                                         $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
                                         $html .= '<select name="options[]" id="options" class="form-select" multiple>';
                                             if(count($options) > 0)
@@ -2423,7 +2423,7 @@ class ItemsController extends Controller
                             // Order Attributes
                             if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
                             {
-                                $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<div class="col-md-12 mb-3 attributes-div">';
                                     $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
                                     $html .= '<select name="options[]" id="options" class="form-select" multiple>';
                                         if(count($options) > 0)
@@ -2866,7 +2866,7 @@ class ItemsController extends Controller
                             // Order Attributes
                             if((isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1))
                             {
-                                $html .= '<div class="col-md-12 mb-3">';
+                                $html .= '<div class="col-md-12 mb-3 attributes-div">';
                                     $html .= '<label class="form-label" for="options">'.__('Attributes').'</label>';
                                     $html .= '<select name="options[]" id="options" class="form-select" multiple>';
                                         if(count($options) > 0)

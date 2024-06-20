@@ -3068,6 +3068,18 @@ span.qty-number {
 
 @media (max-width: 767px) {
 
+    .category_name_title .category_title {
+        margin-bottom: 30px;
+    }
+
+    .category_inr_list_item .category_title.devider {
+        padding: 10px 0;
+    }
+
+    .category_title .img-devider img{
+        width: 100% !important;
+    }
+
     .cart-back-btn {
         display: none;
     }
@@ -3365,6 +3377,7 @@ span.qty-number {
 
     .category_title .img-devider {
         width: 100%;
+        margin-bottom: 15px;
     }
 }
 

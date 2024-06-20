@@ -147,7 +147,7 @@
      $special_discount_percentage = isset($order_settings['discount_percentage']) ? $order_settings['discount_percentage'] : '';
 
 
-     if ($special_discount_type == 'percentage') {
+    if ($special_discount_type == 'percentage') {
             $special_discount = $special_discount_percentage . '%';
     } else {
         // Assuming $special_discount_percentage is a string representing the discount amount
@@ -1620,85 +1620,11 @@
 
                     {{-- Categories Tabs --}}
                     @if ($category_effect == 'default')
-                            <div class="category_slider position-relative">
-                                <ul class="slider-item" id="myTab" role="tablist">
-                                    @php
-                                        $categories_data = ($cat_parent_id == null) ? $categories_parent : $categories;
-                                    @endphp
-                                    @if (count($categories_data) > 0)
-                                        @foreach ($categories_data as $cat)
-                                            @php
-
-                                                $active_cat = checkCategorySchedule($cat['id'], $cat['shop_id']);
-                                                $check_cat_type_permission = checkCatTypePermission($cat['category_type'], $shop_details['id']);
-                                                $categoryImage = App\Models\CategoryImages::where('category_id',$cat['id'])->first();
-
-                                            @endphp
-
-                                            @if ($active_cat == 1)
-                                                @if ($check_cat_type_permission == 1)
-                                                    <li>
-                                                        @if ($cat['category_type'] == 'link')
-                                                            <a href="{{ $cat['link_url'] }}" target="_blank"
-                                                                class="nav-link cat-btn">
-                                                            @elseif($cat['category_type'] == 'parent_category')
-                                                                <a href="{{ route('restaurant', [$shop_slug, $cat['id']]) }}"  class="nav-link cat-btn {{ $cat['id'] == $current_cat_id ? 'active' : '' }}">
-                                                            @else
-                                                                <a href="{{ route('items.preview', [$shop_details['shop_slug'], $cat['id']]) }}"
-                                                                    class="nav-link cat-btn {{ $cat['id'] == $current_cat_id ? 'active' : '' }}">
-                                                        @endif
-                                                        <div class="img_box text-center">
-                                                            {{-- Img Section --}}
-                                                            @if (
-                                                                $cat['category_type'] == 'page' ||
-                                                                    $cat['category_type'] == 'gallery' ||
-                                                                    $cat['category_type'] == 'link' ||
-                                                                    $cat['category_type'] == 'check_in' ||
-                                                                    $cat['category_type'] == 'parent_category' ||
-                                                                    $cat['category_type'] == 'pdf_page')
-                                                                @if (!empty($cat['cover']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover))
-                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']) }}"
-                                                                        class="w-100 mb-2">
-                                                                @else
-                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}"
-                                                                        class="w-100 mb-2">
-                                                                @endif
-                                                            @else
-                                                                @php
-                                                                    $cat_image = isset($categoryImage) ? $categoryImage->image : '';
-                                                                @endphp
-
-                                                                @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}"
-                                                                        class="w-100 mb-2">
-                                                                @else
-                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}"
-                                                                        class="w-100 mb-2">
-                                                                @endif
-                                                            @endif
-                                                            <span>{{ isset($cat[$name_key]) ? $cat[$name_key] : '' }}</span>
-                                                        </div>
-                                                        </a>
-                                                    </li>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </ul>
-                                <button class="prev slick-arrow"><i class="fa-solid fa-angle-left"></i></button>
-                                <button class="next slick-arrow"><i class="fa-solid fa-angle-right"></i></button>
-                            </div>
-
-                    @elseif(
-                        $category_effect == 'wheel' ||
-                            $category_effect == 'coverflow' ||
-                            $category_effect == 'carousel' ||
-                            $category_effect == 'flat')
-                        <div id="coverflow">
-                            <ul class="flip-items">
-                            @php
-                                $categories_data = ($cat_parent_id == null) ? $categories_parent : $categories;
-                            @endphp
+                        <div class="category_slider position-relative">
+                            <ul class="slider-item" id="myTab" role="tablist">
+                                @php
+                                    $categories_data = ($cat_parent_id == null) ? $categories_parent : $categories;
+                                @endphp
                                 @if (count($categories_data) > 0)
                                     @foreach ($categories_data as $cat)
                                         @php
@@ -1706,52 +1632,95 @@
                                             $check_cat_type_permission = checkCatTypePermission($cat['category_type'], $shop_details['id']);
                                             $categoryImage = App\Models\CategoryImages::where('category_id',$cat['id'])->first();
                                         @endphp
+
+                                        @if ($active_cat == 1)
+                                            @if ($check_cat_type_permission == 1)
+                                                <li>
+                                                    @if ($cat['category_type'] == 'link')
+                                                        <a href="{{ $cat['link_url'] }}" target="_blank" class="nav-link cat-btn">
+                                                    @elseif($cat['category_type'] == 'parent_category')
+                                                        <a href="{{ route('restaurant', [$shop_slug, $cat['id']]) }}"  class="nav-link cat-btn {{ $cat['id'] == $current_cat_id ? 'active' : '' }}">
+                                                    @else
+                                                        <a href="{{ route('items.preview', [$shop_details['shop_slug'], $cat['id']]) }}" class="nav-link cat-btn {{ $cat['id'] == $current_cat_id ? 'active' : '' }}">
+                                                    @endif
+
+                                                        <div class="img_box text-center">
+                                                            {{-- Image Section --}}
+                                                            @if ($cat['category_type'] == 'page' || $cat['category_type'] == 'gallery' || $cat['category_type'] == 'link' || $cat['category_type'] == 'check_in' || $cat['category_type'] == 'parent_category' || $cat['category_type'] == 'pdf_page')
+                                                                @if (!empty($cat['cover']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover))
+                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']) }}" class="w-100 mb-2">
+                                                                @else
+                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100 mb-2">
+                                                                @endif
+                                                            @else
+                                                                @php
+                                                                    $cat_image = isset($categoryImage) ? $categoryImage->image : '';
+                                                                @endphp
+
+                                                                @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" class="w-100 mb-2">
+                                                                @else
+                                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100 mb-2">
+                                                                @endif
+                                                            @endif
+                                                            <span>{{ isset($cat[$name_key]) ? $cat[$name_key] : '' }}</span>
+                                                        </div>
+
+                                                    </a>
+                                                </li>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </ul>
+                            <button class="prev slick-arrow"><i class="fa-solid fa-angle-left"></i></button>
+                            <button class="next slick-arrow"><i class="fa-solid fa-angle-right"></i></button>
+                        </div>
+                    @elseif($category_effect == 'wheel' || $category_effect == 'coverflow' || $category_effect == 'carousel' || $category_effect == 'flat')
+                        <div id="coverflow">
+                            <ul class="flip-items">
+                                @php
+                                    $categories_data = ($cat_parent_id == null) ? $categories_parent : $categories;
+                                @endphp
+
+                                @if (count($categories_data) > 0)
+                                    @foreach ($categories_data as $cat)
+                                        @php
+                                            $active_cat = checkCategorySchedule($cat['id'], $cat['shop_id']);
+                                            $check_cat_type_permission = checkCatTypePermission($cat['category_type'], $shop_details['id']);
+                                            $categoryImage = App\Models\CategoryImages::where('category_id',$cat['id'])->first();
+                                        @endphp
+
                                         @if ($active_cat == 1)
                                             @if ($check_cat_type_permission == 1)
                                                 <li data-flip-title="{{ $cat[$name_key] }}">
                                                     @if ($cat['category_type'] == 'link')
-                                                        <a href="{{ $cat['link_url'] }}" target="_blank"
-                                                            class="cate_item">
-                                                            @elseif($cat['category_type'] == 'parent_category')
-                                                                <a href="{{ route('restaurant', [$shop_slug, $cat['id']]) }}" class="cate_item">
-                                                        @else
-                                                            <a href="{{ route('items.preview', [$shop_details['shop_slug'], $cat['id']]) }}"
-                                                                class="cate_item">
-                                                    @endif
-                                                    @if (
-                                                        $cat['category_type'] == 'page' ||
-                                                            $cat['category_type'] == 'gallery' ||
-                                                            $cat['category_type'] == 'link' ||
-                                                            $cat['category_type'] == 'check_in' ||
-                                                            $cat['category_type'] == 'parent_category' ||
-                                                            $cat['category_type'] == 'pdf_page')
-                                                        @if (!empty($cat['cover']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']))
-                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']) }}"
-                                                                class="w-100">
-
-                                                        @else
-                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}"
-                                                                class="w-100">
-
-                                                        @endif
+                                                        <a href="{{ $cat['link_url'] }}" target="_blank" class="cate_item">
+                                                    @elseif($cat['category_type'] == 'parent_category')
+                                                        <a href="{{ route('restaurant', [$shop_slug, $cat['id']]) }}" class="cate_item">
                                                     @else
-                                                        @php
-                                                            $cat_image = isset($categoryImage) ? $categoryImage->image : '';
-                                                        @endphp
-
-                                                        @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}"
-                                                                class="w-100">
-
-                                                        @else
-                                                            <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}"
-                                                                class="w-100">
-
-                                                        @endif
+                                                        <a href="{{ route('items.preview', [$shop_details['shop_slug'], $cat['id']]) }}" class="cate_item">
                                                     @endif
-                                                    <span>{{ isset($cat[$name_key]) ? $cat[$name_key] : '' }}</span>
-                                                    </a>
 
+                                                        @if ($cat['category_type'] == 'page' || $cat['category_type'] == 'gallery' || $cat['category_type'] == 'link' || $cat['category_type'] == 'check_in' || $cat['category_type'] == 'parent_category' || $cat['category_type'] == 'pdf_page')
+                                                            @if (!empty($cat['cover']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']))
+                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']) }}" class="w-100">
+                                                            @else
+                                                                <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                            @endif
+                                                        @else
+                                                            @php
+                                                                $cat_image = isset($categoryImage) ? $categoryImage->image : '';
+                                                            @endphp
+
+                                                            @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" class="w-100">
+                                                            @else
+                                                                <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
+                                                            @endif
+                                                        @endif
+                                                        <span>{{ isset($cat[$name_key]) ? $cat[$name_key] : '' }}</span>
+                                                    </a>
                                                 </li>
                                             @endif
                                         @endif
@@ -1763,23 +1732,24 @@
 
                     <div class="item_list_div">
                         <h3 class="mb-3 cat_name text-center">
-                        @if($cat_parent_id != null)
-                            <a href="{{ route('restaurant', [$shop_details['shop_slug'],$cat_parent_id]) }}" class="text-decoration-none"><i class="fa-solid fa-circle-chevron-left me-2"></i><span>{{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : '' }}</span></a>
+                            @if($cat_parent_id != null)
+                                <a href="{{ route('restaurant', [$shop_details['shop_slug'],$cat_parent_id]) }}" class="text-decoration-none">
+                                    <i class="fa-solid fa-circle-chevron-left me-2"></i>
+                                    <span>{{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : '' }}</span>
+                                </a>
                             @else
-                            {{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : '' }}
-                        @endif
-                            </h3>
-                        <div class="mb-3">{!! isset($cat_details[$description_key]) ? $cat_details[$description_key] : '' !!}</div>
-
+                                {{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : '' }}
+                            @endif
+                        </h3>
+                        <div class="mb-3">
+                            {!! isset($cat_details[$description_key]) ? $cat_details[$description_key] : '' !!}
+                        </div>
                         <div class="item_inr_info">
-
                             @if (count($cat_tags) > 0)
                                 {{-- Tags Section --}}
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button onclick="setTabKey('all','')" class="nav-link active tags-btn"
-                                            id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button"
-                                            role="tab" aria-controls="all" aria-selected="true">{{ __('All')}}</button>
+                                        <button onclick="setTabKey('all','')" class="nav-link active tags-btn" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">{{ __('All')}}</button>
                                     </li>
 
                                     @foreach ($cat_tags as $tag)
@@ -1789,18 +1759,17 @@
 
                                         @if (count($tag_items) > 0)
                                             <li class="nav-item" role="presentation">
-                                                <button onclick="setTabKey('{{ $tag['id'] }}','{{ $tag['tag_id'] }}')"
-                                                    class="nav-link tags-btn" id="{{ $tag['id'] }}-tab"
-                                                    data-bs-toggle="tab" data-bs-target="#tag{{ $tag['id'] }}"
-                                                    type="button" role="tab" aria-controls="tag{{ $tag['id'] }}"
-                                                    aria-selected="false">{{ isset($tag[$name_key]) ? $tag[$name_key] : '' }}</button>
+                                                <button onclick="setTabKey('{{ $tag['id'] }}','{{ $tag['tag_id'] }}')" class="nav-link tags-btn" id="{{ $tag['id'] }}-tab" data-bs-toggle="tab" data-bs-target="#tag{{ $tag['id'] }}" type="button" role="tab" aria-controls="tag{{ $tag['id'] }}" aria-selected="false">{{ isset($tag[$name_key]) ? $tag[$name_key] : '' }}</button>
                                             </li>
                                         @endif
                                     @endforeach
                                 </ul>
+
+                                {{-- Tags Content --}}
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="all" role="tabpanel"
-                                        aria-labelledby="all-tab">
+
+                                    {{-- All Tab Content --}}
+                                    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
                                         <div class="item_inr_info_sec">
                                             <div class="row">
                                                 @if (count($all_items) > 0)
@@ -1812,17 +1781,13 @@
                                                         @endphp
                                                         @if ($item['type'] == 1)
                                                             <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
-                                                                <div class="item_detail single_item_inr devider-border @if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink')
-                                                                    special_day_blink
-                                                                    @elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate')
-                                                                    special_day_rotate
-                                                                    @endif"                                                                   
-                                                                    >
+                                                                <div class="item_detail single_item_inr devider-border @if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink') special_day_blink @elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate') special_day_rotate @endif">
+
                                                                     <div class="special">
-                                                                        <label ></label>
-                                                                        <label ></label>
-                                                                        <label ></label>
-                                                                        <label ></label>
+                                                                        <label></label>
+                                                                        <label></label>
+                                                                        <label></label>
+                                                                        <label></label>
                                                                     </div>
 
                                                                     {{-- Image Section --}}
@@ -1969,7 +1934,7 @@
                                                                         {{-- Image Section --}}
                                                                         @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                             <div class="item_image">
-                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}">
+                                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" style="width: {{ $item['divider_img_size'] }}px;">
                                                                             </div>
                                                                         @endif
 
@@ -2015,13 +1980,13 @@
                                         </div>
                                     </div>
 
+                                    {{-- Others Tab Content --}}
                                     @foreach ($cat_tags as $tag)
                                         @php
                                             $tag_items = getTagsProducts($tag['tag_id'], $cat_details['id']);
                                         @endphp
 
-                                        <div class="tab-pane fade show" id="tag{{ $tag['id'] }}" role="tabpanel"
-                                            aria-labelledby="{{ $tag['id'] }}-tab">
+                                        <div class="tab-pane fade show" id="tag{{ $tag['id'] }}" role="tabpanel" aria-labelledby="{{ $tag['id'] }}-tab">
                                             <div class="item_inr_info_sec">
                                                 <div class="row">
                                                     @if (count($tag_items) > 0)
@@ -2033,12 +1998,7 @@
                                                             @endphp
                                                             @if ($item['type'] == 1)
                                                                 <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
-                                                                    <div class="item_detail single_item_inr devider-border @if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink')
-                                                                    special_day_blink
-                                                                    @elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate')
-                                                                    special_day_rotate
-                                                                    @endif "
-                                                                        >
+                                                                    <div class="item_detail single_item_inr devider-border @if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink') special_day_blink @elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate') special_day_rotate @endif ">
 
                                                                         <div class="special">
                                                                             <label ></label>
@@ -2046,7 +2006,6 @@
                                                                             <label ></label>
                                                                             <label ></label>
                                                                         </div>
-
 
                                                                         {{-- Image Section --}}
                                                                         <div class="item_image">
@@ -2190,7 +2149,7 @@
                                                                             {{-- Image Section --}}
                                                                             @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
                                                                                 <div class="item_image">
-                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}">
+                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" style="width: {{ $item['divider_img_size'] }}px;">
                                                                                 </div>
                                                                             @endif
 
@@ -2247,6 +2206,7 @@
                                                     $item_discount_type = isset($item['discount_type']) ? $item['discount_type'] : 'percentage';
                                                     $item_delivery = isset($item['delivery']) && $item['delivery'] == 1 ? $item['delivery'] : 0;
                                                 @endphp
+
                                                 @if ($item['type'] == 1)
                                                     <div class="col-md-6 col-lg-6 col-xl-3 mb-3">
                                                         <div class="item_detail single_item_inr devider-border">
@@ -2395,8 +2355,7 @@
                                                                 {{-- Image Section --}}
                                                                 @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
                                                                     <div class="item_image">
-                                                                        <img
-                                                                            src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}">
+                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" style="width: {{ $item['divider_img_size'] }}px;">
                                                                     </div>
                                                                 @endif
 
@@ -2449,36 +2408,32 @@
     @elseif ($layout == 'layout_2')
         <section class="category_section_inr">
 
+            {{-- Categories Tabs --}}
             <div class="owl-carousel owl-carousel-stacked" id="owl-carousel">
                 @if (count($categories) > 0)
                     @foreach ($categories as $cat)
-                    @php
+                        @php
                             $active_cat = checkCategorySchedule($cat->id, $cat->shop_id);
                             $check_cat_type_permission = checkCatTypePermission($cat->category_type, $shop_details['id']);
-                    @endphp
-                    @if($active_cat == 1)
-                        @if($check_cat_type_permission == 1)
+                        @endphp
 
-                            <div class="item" data-flip-title="{{ $cat->$name_key }}">
-                                @if ($cat->category_type == 'link')
-                                    <a href="{{ $cat->link_url }}" target="_blank" class="cate_item">
-                                @else
+                        @if($active_cat == 1)
+                            @if($check_cat_type_permission == 1)
+                                <div class="item" data-flip-title="{{ $cat->$name_key }}">
+                                    @if ($cat->category_type == 'link')
+                                        <a href="{{ $cat->link_url }}" target="_blank" class="cate_item">
+                                    @else
                                         <a href="{{ route('items.preview', [$shop_details['shop_slug'], $cat->id]) }}" class="cate_item">
-                                @endif
-                                @if (
-                                            $cat->category_type == 'page' ||
-                                                $cat->category_type == 'gallery' ||
-                                                $cat->category_type == 'link' ||
-                                                $cat->category_type == 'check_in' ||
-                                                $cat->category_type == 'parent_category' ||
-                                                $cat->category_type == 'pdf_page')
-                                                @if (!empty($cat->cover) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover))
+                                    @endif
+
+                                        @if ($cat->category_type == 'page' || $cat->category_type == 'gallery' || $cat->category_type == 'link' || $cat->category_type == 'check_in' || $cat->category_type == 'parent_category' || $cat->category_type == 'pdf_page')
+                                            @if (!empty($cat->cover) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover))
                                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover) }}">
                                             @else
                                                 <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}">
                                             @endif
-                                @else
-                                        @php
+                                        @else
+                                            @php
                                                 $cat_image = isset($cat->categoryImages[0]['image']) ? $cat->categoryImages[0]['image'] : '';
                                             @endphp
 
@@ -2487,17 +2442,17 @@
                                             @else
                                                 <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}">
                                             @endif
-
-                                @endif
+                                        @endif
                                         <span>{{ isset($cat->$name_key) ? $cat->$name_key : '' }}</span>
-                                </a>
-                            </div>
+                                    </a>
+                                </div>
+                            @endif
                         @endif
-                    @endif
                     @endforeach
                 @endif
             </div>
 
+            {{-- Header --}}
             <div class="category_header">
                 <div class="row align-item-center">
                     <div class="col-md-4">
@@ -2507,49 +2462,54 @@
                             @else
                                 <a class="back_btn" onclick="homePage('{{ $shop_details['shop_slug'] }}')">
                             @endif
-                             <i
-                                    class="fa-solid fa-circle-chevron-left me-2"></i>
-                            <span>{{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}</span>
+                                <i class="fa-solid fa-circle-chevron-left me-2"></i>
+                                <span>{{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}</span>
+
                                 @php
-                                 $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
+                                    $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
                                 @endphp
-                                 @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
-                             @endif
+
+                                @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
+                                @endif
                             </a>
                         </div>
                     </div>
                     @if($special_discount_percentage != 0 && $special_discount_percentage != '')
-                    <div class="col-md-4">
-                        <div class="item_discount">
-                            <label class="discount_btn">Special Discount  {{ $special_discount }}</label>
+                        <div class="col-md-4">
+                            <div class="item_discount">
+                                <label class="discount_btn">Special Discount  {{ $special_discount }}</label>
+                            </div>
                         </div>
-                    </div>
                     @endif
                 </div>
-
             </div>
 
-
-            {{-- Category --}}
+            {{-- Items List --}}
             <div class="category_item_list">
-                    @php
-                        $first_array = (isset($all_items[0]['type']) && $all_items[0]['type'] == 2) ? $all_items[0]['type'] : '';
-                    @endphp
+                @php
+                    $first_is_divider = (isset($all_items[0]['type']) && $all_items[0]['type'] == 2) ? $all_items[0]['type'] : '';
+                @endphp
+
                 <div class="category_list_item_inr">
                     <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
-                            @if ($first_array)
+
+                        {{-- All Tab --}}
+                        <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">                         
+
+                            @if ($first_is_divider)
                                 <div class="category_name_title">
                                     <div class="row aline-items-center mb-3">
                                         <div class="col-md-3">
-                                                <div class="category_back_btn">
-                                                <a class="back_btn" onclick="homePage('{{ $shop_details['shop_slug'] }}')"> <i
-                                                        class="fa-solid fa-circle-chevron-left me-2"></i>
+                                            <div class="category_back_btn">
+                                                <a class="back_btn" onclick="homePage('{{ $shop_details['shop_slug'] }}')"> 
+                                                    <i class="fa-solid fa-circle-chevron-left me-2"></i>
                                                     <span>{{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}</span>
+
                                                     @php
                                                         $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
                                                     @endphp
+
                                                     @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
                                                         <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
                                                     @endif
@@ -2564,128 +2524,152 @@
                                             </div>
                                         </div>
                                         <div class="col-md-3"></div>
-
                                     </div>
-                                        <div class="category_title devider">
-                                            @if (!empty($all_items[0]['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']))
-                                                <div class="category_title_img img-devider">
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']) }}" class="w-100"> 
+                                    {{-- Tags --}}
+                                    @if (count($cat_tags) > 0)
+                                        <div class="category_header">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-7">
+                                                    <div class="category_inr_tag">
+                                                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                                                            {{-- All --}}
+                                                            <li class="nav-item" role="presentation">
+                                                                <button class="nav-link active tags-btn all-tab" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">{{ __('All') }}</button>
+                                                            </li>
+
+                                                            {{-- Others --}}
+                                                            @foreach ($cat_tags as $inner_tag)
+                                                                @php
+                                                                    $tag_items_inner = getTagsProducts($inner_tag['tag_id'], $cat_details['id']);
+                                                                @endphp
+
+                                                                @if (count($tag_items_inner) > 0)
+                                                                    <li class="nav-item" role="presentation">
+                                                                        <button class="nav-link tags-btn {{ $inner_tag['id'] }}-tab" id="{{ $inner_tag['id'] }}-tab" data-bs-toggle="tab" data-bs-target="#tag{{ $inner_tag['id'] }}" type="button" role="tab" aria-controls="tag{{ $inner_tag['id'] }}" aria-selected="false">{{ isset($inner_tag[$name_key]) ? $inner_tag[$name_key] : '' }}</button>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
                                                 </div>
-                                            @endif
-                                            <div class="category_title_name">
-                                                <h3>{{ isset($all_items[0][$name_key]) && !empty($all_items[0][$name_key]) ? $all_items[0][$name_key] : '' }}</h3>
                                             </div>
                                         </div>
+                                    @endif
+                                    <div class="category_title devider text-center">
+                                        @if (!empty($all_items[0]['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']))
+                                            <div class="category_title_img img-devider">
+                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $all_items[0]['image']) }}" style="width: {{ $all_items[0]['divider_img_size'] }}px;"> 
+                                            </div>
+                                        @endif
+                                        <div class="category_title_name">
+                                            <h3>{{ isset($all_items[0][$name_key]) && !empty($all_items[0][$name_key]) ? $all_items[0][$name_key] : '' }}</h3>
+                                        </div>
+                                    </div>
                                 </div>
                             @else
-                            <div class="category_name_title">
-                            <div class="row aline-items-center mb-3">
+                                <div class="category_name_title">
+                                    <div class="row aline-items-center mb-3">
                                         <div class="col-md-3">
-                                                <div class="category_back_btn">
-                                                    @if($cat_details['parent_id'] != 0)
+                                            <div class="category_back_btn">
+                                                @if($cat_details['parent_id'] != 0)
                                                     <a class="back_btn" href="{{ route('restaurant', [$shop_details['shop_slug'],$cat_details['parent_id']]) }}">
-                                                    @else
+                                                @else
                                                     <a class="back_btn" onclick="homePage('{{ $shop_details['shop_slug'] }}')">
-                                                    @endif
-                                                <i class="fa-solid fa-circle-chevron-left me-2"></i>
-                                                   <span>{{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}</span>
-                                                    @php
-                                                    $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
-                                                    @endphp
-                                                    @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
                                                 @endif
+                                                    <i class="fa-solid fa-circle-chevron-left me-2"></i>
+                                                    <span>{{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}</span>
+
+                                                    @php
+                                                        $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
+                                                    @endphp
+                                                    
+                                                    @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
+                                                    @endif
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="d-none search_input_inner">
-                                                            <input type="text" class="form-control search_layout" name="search" id="search_layout" placeholder="Search Items">
-                                                            <button class="btn btn-secondary src_btn_inner"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                            <button class="btn btn-danger clr_btn_inner"><i class="fa-solid fa-x"></i></button>
-
-                                                </div>
+                                                <input type="text" class="form-control search_layout" name="search" id="search_layout" placeholder="Search Items">
+                                                <button class="btn btn-secondary src_btn_inner"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                                <button class="btn btn-danger clr_btn_inner"><i class="fa-solid fa-x"></i></button>
+                                            </div>
                                         </div>
                                         <div class="col-md-3"></div>
-
                                     </div>
                                     <div class="category_title">
-                                        <div class="category_title_img">
-                                            @if (
-                                                $cat_details->category_type == 'page' ||
-                                                    $cat_details->category_type == 'gallery' ||
-                                                    $cat_details->category_type == 'link' ||
-                                                    $cat_details->category_type == 'check_in' ||
-                                                    $cat_details->category_type == 'parent_category' ||
-                                                    $cat_details->category_type == 'pdf_page')
-                                                @if (
-                                                    !empty($cat_details->cover) &&
-                                                        file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_details->cover))
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_details->cover) }}"
-                                                        class="w-100">
-                                                @else
-                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                @endif
-                                            @else
-                                                @php
-                                                    $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
-                                                @endphp
-                                                @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}"
-                                                        class="w-100">
-                                                @else
-                                                    <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                @endif
+                                        @if ($cat_details->category_type == 'page' || $cat_details->category_type == 'gallery' || $cat_details->category_type == 'link' || $cat_details->category_type == 'check_in' || $cat_details->category_type == 'parent_category' || $cat_details->category_type == 'pdf_page')
+                                            @if (!empty($cat_details->cover) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_details->cover))
+                                                <div class="category_title_img">
+                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_details->cover) }}" class="w-100">
+                                                </div>
                                             @endif
-                                        </div>
+                                        @else
 
+                                            @php
+                                                $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
+                                            @endphp
+
+                                            @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                                <div class="category_title_img">
+                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" class="w-100">
+                                                </div>
+                                            @endif
+                                            
+                                        @endif
                                         <div class="category_title_name">
                                             <h3>{{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : '' }}</h3>
                                         </div>
                                     </div>
                                 </div>
                             @endif
-                            <div class="category_header">
-                                @if (count($cat_tags) > 0)                                
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-7">
-                                            <div class="category_inr_tag">
-                                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                                    <li class="nav-item" role="presentation">
-                                                        <button  class="nav-link active tags-btn all-tab" id="all-tab"
-                                                            data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab"
-                                                            aria-controls="all" aria-selected="true">{{ __('All') }}</button>
-                                                    </li>
-                                                    @foreach ($cat_tags as $inner_tag)
-                                                        @php
-                                                            $tag_items_inner = getTagsProducts($inner_tag['tag_id'], $cat_details['id']);
-                                                        @endphp
 
-                                                        @if (count($tag_items_inner) > 0)
-                                                            <li class="nav-item" role="presentation">
-                                                                <button
-                                                                    class="nav-link tags-btn {{ $inner_tag['id'] }}-tab" id="{{ $inner_tag['id'] }}-tab"
-                                                                    data-bs-toggle="tab" data-bs-target="#tag{{ $inner_tag['id'] }}"
-                                                                    type="button" role="tab" aria-controls="tag{{ $inner_tag['id'] }}"
-                                                                    aria-selected="false">{{ isset($inner_tag[$name_key]) ? $inner_tag[$name_key] : '' }}</button>
-                                                            </li>
-                                                        @endif
-                                                    @endforeach
-                                                </ul>
+                            {{-- Tags --}}
+                            @if ($first_is_divider != 2)                                
+                                @if (count($cat_tags) > 0)
+                                    <div class="category_header">
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-7">
+                                                <div class="category_inr_tag">
+                                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                                                        {{-- All --}}
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link active tags-btn all-tab" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">{{ __('All') }}</button>
+                                                        </li>
+
+                                                        {{-- Others --}}
+                                                        @foreach ($cat_tags as $inner_tag)
+                                                            @php
+                                                                $tag_items_inner = getTagsProducts($inner_tag['tag_id'], $cat_details['id']);
+                                                            @endphp
+
+                                                            @if (count($tag_items_inner) > 0)
+                                                                <li class="nav-item" role="presentation">
+                                                                    <button class="nav-link tags-btn {{ $inner_tag['id'] }}-tab" id="{{ $inner_tag['id'] }}-tab" data-bs-toggle="tab" data-bs-target="#tag{{ $inner_tag['id'] }}" type="button" role="tab" aria-controls="tag{{ $inner_tag['id'] }}" aria-selected="false">{{ isset($inner_tag[$name_key]) ? $inner_tag[$name_key] : '' }}</button>
+                                                                </li>
+                                                            @endif
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 @endif
-                            </div>
-
+                            @endif
+                            
+                            {{-- Items --}}
                             <div class="category_inr_list_item">
                                 <div class="row">
 
                                     @php
-                                        if($first_array == 2) {
+                                        if($first_is_divider == 2) {
                                             unset($all_items[0]);
                                         }
                                     @endphp
+                                    
                                     @if (count($all_items) > 0)
                                         @foreach ($all_items as  $item)
                                             @php
@@ -2695,181 +2679,171 @@
                                                 $tag_name = getTagName($item->id);
                                                 $tagName = isset($tag_name->hasOneTag->$name_key) ? $tag_name->hasOneTag->$name_key : '';
                                             @endphp
+
                                             @if ($item['type'] == 1)
                                                 <div class="col-xl-4 col-lg-6 col-md-6">
-                                                    <div class="item_detail single_item_inr devider-border  @if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink')
-                                                    special_day_blink
-                                                    @elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate')
-                                                    special_day_rotate
-                                                     @endif @if($item['is_new'] == 1 || $item['as_sign'] == 1) tag_item_detail @endif">
+                                                    <div class="item_detail single_item_inr devider-border  @if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink') special_day_blink @elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate') special_day_rotate @endif @if($item['is_new'] == 1 || $item['as_sign'] == 1) tag_item_detail @endif">
+
                                                         <div class="special">
                                                             <label ></label>
                                                             <label ></label>
                                                             <label ></label>
                                                             <label ></label>
                                                         </div>
-                                                            @if ($item['is_new'] == 1)
-                                                                    <img class="is_new tag-img position-absolute"
-                                                                        src="{{ asset('public/client_images/bs-icon/new.png') }}" style="top:0; left:0; width:70px;">
-                                                                @endif
+                                                        
+                                                        {{-- Is New --}}
+                                                        @if ($item['is_new'] == 1)
+                                                            <img class="is_new tag-img position-absolute" src="{{ asset('public/client_images/bs-icon/new.png') }}" style="top:0; left:0; width:70px;">
+                                                        @endif
 
-                                                                {{-- Signature Image --}}
-                                                                @if ($item['as_sign'] == 1)
-                                                                    <img class="is_sign tag-img position-absolute"
-                                                                        src="{{ asset('public/client_images/bs-icon/signature.png') }}" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">
-                                                                @endif
-                                                        {{-- name --}}
+                                                        {{-- Signature Image --}}
+                                                        @if ($item['as_sign'] == 1)
+                                                            <img class="is_sign tag-img position-absolute" src="{{ asset('public/client_images/bs-icon/signature.png') }}" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">
+                                                        @endif
+
+                                                        {{-- Name --}}
                                                         <div class="category_item_name">
-                                                                    <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})"
-                                                                        style="cursor: pointer">
-                                                                        {{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
-                                                                    </h3>
-                                                            </div>
-                                                            <div class="item_detail_inr {{ (!empty($item['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))) ? '' : 'no_img_item_detail' }}">
-                                                                <div class="item_info">
+                                                            <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
+                                                                {{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
+                                                            </h3>
+                                                        </div>
 
-                                                                    <!-- {{-- name --}}
-                                                                    <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})"
-                                                                        style="cursor: pointer">
-                                                                        {{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
-                                                                    </h3> -->
+                                                        {{-- Other Details --}}
+                                                        <div class="item_detail_inr {{ (!empty($item['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))) ? '' : 'no_img_item_detail' }}">
+                                                            <div class="item_info">
 
-                                                                    {{-- Description Section --}}
-                                                                    @php
-                                                                        $desc = isset($item[$description_key]) && !empty($item[$description_key]) ? $item[$description_key] : '';
-                                                                    @endphp
-                                                                    @if (strlen(strip_tags($desc)) > 180)
-                                                                        <div class="item-desc position-relative">
-                                                                            <p>
-                                                                                {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
-                                                                                <a class="read-more-desc text-white" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ $read_more_label }}</a>
-                                                                            </p>
-                                                                        </div>
-                                                                    @else
-                                                                        <div class="item-desc position-relative">
-                                                                            <p>{!! $desc !!}</p>
-                                                                        </div>
-                                                                    @endif
-
-                                                                    {{-- Ingredient Section --}}
-                                                                    @php
-                                                                        $ingrediet_arr = isset($item['ingredients']) && !empty($item['ingredients']) ? unserialize($item['ingredients']) : [];
-                                                                    @endphp
-
-                                                                    @if (count($ingrediet_arr) > 0)
-                                                                        <div class="item_tag">
-                                                                            @foreach ($ingrediet_arr as $val)
-                                                                                @php
-                                                                                    $ingredient = getIngredientDetail($val);
-                                                                                    $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
-                                                                                    $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
-                                                                                @endphp
-
-                                                                                @if (
-                                                                                    (isset($package_permissions['special_icons']) &&
-                                                                                        !empty($package_permissions['special_icons']) &&
-                                                                                        $package_permissions['special_icons'] == 1) ||
-                                                                                        $parent_ing_id != null)
-                                                                                    @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
-                                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}"
-                                                                                            width="45px" height="45px">
-                                                                                    @endif
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </div>
-                                                                    @endif
-
-                                                                    {{-- Calories Section --}}
-                                                                    @if (isset($item[$calories_key]) && !empty($item[$calories_key]))
-                                                                        <p class="m-0 p-2"><strong>Cal:
-                                                                            </strong>{{ isset($item[$calories_key]) && !empty($item[$calories_key]) ? $item[$calories_key] : '' }}
-                                                                        </p>
-                                                                    @endif
-
-                                                                </div>
-                                                                <div class="item_image">
-                                                                    @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}"
-                                                                            onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})"
-                                                                            style="cursor: pointer">
-                                                                    @endif
-
-                                                                    @if ($item['review'] == 1)                                                                        
-                                                                        <a  class="review_btn"
-                                                                            onclick="openRatingModel({{ $item['id'] }})"><i
-                                                                                class="fa-solid fa-star"></i> <i
-                                                                                class="fa-solid fa-star"></i> <i
-                                                                                class="fa-solid fa-star"></i></a>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                            <div class="special_day_item_gif text-center">
-                                                                @if ($item['day_special'] == 1)
-                                                                    @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
-                                                                        <img width="170" src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
-                                                                    @else
-                                                                        @if (!empty($default_special_image))
-                                                                            <img width="170" src="{{ $default_special_image }}" alt="Special">
-                                                                        @else
-                                                                            <img width="170" src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            </div>
-                                                            <div class="item_footer">
-                                                                @if($tagName)
-                                                                    <span>{{ $tagName }}</span>
-                                                                @endif
-                                                                {{-- Price --}}
+                                                                {{-- Description Section --}}
                                                                 @php
-                                                                    $price_arr = getItemPrice($item['id']);
+                                                                    $desc = isset($item[$description_key]) && !empty($item[$description_key]) ? $item[$description_key] : '';
+                                                                @endphp
+                                                                @if (strlen(strip_tags($desc)) > 180)
+                                                                    <div class="item-desc position-relative">
+                                                                        <p>
+                                                                            {!! substr(strip_tags($desc), 0, strpos(wordwrap(strip_tags($desc), 150), "\n")) !!}... <br>
+                                                                            <a class="read-more-desc text-white" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">{{ $read_more_label }}</a>
+                                                                        </p>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="item-desc position-relative">
+                                                                        <p>{!! $desc !!}</p>
+                                                                    </div>
+                                                                @endif
+
+                                                                {{-- Ingredient Section --}}
+                                                                @php
+                                                                    $ingrediet_arr = isset($item['ingredients']) && !empty($item['ingredients']) ? unserialize($item['ingredients']) : [];
                                                                 @endphp
 
-                                                                @if (count($price_arr) > 0)
-                                                                    @php
-                                                                        $price = Currency::currency($currency)->format($price_arr[0]['price']);
-                                                                        $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
-                                                                    @endphp
-                                                                    @if ($item_discount > 0)
-                                                                        @php
-                                                                            if ($item_discount_type == 'fixed') {
-                                                                                $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
-                                                                            } else {
-                                                                                $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
-                                                                                $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
-                                                                            }
-                                                                        @endphp
-                                                                        <h4>
-                                                                            {{ $price_label }}
-                                                                            {{ Currency::currency($currency)->format($new_amount) }}
-                                                                            <span>{{ $price }}</span>
-                                                                        </h4>
-                                                                    @else
-                                                                        <h4>
-                                                                            {{ $price_label }} {{ $price }}
-                                                                        </h4>
-                                                                    @endif
+                                                                @if (count($ingrediet_arr) > 0)
+                                                                    <div class="item_tag">
+                                                                        @foreach ($ingrediet_arr as $val)
+                                                                            @php
+                                                                                $ingredient = getIngredientDetail($val);
+                                                                                $ing_icon = isset($ingredient['icon']) ? $ingredient['icon'] : '';
+                                                                                $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
+                                                                            @endphp
+
+                                                                            @if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != null)
+                                                                                @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
+                                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}" width="45px" height="45px">
+                                                                                @endif
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </div>
                                                                 @endif
 
-                                                                @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
-                                                                    <button class="item_cart_btn"
-                                                                        onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})"
-                                                                        style="cursor: pointer"><i
-                                                                            class="fa-solid fa-cart-plus"></i></button>
+                                                                {{-- Calories Section --}}
+                                                                @if (isset($item[$calories_key]) && !empty($item[$calories_key]))
+                                                                    <p class="m-0 p-2"><strong>Cal:
+                                                                        </strong>{{ isset($item[$calories_key]) && !empty($item[$calories_key]) ? $item[$calories_key] : '' }}
+                                                                    </p>
                                                                 @endif
                                                             </div>
+                                                            <div class="item_image">
+                                                                @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
+                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer">
+                                                                @endif
+
+                                                                @if ($item['review'] == 1)                                                                        
+                                                                    <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                        <i class="fa-solid fa-star"></i> 
+                                                                        <i class="fa-solid fa-star"></i> 
+                                                                        <i class="fa-solid fa-star"></i>
+                                                                    </a>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- Special Day Image --}}
+                                                        <div class="special_day_item_gif text-center">
+                                                            @if ($item['day_special'] == 1)
+                                                                @if (!empty($today_special_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon))
+                                                                    <img width="170" src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/today_special_icon/' . $today_special_icon) }}">
+                                                                @else
+                                                                    @if (!empty($default_special_image))
+                                                                        <img width="170" src="{{ $default_special_image }}" alt="Special">
+                                                                    @else
+                                                                        <img width="170" src="{{ asset('public/client_images/bs-icon/today_special.gif') }}">
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        </div>
+
+                                                        {{-- Item Footer --}}
+                                                        <div class="item_footer">
+                                                            
+                                                            @if($tagName)
+                                                                <span>{{ $tagName }}</span>
+                                                            @endif
+
+                                                            @php
+                                                                $price_arr = getItemPrice($item['id']);
+                                                            @endphp
+
+                                                            @if (count($price_arr) > 0)
+                                                                @php
+                                                                    $price = Currency::currency($currency)->format($price_arr[0]['price']);
+                                                                    $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
+                                                                @endphp
+
+                                                                @if ($item_discount > 0)
+                                                                    @php
+                                                                        if ($item_discount_type == 'fixed') {
+                                                                            $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
+                                                                        } else {
+                                                                            $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
+                                                                            $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
+                                                                        }
+                                                                    @endphp
+
+                                                                    <h4>
+                                                                        {{ $price_label }}
+                                                                        {{ Currency::currency($currency)->format($new_amount) }}
+                                                                        <span>{{ $price }}</span>
+                                                                    </h4>
+                                                                @else
+                                                                    <h4>{{ $price_label }} {{ $price }}</h4>
+                                                                @endif
+                                                            @endif
+
+                                                            @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
+                                                                <button class="item_cart_btn" onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})" style="cursor: pointer"><i class="fa-solid fa-cart-plus"></i></button>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             @else
                                                 @if ($item_devider == 1)
-                                                    <div class="category_title devider">
-                                                        @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
-                                                            <div class="category_title_img img-devider text-center">
-                                                                <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" class="w-100">                                                                
+                                                    <div class="col-md-12">
+                                                        <div class="category_title devider">
+                                                            @if (!empty($item['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))
+                                                                <div class="category_title_img img-devider text-center">
+                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item['image']) }}" style="width: {{ $item['divider_img_size'] }}px;">                                                                
+                                                                </div>
+                                                            @endif
+                                                            <div class="category_title_name">
+                                                                <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>
                                                             </div>
-                                                        @endif
-                                                        <div class="category_title_name">
-                                                            <h3>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}</h3>
                                                         </div>
                                                     </div>
                                                 @endif
@@ -2879,52 +2853,81 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Others Tab --}}
                         @foreach ($cat_tags as $tag)
                             @php
-
                                 $tag_items = getTagsProducts($tag['tag_id'], $cat_details['id']);
-
-                                $tag_array = (isset($tag_items[0]['type']) && $tag_items[0]['type'] == 2) ? $tag_items[0]['type'] : '';
+                                $first_is_divider = (isset($tag_items[0]['type']) && $tag_items[0]['type'] == 2) ? $tag_items[0]['type'] : '';
                             @endphp
 
-                            <div class="tab-pane fade show" id="tag{{ $tag['id'] }}" role="tabpanel"
-                                aria-labelledby="{{ $tag['id'] }}-tab">
+                            <div class="tab-pane fade show" id="tag{{ $tag['id'] }}" role="tabpanel" aria-labelledby="{{ $tag['id'] }}-tab">
 
-                                @if ($tag_array)
+                                @if ($first_is_divider)
                                     <div class="category_name_title">
-                                    <div class="row aline-items-center mb-3">
-                                        <div class="col-md-3">
+                                        <div class="row aline-items-center mb-3">
+                                            <div class="col-md-3">
                                                 <div class="category_back_btn">
-                                                <a class="back_btn" onclick="homePage('{{ $shop_details['shop_slug'] }}')"> <i
-                                                        class="fa-solid fa-circle-chevron-left me-2"></i>
-                                                   <span>{{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}</span>
-                                                    @php
-                                                    $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
-                                                    @endphp
-                                                    @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
-                                                @endif
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="d-none search_input_inner" id="search_input">
-                                                            <input type="text" class="form-control search_layout" name="search" id="search_layout" placeholder="Search Items">
-                                                            <button class="btn btn-secondary src_btn_inner"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                            <button class="btn btn-danger clr_btn_inner"><i class="fa-solid fa-x"></i></button>
-                                                </div>
-                                        </div>
-                                        <div class="col-md-3"></div>
+                                                    <a class="back_btn" onclick="homePage('{{ $shop_details['shop_slug'] }}')">
+                                                        <i class="fa-solid fa-circle-chevron-left me-2"></i>
+                                                        <span>{{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}</span>
 
-                                    </div>
-                                        <div class="category_title">
-                                            <div class="category_title_img">
-                                                @if (!empty($tag_items[0]['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $tag_items[0]['image']))
-                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $tag_items[0]['image']) }}" class="w-100">
-                                                @else
-                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                @endif
+                                                        @php
+                                                            $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
+                                                        @endphp
+
+                                                        @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
+                                                        @endif
+                                                    </a>
+                                                </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="d-none search_input_inner" id="search_input">
+                                                    <input type="text" class="form-control search_layout" name="search" id="search_layout" placeholder="Search Items">
+                                                    <button class="btn btn-secondary src_btn_inner"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-danger clr_btn_inner"><i class="fa-solid fa-x"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3"></div>
+                                        </div>
+                                        {{-- Tags --}}
+                                        @if (count($cat_tags) > 0)
+                                            <div class="category_header">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-md-7">
+                                                        <div class="category_inr_tag">
+                                                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                                                                {{-- All --}}
+                                                                <li class="nav-item" role="presentation">
+                                                                    <button  class="nav-link active tags-btn all-tab" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">{{ __('All') }}</button>
+                                                                </li>
+
+                                                                {{-- Others --}}
+                                                                @foreach ($cat_tags as $inner_tag)
+                                                                    @php
+                                                                        $tag_items_inner = getTagsProducts($inner_tag['tag_id'], $cat_details['id']);
+                                                                    @endphp
+
+                                                                    @if (count($tag_items_inner) > 0)
+                                                                        <li class="nav-item" role="presentation">
+                                                                            <button class="nav-link tags-btn {{ $inner_tag['id'] }}-tab" id="{{ $inner_tag['id'] }}-tab" data-bs-toggle="tab" data-bs-target="#tag{{ $inner_tag['id'] }}" type="button" role="tab" aria-controls="tag{{ $inner_tag['id'] }}" aria-selected="false">{{ isset($inner_tag[$name_key]) ? $inner_tag[$name_key] : '' }}</button>
+                                                                        </li>
+                                                                    @endif
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <div class="category_title devider text-center">
+                                            @if (!empty($tag_items[0]['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $tag_items[0]['image']))
+                                                <div class="category_title_img img-devider">
+                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $tag_items[0]['image']) }}" style="width: {{ $tag_items[0]['divider_img_size'] }}px;">
+                                                </div>
+                                            @endif
                                             <div class="category_title_name">
                                                 <h3>{{ isset($tag_items[0][$name_key]) && !empty($tag_items[0][$name_key]) ? $tag_items[0][$name_key] : '' }}</h3>
                                             </div>
@@ -2932,60 +2935,50 @@
                                     </div>
                                 @else
                                     <div class="category_name_title">
-                                    <div class="row aline-items-center mb-3">
-                                        <div class="col-md-3">
+                                        <div class="row aline-items-center mb-3">
+                                            <div class="col-md-3">
                                                 <div class="category_back_btn">
-                                                <a class="back_btn" onclick="homePage('{{ $shop_details['shop_slug'] }}')"> <i
-                                                        class="fa-solid fa-circle-chevron-left me-2"></i>
-                                                    {{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}
-                                                    @php
-                                                    $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
-                                                    @endphp
-                                                    @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
-                                                @endif
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="d-none search_input_inner">
-                                                            <input type="text" class="form-control search_layout" name="search" id="search_layout" placeholder="Search Items">
-                                                            <button class="btn btn-secondary src_btn_inner"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                            <button class="btn btn-danger clr_btn_inner"><i class="fa-solid fa-x"></i></button>
-                                                </div>
-                                        </div>
-                                        <div class="col-md-3"></div>
+                                                    <a class="back_btn" onclick="homePage('{{ $shop_details['shop_slug'] }}')">
+                                                        <i class="fa-solid fa-circle-chevron-left me-2"></i>
+                                                        {{isset($cat_details[$name_key]) ? $cat_details[$name_key] : ''}}
 
-                                    </div>
-                                        <div class="category_title">
-                                            <div class="category_title_img">
-                                                @if (
-                                                    $cat_details->category_type == 'page' ||
-                                                        $cat_details->category_type == 'gallery' ||
-                                                        $cat_details->category_type == 'link' ||
-                                                        $cat_details->category_type == 'check_in' ||
-                                                        $cat_details->category_type == 'parent_category' ||
-                                                        $cat_details->category_type == 'pdf_page')
-                                                    @if (
-                                                        !empty($cat_details->cover) &&
-                                                            file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_details->cover))
-                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_details->cover) }}"
-                                                            class="w-100">
-                                                    @else
-                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                    @endif
-                                                @else
-                                                    @php
-                                                        $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
-                                                    @endphp
-                                                    @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
-                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}"
-                                                            class="w-100">
-                                                    @else
-                                                        <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}" class="w-100">
-                                                    @endif
-                                                @endif
+                                                        @php
+                                                            $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
+                                                        @endphp
+
+                                                        @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" width="30" class="rounded-circle ms-2">
+                                                        @endif
+                                                    </a>
+                                                </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="d-none search_input_inner">
+                                                    <input type="text" class="form-control search_layout" name="search" id="search_layout" placeholder="Search Items">
+                                                    <button class="btn btn-secondary src_btn_inner"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-danger clr_btn_inner"><i class="fa-solid fa-x"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3"></div>
+                                        </div>
+                                        <div class="category_title">
+                                            @if ($cat_details->category_type == 'page' || $cat_details->category_type == 'gallery' || $cat_details->category_type == 'link' || $cat_details->category_type == 'check_in' || $cat_details->category_type == 'parent_category' || $cat_details->category_type == 'pdf_page')
+                                                @if (!empty($cat_details->cover) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_details->cover))
+                                                    <div class="category_title_img">
+                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_details->cover) }}" class="w-100">
+                                                    </div>
+                                                @endif
+                                            @else
+                                                @php
+                                                    $cat_image = isset($cat_details->categoryImages[0]['image']) ? $cat_details->categoryImages[0]['image'] : '';
+                                                @endphp
+
+                                                @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
+                                                    <div class="category_title_img">
+                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image) }}" class="w-100">
+                                                    </div>
+                                                @endif
+                                            @endif
 
                                             <div class="category_title_name">
                                                 <h3>{{ isset($cat_details[$name_key]) ? $cat_details[$name_key] : '' }}</h3>
@@ -2993,47 +2986,51 @@
                                         </div>
                                     </div>
                                 @endif
-                                <div class="category_header">
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-7">
-                                            <div class="category_inr_tag">
-                                                @if (count($cat_tags) > 0)
-                                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                                        <li class="nav-item" role="presentation">
-                                                            <button  class="nav-link active tags-btn all-tab" id="all-tab"
-                                                                data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab"
-                                                                aria-controls="all" aria-selected="true">{{ __('All') }}</button>
-                                                        </li>
-                                                        @foreach ($cat_tags as $inner_tag)
-                                                            @php
-                                                                $tag_items_inner = getTagsProducts($inner_tag['tag_id'], $cat_details['id']);
-                                                            @endphp
 
-                                                            @if (count($tag_items_inner) > 0)
-                                                                <li class="nav-item" role="presentation">
-                                                                    <button
-                                                                        class="nav-link tags-btn {{ $inner_tag['id'] }}-tab" id="{{ $inner_tag['id'] }}-tab"
-                                                                        data-bs-toggle="tab" data-bs-target="#tag{{ $inner_tag['id'] }}"
-                                                                        type="button" role="tab" aria-controls="tag{{ $inner_tag['id'] }}"
-                                                                        aria-selected="false">{{ isset($inner_tag[$name_key]) ? $inner_tag[$name_key] : '' }}</button>
-                                                                </li>
-                                                            @endif
-                                                        @endforeach
-                                                    </ul>
-                                                @endif
+                                {{-- Tags --}}
+                                @if ($first_is_divider != 2)                                    
+                                    @if (count($cat_tags) > 0)
+                                        <div class="category_header">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-7">
+                                                    <div class="category_inr_tag">
+                                                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                                                            {{-- All --}}
+                                                            <li class="nav-item" role="presentation">
+                                                                <button  class="nav-link active tags-btn all-tab" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">{{ __('All') }}</button>
+                                                            </li>
+
+                                                            {{-- Others --}}
+                                                            @foreach ($cat_tags as $inner_tag)
+                                                                @php
+                                                                    $tag_items_inner = getTagsProducts($inner_tag['tag_id'], $cat_details['id']);
+                                                                @endphp
+
+                                                                @if (count($tag_items_inner) > 0)
+                                                                    <li class="nav-item" role="presentation">
+                                                                        <button class="nav-link tags-btn {{ $inner_tag['id'] }}-tab" id="{{ $inner_tag['id'] }}-tab" data-bs-toggle="tab" data-bs-target="#tag{{ $inner_tag['id'] }}" type="button" role="tab" aria-controls="tag{{ $inner_tag['id'] }}" aria-selected="false">{{ isset($inner_tag[$name_key]) ? $inner_tag[$name_key] : '' }}</button>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    @endif
+                                @endif
+
+                                {{-- Items --}}
                                 <div class="category_inr_list_item">
                                     <div class="row">
                                         @php
-                                            if($tag_array == 2) {
-                                            unset($tag_items[0]);
-                                        }
+                                            if($first_is_divider == 2) {
+                                                unset($tag_items[0]);
+                                            }
                                         @endphp
-                                        @if (count($tag_items) > 0)
 
+                                        @if (count($tag_items) > 0)
                                             @foreach ($tag_items as $item)
                                                 @php
                                                     $item_discount = isset($item['discount']) ? $item['discount'] : 0;
@@ -3042,42 +3039,45 @@
                                                     $tag_name = getTagName($item['id']);
                                                     $tagName = isset($tag_name->hasOneTag->$name_key) ? $tag_name->hasOneTag->$name_key : '';
                                                 @endphp
+
                                                 @if ($item['type'] == 1)
                                                     <div class="col-xl-4 col-lg-6 col-md-6">
-                                                        <div class="item_detail single_item_inr devider-border  @if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink')
-                                                        special_day_blink
-                                                        @elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate')
-                                                        special_day_rotate
-                                                    @endif @if($item['is_new'] == 1 || $item['as_sign'] == 1) tag_item_detail @endif">
+                                                        <div class="item_detail single_item_inr devider-border  @if($item['day_special'] == 1 && $special_day_effect_box == 'blink' || $item['as_sign'] == 1 && $special_day_effect_box == 'blink') special_day_blink @elseif($item['day_special'] == 1 && $special_day_effect_box == 'rotate' || $item['as_sign'] == 1 && $special_day_effect_box == 'rotate') special_day_rotate @endif @if($item['is_new'] == 1 || $item['as_sign'] == 1) tag_item_detail @endif">
+
                                                             <div class="special">
                                                                 <label ></label>
                                                                 <label ></label>
                                                                 <label ></label>
                                                                 <label ></label>
                                                             </div>
-                                                             @if ($item['is_new'] == 1)
-                                                                    <img class="is_new tag-img position-absolute"
-                                                                        src="{{ asset('public/client_images/bs-icon/new.png') }}" style="top:0; left:0; width:70px;">
-                                                                @endif
 
-                                                                {{-- Signature Image --}}
-                                                                @if ($item['as_sign'] == 1)
-                                                                    <img class="is_sign tag-img position-absolute"
-                                                                        src="{{ asset('public/client_images/bs-icon/signature.png') }}" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">
-                                                                @endif
+                                                            {{-- Is New --}}
+                                                            @if ($item['is_new'] == 1)
+                                                                <img class="is_new tag-img position-absolute" src="{{ asset('public/client_images/bs-icon/new.png') }}" style="top:0; left:0; width:70px;">
+                                                            @endif
+
+                                                            {{-- Signature Image --}}
+                                                            @if ($item['as_sign'] == 1)
+                                                                <img class="is_sign tag-img position-absolute" src="{{ asset('public/client_images/bs-icon/signature.png') }}" style="top:0; left:50%; transform:translate(-50%,0); width:50px;">
+                                                            @endif
+
+                                                            {{-- Name --}}
                                                             <div class="category_item_name">
-                                                                {{-- name --}}
-                                                                    <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})"
-                                                                        style="cursor: pointer">
-                                                                        {{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
-                                                                    </h3>
+                                                                <h3 onclick="getItemDetails({{ $item->id }},{{ $shop_details['id'] }})"
+                                                                    style="cursor: pointer">
+                                                                    {{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
+                                                                </h3>
                                                             </div>
-                                                            <div class="item_detail_inr {{ (!empty($item->product['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))) ? '' : 'no_img_item_detail' }} ">
+
+                                                            {{-- Item Details --}}
+                                                            <div class="item_detail_inr {{ (!empty($item->product['image']) && file_exists(public_path('client_uploads/shops/' . $shop_slug . '/items/' . $item['image']))) ? '' : 'no_img_item_detail' }}">
                                                                 <div class="item_info">
+
                                                                     {{-- Description Section --}}
                                                                     @php
                                                                         $desc = isset($item->product[$description_key]) && !empty($item->product[$description_key]) ? $item->product[$description_key] : '';
                                                                     @endphp
+
                                                                     @if (strlen(strip_tags($desc)) > 180)
                                                                         <div class="item-desc position-relative">
                                                                             <p>
@@ -3090,7 +3090,6 @@
                                                                             <p>{!! $desc !!}</p>
                                                                         </div>
                                                                     @endif
-
 
                                                                     {{-- Ingredient Section --}}
                                                                     @php
@@ -3106,14 +3105,9 @@
                                                                                     $parent_ing_id = isset($ingredient['parent_id']) ? $ingredient['parent_id'] : null;
                                                                                 @endphp
 
-                                                                                @if (
-                                                                                    (isset($package_permissions['special_icons']) &&
-                                                                                        !empty($package_permissions['special_icons']) &&
-                                                                                        $package_permissions['special_icons'] == 1) ||
-                                                                                        $parent_ing_id != null)
+                                                                                @if ((isset($package_permissions['special_icons']) && !empty($package_permissions['special_icons']) && $package_permissions['special_icons'] == 1) || $parent_ing_id != null)
                                                                                     @if (!empty($ing_icon) && file_exists('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon))
-                                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}"
-                                                                                            width="45px" height="45px">
+                                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/ingredients/' . $ing_icon) }}" width="45px" height="45px">
                                                                                     @endif
                                                                                 @endif
                                                                             @endforeach
@@ -3127,21 +3121,17 @@
                                                                         </p>
                                                                     @endif
                                                                 </div>
-
                                                                 <div class="item_image">
-                                                                    @if (
-                                                                        !empty($item->product['image']) &&
-                                                                            file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
-                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}"
-                                                                            onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})"
-                                                                            style="cursor: pointer">
+                                                                    @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
+                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})" style="cursor: pointer">
 
-                                                                            @if ($item['review'] == 1)                                                                        
-                                                                                <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})"><i
-                                                                                    class="fa-solid fa-star"></i> <i
-                                                                                    class="fa-solid fa-star"></i> <i
-                                                                                    class="fa-solid fa-star"></i></a>
-                                                                            @endif
+                                                                        @if ($item['review'] == 1)                                                                        
+                                                                            <a  class="review_btn" onclick="openRatingModel({{ $item['id'] }})">
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                                <i class="fa-solid fa-star"></i>
+                                                                            </a>
+                                                                        @endif
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -3158,10 +3148,14 @@
                                                                     @endif
                                                                 @endif
                                                             </div>
+
+                                                            {{-- Item Footer --}}
                                                             <div class="item_footer">
+
                                                                 @if($tagName)
                                                                     <span>{{ $tagName }}</span>
                                                                 @endif
+
                                                                 {{-- Price --}}
                                                                 @php
                                                                     $price_arr = getItemPrice($item['id']);
@@ -3172,6 +3166,7 @@
                                                                         $price = Currency::currency($currency)->format($price_arr[0]['price']);
                                                                         $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
                                                                     @endphp
+
                                                                     @if ($item_discount > 0)
                                                                         @php
                                                                             if ($item_discount_type == 'fixed') {
@@ -3181,6 +3176,7 @@
                                                                                 $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
                                                                             }
                                                                         @endphp
+
                                                                         <h4>
                                                                             {{ $price_label }}
                                                                             {{ Currency::currency($currency)->format($new_amount) }}
@@ -3192,25 +3188,27 @@
                                                                         </h4>
                                                                     @endif
                                                                 @endif
-                                                            @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
-                                                                <button class="item_cart_btn"
-                                                                    onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})"
-                                                                    style="cursor: pointer"><i
-                                                                        class="fa-solid fa-cart-plus"></i></button>
-                                                            @endif
+
+                                                                @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
+                                                                    <button class="item_cart_btn" onclick="getItemDetails({{ $item['id'] }},{{ $shop_details['id'] }})" style="cursor: pointer">
+                                                                        <i class="fa-solid fa-cart-plus"></i>
+                                                                    </button>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
                                                 @else
                                                     @if ($item_devider == 1)
-                                                        <div class="category_title devider">
-                                                            @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
-                                                                <div class="category_title_img img-devider text-center">
-                                                                    <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" class="w-100">
+                                                        <div class="col-md-12">
+                                                            <div class="category_title devider">
+                                                                @if (!empty($item->product['image']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']))
+                                                                    <div class="category_title_img img-devider text-center">
+                                                                        <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/items/' . $item->product['image']) }}" style="width: {{ $item['divider_img_size'] }}px;">
+                                                                    </div>
+                                                                @endif
+                                                                <div class="category_title_name">
+                                                                    <h3>{{ isset($item->product[$name_key]) && !empty($item->product[$name_key]) ? $item->product[$name_key] : '' }}</h3>
                                                                 </div>
-                                                            @endif
-                                                            <div class="category_title_name">
-                                                                <h3>{{ isset($item->product[$name_key]) && !empty($item->product[$name_key]) ? $item->product[$name_key] : '' }}</h3>
                                                             </div>
                                                         </div>
                                                     @endif
@@ -3218,7 +3216,6 @@
                                             @endforeach
                                         @endif
                                     </div>
-
                                 </div>
                             </div>
                         @endforeach
@@ -3471,7 +3468,7 @@
 
                                                                     @else
                                                                     <div class="menu_item_list">
-                                                                         <div class="menu_item_box" style="justify-content: center">
+                                                                         <div class="menu_item_box item_devider" style="justify-content: center">
                                                                             <div class="menu_item_name">
                                                                                      {{-- Item Name --}}
                                                                                 <h4>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
@@ -3641,7 +3638,7 @@
                                                                         </div>
                                                                         @else
                                                                           <div class="menu_item_list">
-                                                                            <div class="menu_item_box justify-content-center">
+                                                                            <div class="menu_item_box item_devider justify-content-center">
                                                                             <div class="menu_item_name">
                                                                                         {{-- Item Name --}}
                                                                                 <h4>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
@@ -3789,7 +3786,7 @@
                                                         </div>
                                                     @else
                                                     <div class="menu_item_list">
-                                                        <div class="menu_item_box" style="justify-content: center">
+                                                        <div class="menu_item_box item_devider" style="justify-content: center">
                                                         <div class="menu_item_name">
                                                                     {{-- Item Name --}}
                                                             <h4>{{ isset($item[$name_key]) && !empty($item[$name_key]) ? $item[$name_key] : '' }}
@@ -4157,6 +4154,7 @@
 
         // Function for Scroll to Section
         function scrollToSection(sectionId, offset = null) {
+            $('#menuModal').modal('hide');
             $('.scrollTab').removeClass('active');
             $('.' + sectionId).addClass('active');
 
@@ -4167,7 +4165,7 @@
             }else{
                 var topOffset = targetSection?.offsetTop - offset;
             }
-            window.scrollTo({ top: topOffset, behavior: 'smooth',});
+            window.scrollTo({ top: topOffset, behavior: 'smooth',});            
         }
 
 
@@ -4457,6 +4455,7 @@
             var parent_id = $('#parent_id').val();
             var shop_id = $('#shop_id').val();
             var keyword = $(this).val();
+            var layout = "{{ $layout }}";
 
             $.ajax({
                 type: "POST",
@@ -4473,25 +4472,31 @@
                 dataType: "JSON",
                 success: function(response) {
                     if (response.success == 1) {
-                        if (tabID == 'no_tab') {
-                            $('.item_inr_info').html('');
-                            $('.item_inr_info').append(response.data);
-                        } else {
-                            if (keyword == '') {
-                                $('.item_inr_info #myTab').show();
-                                $('.cat_name').show();
+                        if(layout == 'layout_2'){
+                            $('.nav-tabs').hide();
+                            $('.category_inr_list_item').html('');
+                            $('.category_inr_list_item').append(response.data);
+                        }else{
+                            if (tabID == 'no_tab') {
+                                $('.item_inr_info').html('');
+                                $('.item_inr_info').append(response.data);
                             } else {
-                                $('.item_inr_info #myTab').hide();
-                                $('.cat_name').hide();
-                            }
-
-                            if (tabID == 'all') {
-                                $('#' + tabID).html('');
-                                $('#' + tabID).append(response.data);
-                            } else {
-                                // alert('#tag'+tabID);
-                                $('#tag' + tabID).html('');
-                                $('#tag' + tabID).append(response.data);
+                                if (keyword == '') {
+                                    $('.item_inr_info #myTab').show();
+                                    $('.cat_name').show();
+                                } else {
+                                    $('.item_inr_info #myTab').hide();
+                                    $('.cat_name').hide();
+                                }
+    
+                                if (tabID == 'all') {
+                                    $('#' + tabID).html('');
+                                    $('#' + tabID).append(response.data);
+                                } else {
+                                    // alert('#tag'+tabID);
+                                    $('#tag' + tabID).html('');
+                                    $('#tag' + tabID).append(response.data);
+                                }
                             }
                         }
                     } else {

@@ -235,7 +235,7 @@
         /* Categories Title & Description Color */
         @if(isset($theme_settings['category_title_and_description_color']) && !empty($theme_settings['category_title_and_description_color']))
             .item_list_div .cat_name, .menu_info_inr .menu_title h3, .category_item_list .category_title .category_title_name h3, .item_list_div .cat_name a{
-                color : {{ $theme_settings['category_title_and_description_color'] }}!important;
+                color : {{ $theme_settings['category_title_and_description_color'] }};
             }
         @endif
 
@@ -277,7 +277,7 @@
         /* Item Description Color */
         @if(isset($theme_settings['item_description_color']) && !empty($theme_settings['item_description_color']))
             .single_item_inr .item-desc, .single_item_inr .item-desc p{
-                color : {{ $theme_settings['item_description_color'] }}!important;
+                color : {{ $theme_settings['item_description_color'] }};
             }
         @endif
 
@@ -392,7 +392,7 @@
 
         /* Item Divider Font Color */
         @if(isset($theme_settings['item_divider_font_color']) && !empty($theme_settings['item_divider_font_color']))
-            .devider h3, .devider p{
+            .devider h3, .devider p, .menu_item_list .item_devider h4, .menu_item_list .item_devider p{
                 color : {{ $theme_settings['item_divider_font_color'] }}!important;
             }
         @endif
