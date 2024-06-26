@@ -1310,6 +1310,7 @@
                                             @php
                                                 $active_cat = checkCategorySchedule($cat['id'], $cat['shop_id']);
                                                 $check_cat_type_permission = checkCatTypePermission($cat['category_type'], $shop_details['id']);
+                                                $categoryImage = App\Models\CategoryImages::where('category_id',$cat['id'])->first();
                                             @endphp
 
                                             @if ($active_cat == 1)
@@ -1331,7 +1332,7 @@
                                                                     $cat['category_type'] == 'check_in' ||
                                                                     $cat['category_type'] == 'parent_category' ||
                                                                     $cat['category_type'] == 'pdf_page')
-                                                                @if (!empty($cat['cover']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover))
+                                                                @if (isset($cat['cover']) && !empty($cat['cover']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']))
                                                                     <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']) }}"
                                                                         class="w-100 mb-2">
                                                                 @else
@@ -1340,7 +1341,7 @@
                                                                 @endif
                                                             @else
                                                                 @php
-                                                                    $cat_image = isset($cat['categoryImages'][0]['image']) ? $cat['categoryImages'][0]['image'] : '';
+                                                                    $cat_image = isset($categoryImage->image) ? $categoryImage->image : '';
                                                                 @endphp
 
                                                                 @if (!empty($cat_image) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat_image))
@@ -1360,8 +1361,8 @@
                                         @endforeach
                                     @endif
                                 </ul>
-                                <button class="prev"><i class="fa-solid fa-angle-left"></i></button>
-                                <button class="next"><i class="fa-solid fa-angle-right"></i></button>
+                                <button class="prev slick-arrow"><i class="fa-solid fa-angle-left"></i></button>
+                                <button class="next slick-arrow"><i class="fa-solid fa-angle-right"></i></button>
                             </div>
                     @elseif(
                         $category_effect == 'wheel' ||
@@ -1394,7 +1395,7 @@
                                                             $cat['category_type'] == 'check_in' ||
                                                             $cat['category_type'] == 'parent_category' ||
                                                             $cat['category_type'] == 'pdf_page')
-                                                        @if (!empty($cat['cover']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']))
+                                                        @if (isset($cat['cover']) && !empty($cat['cover']) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']))
                                                             <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat['cover']) }}"
                                                                 class="w-100">
                                                         @else
@@ -1442,7 +1443,7 @@
                                         @endif
                                     </div>
                                     <div class="col-md-12 mt-3 text-center">
-                                        <h3>{{ $cat_details->$name_key }}</h3>
+                                        <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         {!! $cat_details->$description_key !!}
@@ -1456,7 +1457,7 @@
                             <div class="gallary-details">
                                 <div class="row">
                                     <div class="col-md-12 mb-3 text-center">
-                                        <h3>{{ $cat_details->$name_key }}</h3>
+                                        <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                                     </div>
                                     @if (count($gallery_images) > 0)
                                         @foreach ($gallery_images as $album)
@@ -1488,7 +1489,7 @@
                             <div class="pdf-view">
                                 <div class="row">
                                     <div class="col-md-12 mb-3 text-center">
-                                        <h3>{{ $cat_details->$name_key }}</h3>
+                                        <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                                     </div>
                                     <div class="col-md-12" id="canvas_container">
                                     </div>
@@ -1498,7 +1499,7 @@
                             <div class="check-in-page">
                                 <div class="row justify-content-center">
                                     <div class="col-md-12 mb-3 text-center">
-                                        <h3>{{ $cat_details->$name_key }}</h3>
+                                        <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                                         <div class="check-in-page-desc">
                                             {!! $cat_details->$description_key !!}
                                         </div>
@@ -1814,7 +1815,7 @@
                                                 $cat->category_type == 'check_in' ||
                                                 $cat->category_type == 'parent_category' ||
                                                 $cat->category_type == 'pdf_page')
-                                                @if (!empty($cat->cover) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover))
+                                                @if (isset($cat->cover) && !empty($cat->cover) && file_exists('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover))
                                                 <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/categories/' . $cat->cover) }}">
                                             @else
                                                 <img src="{{ asset('public/client_images/not-found/no_image_1.jpg') }}">
@@ -1857,7 +1858,7 @@
                                 @endif
                             </div>
                             <div class="col-md-12 mt-3 text-center">
-                                <h3>{{ $cat_details->$name_key }}</h3>
+                                <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                             </div>
                             <div class="col-md-12 mt-3">
                                 {!! $cat_details->$description_key !!}
@@ -1871,7 +1872,7 @@
                     <div class="gallary-details">
                         <div class="row">
                             <div class="col-md-12 mb-3 text-center">
-                                <h3>{{ $cat_details->$name_key }}</h3>
+                                <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                             </div>
                             @if (count($gallery_images) > 0)
                                 @foreach ($gallery_images as $album)
@@ -1903,7 +1904,7 @@
                     <div class="pdf-view">
                         <div class="row">
                             <div class="col-md-12 mb-3 text-center">
-                                <h3>{{ $cat_details->$name_key }}</h3>
+                                <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                             </div>
                             <div class="col-md-12" id="canvas_container">
                             </div>
@@ -1913,7 +1914,7 @@
                     <div class="check-in-page">
                         <div class="row justify-content-center">
                             <div class="col-md-12 mb-3 text-center">
-                                <h3>{{ $cat_details->$name_key }}</h3>
+                                <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                                 <div class="check-in-page-desc">
                                     {!! $cat_details->$description_key !!}
                                 </div>
@@ -2221,7 +2222,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-12 mt-3 text-center">
-                                    <h3>{{ $cat_details->$name_key }}</h3>
+                                    <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                                 </div>
                                 <div class="col-md-12 mt-3">
                                     {!! $cat_details->$description_key !!}
@@ -2235,7 +2236,7 @@
                         <div class="gallary-details">
                             <div class="row">
                                 <div class="col-md-12 mb-3 text-center">
-                                    <h3>{{ $cat_details->$name_key }}</h3>
+                                    <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                                 </div>
                                 @if (count($gallery_images) > 0)
                                     @foreach ($gallery_images as $album)
@@ -2263,7 +2264,7 @@
                         <input type="hidden" name="pdf_url" id="pdf_url" value="{{ $pdf_file }}">
                         <div class="pdf-view">
                             <div class="title text-center">
-                                <h3>{{ $cat_details->$name_key }}</h3>
+                                <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                             </div>
                             <div class="row">
                                 <div class="col-md-12" id="canvas_container">
@@ -2274,7 +2275,7 @@
                         <div class="check-in-page">
                             <div class="row justify-content-center">
                                 <div class="col-md-12 mb-3 text-center">
-                                    <h3>{{ $cat_details->$name_key }}</h3>
+                                    <h3>{{ isset($cat_details->$name_key) ? $cat_details->$name_key : '' }}</h3>
                                     <div class="check-in-page-desc">
                                         {!! $cat_details->$description_key !!}
                                     </div>
