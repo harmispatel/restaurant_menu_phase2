@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{ShopRoom, ShopTable, CallWaiter, UserShop, ClientSettings};
 use Illuminate\Support\Facades\Auth;
+use Infobip\Configuration;
+use Infobip\Api\WhatsAppApi;
+use Infobip\Model\{WhatsAppMessage, WhatsAppTemplateContent, WhatsAppTemplateDataContent,WhatsAppTemplateBodyContent, WhatsAppBulkMessage};
 
 class WaiterController extends Controller
 {
@@ -187,7 +190,6 @@ class WaiterController extends Controller
 
     public function sendCallWaiter(Request $request)
     {
-
         $request->validate([
             'location' => 'required',
             'table' => $request->filled('location') && $request->location == 0 ? 'required' : '',
@@ -203,29 +205,39 @@ class WaiterController extends Controller
         }
 
         try {
-
-
             $input = $request->except('_token','room','table');
             $input['room_or_table_no'] =  $request->location == 0 ? $request->table : $request->room;
+
             $waiter = CallWaiter::create($input);
 
-            $fromEmail = UserShop::where('shop_id',$waiter->shop_id)->first();
+            $fromEmail = UserShop::where('shop_id', $input['shop_id'])->first();
             $from = $fromEmail->user->email;
-
 
             if($request->location == 0){
                 $tables = ShopTable::where('id',$request->table)->first();
                 $tableNumber = $tables->table_name;
-                $staffIds = $tables->staffs()->pluck('staffs.email')->toArray();
+                $staff_emails = $tables->staffs()->pluck('staffs.email')->toArray();
+                $staffs = $tables->staffs;
             }else{
                 $rooms = ShopRoom::where('id',$request->room)->first();
                 $roomNumber = $rooms->room_no;
-
-                $staffIds = $rooms->staffs()->pluck('staffs.email')->toArray();
+                $staff_emails = $rooms->staffs()->pluck('staffs.email')->toArray();
+                $staffs = $rooms->staffs;
             }
 
-            if(count($staffIds) > 0){
-                foreach($staffIds as $email){
+            // Sent Message
+            if(count($staffs) > 0){
+                foreach($staffs as $staff){
+                    if(!empty($staff) && isset($staff->wp_number) && !empty($staff->wp_number)){
+                        $this->sendWhatsappMessage($staff);
+                    }
+                }
+            }
+
+            // Sent Mail
+            if(count($staff_emails) > 0){
+                foreach($staff_emails as $email){
+                    // Send Mail
                     $to = $email;
                     $subject = 'New Notification for waiter';
                     $message = '';
@@ -271,11 +283,48 @@ class WaiterController extends Controller
             ]);
 
         } catch (\Throwable $th) {
-            //throw $th;
             return response()->json([
                 'success' => 0,
                 'message' => 'Internal Server Error!',
             ]);
+        }
+    }
+
+    private function sendWhatsappMessage($staff) 
+    {
+        try {
+            $host = '2v8qqz.api.infobip.com';
+            $apiKey = '4a966396254536dcd8e8dd240f3ae5a7-a642f3b1-bcbb-4af0-84de-f9627f009796';
+            $configuration = new Configuration(
+                host: $host,
+                apiKey: $apiKey
+            );
+
+            $phone = str_replace('+', '', $staff->wp_number);
+            $name = $staff->name;
+            
+            $textMessage = new WhatsAppMessage(
+                from: '447860099299',
+                to: $phone,
+                content: new WhatsAppTemplateContent(
+                    templateName: 'message_test',
+                    templateData: new WhatsAppTemplateDataContent(
+                    body: new WhatsAppTemplateBodyContent(
+                        placeholders: [$name]
+                    )
+                ),
+                language: 'en'
+            ));
+
+            $bulkMessage = new WhatsAppBulkMessage(messages: [$textMessage]);
+
+            $whatsAppApi = new WhatsAppApi(config: $configuration);
+
+            $messageInfo = $whatsAppApi->sendWhatsAppTemplateMessage($bulkMessage);
+
+            return 1;
+        } catch (\Throwable $th) {
+            return 0;
         }
     }
 
