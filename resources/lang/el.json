@@ -703,5 +703,7 @@
     "Select Special Effect":"Επιλέξτε Ειδικό Εφέ",
     "Special Effect":"Σπέσιαλ Εφέ",
 
-    "Disabled Menu URL:":"Απενεργοποιημένων Μενού URL:"
+    "Disabled Menu URL:":"Απενεργοποιημένων Μενού URL:",
+    "Upload Theme Image": "Μεταφόρτωση εικόνας θέματος",
+    "Remove Theme Image": "Κατάργηση εικόνας θέματος"
 }

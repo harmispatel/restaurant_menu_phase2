@@ -1116,24 +1116,7 @@
                                                                     <input id="item_divider_font_color_input" type="text" class="form-control" value="" onkeyup="changeColor('item_divider_font_color_input','item_divider_font_color')">
                                                                 </div>
                                                             </div>
-                                                        </div>
-
-                                                        {{-- Theme Preview Image --}}
-                                                        <div class="row align-items-center mb-4" id="theme-preview-image">
-                                                            <div class="col-md-7">
-                                                                <span>{{ __('Theme Preview Image') }}</span>
-                                                            </div>
-                                                            <div class="col-md-5">
-                                                                <div class="form-group align-items-center">
-                                                                    <input type="file" name="theme_preview_image" id="theme_preview_image" class="form-control {{ $errors->has('theme_preview_image') ? 'is-invalid' : '' }}">
-                                                                    @if ($errors->has('theme_preview_image'))
-                                                                    <div class="invalid-feedback">
-                                                                        {{ $errors->first('theme_preview_image') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        </div>                                                        
                                                         
                                                     </div>
                                                 </div>

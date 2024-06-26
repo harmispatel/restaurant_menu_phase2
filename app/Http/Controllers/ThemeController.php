@@ -164,7 +164,7 @@ class ThemeController extends Controller
     {
         $request->validate([
             'theme_name' => 'required',
-            'theme_preview_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            // 'theme_preview_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'header_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'bg_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
         ]);
@@ -268,12 +268,12 @@ class ThemeController extends Controller
             'category_bar_slider_buttons_color'=>$request->category_bar_slider_buttons_color,
         ];        
 
-        if($request->hasFile('theme_preview_image'))
-        {
-            $imgname = "theme_preview_image_".time().".". $request->file('theme_preview_image')->getClientOriginalExtension();
-            $request->file('theme_preview_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/theme_preview_image/'), $imgname);
-            $setting_keys['theme_preview_image'] = $imgname;
-        }
+        // if($request->hasFile('theme_preview_image'))
+        // {
+        //     $imgname = "theme_preview_image_".time().".". $request->file('theme_preview_image')->getClientOriginalExtension();
+        //     $request->file('theme_preview_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/theme_preview_image/'), $imgname);
+        //     $setting_keys['theme_preview_image'] = $imgname;
+        // }
 
         if($request->hasFile('bg_image'))
         {
@@ -362,7 +362,7 @@ class ThemeController extends Controller
 
         $request->validate([
             'theme_name' => 'required',
-            'theme_preview_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+            // 'theme_preview_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'header_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
             'bg_image' => 'mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
         ]);
@@ -461,12 +461,12 @@ class ThemeController extends Controller
             'category_bar_slider_buttons_color'=>$request->category_bar_slider_buttons_color,
         ];
 
-        if($request->hasFile('theme_preview_image'))
-        {
-            $imgname = "theme_preview_image_".time().".". $request->file('theme_preview_image')->getClientOriginalExtension();
-            $request->file('theme_preview_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/theme_preview_image/'), $imgname);
-            $setting_keys['theme_preview_image'] = $imgname;
-        }
+        // if($request->hasFile('theme_preview_image'))
+        // {
+        //     $imgname = "theme_preview_image_".time().".". $request->file('theme_preview_image')->getClientOriginalExtension();
+        //     $request->file('theme_preview_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/theme_preview_image/'), $imgname);
+        //     $setting_keys['theme_preview_image'] = $imgname;
+        // }
 
         if($request->hasFile('bg_image'))
         {
@@ -675,5 +675,79 @@ class ThemeController extends Controller
              $bg_img->delete();
              return redirect()->back()->with('success','Background  Image has been Removed SuccessFully..');
           }
+    }
+
+
+    public function deleteThemeImage($id)
+    {
+        try {
+            // Delete Theme Image
+            $theme_preview_image = ThemeSettings::where('theme_id', $id)->where('key', 'theme_preview_image')->first();
+            $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
+            if(isset($theme_preview_image->id) && !empty($theme_preview_image->value)){                
+                if (file_exists('public/client_uploads/shops/'.$shop_slug.'/theme_preview_image/'.$theme_preview_image->value)) {
+                    unlink('public/client_uploads/shops/'.$shop_slug.'/theme_preview_image/'.$theme_preview_image->value);
+                }
+
+                $setting = ThemeSettings::find($theme_preview_image->id);
+                $setting->value = "";
+                $setting->update();
+
+                return redirect()->back()->with('success', 'Image has been Removed.');
+            }else{
+                return redirect()->back()->with('error', 'Setting Not Found!');
+            }
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Oops, Something went wrong!');
+        }
+    }
+
+
+    public function ThemImageUpload(Request $request)
+    {
+        $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+
+        $request->validate([
+            'theme_preview_image' => 'required|mimes:png,jpg,svg,jpeg,PNG,SVG,JPG,JPEG',
+        ]);
+
+        // Theme ID
+        $theme_id = $request->theme_id;
+
+        $setting_keys = [
+            'theme_preview_image' => $request->theme_preview_image,
+        ];
+
+        if($request->hasFile('theme_preview_image'))
+        {
+            $imgname = "theme_preview_image_".time().".". $request->file('theme_preview_image')->getClientOriginalExtension();
+            $request->file('theme_preview_image')->move(public_path('client_uploads/shops/'.$shop_slug.'/theme_preview_image/'), $imgname);
+            $setting_keys['theme_preview_image'] = $imgname;
+        }
+
+        // Update Theme Settings
+        foreach($setting_keys as $key => $value)
+        {
+            $query = ThemeSettings::where('key',$key)->where('theme_id',$theme_id)->first();
+            $setting_id = isset($query->id) ? $query->id : '';
+            // Update
+            if(!empty($setting_id) || $setting_id != '')
+            {
+
+                $settings = ThemeSettings::find($setting_id);
+                $settings->value = $value;
+                $settings->update();
+            }
+            else
+            {
+                $settings = new ThemeSettings();
+                $settings->theme_id = $theme_id;
+                $settings->key = $key;
+                $settings->value = $value;
+                $settings->save();
+            }
+        }
+        return response()->json(['success' => 1, 'message' => 'Image uploaded successfully'], 200);
     }
 }

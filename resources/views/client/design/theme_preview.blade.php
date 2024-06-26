@@ -33,11 +33,12 @@
                     <li class="breadcrumb-item active">{{ isset($theme->name) ? $theme->name : '' }}</li>
                 </ol>
             </nav>
-            <div class="row">
-                <form action="{{ route('design.theme-update') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="theme_id" id="theme_id" value="{{ $theme->id }}">
-                    <div class="col-md-12">
+
+            <form action="{{ route('design.theme-update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="theme_id" id="theme_id" value="{{ $theme->id }}">
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="theme_change_sec">
                             <div class="theme_name">
                                 <h2 class="form-group">
@@ -66,7 +67,7 @@
                                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
                                                 <div class="row">
-                                                    <div class="col-md-7">
+                                                    <div class="col-md-12">
                                                         <div class="main_theme_color">
 
                                                             {{-- Appearance --}}
@@ -698,23 +699,6 @@
 
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-5">
-                                                        <div class="preview_img" id="main_screen">
-                                                            @if (!empty($main_screen) && file_exists($main_screen))
-                                                                <img src="{{ $main_screen }}" class="w-100">                                                                
-                                                            @endif
-                                                        </div>
-                                                        <div class="preview_img" id="second_main_screen">
-                                                            @if (!empty($second_main_screen) && file_exists($second_main_screen))
-                                                                <img src="{{ $second_main_screen }}" class="w-100">
-                                                            @endif
-                                                        </div>
-                                                        <div class="preview_img" id="three_main_screen">
-                                                            @if (!empty($three_main_screen) && file_exists($three_main_screen))
-                                                                <img src="{{ $three_main_screen }}" class="w-100">
-                                                            @endif
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -733,7 +717,7 @@
                                             aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
                                                 <div class="row">
-                                                    <div class="col-md-7">
+                                                    <div class="col-md-12">
                                                         <div class="main_theme_color">
 
                                                             {{-- PC Category Box Title & Icon Color for Layout 3 --}}
@@ -1584,55 +1568,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            
-                                                            {{-- Theme Preview Image --}}
-                                                            <div class="row align-items-center mb-4"
-                                                                id="theme-preview-image">
-                                                                <div class="col-md-7">
-                                                                    <span>{{ __('Theme Preview Image') }}</span>
-                                                                </div>
-                                                                <div class="col-md-5">
-                                                                    <div class="form-group align-items-center">
-                                                                        <input type="file" name="theme_preview_image"
-                                                                            id="theme_preview_image"
-                                                                            class="form-control {{ $errors->has('theme_preview_image') ? 'is-invalid' : '' }}">
-                                                                        @if ($errors->has('theme_preview_image'))
-                                                                            <div class="invalid-feedback">
-                                                                                {{ $errors->first('theme_preview_image') }}
-                                                                            </div>
-                                                                        @endif
-                                                                    </div>
-                                                                    <div class="form-group mt-2">
-                                                                        @if (isset($settings['theme_preview_image']) &&
-                                                                                !empty($settings['theme_preview_image']) &&
-                                                                                file_exists(
-                                                                                    'public/client_uploads/shops/' . $shop_slug . '/theme_preview_image/' . $settings['theme_preview_image']))
-                                                                            <img src="{{ asset('public/client_uploads/shops/' . $shop_slug . '/theme_preview_image/' . $settings['theme_preview_image']) }}"
-                                                                                width="100">
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                            </div>
 
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <div class="preview_img" id="category-screen">
-                                                            @if (!empty($category_screen) && file_exists($category_screen))
-                                                                <img src="{{ $category_screen }}" class="w-100">
-                                                            @endif
-                                                        </div>
-                                                        <div class="preview_img" id="second-category-screen">
-                                                            @if (!empty($second_category_screen) && file_exists($second_category_screen))
-                                                                <img src="{{ $second_category_screen }}" class="w-100">
-                                                            @endif
-                                                        </div>
-                                                        <div class="preview_img" id="three-category-screen">
-                                                            @if (!empty($three_category_screen) && file_exists($three_category_screen))
-                                                                <img src="{{ $three_category_screen }}" class="w-100">
-                                                            @endif
-                                                        </div>
-                                                    </div>
+                                                    </div>                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -1651,7 +1589,7 @@
                                         aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
                                                 <div class="row">
-                                                    <div class="col-md-7">
+                                                    <div class="col-md-12">
                                                         <div class="main_theme_color">
 
                                                             {{-- Details Modal Background Color --}}
@@ -1931,13 +1869,6 @@
                                                 
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-5">
-                                                        <div class="preview_img">
-                                                            @if (!empty($cart_modal_screen_layout) && file_exists($cart_modal_screen_layout))
-                                                                <img src="{{ $cart_modal_screen_layout }}" class="w-100">
-                                                            @endif
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1945,12 +1876,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <button class="btn btn-success updatebtn">{{ __('Update') }}</button>
+                        </div>
                     </div>
-                    <div class="col-md-12 mt-3">
-                        <button class="btn btn-success updatebtn">{{ __('Update') }}</button>
+                    <div class="col-md-6" id="mobile-theme-view">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 text-center">
+                                <div class="mobile-theme-preview">
+                                    <img src="{{ asset('public/client_images/mobile_view/iphone.png') }}">
+                                    <iframe frameborder="0" class="my-iframe" id="myIframe"></iframe>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </section>
 
@@ -1960,12 +1901,33 @@
 @section('page-js')
 
     <script type="text/javascript">
+
+        const shop_slug = @json($shop_slug);
     
         $(document).ready(function() {
             changeLayout();
             changeSlider();
             categoryLayout();
+            loadShopPreview(shop_slug);
         });
+
+        // Assuming your iframe has an id "myIframe"
+        var iframe = document.getElementById('myIframe');
+        iframe.onload = function() {
+            var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            var style = iframeDocument.createElement('style');
+            style.textContent = `
+                html {
+                    scrollbar-width: none; /* For Firefox */
+                    -webkit-scrollbar-width: none; /* For older WebKit-based browsers */
+                }
+                /* Additional styles to hide scrollbar in newer WebKit-based browsers */
+                ::-webkit-scrollbar {
+                    display: none;
+                }
+            `;
+            iframeDocument.head.appendChild(style);
+        };
 
         // Remove Color Picker's Eyedropper
         $('input').attr('colorpick-eyedropper-active', 'false');
@@ -2050,6 +2012,14 @@
         @if (Session::has('success'))
             toastr.success('{{ Session::get('success') }}')
         @endif
+
+
+        function loadShopPreview(url){
+            var preUrl = "{{ url('/') }}/" + url;
+            console.log(preUrl);
+            $('.my-iframe').attr('src',preUrl);
+        }
+
     </script>
 
 @endsection

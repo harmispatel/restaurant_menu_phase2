@@ -225,7 +225,7 @@
                             </div>
 
                             {{-- Main Screen Map Layout 1 --}}
-                            @php
+                            {{-- @php
                                 $theme_main_screen = isset($settings['theme_main_screen_demo']) ? $settings['theme_main_screen_demo'] : '';
                             @endphp
                             <div class="row mb-3">
@@ -245,10 +245,10 @@
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- Product Screen Map Layout 1 --}}
-                            @php
+                            {{-- @php
                                 $theme_category_screen = isset($settings['theme_category_screen_demo']) ? $settings['theme_category_screen_demo'] : '';
                             @endphp
                             <div class="row mb-3">
@@ -268,10 +268,10 @@
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- Main Screen Map Layout 2 --}}
-                            @php
+                            {{-- @php
                                 $theme_main_screen_layout_two_demo = isset($settings['theme_main_screen_layout_two_demo']) ? $settings['theme_main_screen_layout_two_demo'] : '';
                             @endphp
                             <div class="row mb-3">
@@ -291,10 +291,10 @@
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- Product Screen Map Layout 2 --}}
-                            @php
+                            {{-- @php
                                 $theme_category_screen_layout_two_demo = isset($settings['theme_category_screen_layout_two_demo']) ? $settings['theme_category_screen_layout_two_demo'] : '';
                             @endphp
                             <div class="row mb-3">
@@ -314,10 +314,10 @@
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- Main Screen Map Layout 3 --}}
-                            @php
+                            {{-- @php
                                 $theme_main_screen_layout_three_demo = isset($settings['theme_main_screen_layout_three_demo']) ? $settings['theme_main_screen_layout_three_demo'] : '';
                             @endphp
                             <div class="row mb-3">
@@ -337,10 +337,10 @@
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- Product Screen Map Layout 3 --}}
-                            @php
+                            {{-- @php
                                 $theme_category_screen_layout_three_demo = isset($settings['theme_category_screen_layout_three_demo']) ? $settings['theme_category_screen_layout_three_demo'] : '';
                             @endphp
                             <div class="row mb-3">
@@ -360,10 +360,10 @@
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- Cart Modal Screen Layout  --}}
-                            @php
+                            {{-- @php
                                 $cart_modal_screen_layout = isset($settings['cart_modal_screen_layout']) ? $settings['cart_modal_screen_layout'] : '';
                             @endphp
                             <div class="row mb-3">
@@ -383,7 +383,7 @@
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
 
 
                             {{-- Day Special Image --}}

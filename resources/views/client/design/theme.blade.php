@@ -13,6 +13,9 @@
     $package_permissions = getPackagePermission($subscription_id);
 
     $shop_slug = isset(Auth::user()->hasOneShop->shop['shop_slug']) ? Auth::user()->hasOneShop->shop['shop_slug'] : '';
+    
+    $themeSettings = themeSettings($active_theme);
+    $theme_preview_image = $themeSettings['theme_preview_image'] ?? "";
 
 @endphp
 
@@ -21,6 +24,28 @@
 @section('title', __('Themes'))
 
 @section('content')
+
+    <!--Theme Image Modal -->
+    <div class="modal fade" id="ThemeImageModal" tabindex="-1" aria-labelledby="ThemeImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-5" id="ThemeImageModalLabel">{{ __('Upload Theme Image')}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="upload_form" action="{{ route('upload.theme.image') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" id="theme_preview_image" name="theme_preview_image">
+                        <input type="hidden" id="upload_image_id" name="theme_id">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="UploadThemeImage()" class="btn btn-success m-0">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="theme_section">
         <div class="sec_title">
@@ -69,6 +94,14 @@
 
                                     @if(isset($package_permissions['add_edit_clone_theme']) && !empty($package_permissions['add_edit_clone_theme']) && $package_permissions['add_edit_clone_theme'] == 1)
                                         <a href="{{ route('theme.clone',$theme->id) }}" class="btn edit_category">{{ __('Clone')}}</a>
+                                    @endif
+
+                                    @if($theme->is_default == 0)
+                                        @if (!empty($theme_preview_image) && file_exists('public/client_uploads/shops/'.$shop_slug.'/theme_preview_image/'.$theme_preview_image))
+                                            <a href="{{ route('delete.theme.image', $theme->id) }}" class="btn remove_theme_image">{{ __('Remove Theme Image') }}</a>
+                                        @else
+                                            <a onclick="openUploadThemeImageModal({{$theme->id}})" class="btn upload_theme_image" id="upload_button">{{ __('Upload Theme Image') }}</a>
+                                        @endif
                                     @endif
 
                                 </div>
@@ -123,7 +156,6 @@
         </div>
     </section>
 
-
 @endsection
 
 {{-- Custom JS --}}
@@ -134,6 +166,11 @@
         // Success Toastr Message
         @if (Session::has('success'))
             toastr.success('{{ Session::get('success') }}')
+        @endif
+
+        // Error Toastr Message
+        @if (Session::has('error'))
+            toastr.error('{{ Session::get('error') }}')
         @endif
 
 
@@ -156,6 +193,47 @@
                         setTimeout(() => {
                             location.reload();
                         }, 1000);
+                    }
+                }
+            });
+        }
+
+
+        function openUploadThemeImageModal(themeID){
+            $('#upload_image_id').val(themeID);
+            $('#ThemeImageModal').modal('show');
+        }
+
+        
+        function UploadThemeImage() {
+            const formData = new FormData(document.getElementById('upload_form'));
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('upload.theme.image') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success == 1) {
+                        toastr.success(response.message);
+                        $('#ThemeImageModal').modal('hide');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                },
+                error: function(response){
+                    const validationErrors = (response?.responseJSON?.errors) ? response.responseJSON.errors : '';
+                    if (validationErrors != '')
+                    {
+                        // image Error
+                        var imageError = (validationErrors.theme_preview_image) ? validationErrors.theme_preview_image : '';
+                        if (imageError != '')
+                        {
+                            $('#upload_form #theme_preview_image').addClass('is-invalid');
+                            toastr.error(imageError);
+                        }
                     }
                 }
             });

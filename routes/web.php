@@ -316,6 +316,8 @@ Route::group(['prefix' => 'client'], function()
         Route::get('/clone-theme/{id}', [ThemeController::class,'cloneView'])->name('theme.clone');
         Route::get('/delete-header-image/{id}',[ThemeController::class,'deleteHeaderImg'])->name('delete.header.img');
         Route::get('/delete-bg-image/{id}',[ThemeController::class,'deleteBgImg'])->name('delete.bg.img');
+        Route::get('/delete-theme-image/{id}',[ThemeController::class,'deleteThemeImage'])->name('delete.theme.image');
+        Route::post('/design-theme-image-upload', [ThemeController::class,'ThemImageUpload'])->name('upload.theme.image');
 
         //  Layouts
         Route::get('/design-layout', [LayoutController::class,'index'])->name('desgin.layout');
