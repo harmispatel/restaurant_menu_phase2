@@ -762,7 +762,7 @@
                                             </div>
                                         @endif
                                         <div class="col-md-6 mb-3">
-                                            <select name="payment_method" id="payment_method" class="form-select">
+                                            <select name="payment_method" id="payment_method" class="form-select {{ ($errors->has('payment_method')) ? 'is-invalid' : '' }}">
                                                 <option value="">{{ __('Payment Method') }}</option>
                                                 @if(isset($payment_settings['cash']) && $payment_settings['cash'] == 1)
                                                     <option value="cash" {{ (old('payment_method') == 'cash') ? 'selected' : '' }}>{{ __('Cash') }}</option>
@@ -777,6 +777,11 @@
                                                     <option value="every_pay" {{ (old('payment_method') == 'every_pay') ? 'selected' : '' }}>{{ __('Credit/Debit Card') }}</option>
                                                 @endif
                                             </select>
+                                            @if($errors->has('payment_method'))
+                                                <div class="invalid-feedback">
+                                                    {{ $errors->first('payment_method') }}
+                                                </div>
+                                            @endif
                                         </div>
                                         <div class="col-md-6 mb-3 tip-div" style="display: none;">
                                             <input type="text" id="tip" name="tip" value="" class="form-control" placeholder="{{ __('Tip') }}">

@@ -3837,7 +3837,6 @@ class ShopController extends Controller
     // Function for Processing Checkout
     public function checkoutProcessing($shop_slug, Request $request)
     {
-
         // Checkout Type & Payment Method
         $checkout_type = $request->checkout_type;
         $payment_method = $request->payment_method;
@@ -3849,6 +3848,9 @@ class ShopController extends Controller
         $coupon_id = session()->get('coupon_id');
         $instructions = session()->get('instructions');
 
+        $request->validate([
+            'payment_method' => 'required',
+        ]);
 
         $user_lat = $request->latitude;
         $user_lng = $request->longitude;
