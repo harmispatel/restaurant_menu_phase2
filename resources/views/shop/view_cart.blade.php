@@ -339,7 +339,8 @@
                                                                     <span id="quantity_{{ $cart_item['item_id'] }}">{{ $cart_item['quantity'] }}</span>
                                                                 <button class="btn-number" onclick="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i class="fa fa-plus" aria-hidden="true"></i></button>
                                                             </div>
-                                                            <label>{{ $cart_item['total_amount_text'] }}</label>
+                                                            {{-- <label>{{ $cart_item['total_amount_text'] }}</label> --}}
+                                                            <label>{{ Currency::currency($currency)->format($cart_item['total_amount'] / $cart_item['quantity']) }}</label>
                                                         </div>
                                                     </div>
                                                 @endforeach
@@ -620,7 +621,8 @@
                                                                     <span id="quantity_{{ $cart_item['item_id'] }}">{{ $cart_item['quantity'] }}</span>
                                                                 <button class="btn-number" onclick="updateCart({{ $cart_item['item_id'] }},{{ $cart_item['option_id'] }},{{ $cart_item_key }},'increment')"><i class="fa fa-plus" aria-hidden="true"></i></button>
                                                             </div>
-                                                            <label>{{ $cart_item['total_amount_text'] }}</label>
+                                                            {{-- <label>{{ $cart_item['total_amount_text'] }}</label> --}}
+                                                            <label>{{ Currency::currency($currency)->format($cart_item['total_amount'] / $cart_item['quantity']) }}</label>
                                                         </div>
                                                     </div>
                                                 @endforeach
@@ -737,7 +739,8 @@
                                                                 <span>{{ $cart_item['quantity'] }}</span>
                                                                 <h5>{{ $item_name }}</h5>
                                                             </div>
-                                                            <label>{{ $cart_item['total_amount_text'] }}</label>
+                                                            {{-- <label>{{ $cart_item['total_amount_text'] }}</label> --}}
+                                                            <label>{{ Currency::currency($currency)->format($cart_item['total_amount'] / $cart_item['quantity']) }}</label>
                                                         </div>
                                                         <div class="item_attribute">
                                                             <div class="item_attribute_inr">
@@ -1143,7 +1146,8 @@
                                                                 <span>{{ $cart_item['quantity'] }}</span>
                                                                 <h5>{{ $item_name }}</h5>
                                                             </div>
-                                                            <label>{{ $cart_item['total_amount_text'] }}</label>
+                                                            {{-- <label>{{ $cart_item['total_amount_text'] }}</label> --}}
+                                                            <label>{{ Currency::currency($currency)->format($cart_item['total_amount'] / $cart_item['quantity']) }}</label>
                                                         </div>
                                                         <div class="item_attribute">
                                                             <div class="item_attribute_inr">
