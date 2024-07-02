@@ -1081,6 +1081,8 @@
                         </a>
                     @endif
                 @endif
+
+                @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
                     <a @if($cart != []) href="{{ route('shop.cart', $shop_slug) }}" @endif class="text-white text-decoration-none">
                         <div class="cart_box">
                             <div class="cart_box_inr @if($cart != []) cart_active @endif">
@@ -1095,6 +1097,8 @@
                             </div>
                         </div>
                     </a>
+                @endif
+
                 </div>
             </div>
         </div>

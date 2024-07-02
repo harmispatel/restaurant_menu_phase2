@@ -230,6 +230,10 @@
                 color : {{ $theme_settings['menu_bar_font_color'] }}!important;
             }
 
+            #owl-carousel .owl-item .cate_item{
+                color : {{ $theme_settings['menu_bar_font_color'] }}!important;
+            }
+
         @endif
 
         /* Categories Title & Description Color */

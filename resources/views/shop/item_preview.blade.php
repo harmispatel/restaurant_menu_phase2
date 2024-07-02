@@ -1273,20 +1273,23 @@
                             </a>
                         @endif
                         @endif
-                        <a @if($cart != []) href="{{ route('shop.cart', $shop_slug) }}" @endif class="text-white text-decoration-none">
-                            <div class="cart_box">
-                                <div class="cart_box_inr @if($cart != []) cart_active @endif">
-                                    <div class="cart_icon">
-                                        <h4>{{ __('Cart') }}</h4>
-                                        <i class="fa-solid fa-basket-shopping"></i>
-                                    </div>
-                                    <div class="cart_count">
-                                        <span>{{ $total_quantity }}</span>
 
+                        @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1)
+                            <a @if($cart != []) href="{{ route('shop.cart', $shop_slug) }}" @endif class="text-white text-decoration-none">
+                                <div class="cart_box">
+                                    <div class="cart_box_inr @if($cart != []) cart_active @endif">
+                                        <div class="cart_icon">
+                                            <h4>{{ __('Cart') }}</h4>
+                                            <i class="fa-solid fa-basket-shopping"></i>
+                                        </div>
+                                        <div class="cart_count">
+                                            <span>{{ $total_quantity }}</span>
+
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -2801,29 +2804,35 @@
                                                             @endphp
 
                                                             @if (count($price_arr) > 0)
-                                                                @php
-                                                                    $price = Currency::currency($currency)->format($price_arr[0]['price']);
-                                                                    $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
-                                                                @endphp
 
-                                                                @if ($item_discount > 0)
+                                                                @foreach ($price_arr as $value)                                                        
                                                                     @php
-                                                                        if ($item_discount_type == 'fixed') {
-                                                                            $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
-                                                                        } else {
-                                                                            $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
-                                                                            $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
-                                                                        }
+                                                                        $price = Currency::currency($currency)->format($value['price']);
+                                                                        $price_label = isset($value[$price_label_key]) ? $value[$price_label_key] : '';
                                                                     @endphp
 
-                                                                    <h4>
-                                                                        {{ $price_label }}
-                                                                        {{ Currency::currency($currency)->format($new_amount) }}
-                                                                        <span>{{ $price }}</span>
-                                                                    </h4>
-                                                                @else
-                                                                    <h4>{{ $price_label }} {{ $price }}</h4>
-                                                                @endif
+                                                                    @if ($item_discount > 0)
+                                                                        @php
+                                                                            if ($item_discount_type == 'fixed') {
+                                                                                $new_amount = number_format($value['price'] - $item_discount, 2);
+                                                                            } else {
+                                                                                $per_value = ($value['price'] * $item_discount) / 100;
+                                                                                $new_amount = number_format($value['price'] - $per_value, 2);
+                                                                            }
+                                                                        @endphp
+
+                                                                        <h4>
+                                                                            {{ $price_label }}
+                                                                            {{ Currency::currency($currency)->format($new_amount) }}
+                                                                            <span>{{ $price }}</span>
+                                                                        </h4>
+
+                                                                    @else
+                                                                        <h4>{{ $price_label }} {{ $price }}</h4>
+                                                                    @endif
+
+                                                                @endforeach
+
                                                             @endif
 
                                                             @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
@@ -3162,31 +3171,35 @@
                                                                 @endphp
 
                                                                 @if (count($price_arr) > 0)
-                                                                    @php
-                                                                        $price = Currency::currency($currency)->format($price_arr[0]['price']);
-                                                                        $price_label = isset($price_arr[0][$price_label_key]) ? $price_arr[0][$price_label_key] : '';
-                                                                    @endphp
 
-                                                                    @if ($item_discount > 0)
+                                                                    @foreach ($price_arr as $value)                                                                        
                                                                         @php
-                                                                            if ($item_discount_type == 'fixed') {
-                                                                                $new_amount = number_format($price_arr[0]['price'] - $item_discount, 2);
-                                                                            } else {
-                                                                                $per_value = ($price_arr[0]['price'] * $item_discount) / 100;
-                                                                                $new_amount = number_format($price_arr[0]['price'] - $per_value, 2);
-                                                                            }
+                                                                            $price = Currency::currency($currency)->format($value['price']);
+                                                                            $price_label = isset($value[$price_label_key]) ? $value[$price_label_key] : '';
                                                                         @endphp
 
-                                                                        <h4>
-                                                                            {{ $price_label }}
-                                                                            {{ Currency::currency($currency)->format($new_amount) }}
-                                                                            <span>{{ $price }}</span>
-                                                                        </h4>
-                                                                    @else
-                                                                        <h4>
-                                                                            {{ $price_label }} {{ $price }}
-                                                                        </h4>
-                                                                    @endif
+                                                                        @if ($item_discount > 0)
+                                                                            @php
+                                                                                if ($item_discount_type == 'fixed') {
+                                                                                    $new_amount = number_format($value['price'] - $item_discount, 2);
+                                                                                } else {
+                                                                                    $per_value = ($value['price'] * $item_discount) / 100;
+                                                                                    $new_amount = number_format($value['price'] - $per_value, 2);
+                                                                                }
+                                                                            @endphp
+
+                                                                            <h4>
+                                                                                {{ $price_label }}
+                                                                                {{ Currency::currency($currency)->format($new_amount) }}
+                                                                                <span>{{ $price }}</span>
+                                                                            </h4>
+                                                                        @else
+                                                                            <h4>
+                                                                                {{ $price_label }} {{ $price }}
+                                                                            </h4>
+                                                                        @endif
+                                                                    @endforeach
+
                                                                 @endif
 
                                                                 @if (isset($package_permissions['ordering']) && !empty($package_permissions['ordering']) && $package_permissions['ordering'] == 1 && count($price_arr) > 0 && $item_delivery == 1)
